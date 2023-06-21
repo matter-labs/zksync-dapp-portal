@@ -11,8 +11,6 @@
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
     "prepare": "husky install",
-    "metamask:install": "METAMASK_VERSION=10.14.1 node tests/e2e/utils/metamaskDownloader.mjs",
-    "test:e2e": "cucumber-js --tags \"@withdraw and not @incognito\"",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore --no-error-on-unmatched-pattern --max-warnings=0"
   },
   "devDependencies": {

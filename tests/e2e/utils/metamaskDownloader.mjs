@@ -9,7 +9,7 @@ const metamaskZipSource =
   "/metamask-chrome-" +
   metamaskVersion +
   ".zip";
-const targetDirectory = "./tests/e2e/src/support/extension/";
+const targetDirectory = "src/support/extension/";
 const fileName = "extension.zip";
 const metamaskZipTarget = targetDirectory + fileName;
 
