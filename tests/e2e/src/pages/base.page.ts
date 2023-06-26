@@ -65,12 +65,12 @@ export class BasePage {
   }
 
   async getElementByClass(text: string) {
-    element = await this.world.page?.locator(`//*[@class='${text}'][1]`);
+    element = await this.world.page?.locator(`//*[@class="${text}"]`).first();
     return await element;
   }
 
   async getElementByPartialClass(text: string) {
-    element = await this.world.page?.locator(`//*[contains(@class, '${text}')]`);
+    element = await this.world.page?.locator(`//*[contains(@class, "${text}")]`).first();
     return await element;
   }
 
@@ -90,8 +90,24 @@ export class BasePage {
     return await element;
   }
 
-  async getElementByHref(partialHref: string) {
-    element = await this.world.page?.locator(`//*[@href='${partialHref}']`);
+  async getElementByHref(href: string) {
+    element = await this.world.page?.locator(`//*[@href="${href}"]`);
+    await element.scrollIntoViewIfNeeded();
+    return await element;
+  }
+
+  async getElementByHrefAndText(hrefAndText: string) {
+    const regex = /'([^']+)'/g; //extract href and text
+    const matches = hrefAndText.match(regex);
+    let href;
+    let text;
+
+    if (matches && matches.length >= 2) {
+      href = matches[0].replace(/'/g, "");
+      text = matches[matches.length - 1].replace(/'/g, "");
+    }
+
+    element = await this.world.page?.locator(`//*[text()="${text}" and contains(@href, "${href}")]`);
     await element.scrollIntoViewIfNeeded();
     return await element;
   }
@@ -108,14 +124,14 @@ export class BasePage {
     return await element;
   }
 
-  async getElementByTestIdAndText(testid: string, text: string) {
-    element = await this.world.page?.locator(`//*[@${this.byTestId}'${testid}' and contains(text(), '${text}')]`);
+  async getElementByXpath(xpath: string) {
+    element = await this.world.page?.locator(`${xpath}`).first();
     await element.scrollIntoViewIfNeeded();
     return await element;
   }
 
   async getElementByTestId(testid: string) {
-    element = await this.world.page?.locator(`${this.byTestId}${testid}`);
+    element = await this.world.page?.locator(`${this.byTestId}${testid}`).first();
     await element.scrollIntoViewIfNeeded();
     return await element;
   }
@@ -153,6 +169,8 @@ export class BasePage {
       element = await this.getElementByPartialHref(value);
     } else if (elementType === "href") {
       element = await this.getElementByHref(value);
+    } else if (elementType === "href and text") {
+      element = await this.getElementByHrefAndText(value);
     } else if (elementType === "id") {
       element = await this.getElementById(value);
     } else if (elementType === "testId") {
@@ -165,6 +183,8 @@ export class BasePage {
       element = await this.getElementByType(value);
     } else if (elementType === "placeholder") {
       element = await this.getElementByPlaceholder(value);
+    } else if (elementType === "xpath") {
+      element = await this.getElementByXpath(value);
     }
     return element;
   }

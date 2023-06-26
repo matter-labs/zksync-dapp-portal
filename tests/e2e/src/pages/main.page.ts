@@ -21,6 +21,14 @@ export class MainPage extends BasePage {
     return "//*[@class='amount-input-field-container']//input";
   }
 
+  get totalIntBalance() {
+    return ".total-int";
+  }
+
+  get totalDecBalance() {
+    return ".total-dec";
+  }
+
   get tokenDropDown() {
     return "token-dropDown";
   }
@@ -31,6 +39,10 @@ export class MainPage extends BasePage {
 
   get getFirstToken() {
     return "//button[@l1address]";
+  }
+
+  get emptyBalancesWarning() {
+    return `${this.byTestId}no-balances-warning`;
   }
 
   async selectTransaction(transactionType: string) {
@@ -68,11 +80,24 @@ export class MainPage extends BasePage {
     return result;
   }
 
-  async checkBalance(walletAddress: string, layer: string) {
+  async monitorBalance(walletAddress: string, layer: string) {
     const helper = await new Helper(this.world);
     const balanceETH = await helper.getBalanceETH(walletAddress, layer);
     await helper.notifyQAIfLowBalance(layer, walletAddress, balanceETH);
     console.log("======== " + layer + " balance: " + balanceETH + " ETH | " + walletAddress);
     await expect(balanceETH).toBeGreaterThan(config.thresholdBalance);
+  }
+
+  async getTotalBalance() {
+    const helper = new Helper(this.world);
+
+    const totalInt = await helper.getTextFromLocator(this.totalIntBalance);
+    const totalDec = await helper.getTextFromLocator(this.totalDecBalance);
+
+    result = await helper.getNumberFromString(totalInt + totalDec);
+    const extractedNumber = result.replace(/[^\d.-]/g, "");
+    result = parseFloat(extractedNumber);
+
+    return result;
   }
 }

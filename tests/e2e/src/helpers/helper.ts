@@ -145,9 +145,9 @@ export class Helper {
   async thresholdBalanceIsOk() {
     const mainPage = new MainPage(this.world);
     if (depositTag && !noBlockChain) {
-      await mainPage.checkBalance(MetamaskWallet.mainWallet, "L1");
+      await mainPage.monitorBalance(MetamaskWallet.mainWallet, "L1");
     } else if (withdrawTag || transferTag) {
-      await mainPage.checkBalance(MetamaskWallet.secondWallet, "L2");
+      await mainPage.monitorBalance(MetamaskWallet.secondWallet, "L2");
     }
   }
 
