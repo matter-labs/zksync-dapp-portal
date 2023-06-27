@@ -1,6 +1,6 @@
 {
-  "name": "zksync-plus test solution",
-  "description": "zksync-plus test solution is based on BDD/Playwright and focused on the e2e scenarios",
+  "name": "zksync-portal test solution",
+  "description": "zksync-portal test solution is based on BDD/Playwright and focused on the e2e scenarios",
   "private": true,
   "scripts": {
     "metamask:install": "METAMASK_VERSION=10.14.1 node utils/metamaskDownloader.mjs",

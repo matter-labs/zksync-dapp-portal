@@ -43,8 +43,6 @@ Feature: Artifacts - UI
     Then Element with "text" "Contacts" should be "clickable"
     Then Element with "testId" "network-switcher" should be "visible"
     Then Element with "testId" "network-switcher" should be "clickable"
-    Then Element with "testId" "support-button" should be "visible"
-    Then Element with "testId" "support-button" should be "clickable"
 
   @id1379
   Scenario: Check artifacts on the Networks switcher
