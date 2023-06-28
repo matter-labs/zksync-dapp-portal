@@ -28,7 +28,7 @@
         <template #secondary v-if="$slots['top-right']">
           <slot name="top-right" />
         </template>
-        <template #underline v-if="$slots['bottom-left']">
+        <template #underline v-if="$slots['bottom-right']">
           <slot name="bottom-right" />
         </template>
       </CommonButtonLineBodyInfo>
