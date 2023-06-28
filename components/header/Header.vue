@@ -167,10 +167,10 @@ const networkNav: Navigation[] = reactive([
   .panel-container-desktop {
     @apply relative z-20 mx-auto flex h-full items-center justify-between px-5;
     @media screen and (min-width: 720px) {
-      @apply grid grid-cols-[216px_1fr_216px] px-6;
+      @apply px-6;
     }
     @media screen and (min-width: 1024px) {
-      @apply px-9;
+      @apply grid grid-cols-[216px_1fr_216px] px-9;
     }
 
     .logo-container {

@@ -62,7 +62,8 @@
     <h1 class="h1 text-center">zkSync Portal</h1>
     <button autofocus class="login-btn" @click="onboardStore.openModal" data-testid="login-button">
       <div class="login-btn-inner">
-        <IconsEra class="login-btn-icon" />
+        <IconsEra v-if="version === 'era'" class="login-btn-icon" />
+        <IconsZkSyncLite v-else class="login-btn-icon" />
         <div class="login-btn-description">Connect your Ethereum wallet to zkSync Portal</div>
         <ChevronRightIcon class="block h-5 w-5 flex-none" aria-hidden="true" />
       </div>

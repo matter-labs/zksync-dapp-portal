@@ -1,6 +1,7 @@
 import { BigNumber } from "ethers";
 
 import type { ExtendedChain } from "@/store/network";
+import type { Version } from "@/store/preferences";
 import type { BigNumberish } from "ethers";
 
 export function generateAvatarColors(address: string) {
@@ -36,11 +37,18 @@ export const getNetworkUrl = (network: ExtendedChain, routePath: string) => {
   const hostname = window.location.hostname;
 
   if (hostname === "localhost" || !network.hostnames?.length) {
-    return `${routePath}?network=${network.network}`;
+    const url = new URL(routePath, window.location.origin);
+    url.searchParams.set("network", network.network);
+    return url.toString();
   }
   return network.hostnames[0] + routePath;
 };
 
 export const isMobile = () => {
   return /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(navigator.userAgent);
+};
+
+export const replaceVersionInString = (url: string, replacement: Version) => {
+  const regex = new RegExp("\\bera\\b|\\blite\\b", "gi");
+  return url.replace(regex, replacement);
 };

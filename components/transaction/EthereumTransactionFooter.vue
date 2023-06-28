@@ -12,9 +12,7 @@
     </transition>
 
     <div v-if="buttonStep === 'network'" class="transaction-footer-row">
-      <div class="mb-2 text-center text-sm text-gray-secondary">
-        Incorrect network selected in your {{ walletName }} wallet
-      </div>
+      <CommonButtonTopInfo>Incorrect network selected in your {{ walletName }} wallet</CommonButtonTopInfo>
       <CommonButton
         :disabled="switchingNetworkInProgress"
         variant="primary-solid"

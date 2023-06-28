@@ -60,7 +60,7 @@ const { copy, copied } = useCopy(contactAddress, 700);
     @apply aspect-square h-8 w-8;
   }
   .account-dropdown-icon {
-    @apply -mr-0.5 hidden h-5 w-5 text-gray-secondary;
+    @apply -mr-0.5 hidden h-5 w-5 text-gray-secondary dark:text-neutral-400;
   }
   .account-name-container {
     @apply ml-3 grid w-full grid-cols-[1fr_max-content] items-center justify-between;
@@ -72,7 +72,7 @@ const { copy, copied } = useCopy(contactAddress, 700);
       @apply rounded p-1 ring-primary-400;
 
       .copy-button-icon {
-        @apply pointer-events-none h-5 w-5 text-gray-secondary;
+        @apply pointer-events-none h-5 w-5 text-gray-secondary dark:text-neutral-400;
         &.check-icon {
           @apply text-primary-400;
         }

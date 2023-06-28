@@ -11,7 +11,6 @@
         v-for="item in chains"
         :key="item.network"
         :label="`zkSync Era ${item.name}`"
-        :href="getNetworkUrl(item, route.path)"
         :icon="isNetworkSelected(item.network, 'era') ? CheckIcon : undefined"
         :icon-url="item.iconUrl"
         @click="buttonClicked(item, 'era')"
@@ -28,7 +27,6 @@
         v-for="item in chains"
         :key="item.network"
         :label="`zkSync Lite ${item.name}`"
-        :href="getNetworkUrl(item, route.path)"
         :icon="isNetworkSelected(item.network, 'lite') ? CheckIcon : undefined"
         :icon-url="item.iconUrl"
         @click="buttonClicked(item, 'lite')"
@@ -51,33 +49,43 @@ import IconsZkSyncLite from "@/components/icons/zkSyncLite.vue";
 import type { ExtendedChain } from "@/store/network";
 import type { Version } from "@/store/preferences";
 
-import { useRoute } from "#app";
+import { useRoute, useRouter } from "#app";
 import { chains, useNetworkStore } from "@/store/network";
 import { usePreferencesStore } from "@/store/preferences";
-import { getNetworkUrl } from "@/utils/helpers";
+import { getNetworkUrl, replaceVersionInString } from "@/utils/helpers";
 
 const emit = defineEmits<{
   (eventName: "update:opened", state: boolean): void;
 }>();
 
 const route = useRoute();
+const router = useRouter();
 
-const preferencesStore = usePreferencesStore();
-const { version: selectedZkSyncVersion } = storeToRefs(preferencesStore);
+const { version: selectedZkSyncVersion } = storeToRefs(usePreferencesStore());
 const { selectedEthereumNetwork } = storeToRefs(useNetworkStore());
 const isNetworkSelected = (network: string, version: Version) =>
   selectedEthereumNetwork.value.network === network && version === selectedZkSyncVersion.value;
+
+const getRouteWithCurrentVersion = () => {
+  const newRoute = router.resolve({
+    name: replaceVersionInString(route.name?.toString() || "", selectedZkSyncVersion.value),
+    query: route.query,
+    params: route.params,
+  });
+  return newRoute.name ? newRoute : router.resolve({ name: "index" });
+};
 const buttonClicked = (network: ExtendedChain, version: Version) => {
   if (isNetworkSelected(network.network, version)) {
     closeModal();
+  } else if (version === selectedZkSyncVersion.value && selectedEthereumNetwork.value.network !== network.network) {
+    window.location.href = getNetworkUrl(network, route.fullPath);
+  } else if (version !== selectedZkSyncVersion.value && selectedEthereumNetwork.value.network === network.network) {
+    selectedZkSyncVersion.value = version;
+    router.push(getRouteWithCurrentVersion());
+    closeModal();
   } else {
     selectedZkSyncVersion.value = version;
-    if (selectedEthereumNetwork.value.network !== network.network) {
-      const link = getNetworkUrl(network, route.path);
-      window.open(link, "_self");
-    } else {
-      closeModal();
-    }
+    window.location.href = getNetworkUrl(network, getRouteWithCurrentVersion().fullPath);
   }
 };
 const closeModal = () => emit("update:opened", false);
