@@ -4,12 +4,8 @@
     :icon="icon"
     :transaction-url="`${blockExplorerUrl}/tx/${transaction.transactionHash}`"
   >
-    <template #top-left>
-      <div class="transaction-line-label">{{ label }}</div>
-    </template>
-    <template #bottom-left>
-      <div class="transaction-line-label-underline">{{ time }}</div>
-    </template>
+    <template #top-left>{{ label }}</template>
+    <template #bottom-left>{{ time }}</template>
     <template #top-right>
       <TokenAmount v-if="token" :token="token" :amount="computeAmount" :direction="direction" />
     </template>

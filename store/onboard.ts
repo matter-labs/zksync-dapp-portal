@@ -5,6 +5,7 @@ import { EthereumClient, w3mConnectors, w3mProvider } from "@web3modal/ethereum"
 import { Web3Modal } from "@web3modal/html";
 import { defineStore, storeToRefs } from "pinia";
 
+import useColorMode from "@/composables/useColorMode";
 import useObservable from "@/composables/useObservable";
 
 import { useRuntimeConfig } from "#imports";
@@ -14,6 +15,7 @@ const extendedChains = [...chains, zkSync, zkSyncTestnet];
 const { public: env } = useRuntimeConfig();
 
 export const useOnboardStore = defineStore("onboard", () => {
+  const { selectedColorMode } = useColorMode();
   const { selectedEthereumNetwork } = storeToRefs(useNetworkStore());
 
   const { provider } = configureChains(extendedChains, [
@@ -24,7 +26,7 @@ export const useOnboardStore = defineStore("onboard", () => {
     autoConnect: true,
     connectors: w3mConnectors({
       projectId: env.walletConnectProjectID,
-      version: 1,
+      version: 2,
       chains: extendedChains,
     }),
     provider,
@@ -46,7 +48,12 @@ export const useOnboardStore = defineStore("onboard", () => {
   const connectorName = ref(wagmiClient.connector?.name);
   const walletName = ref<string | undefined>(getWalletName());
   const web3modal = new Web3Modal(
-    { projectId: env.walletConnectProjectID, enableNetworkView: false, enableAccountView: true, themeMode: "light" },
+    {
+      projectId: env.walletConnectProjectID,
+      enableNetworkView: false,
+      enableAccountView: true,
+      themeMode: selectedColorMode.value,
+    },
     ethereumClient
   );
   web3modal.setDefaultChain(selectedEthereumNetwork.value);
@@ -66,6 +73,11 @@ export const useOnboardStore = defineStore("onboard", () => {
     if (!state.open && !account.value.isConnected) {
       disconnect();
     }
+  });
+  watch(selectedColorMode, (colorMode) => {
+    web3modal.setTheme({
+      themeMode: colorMode,
+    });
   });
 
   const openModal = () => web3modal.openModal();

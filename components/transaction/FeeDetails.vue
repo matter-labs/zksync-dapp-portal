@@ -24,18 +24,14 @@
             leave-to-class="translate-y-1.5 opacity-0"
             mode="out-in"
           >
-            <template v-if="canDisplayFeeAsFiat && displayFeeAsFiat">
-              <span>
-                <template v-if="feeToken.price === 'loading'">
-                  <CommonContentLoader :length="15" />
-                </template>
-                <template v-else>{{ totalPrice }}</template>
-                of
-              </span>
-            </template>
-            <template v-else>
-              <span class="font-medium">{{ parseTokenAmount(feeAmount, feeToken.decimals) }}</span>
-            </template>
+            <span v-if="canDisplayFeeAsFiat && displayFeeAsFiat">
+              <template v-if="feeToken.price === 'loading'">
+                <CommonContentLoader :length="15" />
+              </template>
+              <template v-else>{{ totalPrice }}</template>
+              of
+            </span>
+            <span v-else>{{ parseTokenAmount(feeAmount, feeToken.decimals) }}</span>
           </transition>
           <TokenImage class="ml-1 mr-0.5 h-5 w-5" v-bind="feeToken" />
           <span class="font-medium">{{ feeToken.symbol }}</span>
@@ -101,6 +97,6 @@ const totalPrice = computed(() => {
 
 <style lang="scss" scoped>
 .fee-details-container {
-  @apply flex items-center justify-between rounded-lg py-1.5 px-4 text-sm text-gray-secondary;
+  @apply flex items-center justify-between rounded-lg py-1.5 px-4 text-sm text-gray-secondary dark:text-neutral-400;
 }
 </style>

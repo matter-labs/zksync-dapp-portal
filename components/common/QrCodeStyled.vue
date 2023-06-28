@@ -26,7 +26,7 @@ defineProps({
     }
   }
   .qr-code-styled-underline {
-    @apply mt-1.5 text-center text-sm text-gray-secondary;
+    @apply mt-1.5 text-center text-sm text-gray-secondary dark:text-neutral-400;
   }
 }
 </style>

@@ -30,7 +30,7 @@ export default defineNuxtConfig({
         },
         {
           property: "og:image:alt",
-          content: "zkSync Plus",
+          content: "zkSync Portal",
         },
       ],
     },
@@ -40,11 +40,11 @@ export default defineNuxtConfig({
   ssr: false,
   pwa: {
     meta: {
-      name: "zkSync Plus",
+      name: "zkSync Portal",
       description: "All in one wallet for zkSync Era∎ and zkSync Lite",
     },
     manifest: {
-      name: "zkSync Plus",
+      name: "zkSync Portal",
       short_name: "zkPlus",
     },
   },

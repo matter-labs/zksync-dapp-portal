@@ -18,7 +18,6 @@
         <TransactionItemIcon :icon="LockOpenIcon" />
         <CommonCardWithLineButtons>
           <TokenBalance v-bind="transaction.token" as="div" :amount="transaction.amount" />
-          <div class="-mx-1 border-b border-dashed"></div>
           <DestinationItem v-bind="destination" as="div" description="Approving allowance for deposit" />
         </CommonCardWithLineButtons>
       </template>
@@ -34,8 +33,7 @@
         </a>
       </CommonAlert>
 
-      <div class="sticky bottom-0 z-[1] mt-auto w-full bg-gray bg-opacity-60 backdrop-blur-sm">
-        <div class="mx-4 mb-3 border-t border-dashed border-gray-300"></div>
+      <TransactionConfirmModalFooter>
         <div v-if="error" class="mx-4">
           <CommonErrorBlock :retry-button="false" class="mt-3">
             {{ error.message }}
@@ -52,13 +50,8 @@
             <span v-else>Approve allowance</span>
           </transition>
         </CommonButton>
-        <CommonHeightTransition :opened="status === 'waiting-for-signature'">
-          <div class="text-center text-sm font-medium text-gray-500">
-            <div class="pt-1"></div>
-            Confirm this transaction in your {{ walletName }} wallet
-          </div>
-        </CommonHeightTransition>
-      </div>
+        <TransactionButtonUnderlineConfirmTransaction :opened="status === 'waiting-for-signature'" />
+      </TransactionConfirmModalFooter>
     </div>
   </CommonModal>
 
@@ -85,15 +78,11 @@
           :icon="LockOpenIcon"
           :transaction-url="`${blockExplorerUrl}/tx/${transactionReceipt?.hash}`"
         >
-          <template #top-left>
-            <div class="transaction-line-label">Allowance</div>
-          </template>
+          <template #top-left>Allowance</template>
           <template #top-right>
             <TokenAmount :token="transaction.token" :amount="transaction.amount" />
           </template>
-          <template #bottom-right>
-            <div class="transaction-line-item-price">Approved amount</div>
-          </template>
+          <template #bottom-right>Approved amount</template>
         </TransactionLineItem>
       </CommonCardWithLineButtons>
 
@@ -116,18 +105,18 @@
         </p>
       </CommonAlert>
 
-      <div class="sticky bottom-0 z-[1] mt-auto flex w-full flex-col items-center">
+      <TransactionConfirmModalFooter>
         <transition v-bind="TransitionAlertScaleInOutTransition">
           <CommonButton
             v-if="transactionCommitted"
-            class="mx-auto mt-8"
+            class="mx-auto mt-4"
             variant="primary-solid"
             @click="emit('continue')"
           >
             Continue
           </CommonButton>
         </transition>
-      </div>
+      </TransactionConfirmModalFooter>
     </div>
   </CommonModal>
 </template>
@@ -189,7 +178,7 @@ const emit = defineEmits<{
   (eventName: "continue"): void;
 }>();
 
-const { account, walletName } = storeToRefs(useOnboardStore());
+const { account } = storeToRefs(useOnboardStore());
 const { destinations } = storeToRefs(useDestinationsStore());
 const { blockExplorerUrl } = storeToRefs(useNetworkStore());
 

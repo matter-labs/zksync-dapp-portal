@@ -2,7 +2,7 @@
   <div>
     <CommonContentBlock>
       <CommonTotalBalance :balance="balance" :loading="loading" :error="balanceError" />
-      <CommonButtonsLineGroup class="my-4">
+      <CommonButtonGroup class="my-4">
         <CommonButton as="RouterLink" :to="{ name: 'transaction-zksync-lite-receive' }">
           <template #icon>
             <ArrowDownIcon aria-hidden="true" />
@@ -21,15 +21,15 @@
           </template>
           <template #default>Swap</template>
         </CommonButton>
-      </CommonButtonsLineGroup>
+      </CommonButtonGroup>
 
       <!-- Tokens container -->
       <div>
         <div class="flex items-center justify-between py-4">
-          <h2 class="text-sm text-gray-secondary">Balances</h2>
+          <TypographyCategoryLabel as="h2" :padded="false">Balances</TypographyCategoryLabel>
           <CommonLabelButton as="RouterLink" :to="{ name: 'balances' }">View all</CommonLabelButton>
         </div>
-        <div class="-mx-2 -mt-1 -mb-3">
+        <div class="-mx-2 -mt-1 -mb-2">
           <template v-if="loading">
             <TokenBalanceLoader v-for="index in 2" :key="index" send-route-name />
           </template>
@@ -49,8 +49,9 @@
           </template>
           <template v-else>
             <CommonEmptyBlock class="mx-3 mb-3 mt-1">
-              You don't have any balances on <span class="font-medium">{{ destinations.zkSyncLite.label }}</span> (L2)
-              <br />
+              <div class="wrap-balance">
+                You don't have any balances on <span class="font-medium">{{ destinations.zkSyncLite.label }}</span>
+              </div>
               <span class="mt-1.5 inline-block">
                 Proceed to
                 <NuxtLink class="link" :to="{ name: 'transaction-zksync-lite-receive' }">Add funds</NuxtLink> page to

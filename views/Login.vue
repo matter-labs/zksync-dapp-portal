@@ -1,5 +1,7 @@
 <template>
   <div class="login-view isolate">
+    <ModalNetworkChange v-model:opened="networkChangeModalOpened" />
+
     <div class="pointer-events-none absolute left-0 top-0 h-full w-full">
       <div class="relative h-full w-full overflow-hidden">
         <div class="bg-block-1 absolute inset-x-0 top-[-10rem] -z-10 overflow-hidden blur-3xl sm:top-[-20rem]">
@@ -9,7 +11,7 @@
           >
             <path
               fill="url(#45de2b6b-92d5-4d68-a6a0-9b9b2abad533)"
-              fill-opacity=".3"
+              fill-opacity=".4"
               d="M317.219 518.975L203.852 678 0 438.341l317.219 80.634 204.172-286.402c1.307 132.337 45.083 346.658 209.733 145.248C936.936 126.058 882.053-94.234 1031.02 41.331c119.18 108.451 130.68 295.337 121.53 375.223L855 299l21.173 362.054-558.954-142.079z"
             />
             <defs>
@@ -21,8 +23,8 @@
                 y2="474.645"
                 gradientUnits="userSpaceOnUse"
               >
-                <stop stop-color="#9089FC" />
-                <stop offset="1" stop-color="#FF80B5" />
+                <stop stop-color="#0F6" />
+                <stop offset="1" stop-color="#005ECD" />
               </linearGradient>
             </defs>
           </svg>
@@ -36,7 +38,7 @@
           >
             <path
               fill="url(#ecb5b0c9-546c-4772-8c71-4d3f06d544bc)"
-              fill-opacity=".3"
+              fill-opacity=".6"
               d="M317.219 518.975L203.852 678 0 438.341l317.219 80.634 204.172-286.402c1.307 132.337 45.083 346.658 209.733 145.248C936.936 126.058 882.053-94.234 1031.02 41.331c119.18 108.451 130.68 295.337 121.53 375.223L855 299l21.173 362.054-558.954-142.079z"
             />
             <defs>
@@ -48,8 +50,8 @@
                 y2="474.645"
                 gradientUnits="userSpaceOnUse"
               >
-                <stop stop-color="#9089FC" />
-                <stop offset="1" stop-color="#FF80B5" />
+                <stop stop-color="#EB00FF" />
+                <stop offset="1" stop-color="#005ECD" />
               </linearGradient>
             </defs>
           </svg>
@@ -57,50 +59,32 @@
       </div>
     </div>
 
-    <h1 class="h1 text-center">Log in to zkSync Plus</h1>
-    <button v-if="!account.address" autofocus class="login-btn" @click="onboardStore.openModal">
+    <h1 class="h1 text-center">zkSync Portal</h1>
+    <button autofocus class="login-btn" @click="onboardStore.openModal" data-testid="login-button">
       <div class="login-btn-inner">
-        <IconsEthereum class="mr-2 h-20 w-auto" data-testid="login-button" />
-        <div class="login-btn-description">Connect your Ethereum wallet to experience zkSync Plus</div>
-        <ChevronRightIcon class="block h-6 w-6" aria-hidden="true" />
+        <IconsEra class="login-btn-icon" />
+        <div class="login-btn-description">Connect your Ethereum wallet to zkSync Portal</div>
+        <ChevronRightIcon class="block h-5 w-5 flex-none" aria-hidden="true" />
       </div>
     </button>
-    <template v-else>
-      <NuxtLink :to="{ name: 'index' }" class="login-btn">
-        <div class="login-btn-inner">
-          <div class="mr-2 flex h-20 items-center justify-center pr-0.5">
-            <AddressAvatar class="h-10 w-10" :address="account.address" />
-          </div>
-          <div class="logged-in-address">{{ shortenAddress(account.address) }}</div>
-          <ChevronRightIcon class="block h-6 w-6" aria-hidden="true" />
-        </div>
-      </NuxtLink>
-      <CommonLabelButton class="mx-auto mt-6 -mb-[calc(24px_+_20px)] text-center" @click="useAnotherAccount">
-        Use another account
-      </CommonLabelButton>
-    </template>
 
     <footer class="login-footer">
+      <button class="network-switch" @click="networkChangeModalOpened = true" data-testid="network-switcher">
+        <IconsEra v-if="version === 'era'" class="navbar-link-icon" />
+        <IconsZkSyncLite v-else-if="version === 'lite'" class="navbar-link-icon" />
+        <span class="navbar-link-label">
+          <span class="capitalize">{{ version }}</span>
+          {{ selectedEthereumNetwork.network === "mainnet" ? selectedEthereumNetwork.name : "Testnet" }}
+        </span>
+        <ChevronDownIcon class="dropdown-icon" aria-hidden="true" />
+      </button>
       <div></div>
-      <div class="made-with-love">
-        Made with ❤️ by
-        <a class="link" href="https://github.com/JackHamer09" target="_blank" rel="noopener">JackHamer</a>
-        and
-        <a
-          class="link"
-          href="https://github.com/JackHamer09/zksync-plus/graphs/contributors"
-          target="_blank"
-          rel="noopener"
-        >
-          contributors
-        </a>
-      </div>
       <a
-        href="https://github.com/JackHamer09/zksync-plus"
-        title="zkSync Plus GitHub page"
+        href="https://github.com/matter-labs/dapp-portal"
+        title="zkSync Portal GitHub page"
         target="_blank"
         rel="noopener"
-        class="block w-max text-gray-500 hover:text-gray-900"
+        class="block w-max text-gray-500 transition-colors hover:text-gray-900 dark:hover:text-white"
       >
         <svg class="h-7 w-7" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
           <path
@@ -115,38 +99,56 @@
 </template>
 
 <script lang="ts" setup>
-import { ChevronRightIcon } from "@heroicons/vue/24/solid";
+import { ref } from "vue";
+
+import { ChevronDownIcon, ChevronRightIcon } from "@heroicons/vue/24/solid";
 import { storeToRefs } from "pinia";
 
+import { useNetworkStore } from "@/store/network";
 import { useOnboardStore } from "@/store/onboard";
-import { shortenAddress } from "@/utils/formatters";
+import { usePreferencesStore } from "@/store/preferences";
 
 const onboardStore = useOnboardStore();
-const { account } = storeToRefs(onboardStore);
+const { selectedEthereumNetwork } = storeToRefs(useNetworkStore());
+const { version } = storeToRefs(usePreferencesStore());
 
-const useAnotherAccount = async () => {
-  await onboardStore.disconnect();
-  await onboardStore.openModal();
-};
+const networkChangeModalOpened = ref(false);
 </script>
 
 <style lang="scss" scoped>
+.lite.dark {
+  .login-view {
+    .login-btn {
+      @apply bg-primary-300;
+      &:hover:not(:disabled),
+      &:focus:not(:disabled) {
+        .login-btn-inner {
+          @apply bg-primary-200/20;
+        }
+      }
+    }
+  }
+}
 .login-view {
   @apply sm:pb-20;
 
   .login-btn {
-    @apply mt-5 block w-full rounded-lg bg-white p-1 text-left text-gray-secondary outline-none transition-shadow disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none;
+    @apply mt-5 block w-full rounded-3xl bg-white p-1 text-left text-gray-secondary outline-none transition-shadow disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none;
+    @apply dark:bg-primary-300 dark:text-white;
     &:hover:not(:disabled),
     &:focus:not(:disabled) {
       @apply shadow-sm;
 
       .login-btn-inner {
-        @apply bg-gray-50;
+        @apply bg-gray-50 dark:bg-primary-200;
       }
     }
 
     .login-btn-inner {
-      @apply flex w-full items-center justify-between gap-2.5 rounded-lg px-5 pr-6 transition-colors;
+      @apply flex w-full items-center justify-between gap-2.5 rounded-[1.24rem] p-5 pr-6 transition-colors;
+    }
+    .login-btn-icon {
+      @apply mr-2 h-10 w-10 flex-none rounded-full bg-gray p-2 text-black dark:bg-white;
     }
     .login-btn-description {
       @apply text-xs font-light leading-tight sm:text-sm;
@@ -156,13 +158,24 @@ const useAnotherAccount = async () => {
     }
   }
   .login-footer {
-    @apply absolute left-0 bottom-0 grid w-full items-center justify-items-center gap-3 px-6 pb-5 sm:grid-cols-[1.75rem_1fr_1.75rem];
+    @apply absolute left-0 bottom-0 grid w-full items-center justify-items-center gap-3 px-6 pb-5 sm:grid-cols-[max-content_1fr_1.75rem];
     @media screen and (max-height: 480px) {
       @apply static mt-8 px-0;
     }
 
-    .made-with-love {
-      @apply whitespace-pre-line text-center text-sm text-gray-400;
+    .network-switch {
+      @apply flex w-max items-center rounded-xl px-3.5 py-2.5 text-neutral-800 no-underline transition-colors;
+      @apply border bg-gray-100 hover:border-gray-300 hover:bg-gray-200/60 dark:border-neutral-900/70 dark:bg-neutral-900/50 dark:text-white dark:hover:bg-neutral-900;
+
+      .navbar-link-icon {
+        @apply -ml-0.5 h-6 w-6 flex-none text-black dark:text-white;
+      }
+      .dropdown-icon {
+        @apply ml-3 -mr-0.5 h-4 w-4 flex-none text-inherit;
+      }
+      .navbar-link-label {
+        @apply mr-auto ml-4 text-left text-sm font-medium leading-4 tracking-[-0.1px];
+      }
     }
   }
 

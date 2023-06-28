@@ -6,12 +6,7 @@
         <MagnifyingGlassIcon aria-hidden="true" />
       </template>
       <template #right>
-        <label
-          class="aspect-square h-full w-auto scale-125 cursor-pointer rounded p-0.5 transition-colors hover:bg-gray-300"
-        >
-          <QrCodeIcon class="aspect-square h-full w-auto" aria-hidden="true" />
-          <CommonQrAddressInput id="qr-code-input" @selected="emit('selected', $event)" />
-        </label>
+        <CommonQrUploadIconButton class="md:hidden" id="qr-code-input" @selected="emit('selected', $event)" />
       </template>
     </CommonSmallInput>
     <div v-if="displayedAddresses.length">
@@ -24,12 +19,10 @@
             v-for="item in group.addresses"
             :name="item.name"
             :address="item.address"
+            :icon="item.icon"
             :key="item.address"
             @click="emit('selected', item.address)"
           >
-            <template #icon v-if="item.icon">
-              <component :is="item.icon" class="mr-3 text-gray-secondary" aria-hidden="true" />
-            </template>
             <template #address-icon v-if="destination">
               <img v-tooltip="destinationTooltip" :src="destination!.iconUrl" :alt="destination!.label" />
             </template>
@@ -60,7 +53,7 @@
       <CommonEmptyBlock class="search-empty-block">
         Nothing was found for "{{ search }}"
         <br />
-        <span class="mt-1.5 inline-block">Please enter a valid ethereum address</span>
+        <span class="mt-1.5 inline-block">Please enter a valid Ethereum address</span>
       </CommonEmptyBlock>
     </div>
   </div>
@@ -69,7 +62,7 @@
 <script lang="ts" setup>
 import { computed, ref } from "vue";
 
-import { ClockIcon, MagnifyingGlassIcon, QrCodeIcon, UserIcon } from "@heroicons/vue/24/outline";
+import { ClockIcon, MagnifyingGlassIcon, UserIcon } from "@heroicons/vue/24/outline";
 import { isAddress } from "ethers/lib/utils";
 import { storeToRefs } from "pinia";
 
@@ -134,7 +127,7 @@ const inputtedAddressAccount = computed<ContactWithIcon | null>(() => {
     };
   } else if (isAddressValid.value) {
     return {
-      name: search.value,
+      name: "",
       address: checksumAddress(search.value),
     };
   }

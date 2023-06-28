@@ -17,12 +17,11 @@ defineProps({
 
 <style lang="scss" scoped>
 .line-button-container {
-  @apply h-[59.5px] w-full rounded-lg p-2 transition-colors;
-  text-align: inherit;
+  @apply w-full rounded-[1.24rem] p-2 transition-colors dark:bg-neutral-900;
   &:enabled,
   &:is(a) {
     &:not([aria-disabled="true"]) {
-      @apply cursor-pointer hover:bg-gray-50;
+      @apply cursor-pointer hover:bg-gray-50 dark:hover:bg-neutral-800;
     }
   }
   &:disabled,

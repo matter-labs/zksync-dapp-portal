@@ -15,19 +15,19 @@
         v-bind="destinations.era"
         as="RouterLink"
         :to="{ name: 'transaction-zksync-era-send', query: $route.query }"
-        description="Send inside zkSync Era∎ (L2) network"
+        description="Send inside zkSync Era∎ network"
       />
       <DestinationItem
         v-bind="destinations.ethereum"
         as="RouterLink"
         :to="{ name: 'transaction-zksync-era-withdraw', query: $route.query }"
-        description="Withdraw to Ethereum (L1)"
+        description="Withdraw to Ethereum"
       />
       <DestinationItem
         v-bind="destinations.zkSyncLite"
         as="RouterLink"
         :to="{ name: 'transaction-zksync-era-send-lite', query: $route.query }"
-        description="Send to zkSync Lite (L2) network"
+        description="Send to zkSync Lite network"
       />
     </CommonCardWithLineButtons>
 

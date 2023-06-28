@@ -9,7 +9,7 @@
       </div>
     </div>
     <div class="inset flex p-[2px]">
-      <div class="h-full w-full rounded-full bg-gray-input"></div>
+      <div class="h-full w-full rounded-full bg-gray-input dark:bg-neutral-900"></div>
     </div>
   </div>
 </template>
@@ -52,6 +52,17 @@ onBeforeUnmount(() => {
 
 <style lang="scss" scoped>
 @use "sass:math";
+.lite.dark {
+  .radial-progress {
+    .circle {
+      .mask {
+        .fill {
+          @apply bg-primary-300;
+        }
+      }
+    }
+  }
+}
 .radial-progress {
   $circle-size: 20px;
   $inset-size: 14px;
@@ -61,7 +72,7 @@ onBeforeUnmount(() => {
   height: $circle-size;
 
   &.loading {
-    @apply animate-pulse bg-gray-100;
+    @apply animate-pulse;
   }
 
   .circle {
@@ -87,7 +98,7 @@ onBeforeUnmount(() => {
     }
   }
   .inset {
-    @apply absolute top-1/2 left-1/2 aspect-square w-9/12 -translate-x-1/2 -translate-y-1/2 rounded-full bg-gray;
+    @apply absolute top-1/2 left-1/2 aspect-square w-9/12 -translate-x-1/2 -translate-y-1/2 rounded-full bg-gray dark:bg-neutral-900;
   }
 
   @keyframes animateCircle {

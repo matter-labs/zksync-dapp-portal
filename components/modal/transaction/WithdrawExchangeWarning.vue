@@ -6,9 +6,7 @@
     </p>
     <p class="leading-normal">
       If you are unsure, the safest way would be to firstly
-      <NuxtLink :to="withdrawToSelfLinkLocation" class="link"
-        >withdraw to {{ selectedEthereumNetwork.name }} (L1)</NuxtLink
-      >
+      <NuxtLink :to="withdrawToSelfLinkLocation" class="link">withdraw to {{ selectedEthereumNetwork.name }}</NuxtLink>
       and then send funds to the exchange.
     </p>
 

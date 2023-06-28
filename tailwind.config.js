@@ -3,6 +3,7 @@ const defaultTheme = require("tailwindcss/defaultTheme");
 const plugin = require("tailwindcss/plugin");
 
 module.exports = {
+  darkMode: "class",
   content: [
     "./components/**/*.{js,vue,ts}",
     "./views/**/*.vue",
@@ -25,6 +26,14 @@ module.exports = {
           input: "#edeff2",
           "input-focus": "#dfe3e7",
         },
+        warning: {
+          400: "#FFC81A",
+          600: "#E5AF00",
+        },
+        success: {
+          400: "#33FF99",
+          600: "#00CC66",
+        },
       },
     },
     screens: {
@@ -38,7 +47,7 @@ module.exports = {
     },
   },
   plugins: [
-    plugin(function ({ addBase, theme }) {
+    plugin(function ({ addBase, addUtilities, theme }) {
       addBase({
         ".h1": {
           fontSize: "32px",
@@ -53,6 +62,11 @@ module.exports = {
           lineHeight: theme("lineHeight.tight"),
           paddingTop: theme("padding.5"),
           paddingBottom: theme("padding.4"),
+        },
+      });
+      addUtilities({
+        ".wrap-balance": {
+          textWrap: "balance",
         },
       });
     }),
@@ -71,6 +85,19 @@ module.exports = {
               700: "#113EB2",
               800: "#0C2C80",
               900: "#071B4D",
+            },
+            neutral: {
+              50: "#F7F9FC",
+              100: "#E8ECF2",
+              200: "#DADDE5",
+              300: "#BEC2CC",
+              400: "#A1A7B3",
+              500: "#858C99",
+              600: "#6C7380",
+              700: "#555A66",
+              800: "#3D424D",
+              900: "#262B33",
+              950: "#11141A",
             },
           },
         },

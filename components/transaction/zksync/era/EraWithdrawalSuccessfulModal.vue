@@ -10,15 +10,10 @@
         <EraTransactionLineItem :transaction="transaction" />
       </CommonCardWithLineButtons>
 
-      <CommonAlert
-        v-if="selectedEthereumNetwork.network === 'mainnet'"
-        class="mt-3"
-        variant="neutral"
-        :icon="InformationCircleIcon"
-      >
+      <CommonAlert class="mt-3" variant="neutral" :icon="InformationCircleIcon">
         <p>
-          Your funds will be available on the <span class="font-medium">{{ destinations.ethereum.label }}</span> (L1)
-          after a <a :href="ERA_WITHDRAWAL_DELAY" target="_blank" class="link">~24-hour delay</a>. During this time, the
+          Your funds will be available on the <span class="font-medium">{{ destinations.ethereum.label }}</span> after a
+          <a :href="ERA_WITHDRAWAL_DELAY" target="_blank" class="link">~24-hour delay</a>. During this time, the
           transaction will be processed and finalized. You are free to close this page.
         </p>
         <a :href="ERA_WITHDRAWAL_DELAY" target="_blank" class="alert-link">
@@ -27,16 +22,14 @@
         </a>
       </CommonAlert>
 
-      <div
-        class="sticky bottom-0 z-[1] mt-auto flex w-full flex-col items-center bg-gray bg-opacity-60 backdrop-blur-sm"
-      >
-        <NuxtLink :to="{ name: 'transaction-zksync-era' }" class="link mb-2 mt-2 text-sm underline-offset-2">
+      <TransactionConfirmModalFooter>
+        <CommonButtonTopLink as="RouterLink" :to="{ name: 'transaction-zksync-era' }">
           Make another transaction
-        </NuxtLink>
+        </CommonButtonTopLink>
         <CommonButton as="RouterLink" :to="{ name: 'index' }" class="mx-auto" variant="primary-solid">
-          Go to Home page
+          Go to Assets page
         </CommonButton>
-      </div>
+      </TransactionConfirmModalFooter>
     </div>
   </CommonModal>
 </template>
@@ -51,7 +44,6 @@ import type { EraTransaction } from "@/utils/zksync/era/mappers";
 import type { PropType } from "vue";
 
 import { useDestinationsStore } from "@/store/destinations";
-import { useNetworkStore } from "@/store/network";
 import { ERA_WITHDRAWAL_DELAY } from "@/utils/doc-links";
 
 defineProps({
@@ -61,7 +53,6 @@ defineProps({
   },
 });
 
-const { selectedEthereumNetwork } = storeToRefs(useNetworkStore());
 const { destinations } = storeToRefs(useDestinationsStore());
 </script>
 

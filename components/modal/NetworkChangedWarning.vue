@@ -7,16 +7,16 @@
     <p class="leading-normal">
       The selected network has been automatically changed from
       <span class="font-medium">{{ lastSelectedEthereumNetworkName }}</span> to
-      <span class="font-medium">{{ selectedEthereumNetwork.name }}</span> since your last use of zkSync Plus.
+      <span class="font-medium">{{ selectedEthereumNetwork.name }}</span> since your last use of zkSync Portal.
     </p>
     <div class="mt-10 flex flex-col items-center">
-      <a
+      <CommonButtonTopLink
         v-if="lastSelectedEthereumNetwork"
+        as="a"
         :href="getNetworkUrl(lastSelectedEthereumNetwork, route.path)"
-        class="link mb-2 text-sm underline-offset-2"
       >
         Return to {{ lastSelectedEthereumNetworkName }}
-      </a>
+      </CommonButtonTopLink>
       <CommonButton variant="primary-solid" @click="closeModal">
         Continue on {{ selectedEthereumNetwork.name }}
       </CommonButton>

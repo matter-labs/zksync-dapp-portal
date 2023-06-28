@@ -25,7 +25,7 @@ const emit = defineEmits<{
 
 <style lang="scss" scoped>
 .error-block-container {
-  @apply grid w-full grid-cols-[max-content_1fr_max-content] items-center rounded-lg border border-dashed border-red-500 p-2 text-red-500;
+  @apply grid w-full grid-cols-[max-content_1fr_max-content] items-center rounded-3xl border border-dashed border-red-500 p-2 text-red-500;
 
   .error-block-icon {
     @apply mr-3 block h-7 w-7;

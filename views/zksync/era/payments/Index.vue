@@ -1,7 +1,7 @@
 <template>
   <div>
     <CommonContentBlock>
-      <CommonButtonsLineGroup class="mb-4">
+      <CommonButtonGroup class="mb-4">
         <CommonButton as="RouterLink" :to="{ name: 'transaction-zksync-era' }">
           <template #icon>
             <PaperAirplaneIcon aria-hidden="true" />
@@ -14,13 +14,13 @@
           </template>
           <template #default>Swap</template>
         </CommonButton>
-      </CommonButtonsLineGroup>
-      <div class="transactions-block-container">
+      </CommonButtonGroup>
+      <div>
         <div class="flex items-center justify-between py-4">
-          <h2 class="text-sm text-gray-secondary">Transactions</h2>
+          <TypographyCategoryLabel as="h2" :padded="false">Transactions</TypographyCategoryLabel>
           <CommonLabelButton as="RouterLink" :to="{ name: 'payments-all' }">View all</CommonLabelButton>
         </div>
-        <div class="transactions-container">
+        <div class="-mx-2 -mt-1 -mb-2">
           <template v-if="recentTransactionsRequestInProgress">
             <TokenBalanceLoader v-for="index in 5" :key="index" />
           </template>
@@ -40,7 +40,7 @@
           <template v-else>
             <CommonEmptyBlock class="mx-3 mb-3 mt-1">
               You currently don't have any transactions on
-              <span class="font-medium">{{ destinations.era.label }}</span> (L2)
+              <span class="font-medium">{{ destinations.era.label }}</span>
             </CommonEmptyBlock>
           </template>
         </div>
@@ -84,10 +84,4 @@ onBeforeUnmount(() => {
 
 <style lang="scss" scoped></style>
 
-<style lang="scss" scoped>
-.transactions-block-container {
-  .transactions-container {
-    @apply -mx-2 -mt-1 -mb-3;
-  }
-}
-</style>
+<style lang="scss" scoped></style>

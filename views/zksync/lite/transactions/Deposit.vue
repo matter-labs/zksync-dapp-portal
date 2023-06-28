@@ -87,8 +87,11 @@
           <p>
             Your current allowance for <span class="font-medium">{{ selectedToken!.symbol }}</span> is
             <button type="button" class="link underline underline-offset-2" @click="setAmountToAllowance">
-              {{ parseTokenAmount(allowance!, selectedToken!.decimals) }}</button
-            >. Depositing more than that will require you to approve a new allowance.
+              {{ parseTokenAmount(allowance!, selectedToken!.decimals) }}
+            </button>
+            <span class="block wrap-balance">
+              Depositing more than that will require you to approve a new allowance.
+            </span>
           </p>
           <a :href="TOKEN_ALLOWANCE" target="_blank" class="alert-link">
             Learn more

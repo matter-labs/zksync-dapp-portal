@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1 class="h1">{{ title }}</h1>
-    <VersionTabs class="mb-4" />
+    <!-- <VersionTabs class="mb-4" /> -->
 
     <slot name="era" v-if="version === 'era'" />
     <slot name="lite" v-else-if="version === 'lite'" />

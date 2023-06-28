@@ -1,6 +1,6 @@
 <template>
-  <div class="relative z-[1] mx-auto -my-4 aspect-square w-max bg-white p-1.5">
-    <div class="rounded-lg bg-gray p-2">
+  <div class="relative z-[1] mx-auto -my-4 aspect-square w-max bg-white p-1.5 dark:bg-neutral-900">
+    <div class="rounded-lg bg-gray p-2 dark:bg-neutral-800">
       <component :is="icon" class="h-5 w-5" aria-hidden="true" />
     </div>
   </div>

@@ -6,18 +6,25 @@
       :loading="loading"
       :balances="balances"
     />
-    <label class="amount-input-container" :class="{ focused, loading, 'has-error': !!amountError }">
+    <label for="amount-input" class="amount-input-container" :class="{ focused, loading, 'has-error': !!amountError }">
       <div class="amount-input-token">
-        <CommonContentLoader v-if="loading" :length="10" />
+        <CommonContentLoader v-if="loading" :length="14" />
         <template v-else-if="selectedToken">
-          <div class="flex items-center" @click="selectTokenModalOpened = true" data-testid="token-dropDown">
+          <button
+            type="button"
+            class="flex w-max items-center space-x-1.5"
+            @click.prevent="selectTokenModalOpened = true"
+            data-testid="token-dropDown"
+          >
             <TokenImage class="-ml-0.5 h-5 w-5" v-bind="selectedToken" />
-            <span class="ml-1 inline-block">{{ selectedToken.symbol }}</span>
-          </div>
+            <span class="inline-block">{{ selectedToken.symbol }}</span>
+            <ChevronDownIcon class="h-4 w-4 text-gray-secondary dark:text-neutral-400" aria-hidden="true" />
+          </button>
         </template>
       </div>
       <div class="amount-input-field-container">
         <input
+          id="amount-input"
           ref="inputElement"
           v-model="inputted"
           class="amount-input-field"
@@ -25,6 +32,7 @@
           type="text"
           maxlength="20"
           spellcheck="false"
+          autocomplete="off"
           :style="{ width: `${inputWidth}px` }"
           @keyup.enter="emit('enter')"
         />
@@ -58,7 +66,6 @@
             </span>
           </template>
           <template v-else>Select token</template>
-          <ChevronDownIcon class="ml-1.5 h-4 w-4" aria-hidden="true" />
         </button>
       </div>
       <transition v-bind="TransitionOpacity()">
@@ -235,26 +242,21 @@ const recalculateInputWidth = () => {
 
 <style lang="scss" scoped>
 .amount-input-container {
-  @apply grid w-full gap-x-4 rounded-xl bg-gray-input p-4 transition-colors;
+  @apply grid w-full gap-x-4 rounded-xl bg-gray-input p-4 transition-colors dark:bg-neutral-900;
   grid-template-areas:
     "a b b b"
     "c c d d";
   &:not(.loading) {
     &.focused {
-      @apply bg-gray-input-focus;
-
-      .small-input-clear-button {
-        @apply bg-gray-400;
-      }
+      @apply bg-gray-input-focus dark:bg-neutral-800;
     }
   }
   &.has-error {
-    // @apply bg-red-100;
     @apply ring-1 ring-inset ring-red-500;
   }
 
   .amount-input-token {
-    @apply text-xl font-medium leading-[1.4] text-gray-900;
+    @apply text-xl font-medium leading-[1.4] text-gray-900 dark:text-white;
     grid-area: a / a / a / a;
   }
   .amount-input-field-container {
@@ -262,22 +264,22 @@ const recalculateInputWidth = () => {
     @apply flex flex-row-reverse items-center justify-start gap-2 overflow-hidden pl-2;
 
     .amount-input-max-button {
-      @apply rounded bg-primary-100/50 px-1.5 py-1 text-xs font-medium uppercase text-primary-400 transition-all;
+      @apply rounded bg-primary-100/50 px-1.5 py-1 text-xs font-medium uppercase text-primary-400 transition-all dark:bg-neutral-700 dark:text-neutral-400;
       &:not(.is-max) {
-        @apply cursor-pointer hover:bg-primary-100;
+        @apply cursor-pointer hover:bg-primary-100 dark:hover:bg-neutral-600;
       }
       &.is-max {
-        @apply cursor-default bg-primary-600 text-white;
+        @apply cursor-default bg-primary-600 text-white dark:bg-primary-300;
       }
     }
     .amount-input-field {
-      @apply block w-max min-w-[15px] overflow-hidden border-none bg-transparent text-right text-xl font-medium outline-none placeholder:text-gray-secondary;
+      @apply block w-max min-w-[15px] overflow-hidden border-none bg-transparent text-right text-xl font-medium outline-none placeholder:text-gray-secondary dark:placeholder:text-neutral-400;
     }
   }
   .amount-input-select-asset,
   .amount-input-note,
   .amount-input-error {
-    @apply mt-1 text-sm text-gray-secondary;
+    @apply mt-1 text-sm text-gray-secondary dark:text-neutral-400;
   }
   .amount-input-select-asset {
     @apply flex cursor-pointer items-start whitespace-pre-line transition-colors hover:text-gray-400 xs:w-max;

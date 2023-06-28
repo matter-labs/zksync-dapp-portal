@@ -9,6 +9,7 @@
       class="small-input-field"
       :placeholder="placeholder"
       :type="type"
+      :maxlength="maxLength"
       spellcheck="false"
     />
     <transition v-bind="TransitionOpacity()" mode="out-in">
@@ -44,6 +45,10 @@ const props = defineProps({
     type: String,
     default: "",
   },
+  maxLength: {
+    type: Number,
+    default: 50,
+  },
   type: {
     type: String,
     default: "text",
@@ -71,30 +76,30 @@ const inputted = computed({
 
 <style lang="scss">
 .small-input-container {
-  @apply flex h-9 w-full items-center rounded-[10px] bg-gray-input p-1.5 transition-colors;
+  @apply flex h-12 w-full items-center rounded-3xl bg-gray-input py-3 px-4 transition-colors dark:bg-neutral-900;
   &.focused,
   &:hover {
-    @apply bg-gray-input-focus;
+    @apply bg-gray-input-focus dark:bg-neutral-800;
 
     .small-input-clear-button {
-      @apply bg-gray-400;
+      @apply bg-gray-400 dark:bg-neutral-500;
     }
   }
 
   .small-input-icon-container {
-    @apply flex h-5 w-5 items-center justify-center text-gray-secondary;
+    @apply flex h-5 w-5 flex-none items-center justify-center text-gray-secondary dark:text-neutral-400;
 
     svg {
       @apply block aspect-square h-full w-full;
     }
   }
   .small-input-field {
-    @apply mx-1.5 w-full border-none bg-transparent outline-none placeholder:text-gray-secondary;
+    @apply mx-2 w-full truncate border-none bg-transparent outline-none placeholder:text-gray-secondary dark:placeholder:text-neutral-400;
   }
   .small-input-clear-button {
-    @apply block aspect-square h-6 w-6 self-end rounded-full bg-gray-300 p-1 transition-all;
+    @apply block aspect-square h-6 w-6 self-end rounded-full bg-gray-300 p-1 transition-all dark:bg-neutral-800;
     &:hover {
-      @apply bg-gray-500;
+      @apply bg-gray-500 dark:bg-neutral-600;
     }
 
     .small-input-clear-button-icon {

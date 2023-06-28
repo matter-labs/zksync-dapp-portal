@@ -2,7 +2,6 @@
   <Menu as="div" class="account-button-container">
     <ModalNetworkChange v-model:opened="networkChangeModalOpened" />
     <ModalViewOnExplorer v-model:opened="viewOnExplorerModalOpened" />
-    <ModalSupport v-model:opened="supportModalOpened" />
 
     <MenuButton as="template">
       <SidebarAccountAvatarName class="main-account-button" />
@@ -36,15 +35,24 @@
             </button>
           </MenuItem>
           <MenuItem v-slot="{ active }" as="template">
+            <button class="account-menu-item" :class="{ active }" @click.prevent="switchColorMode">
+              <div class="account-menu-item-icon overflow-hidden p-2">
+                <transition v-bind="TransitionPrimaryButtonText" mode="out-in">
+                  <MoonIcon
+                    v-if="selectedColorMode === 'dark'"
+                    class="aspect-square h-full w-full"
+                    aria-hidden="true"
+                  />
+                  <SunIcon v-else class="aspect-square h-full w-full" aria-hidden="true" />
+                </transition>
+              </div>
+              Theme
+            </button>
+          </MenuItem>
+          <MenuItem v-slot="{ active }" as="template">
             <button class="account-menu-item" :class="{ active }" @click="viewOnExplorerModalOpened = true">
               <Squares2X2Icon class="account-menu-item-icon p-2" aria-hidden="true" />
               View on explorer
-            </button>
-          </MenuItem>
-          <MenuItem v-if="mdAndSmaller" v-slot="{ active }" as="template">
-            <button class="account-menu-item" :class="{ active }" @click="supportModalOpened = true">
-              <HeartIcon class="account-menu-item-icon p-1.5" aria-hidden="true" />
-              Support
             </button>
           </MenuItem>
           <MenuItem v-slot="{ active }" as="template">
@@ -63,14 +71,17 @@
 import { ref } from "vue";
 
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/vue";
-import { ChevronDownIcon, HeartIcon, Squares2X2Icon } from "@heroicons/vue/24/outline";
+import { ChevronDownIcon, MoonIcon, Squares2X2Icon, SunIcon } from "@heroicons/vue/24/outline";
 import { PowerIcon } from "@heroicons/vue/24/solid";
 import { useBreakpoints } from "@vueuse/core";
 import { storeToRefs } from "pinia";
 
+import useColorMode from "@/composables/useColorMode";
+
 import { useNetworkStore } from "@/store/network";
 import { useOnboardStore } from "@/store/onboard";
 
+const { selectedColorMode, switchColorMode } = useColorMode();
 const { selectedEthereumNetwork } = storeToRefs(useNetworkStore());
 const onboardStore = useOnboardStore();
 
@@ -81,7 +92,6 @@ const mdAndSmaller = breakpoints.smallerOrEqual("md");
 
 const networkChangeModalOpened = ref(false);
 const viewOnExplorerModalOpened = ref(false);
-const supportModalOpened = ref(false);
 </script>
 
 <style lang="scss">
@@ -89,10 +99,10 @@ const supportModalOpened = ref(false);
   @apply relative;
 
   .main-account-button {
-    @apply transition-colors hover:bg-gray-200;
+    @apply transition-colors hover:bg-gray-200 dark:hover:bg-neutral-900;
   }
   .menu-panel {
-    @apply absolute left-0 bottom-0 z-10 grid h-max w-56 rounded-lg bg-white shadow-lg ring-1 ring-gray-900/5 focus:outline-none md:-left-px md:-top-px md:p-px;
+    @apply absolute left-0 bottom-0 z-10 grid h-max w-56 rounded-lg bg-white shadow-lg ring-1 ring-gray-900/5 focus:outline-none dark:bg-neutral-900 md:-left-px md:-top-px md:p-px;
     grid-template-areas:
       "menu-options"
       "account-button";
@@ -107,13 +117,13 @@ const supportModalOpened = ref(false);
       grid-area: account-button;
     }
     .menu-options {
-      @apply border-b p-1 md:border-b-0 md:border-t;
+      @apply border-b p-1 dark:border-neutral-800 md:border-b-0 md:border-t;
       grid-area: menu-options;
 
       .account-menu-item {
-        @apply grid w-full grid-cols-[max-content_1fr] items-center gap-3 rounded-lg px-2 py-2 text-left leading-6 text-gray-900 transition-colors;
+        @apply grid w-full grid-cols-[max-content_1fr] items-center gap-3 rounded-lg px-2 py-2 text-left leading-6 text-gray-900 transition-colors dark:text-white;
         &.active {
-          @apply bg-gray text-primary-400;
+          @apply bg-gray text-primary-400 dark:bg-neutral-800 dark:text-white;
 
           .account-menu-item-icon {
             @apply bg-white text-primary-400;
@@ -121,7 +131,7 @@ const supportModalOpened = ref(false);
         }
 
         .account-menu-item-icon {
-          @apply flex aspect-square h-auto w-8 items-center justify-center rounded-full bg-gray-50 text-center text-gray-500;
+          @apply flex aspect-square h-auto w-8 items-center justify-center rounded-full bg-gray-50 text-center text-gray-500 dark:bg-neutral-800 dark:text-neutral-200;
         }
       }
     }

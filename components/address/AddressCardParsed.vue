@@ -1,8 +1,5 @@
 <template>
-  <AddressCard as="div" :name="addressCard.name" :address="addressCard.address">
-    <template #icon v-if="addressCard.icon">
-      <component :is="addressCard.icon" class="text-gray-secondary" aria-hidden="true" />
-    </template>
+  <AddressCard as="div" :name="addressCard.name" :address="addressCard.address" :icon="addressCard.icon">
     <template #address-icon v-if="destination">
       <img v-tooltip="tooltip" :src="destination!.iconUrl" :alt="destination!.label" />
     </template>

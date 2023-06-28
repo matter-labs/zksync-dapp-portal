@@ -1,17 +1,17 @@
 <template>
-  <CommonPage title="Payments">
+  <CommonPage title="Transactions">
     <template #era>
-      <PaymentsEra />
+      <TransactionsEra />
     </template>
     <template #lite>
-      <PaymentsLite />
+      <TransactionsLite />
     </template>
   </CommonPage>
 </template>
 
 <script lang="ts" setup>
-import PaymentsEra from "@/views/zksync/era/payments/Index.vue";
-import PaymentsLite from "@/views/zksync/lite/payments/Index.vue";
+import TransactionsEra from "@/views/zksync/era/payments/Index.vue";
+import TransactionsLite from "@/views/zksync/lite/payments/Index.vue";
 </script>
 
 <style lang="scss" scoped></style>

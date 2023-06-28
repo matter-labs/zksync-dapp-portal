@@ -1,25 +1,25 @@
 <template>
   <CommonModal v-bind="$attrs" title="View on explorer">
+    <TypographyCategoryLabel>Selected network</TypographyCategoryLabel>
     <CommonCardWithLineButtons>
       <DestinationItem
-        v-bind="destinations.era"
+        v-bind="selectedNetwork?.destination"
         as="a"
         :icon="ArrowUpRightIcon"
-        :href="`${eraBlockExplorerUrl}/address/${account.address}`"
+        :href="selectedNetwork?.link"
         target="_blank"
       />
+    </CommonCardWithLineButtons>
+
+    <TypographyCategoryLabel>Other networks</TypographyCategoryLabel>
+    <CommonCardWithLineButtons>
       <DestinationItem
-        v-bind="destinations.zkSyncLite"
+        v-for="item in otherNetworks"
+        v-bind="item.destination"
+        :key="item.destination.key"
         as="a"
         :icon="ArrowUpRightIcon"
-        :href="`${liteBlockExplorerUrl}/address/${account.address}`"
-        target="_blank"
-      />
-      <DestinationItem
-        v-bind="destinations.ethereum"
-        as="a"
-        :icon="ArrowUpRightIcon"
-        :href="`${ethereumBlockExplorerUrl}/address/${account.address}`"
+        :href="item.link"
         target="_blank"
       />
     </CommonCardWithLineButtons>
@@ -27,16 +27,48 @@
 </template>
 
 <script lang="ts" setup>
+import { computed } from "vue";
+
 import { ArrowUpRightIcon } from "@heroicons/vue/24/outline";
 import { storeToRefs } from "pinia";
 
 import { useDestinationsStore } from "@/store/destinations";
 import { useOnboardStore } from "@/store/onboard";
+import { usePreferencesStore } from "@/store/preferences";
 import { useEraProviderStore } from "@/store/zksync/era/provider";
 import { useLiteProviderStore } from "@/store/zksync/lite/provider";
 
+const { version } = storeToRefs(usePreferencesStore());
 const { account, blockExplorerUrl: ethereumBlockExplorerUrl } = storeToRefs(useOnboardStore());
 const { destinations } = storeToRefs(useDestinationsStore());
 const { blockExplorerUrl: eraBlockExplorerUrl } = storeToRefs(useEraProviderStore());
 const { blockExplorerUrl: liteBlockExplorerUrl } = storeToRefs(useLiteProviderStore());
+
+const networks = computed(() => {
+  return [
+    {
+      destination: destinations.value.era,
+      link: `${eraBlockExplorerUrl.value}/address/${account.value.address}`,
+    },
+    {
+      destination: destinations.value.zkSyncLite,
+      link: `${liteBlockExplorerUrl.value}/address/${account.value.address}`,
+    },
+    {
+      destination: destinations.value.ethereum,
+      link: `${ethereumBlockExplorerUrl.value}/address/${account.value.address}`,
+    },
+  ];
+});
+const selectedNetwork = computed(() => {
+  if (version.value === "era") {
+    return networks.value.find((network) => network.destination.key === "era");
+  } else if (version.value === "lite") {
+    return networks.value.find((network) => network.destination.key === "zkSyncLite");
+  }
+  return undefined;
+});
+const otherNetworks = computed(() => {
+  return networks.value.filter((network) => network.destination.key !== selectedNetwork.value?.destination.key);
+});
 </script>

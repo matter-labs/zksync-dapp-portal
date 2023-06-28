@@ -1,7 +1,7 @@
 <template>
   <CommonModal v-model:opened="walletWarningModal" :close-on-background-click="false" title="Wallet warning">
     <p class="leading-normal">
-      zkSync Plus is still in beta. For the best experience, we recommend using
+      zkSync Portal is still in beta. For the best experience, we recommend using
       <span class="font-medium">MetaMask</span>. Some features may not work properly with other wallets.
     </p>
 

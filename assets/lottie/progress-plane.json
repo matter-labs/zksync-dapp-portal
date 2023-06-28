@@ -308,6 +308,7 @@
       "op": 301,
       "ip": 0,
       "hd": false,
+      "ln": "plane",
       "ddd": 0,
       "bm": 0,
       "hasMask": false,

@@ -33,12 +33,7 @@
           <MagnifyingGlassIcon aria-hidden="true" />
         </template>
         <template #right>
-          <label
-            class="aspect-square h-full w-auto scale-125 cursor-pointer rounded p-0.5 transition-colors hover:bg-gray-300"
-          >
-            <QrCodeIcon class="aspect-square h-full w-auto" aria-hidden="true" />
-            <CommonQrAddressInput id="qr-code-input" @selected="search = $event" />
-          </label>
+          <CommonQrUploadIconButton class="md:hidden" id="qr-code-input" @selected="search = $event" />
         </template>
       </CommonSmallInput>
 
@@ -81,13 +76,10 @@
           <AddressCard
             :name="inputtedContact.name"
             :address="inputtedContact.address"
+            :icon="PlusIcon"
             :key="inputtedContact.address"
             @click="addInputtedAddress"
-          >
-            <template #right>
-              <CommonIconButton as="div" :icon="PlusIcon" />
-            </template>
-          </AddressCard>
+          />
         </CommonCardWithLineButtons>
       </div>
       <div v-else-if="!search">
@@ -95,7 +87,7 @@
           Enter address in the search bar
           <br />
           <span class="mt-1.5 inline-block">
-            Or <span class="link cursor-pointer" @click="openAddContactModal">create a contact</span>
+            Or <button class="link cursor-pointer" @click="openAddContactModal">create a contact</button>
           </span>
         </CommonEmptyBlock>
       </div>
@@ -103,7 +95,7 @@
         <CommonEmptyBlock class="search-empty-block">
           Nothing was found for "{{ search }}"
           <br />
-          <span class="mt-1.5 inline-block">Please enter a valid ethereum address</span>
+          <span class="mt-1.5 inline-block">Please enter a valid Ethereum address</span>
         </CommonEmptyBlock>
       </div>
     </div>
@@ -113,7 +105,7 @@
 <script lang="ts" setup>
 import { computed, ref } from "vue";
 
-import { MagnifyingGlassIcon, PaperAirplaneIcon, PlusIcon, QrCodeIcon } from "@heroicons/vue/24/outline";
+import { MagnifyingGlassIcon, PaperAirplaneIcon, PlusIcon } from "@heroicons/vue/24/outline";
 import { isAddress } from "ethers/lib/utils";
 import { storeToRefs } from "pinia";
 

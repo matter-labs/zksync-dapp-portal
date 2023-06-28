@@ -5,13 +5,7 @@
       v-for="(batch, batchIndex) in batches"
       :key="batchIndex"
     >
-      <ZkSyncLiteTransactionLineItem
-        v-for="(item, index) in batch"
-        as="div"
-        :key="item.txHash"
-        :transaction="item"
-        :class="{ 'border-t border-dashed': index > 0 && item.isFeeTransaction }"
-      />
+      <ZkSyncLiteTransactionLineItem v-for="item in batch" :key="item.txHash" as="div" :transaction="item" />
     </CommonCardWithLineButtons>
   </div>
 </template>

@@ -112,15 +112,10 @@
 
     <ZksyncLiteTransactionFooter>
       <template #after-checks>
-        <a
-          v-if="type === 'Withdraw'"
-          class="link mb-2 flex items-center text-sm"
-          :href="LITE_WITHDRAWAL_TIMES"
-          target="_blank"
-        >
+        <CommonButtonTopLink v-if="type === 'Withdraw'" :href="LITE_WITHDRAWAL_TIMES" target="_blank">
           Will arrive in 10 minutes to 7 hours
           <ArrowUpRightIcon class="ml-1 mt-0.5 h-3.5 w-3.5" />
-        </a>
+        </CommonButtonTopLink>
         <CommonButton :disabled="continueButtonDisabled" variant="primary-solid" @click="openConfirmationModal">
           Continue
         </CommonButton>
@@ -398,8 +393,14 @@ onBeforeUnmount(() => {
 </script>
 
 <style lang="scss" scoped>
+.lite.dark {
+  .change-fee-token-button {
+    @apply bg-primary-400 hover:bg-primary-300;
+  }
+}
 .change-fee-token-button {
   @apply ml-2 mt-1 flex w-max cursor-pointer items-center rounded bg-primary-100/50 py-1 px-1.5 text-xs font-medium text-primary-400 transition-colors hover:bg-primary-100 xs:-mr-4 xs:mt-0;
+  @apply dark:bg-primary-300 dark:text-white dark:hover:bg-primary-200;
 
   .change-fee-token-icon {
     @apply ml-1 h-3 w-3;

@@ -1,5 +1,5 @@
 <template>
-  <div class="transaction-line-item-amount">
+  <div>
     <div class="flex items-center justify-end">
       <span v-if="direction" class="relative -top-px mr-[2px] text-xs">{{ direction === "in" ? "+" : "-" }}</span>
       <span class="text-sm font-medium"> {{ symbol }}</span>

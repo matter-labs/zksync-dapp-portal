@@ -3,14 +3,7 @@
     <BackButton :fallback="{ name: 'transaction-zksync-era-receive' }" />
 
     <h1 class="h1">Receive</h1>
-    <Receive :address="address">
-      <CommonAlert variant="neutral">
-        <p>
-          Please transfer funds to this address using
-          <span class="font-medium">{{ destinations.era.label }}</span> to successfully receive them
-        </p>
-      </CommonAlert>
-    </Receive>
+    <Receive :address="address" :destination="destinations.era" />
   </div>
 </template>
 

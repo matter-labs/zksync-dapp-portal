@@ -73,15 +73,15 @@
 
     <EraTransactionFooter :authorization="false" :account-activation="false">
       <template #after-checks>
-        <a
+        <CommonButtonTopLink
           v-if="type === 'withdrawal' && selectedEthereumNetwork.network === 'mainnet'"
-          class="link mb-2 flex items-center text-sm"
+          as="a"
           :href="ERA_WITHDRAWAL_DELAY"
           target="_blank"
         >
           Arriving in ~24 hours
           <ArrowUpRightIcon class="ml-1 mt-0.5 h-3.5 w-3.5" />
-        </a>
+        </CommonButtonTopLink>
         <CommonButton :disabled="continueButtonDisabled" variant="primary-solid" @click="openConfirmationModal">
           Continue
         </CommonButton>

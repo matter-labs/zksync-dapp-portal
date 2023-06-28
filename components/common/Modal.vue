@@ -10,7 +10,7 @@
         leave-from="opacity-100"
         leave-to="opacity-0"
       >
-        <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
+        <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity dark:bg-black dark:bg-opacity-80" />
       </TransitionChild>
 
       <div class="fixed inset-0 z-10 overflow-y-auto">
@@ -37,7 +37,7 @@
               <div class="mb-4 flex items-center justify-between">
                 <DialogTitle as="div" class="h2 py-0">{{ title }}</DialogTitle>
                 <button v-if="closable" @click="closeModal">
-                  <XMarkIcon class="h-6 w-6 text-neutral-700" aria-hidden="true" />
+                  <XMarkIcon class="h-6 w-6 text-neutral-700 dark:text-white" aria-hidden="true" />
                 </button>
               </div>
               <div v-if="$slots.animation" class="flex h-36 w-full items-center justify-center overflow-visible">
@@ -111,6 +111,7 @@ const afterLeave = () => {
 <style lang="scss" scoped>
 .modal-card {
   @apply relative max-h-[570px] w-full max-w-[500px] transform overflow-hidden rounded-2xl bg-gray p-3 text-left shadow-xl transition-all xs:p-5 xs:pb-6;
+  @apply dark:bg-neutral-950;
   @media screen and (max-height: 640px) {
     @apply max-h-[90vh];
   }

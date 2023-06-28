@@ -1,0 +1,21 @@
+{
+  "projects": {
+    "default": "zksync-dapp-wallet-v2"
+  },
+  "targets": {
+    "zksync-dapp-wallet-v2": {
+      "hosting": {
+        "web": [
+          "zksync-dapp-wallet-v2"
+        ]
+      }
+    },
+    "staging-zksync-dapp-wallet-v2": {
+      "hosting": {
+        "web": [
+          "staging-zksync-dapp-wallet-v2"
+        ]
+      }
+    }
+  }
+}

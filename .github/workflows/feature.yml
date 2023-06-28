@@ -1,0 +1,43 @@
+name: Deploy To Feature Branch
+on:
+  pull_request:
+
+jobs:
+  build:
+    name: Build and Test
+    runs-on: ubuntu-latest
+    outputs:
+      dappUrl: ${{ steps.deploy.outputs.details_url }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: |
+          npm set-script prepare ""
+          npm ci --force
+
+      - name: Lint
+        run: |
+          npm run lint
+
+      - name: Build
+        run: |
+          npm run generate
+
+      - name: Deploy
+        uses: matter-labs/action-hosting-deploy@main
+        id: deploy
+        with:
+          repoToken: "${{ secrets.GITHUB_TOKEN }}"
+          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_STAGING_ZKSYNC_DAPP_WALLET_V2 }}"
+          projectId: staging-zksync-dapp-wallet-v2
+          expires: 7d

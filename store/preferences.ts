@@ -9,7 +9,7 @@ export type Version = "lite" | "era";
 export const usePreferencesStore = defineStore("preferences", () => {
   const { account } = storeToRefs(useOnboardStore());
 
-  const version = useStorage<Version>("version", "lite");
+  const version = useStorage<Version>("version", "era");
 
   const previousTransactionAddress = useStorage<{ [userAddress: string]: string }>("last-transaction-address", {});
 

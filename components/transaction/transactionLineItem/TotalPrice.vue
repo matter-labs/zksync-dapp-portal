@@ -1,5 +1,5 @@
 <template>
-  <div class="transaction-line-item-price">
+  <div>
     <template v-if="loading">
       <CommonContentLoader :length="12" />
     </template>

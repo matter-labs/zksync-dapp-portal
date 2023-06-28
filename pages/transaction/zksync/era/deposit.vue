@@ -4,7 +4,7 @@
     v-if="step === 'address'"
     title="Where to add funds"
     :destination="destinations.era"
-    :destination-tooltip="`Add funds to ${destinations.era.label} (L2)`"
+    :destination-tooltip="`Add funds to ${destinations.era.label}`"
     own-address-displayed
     @selected="queryAddress = $event"
   />

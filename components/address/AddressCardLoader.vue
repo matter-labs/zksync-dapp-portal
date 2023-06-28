@@ -1,26 +1,22 @@
 <template>
-  <CommonButtonLineWithImg :as="as" class="address-card-loader">
+  <CommonButtonLineWithImg icon-loading as="div" class="address-card-loader">
     <template #image>
       <CommonContentLoader class="address-avatar-img" />
     </template>
     <template #default>
-      <div class="address-card-info">
-        <div class="address-card-name pb-1"><CommonContentLoader :length="36" /></div>
-        <div class="address-card-address"><CommonContentLoader :length="26" /></div>
-      </div>
+      <CommonButtonLineBodyInfo class="text-left">
+        <template #label>
+          <CommonContentLoader :length="36" />
+        </template>
+        <template #underline>
+          <CommonContentLoader :length="26" />
+        </template>
+      </CommonButtonLineBodyInfo>
     </template>
   </CommonButtonLineWithImg>
 </template>
 
-<script lang="ts" setup>
-import type { Component, PropType } from "vue";
-
-defineProps({
-  as: {
-    type: [String, Object] as PropType<string | Component>,
-  },
-});
-</script>
+<script lang="ts" setup></script>
 
 <style lang="scss">
 .address-card-loader {

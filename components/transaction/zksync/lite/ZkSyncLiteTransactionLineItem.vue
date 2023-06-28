@@ -4,12 +4,8 @@
     :icon="icon"
     :transaction-url="`${blockExplorerUrl}/tx/${transaction.txHash}`"
   >
-    <template #top-left>
-      <div class="transaction-line-label">{{ label }}</div>
-    </template>
-    <template #bottom-left>
-      <div class="transaction-line-label-underline">{{ time }}</div>
-    </template>
+    <template #top-left>{{ label }}</template>
+    <template #bottom-left>{{ time }}</template>
     <template #top-right>
       <TokenAmount v-if="token?.isNFT === false" :token="token" :amount="computeAmount" :direction="direction" />
       <TokenNft v-else-if="token?.isNFT === true" :symbol="token.symbol" :direction="direction" />

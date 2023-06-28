@@ -1,17 +1,17 @@
 <template>
-  <CommonPage title="Home">
+  <CommonPage title="Assets">
     <template #era>
-      <HomeEra />
+      <AssetsEra />
     </template>
     <template #lite>
-      <HomeLite />
+      <AssetsLite />
     </template>
   </CommonPage>
 </template>
 
 <script lang="ts" setup>
-import HomeEra from "@/views/zksync/era/Home.vue";
-import HomeLite from "@/views/zksync/lite/Home.vue";
+import AssetsEra from "@/views/zksync/era/Assets.vue";
+import AssetsLite from "@/views/zksync/lite/Assets.vue";
 </script>
 
 <style lang="scss" scoped></style>

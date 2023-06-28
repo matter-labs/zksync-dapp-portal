@@ -1,6 +1,6 @@
 <template>
   <div class="login-layout">
-    <LoginHeader />
+    <Header />
     <main class="login-layout-main">
       <slot />
     </main>

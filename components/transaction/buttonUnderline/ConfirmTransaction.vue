@@ -1,10 +1,7 @@
 <template>
-  <CommonHeightTransition :opened="opened">
-    <div class="text-center text-sm font-medium text-gray-500">
-      <div class="pt-1"></div>
-      Continue in your {{ walletName }} wallet
-    </div>
-  </CommonHeightTransition>
+  <CommonButtonUnderlineText :opened="opened">
+    Confirm this transaction in your {{ walletName }} wallet
+  </CommonButtonUnderlineText>
 </template>
 
 <script lang="ts" setup>

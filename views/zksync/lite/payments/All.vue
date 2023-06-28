@@ -42,7 +42,7 @@
     <CommonCardWithLineButtons v-else>
       <CommonEmptyBlock>
         At the moment you don't have any transactions on
-        <span class="font-medium">{{ destinations.zkSyncLite.label }}</span> (L2)
+        <span class="font-medium">{{ destinations.zkSyncLite.label }}</span>
       </CommonEmptyBlock>
     </CommonCardWithLineButtons>
   </div>

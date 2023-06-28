@@ -38,12 +38,12 @@ const title = computed(() => {
   if (walletName.value) {
     return `Logging in with ${walletName.value}`;
   }
-  return "Logging in...";
+  return "Loading...";
 });
 </script>
 
 <style lang="scss" scoped>
 .connecting-container {
-  @apply absolute inset-0 z-10 flex h-full w-full flex-col items-center justify-center bg-gray;
+  @apply absolute inset-0 z-10 flex h-full w-full flex-col items-center justify-center bg-gray dark:bg-neutral-950;
 }
 </style>

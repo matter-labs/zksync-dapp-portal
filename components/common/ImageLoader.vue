@@ -47,7 +47,7 @@ const { isReady, error } = props.src
     }
   }
   .image-loader-placeholder {
-    @apply absolute inset-0 h-full w-full;
+    @apply absolute inset-0 h-full w-full rounded-full;
 
     .image-loader-placeholder-default {
       @apply block h-full w-full rounded-full;

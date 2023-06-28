@@ -3,7 +3,7 @@
   <SelectAddress
     v-if="step === 'address'"
     :destination="destinations.era"
-    :destination-tooltip="`Send to ${destinations.era.label} (L2)`"
+    :destination-tooltip="`Send to ${destinations.era.label}`"
     @selected="queryAddress = $event"
   />
   <EraTransferForm v-else-if="step === 'transaction-form'" type="transfer" :address="address!" />

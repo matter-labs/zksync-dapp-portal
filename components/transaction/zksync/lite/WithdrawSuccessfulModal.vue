@@ -23,7 +23,7 @@
       <CommonAlert class="mt-3" variant="neutral" :icon="InformationCircleIcon">
         <p>
           It can take <span class="font-medium">up to 7 hours</span> until funds arrive on
-          <span class="font-medium">{{ destinations.ethereum.label }}</span> (L1)
+          <span class="font-medium">{{ destinations.ethereum.label }}</span>
         </p>
         <a :href="LITE_WITHDRAWAL_TIMES" target="_blank" class="alert-link">
           Learn more
@@ -31,16 +31,14 @@
         </a>
       </CommonAlert>
 
-      <div
-        class="sticky bottom-0 z-[1] mt-auto flex w-full flex-col items-center bg-gray bg-opacity-60 backdrop-blur-sm"
-      >
-        <NuxtLink :to="{ name: 'transaction-zksync-lite' }" class="link mb-2 mt-2 text-sm underline-offset-2">
+      <TransactionConfirmModalFooter>
+        <CommonButtonTopLink as="RouterLink" :to="{ name: 'transaction-zksync-lite' }">
           Make another transaction
-        </NuxtLink>
+        </CommonButtonTopLink>
         <CommonButton as="RouterLink" :to="{ name: 'index' }" class="mx-auto" variant="primary-solid">
-          Go to Home page
+          Go to Assets page
         </CommonButton>
-      </div>
+      </TransactionConfirmModalFooter>
     </div>
   </CommonModal>
 </template>
