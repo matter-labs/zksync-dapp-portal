@@ -67,12 +67,16 @@ const isNetworkSelected = (network: string, version: Version) =>
   selectedEthereumNetwork.value.network === network && version === selectedZkSyncVersion.value;
 
 const getRouteWithCurrentVersion = () => {
-  const newRoute = router.resolve({
-    name: replaceVersionInString(route.name?.toString() || "", selectedZkSyncVersion.value),
-    query: route.query,
-    params: route.params,
-  });
-  return newRoute.name ? newRoute : router.resolve({ name: "index" });
+  try {
+    const newRoute = router.resolve({
+      name: replaceVersionInString(route.name?.toString() || "", selectedZkSyncVersion.value),
+      query: route.query,
+      params: route.params,
+    });
+    return newRoute.name ? newRoute : router.resolve({ name: "index" });
+  } catch {
+    return router.resolve({ name: "index" });
+  }
 };
 const buttonClicked = (network: ExtendedChain, version: Version) => {
   if (isNetworkSelected(network.network, version)) {

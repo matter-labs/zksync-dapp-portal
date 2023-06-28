@@ -33,6 +33,11 @@ export default defineNuxtConfig({
           content: "zkSync Portal",
         },
       ],
+      script: [
+        {
+          src: "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit",
+        },
+      ],
     },
   },
   plugins: [],
@@ -58,6 +63,7 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       walletConnectProjectID: process.env.WALLET_CONNECT_PROJECT_ID,
+      turnstileKey: process.env.TURNSTILE_KEY,
     },
   },
 });

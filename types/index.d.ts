@@ -12,3 +12,19 @@ export type TokenAmount = Token & { amount: BigNumberish };
 
 export type ZkSyncLiteToken = Token & { id: number };
 export type ZkSyncLiteTokenAmount = TokenAmount & ZkSyncLiteToken;
+
+declare global {
+  interface Window {
+    turnstile?: {
+      render: (
+        element: string | HTMLElement,
+        options: {
+          sitekey: string;
+          callback: (response: string) => void;
+          "expired-callback": (response: string) => void;
+          "error-callback": (response: string) => void;
+        }
+      ) => void;
+    };
+  }
+}
