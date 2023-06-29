@@ -2,7 +2,10 @@ import { BigNumber } from "ethers";
 
 import type { ExtendedChain } from "@/store/network";
 import type { Version } from "@/store/preferences";
+import type { TokenAmount } from "@/types";
 import type { BigNumberish } from "ethers";
+
+import { parseTokenAmount } from "@/utils/formatters";
 
 export function generateAvatarColors(address: string) {
   const seedArr = address.match(/.{1,7}/g)?.splice(0, 5);
@@ -51,4 +54,11 @@ export const isMobile = () => {
 export const replaceVersionInString = (url: string, replacement: Version) => {
   const regex = new RegExp("\\bera\\b|\\blite\\b", "gi");
   return url.replace(regex, replacement);
+};
+
+export const calculateTotalTokensPrice = (tokens: TokenAmount[]) => {
+  return tokens.reduce((acc, { amount, decimals, price }) => {
+    if (typeof price !== "number") return acc;
+    return acc + parseFloat(parseTokenAmount(amount, decimals)) * price;
+  }, 0);
 };

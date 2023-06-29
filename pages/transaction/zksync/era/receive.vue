@@ -21,6 +21,16 @@
           <QrCodeIcon class="p-0.5" />
         </template>
       </DestinationItem>
+      <DestinationItem
+        label="Receive test tokens"
+        as="RouterLink"
+        :to="{ name: 'transaction-zksync-era-faucet' }"
+        description="Use official faucet to get test tokens"
+      >
+        <template #image>
+          <IconsFaucet class="aspect-square h-auto w-full" />
+        </template>
+      </DestinationItem>
     </CommonCardWithLineButtons>
 
     <TypographyCategoryLabel>Top-up with cash</TypographyCategoryLabel>

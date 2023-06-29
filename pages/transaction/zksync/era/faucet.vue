@@ -7,7 +7,7 @@
     </template>
   </FaucetModal>
 
-  <BackButton :fallback="{ name: 'index' }" />
+  <BackButton :fallback="{ name: 'transaction-zksync-era-receive' }" />
   <h1 class="h1">Faucet</h1>
   <CommonContentBlock class="faucet-page">
     <IconsFaucet class="mx-auto aspect-square h-auto w-24" />
@@ -38,10 +38,10 @@
     >
       <CommonContentLoader class="absolute inset-0 z-[-1] block h-full w-full" />
     </div>
-    <CommonErrorBlock v-if="turnstileError" class="mt-5" @try-again="initializeTurnstile">
+    <CommonErrorBlock v-if="isFaucetAvailable && turnstileError" class="mt-5" @try-again="initializeTurnstile">
       Captcha error: {{ turnstileError }}
     </CommonErrorBlock>
-    <CommonErrorBlock v-else-if="faucetError" class="mt-2" @try-again="requestTokens">
+    <CommonErrorBlock v-else-if="isFaucetAvailable && faucetError" class="mt-2" @try-again="requestTokens">
       Requesting tokens error: {{ faucetError.message }}
     </CommonErrorBlock>
 
