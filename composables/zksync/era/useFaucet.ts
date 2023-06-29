@@ -46,7 +46,6 @@ export default (receiverAddress: Ref<string | undefined>) => {
             "cf-turnstile-response": data.turnstileToken,
           },
         });
-        await new Promise((resolve) => setTimeout(resolve, 5000));
         faucetUsedTime.value = new Date().toISOString();
         success.value = true;
       } catch (err) {
