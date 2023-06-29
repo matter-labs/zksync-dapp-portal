@@ -12,8 +12,8 @@
   <CommonContentBlock class="faucet-page">
     <IconsFaucet class="mx-auto aspect-square h-auto w-24" />
     <p class="mt-3 text-center leading-tight wrap-balance">
-      Ready to explore the <span class="font-medium">zkSync Era</span>? Get started with our Faucet tool, offering free
-      test tokens, once per day, to enrich your crypto journey.
+      Ready to explore <span class="font-medium">zkSync Era</span>? Get started with our faucet tool, offering free test
+      tokens, once per day, to enrich your crypto journey.
     </p>
     <div class="mt-5 flex flex-wrap justify-center gap-1.5 lg:px-4">
       <template v-if="tokensRequestInProgress">
@@ -61,7 +61,7 @@
         </CommonButton>
       </template>
       <template v-else>
-        <CommonButtonTopInfo>You already requested tokens during the last 24 hours</CommonButtonTopInfo>
+        <CommonButtonTopInfo>You already requested test tokens in the last 24 hours</CommonButtonTopInfo>
         <CommonButton as="button" variant="primary-solid" disabled class="mx-auto">
           You can use faucet in&nbsp;<CommonTimer :future-date="faucetAvailableTime" />
         </CommonButton>

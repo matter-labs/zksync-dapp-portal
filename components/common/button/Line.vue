@@ -17,7 +17,7 @@ defineProps({
 
 <style lang="scss" scoped>
 .line-button-container {
-  @apply w-full rounded-[1.24rem] p-2 transition-colors dark:bg-neutral-900;
+  @apply w-full rounded-[1.24rem] bg-white p-2 transition-colors dark:bg-neutral-900;
   &:enabled,
   &:is(a) {
     &:not([aria-disabled="true"]) {
