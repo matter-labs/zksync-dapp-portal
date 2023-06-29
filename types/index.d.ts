@@ -20,11 +20,15 @@ declare global {
         element: string | HTMLElement,
         options: {
           sitekey: string;
+          theme: "light" | "dark" | "auto";
+          language: string;
+          appearance: "always" | "execute" | "interaction-only";
           callback: (response: string) => void;
           "expired-callback": (response: string) => void;
           "error-callback": (response: string) => void;
         }
-      ) => void;
+      ) => string | undefined;
+      reset: (widgetId: string) => void;
     };
   }
 }

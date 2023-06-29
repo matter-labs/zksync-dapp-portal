@@ -72,7 +72,7 @@ defineProps({
       }
       &:disabled,
       &[aria-disabled="true"] {
-        @apply bg-opacity-50 dark:bg-neutral-900 dark:bg-opacity-50;
+        @apply bg-opacity-50 dark:bg-neutral-800 dark:bg-opacity-50;
       }
     }
     &error {

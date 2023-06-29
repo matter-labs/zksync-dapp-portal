@@ -6,4 +6,10 @@
 import ProgressFaucet from "@/assets/lottie/progress-faucet.json";
 </script>
 
-<style lang="scss"></style>
+<style lang="scss">
+.progress-faucet-animation {
+  .text-colored path {
+    @apply fill-neutral-950 dark:fill-white;
+  }
+}
+</style>

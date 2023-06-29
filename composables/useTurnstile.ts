@@ -1,36 +1,58 @@
-import { computed, ref } from "vue";
+import { computed, onUnmounted, ref } from "vue";
+
+import useColorMode from "@/composables/useColorMode";
 
 import { useRuntimeConfig } from "#imports";
 
 export default () => {
   const { public: env } = useRuntimeConfig();
+  const { selectedColorMode } = useColorMode();
 
   const token = ref<string | null>(null);
-  const expire = ref<string | null>(null);
-  const fail = ref<string | null>(null);
+  const error = ref<string | null>(null);
+  let widgetId: string | undefined = undefined;
 
   const renderTurnstile = async (element: HTMLElement | string) => {
-    fail.value = null;
-    window.turnstile?.render(element, {
+    resetTurnstile();
+    widgetId = window.turnstile?.render(element, {
       sitekey: env.turnstileKey,
+      theme: selectedColorMode.value,
+      appearance: "always",
+      language: "en-US",
       callback: (response: string) => {
-        expire.value = null;
-        fail.value = null;
+        error.value = null;
         token.value = response;
       },
-      "expired-callback": (response: string) => {
-        expire.value = response;
+      "expired-callback": () => {
+        error.value = "Turnstile captcha expired";
       },
       "error-callback": (response: string) => {
-        fail.value = response;
+        if (response === "invalid_domain") {
+          error.value = "Turnstile captcha is not available on this domain";
+        } else if (response === "undefined_error") {
+          error.value = "Unknown error occurred";
+        } else {
+          error.value = response;
+        }
       },
     });
   };
+  const resetTurnstile = () => {
+    error.value = null;
+    if (widgetId) {
+      try {
+        window.turnstile?.reset(widgetId);
+      } catch {
+        // ignore
+      }
+    }
+  };
+
+  onUnmounted(resetTurnstile);
 
   return {
     renderTurnstile,
     token: computed(() => token.value),
-    expire: computed(() => expire.value),
-    fail: computed(() => fail.value),
+    error: computed(() => error.value),
   };
 };

@@ -59,7 +59,7 @@ const networkChangeModalOpened = ref(false);
   grid-area: menu / menu / menu / menu;
 
   @media screen and (min-width: 720px) {
-    @apply top-0 bottom-auto max-h-[calc(100vh_-_72px_-_12px)] px-4 py-8;
+    @apply top-0 bottom-auto max-h-[calc(100vh_-_72px)] px-4 py-8 lg:max-h-[calc(100vh_-_72px_-_12px)];
   }
   @media screen and (min-width: 1024px) {
     @apply px-6;

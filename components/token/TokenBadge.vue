@@ -23,7 +23,7 @@ defineProps({
 
 <style lang="scss">
 .token-badge {
-  @apply flex items-center gap-1 rounded-2xl bg-gray-100 p-1 px-2 dark:bg-neutral-800;
+  @apply flex items-center gap-1 rounded-2xl bg-gray-200/50 p-1 px-2 dark:bg-neutral-800;
 
   .token-badge-img {
     @apply -mr-1 h-6 w-6;

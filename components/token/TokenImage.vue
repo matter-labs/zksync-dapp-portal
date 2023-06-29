@@ -12,10 +12,6 @@ defineProps({
     type: String,
     required: true,
   },
-  address: {
-    type: String,
-    required: true,
-  },
   iconUrl: {
     type: String,
   },
