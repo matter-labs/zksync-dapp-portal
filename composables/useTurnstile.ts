@@ -2,10 +2,7 @@ import { computed, onUnmounted, ref } from "vue";
 
 import useColorMode from "@/composables/useColorMode";
 
-import { useRuntimeConfig } from "#imports";
-
 export default () => {
-  const { public: env } = useRuntimeConfig();
   const { selectedColorMode } = useColorMode();
 
   const token = ref<string | null>(null);
@@ -15,7 +12,7 @@ export default () => {
   const renderTurnstile = async (element: HTMLElement | string) => {
     resetTurnstile();
     widgetId = window.turnstile?.render(element, {
-      sitekey: env.turnstileKey,
+      sitekey: "1x00000000000000000000AA",
       theme: selectedColorMode.value,
       appearance: "always",
       language: "en-US",

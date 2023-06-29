@@ -1,11 +1,11 @@
 import { computed, ref } from "vue";
 
 import { useStorage } from "@vueuse/core";
-import { $fetch, FetchError } from "ohmyfetch";
+import { /* $fetch, */ FetchError } from "ohmyfetch";
 
 import type { Ref } from "vue";
 
-const FAUCET_API_URL = "https://testnet2-faucet.zksync.dev/ask_money";
+/* const FAUCET_API_URL = "https://testnet2-faucet.zksync.dev/ask_money"; */
 
 export default (receiverAddress: Ref<string | undefined>) => {
   const success = ref(false);
@@ -36,7 +36,7 @@ export default (receiverAddress: Ref<string | undefined>) => {
     async () => {
       try {
         success.value = false;
-        await $fetch(FAUCET_API_URL, {
+        /* await $fetch(FAUCET_API_URL, {
           method: "POST",
           headers: {
             "Content-type": "application/json",
@@ -45,7 +45,7 @@ export default (receiverAddress: Ref<string | undefined>) => {
             receiverAddress: receiverAddress.value,
             "cf-turnstile-response": data.turnstileToken,
           },
-        });
+        }); */
         await new Promise((resolve) => setTimeout(resolve, 5000));
         faucetUsedTime.value = new Date().toISOString();
         success.value = true;
