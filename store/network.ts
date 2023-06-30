@@ -43,7 +43,8 @@ export const useNetworkStore = defineStore("network", () => {
   });
   const ethereumNetworkChangedWarning = computed(
     () =>
-      !!lastSelectedEthereumNetworkName.value &&
+      typeof lastSelectedEthereumNetworkName.value === "string" &&
+      (lastSelectedEthereumNetworkName.value as string) !== "undefined" &&
       lastSelectedEthereumNetwork.value?.network !== selectedEthereumNetwork.value.network
   );
   watch(selectedEthereumNetworkName, (val) => {

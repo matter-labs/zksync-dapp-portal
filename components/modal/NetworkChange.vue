@@ -66,10 +66,10 @@ const { selectedEthereumNetwork } = storeToRefs(useNetworkStore());
 const isNetworkSelected = (network: string, version: Version) =>
   selectedEthereumNetwork.value.network === network && version === selectedZkSyncVersion.value;
 
-const getRouteWithCurrentVersion = () => {
+const getRouteByVersion = (version = selectedZkSyncVersion.value) => {
   try {
     const newRoute = router.resolve({
-      name: replaceVersionInString(route.name?.toString() || "", selectedZkSyncVersion.value),
+      name: replaceVersionInString(route.name?.toString() || "", version),
       query: route.query,
       params: route.params,
     });
@@ -85,11 +85,10 @@ const buttonClicked = (network: ExtendedChain, version: Version) => {
     window.location.href = getNetworkUrl(network, route.fullPath);
   } else if (version !== selectedZkSyncVersion.value && selectedEthereumNetwork.value.network === network.network) {
     selectedZkSyncVersion.value = version;
-    router.push(getRouteWithCurrentVersion());
+    router.push(getRouteByVersion(version));
     closeModal();
   } else {
-    selectedZkSyncVersion.value = version;
-    window.location.href = getNetworkUrl(network, getRouteWithCurrentVersion().fullPath);
+    window.location.href = getNetworkUrl(network, getRouteByVersion(version).fullPath, version);
   }
 };
 const closeModal = () => emit("update:opened", false);

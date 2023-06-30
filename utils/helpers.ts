@@ -36,12 +36,15 @@ export function calculateFee(gasLimit: BigNumberish, gasPrice: BigNumberish) {
   return BigNumber.from(gasLimit).mul(gasPrice);
 }
 
-export const getNetworkUrl = (network: ExtendedChain, routePath: string) => {
+export const getNetworkUrl = (network: ExtendedChain, routePath: string, version?: Version) => {
   const hostname = window.location.hostname;
 
   if (hostname === "localhost" || !network.hostnames?.length) {
     const url = new URL(routePath, window.location.origin);
     url.searchParams.set("network", network.network);
+    if (version) {
+      url.searchParams.set("version", version);
+    }
     return url.toString();
   }
   return network.hostnames[0] + routePath;
