@@ -125,24 +125,23 @@ const displayedBalances = computed(() => {
     return false;
   });
 });
+
+const { loading, reset: resetSingleLoading } = useSingleLoading(
+  computed(() => balanceInProgress.value || !allBalancePricesLoaded.value)
+);
+const { loading: transactionsLoading, reset: resetTransactionsSingleLoading } = useSingleLoading(
+  computed(() => recentTransactionsRequestInProgress.value)
+);
 const isFaucetDisplayed = computed(() => {
-  if (loading.value) return false;
+  if (loading.value || transactionsLoading.value) return false;
   if (selectedEthereumNetwork.value.network === "mainnet") {
-    if (
-      recentTransactionsRequestInProgress.value ||
-      recentTransactionsRequestError.value ||
-      transactions.value.length > 2
-    ) {
+    if (recentTransactionsRequestError.value || transactions.value.length > 2) {
       return false;
     }
     return true;
   }
   return calculateTotalTokensPrice(balance.value) < 50;
 });
-
-const { loading, reset: resetSingleLoading } = useSingleLoading(
-  computed(() => balanceInProgress.value || !allBalancePricesLoaded.value)
-);
 
 const fetch = () => {
   walletEraStore.requestBalance();
@@ -157,6 +156,7 @@ const { reset: resetAutoUpdate, stop: stopAutoUpdate } = useInterval(() => {
 const unsubscribe = onboardStore.subscribeOnAccountChange((newAddress) => {
   if (!newAddress) return;
   resetSingleLoading();
+  resetTransactionsSingleLoading();
   resetAutoUpdate();
   fetch();
 });
