@@ -29,13 +29,13 @@ useColorMode();
     "menu menu menu menu";
 
   .error-info-container {
-    @apply col-span-4 flex h-full w-full flex-col items-center justify-center leading-normal;
+    @apply col-span-4 mx-auto flex h-full w-11/12 max-w-md flex-col items-center justify-center px-4 py-2 leading-normal md:px-0 md:py-4;
 
     .error-status-code {
       @apply mb-2 text-9xl font-normal;
     }
     .error-message {
-      @apply text-center wrap-balance;
+      @apply whitespace-pre-line break-words break-all text-center wrap-balance;
     }
   }
 }
