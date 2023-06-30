@@ -1,6 +1,6 @@
 import { watch } from "vue";
 
-import { fetchSigner } from "@wagmi/core";
+/* import { fetchSigner } from "@wagmi/core"; */
 import { BigNumber, VoidSigner } from "ethers";
 import { ethers } from "ethers";
 import { defineStore, storeToRefs } from "pinia";
@@ -47,7 +47,8 @@ export const useLiteWalletStore = defineStore("liteWallet", () => {
         wallet = await getRemoteWallet();
         isRemoteWallet.value = true;
       } else {
-        const signer = await fetchSigner();
+        // WC2 const signer = (await fetchSigner()) as any;
+        const signer = undefined;
         if (!signer) throw new Error("Signer is not available");
 
         wallet = await Wallet.fromEthSignerNoKeys(signer, provider);
@@ -76,7 +77,8 @@ export const useLiteWalletStore = defineStore("liteWallet", () => {
       wallet = await getRemoteWallet();
       isRemoteWallet.value = true;
     } else {
-      const signer = await fetchSigner();
+      // WC2 const signer = (await fetchSigner()) as any;
+      const signer = undefined;
       if (!signer) throw new Error("Signer is not available");
 
       wallet = await Wallet.fromEthSigner(signer, provider);

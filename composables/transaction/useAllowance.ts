@@ -1,4 +1,4 @@
-import { fetchSigner } from "@wagmi/core";
+/* import { fetchSigner } from "@wagmi/core"; */
 import { Contract } from "ethers";
 import { IERC20 } from "zksync-web3/build/src/utils";
 
@@ -45,7 +45,8 @@ export default (
     const contractAddress = await getContractAddress();
     if (!contractAddress) throw new Error("Contract address is not available");
 
-    const signer = await fetchSigner();
+    // WC2 const signer = (await fetchSigner()) as any;
+    const signer = undefined;
     if (!signer) throw new Error("Signer is not available");
 
     const erc20contract = await getContractInstance(signer);

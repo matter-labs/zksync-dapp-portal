@@ -66,4 +66,14 @@ export default defineNuxtConfig({
       turnstileKey: process.env.TURNSTILE_KEY,
     },
   },
+  vite: {
+    build: {
+      target: "es2020",
+    },
+    optimizeDeps: {
+      esbuildOptions: {
+        target: "es2020",
+      },
+    },
+  },
 });

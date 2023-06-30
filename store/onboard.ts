@@ -1,4 +1,4 @@
-import { configureChains, createClient, fetchSigner } from "@wagmi/core";
+import { configureChains, createConfig } from "@wagmi/core";
 import { zkSync, zkSyncTestnet } from "@wagmi/core/chains";
 import { publicProvider } from "@wagmi/core/providers/public";
 import { EthereumClient, w3mConnectors, w3mProvider } from "@web3modal/ethereum";
@@ -18,18 +18,17 @@ export const useOnboardStore = defineStore("onboard", () => {
   const { selectedColorMode } = useColorMode();
   const { selectedEthereumNetwork } = storeToRefs(useNetworkStore());
 
-  const { provider } = configureChains(extendedChains, [
+  const { publicClient } = configureChains(extendedChains, [
     w3mProvider({ projectId: env.walletConnectProjectID }),
     publicProvider(),
   ]);
-  const wagmiClient = createClient({
+  const wagmiClient = createConfig({
     autoConnect: true,
     connectors: w3mConnectors({
       projectId: env.walletConnectProjectID,
-      version: 2,
       chains: extendedChains,
     }),
-    provider,
+    publicClient,
   });
   const ethereumClient = new EthereumClient(wagmiClient, extendedChains);
 
@@ -130,7 +129,8 @@ export const useOnboardStore = defineStore("onboard", () => {
 
   const getEIP1193Provider = async () => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const signer = (await fetchSigner()) as any;
+    // WC2 const signer = (await fetchSigner()) as any;
+    const signer = undefined;
     if (!signer) throw new Error("Signer is not available");
 
     const provider = Object.assign(signer.provider, signer.provider.provider, {
@@ -157,7 +157,7 @@ export const useOnboardStore = defineStore("onboard", () => {
     switchNetworkById,
 
     blockExplorerUrl,
-    getEthereumProvider: () => provider({ chainId: selectedEthereumNetwork.value.id }),
+    getEthereumProvider: () => publicClient({ chainId: selectedEthereumNetwork.value.id }),
     getEIP1193Provider,
 
     subscribeOnAccountChange,
