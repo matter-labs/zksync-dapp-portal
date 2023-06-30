@@ -6,7 +6,7 @@ import {
 } from "zksync/build/utils";
 
 import type { ZkSyncLiteToken, ZkSyncLiteTokenAmount } from "@/types";
-import type { Provider } from "@wagmi/core";
+import type { PublicClient } from "@wagmi/core";
 import type { BigNumberish } from "ethers";
 import type { Ref } from "vue";
 import type { Wallet } from "zksync";
@@ -14,10 +14,10 @@ import type { Wallet } from "zksync";
 import { calculateFee } from "@/utils/helpers";
 
 export default (
-  getProvider: () => Provider,
-  getWalletInstance: () => Promise<Wallet | undefined>,
   tokens: Ref<{ [tokenSymbol: string]: ZkSyncLiteToken } | undefined>,
-  balances: Ref<ZkSyncLiteTokenAmount[]>
+  balances: Ref<ZkSyncLiteTokenAmount[]>,
+  getWalletInstance: () => Promise<Wallet | undefined>,
+  getPublicClient: () => PublicClient
 ) => {
   const params = {
     from: undefined as string | undefined,
@@ -51,7 +51,7 @@ export default (
     return BigNumber.from(ETH_RECOMMENDED_DEPOSIT_GAS_LIMIT);
   };
   const getERC20TransactionFee = async (gasPrice: BigNumberish) => {
-    const provider = getProvider();
+    const publicClient = getPublicClient();
     const wallet = await getWalletInstance();
     if (!wallet) throw new Error("Wallet is not available");
 
@@ -67,7 +67,7 @@ export default (
         () => BigNumber.from("0")
       );
     const recommendedGasLimit =
-      provider.network.chainId === 1 && ERC20_DEPOSIT_GAS_LIMIT[params.tokenAddress!]
+      publicClient.chain.id === 1 && ERC20_DEPOSIT_GAS_LIMIT[params.tokenAddress!]
         ? BigNumber.from(ERC20_DEPOSIT_GAS_LIMIT[params.tokenAddress!])
         : ERC20_RECOMMENDED_DEPOSIT_GAS_LIMIT;
     const gasLimit = gasEstimate.gte(recommendedGasLimit) ? gasEstimate : recommendedGasLimit;
@@ -85,8 +85,7 @@ export default (
     execute: estimateFee,
   } = usePromise(
     async () => {
-      const provider = getProvider();
-      gasPrice.value = await provider.getGasPrice();
+      gasPrice.value = await getPublicClient().getGasPrice();
 
       if (!feeToken.value) throw new Error("Tokens are not available");
 

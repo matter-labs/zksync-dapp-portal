@@ -30,9 +30,9 @@ export const useEraWalletStore = defineStore("eraWallet", () => {
       );
     }
 
-    const web3Provider = new Web3Provider(await onboardStore.getEIP1193Provider());
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const web3Provider = new Web3Provider((await onboardStore.getWallet(eraNetwork.value.id)) as any, "any");
     const eraL2Signer = web3Provider.getSigner();
-    eraL2Signer.provider.getSigner();
     return eraL2Signer;
   });
   const { execute: getL1Signer, reset: resetL1Signer } = usePromise(async () => {
@@ -43,7 +43,8 @@ export const useEraWalletStore = defineStore("eraWallet", () => {
       );
     }
 
-    const web3Provider = new ethers.providers.Web3Provider(await onboardStore.getEIP1193Provider());
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const web3Provider = new ethers.providers.Web3Provider((await onboardStore.getWallet()) as any, "any");
     const eraL1Signer = L1Signer.from(web3Provider.getSigner(), eraProviderStore.requestProvider());
     return eraL1Signer;
   });

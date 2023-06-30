@@ -13,6 +13,7 @@ export const useEnsStore = defineStore("ens", () => {
   const ensAvatar = ref<string | null>(null);
 
   const fetchName = async () => {
+    return;
     ensName.value = null;
     ensAvatar.value = null;
 

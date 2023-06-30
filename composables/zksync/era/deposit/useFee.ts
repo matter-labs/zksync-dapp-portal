@@ -3,7 +3,7 @@ import { L1VoidSigner } from "zksync-web3";
 import { L1_RECOMMENDED_MIN_ERC20_DEPOSIT_GAS_LIMIT } from "zksync-web3/build/src/utils";
 
 import type { Token, TokenAmount } from "@/types";
-import type { Provider as EthereumProvider } from "@wagmi/core";
+import type { PublicClient } from "@wagmi/core";
 import type { Ref } from "vue";
 import type { L1Signer, Provider } from "zksync-web3";
 
@@ -20,11 +20,11 @@ export type DepositFeeValues = {
 };
 
 export default (
-  getEthereumProvider: () => EthereumProvider,
-  getEraProvider: () => Provider,
   address: Ref<string | undefined>,
   tokens: Ref<{ [tokenSymbol: string]: Token } | undefined>,
-  balances: Ref<TokenAmount[]>
+  balances: Ref<TokenAmount[]>,
+  getEraProvider: () => Provider,
+  getPublicClient: () => PublicClient
 ) => {
   const params = {
     to: undefined as string | undefined,
@@ -34,7 +34,8 @@ export default (
   const getVoidL1Signer = () => {
     if (!address.value) throw new Error("Address is not available");
 
-    const voidSigner = new VoidSigner(address.value, getEthereumProvider());
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const voidSigner = new VoidSigner(address.value, getPublicClient() as any);
     return L1VoidSigner.from(voidSigner, getEraProvider()) as unknown as L1Signer;
   };
 
@@ -83,8 +84,9 @@ export default (
     };
   };
   const getGasPrice = async () => {
-    const provider = getEthereumProvider();
-    return (await provider.getGasPrice()).mul(110).div(100);
+    return BigNumber.from(await getPublicClient().getGasPrice())
+      .mul(110)
+      .div(100);
   };
   const estimate = async (to: string, tokenAddress: string) => {
     params.to = to;
@@ -98,7 +100,7 @@ export default (
     execute: estimateFee,
   } = usePromise(
     async () => {
-      if (!feeToken.value) throw new Error("Tokens are not available");
+      if (!feeToken.value) throw new Error("Fee tokens is not available");
 
       if (params.tokenAddress === feeToken.value?.address) {
         fee.value = await getEthTransactionFee();

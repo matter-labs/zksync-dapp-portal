@@ -74,10 +74,7 @@
         {{ transactionCommitted ? "Allowance approved" : "Approving allowance" }}
       </div>
       <CommonCardWithLineButtons v-if="transaction">
-        <TransactionLineItem
-          :icon="LockOpenIcon"
-          :transaction-url="`${blockExplorerUrl}/tx/${transactionReceipt?.hash}`"
-        >
+        <TransactionLineItem :icon="LockOpenIcon" :transaction-url="`${blockExplorerUrl}/tx/${transactionHash}`">
           <template #top-left>Allowance</template>
           <template #top-right>
             <TokenAmount :token="transaction.token" :amount="transaction.amount" />
@@ -93,7 +90,7 @@
           <span class="font-medium">{{ destinations.ethereum.label }}</span
           >.
         </p>
-        <a :href="`${blockExplorerUrl}/tx/${transactionReceipt?.hash}`" target="_blank" class="alert-link">
+        <a :href="`${blockExplorerUrl}/tx/${transactionHash}`" target="_blank" class="alert-link">
           Track status
           <ArrowUpRightIcon class="ml-1 h-3 w-3" />
         </a>
@@ -125,6 +122,7 @@
 import { computed, ref } from "vue";
 
 import { ArrowUpRightIcon, InformationCircleIcon, LockOpenIcon } from "@heroicons/vue/24/outline";
+import { getPublicClient } from "@wagmi/core";
 import { storeToRefs } from "pinia";
 
 import TokenAmount from "@/components/transaction/transactionLineItem/TokenAmount.vue";
@@ -134,9 +132,8 @@ import usePromise from "@/composables/usePromise";
 import SuccessUnlock from "@/assets/lottie/success-unlock.json";
 
 import type { TransactionDestination } from "@/store/destinations";
-import type { Token } from "@/types";
-import type { TransactionResponse } from "@ethersproject/abstract-provider";
-import type { BigNumberish, ContractTransaction } from "ethers";
+import type { Hash, Token } from "@/types";
+import type { BigNumberish } from "ethers";
 import type { PropType } from "vue";
 
 import { useDestinationsStore } from "@/store/destinations";
@@ -165,7 +162,7 @@ const props = defineProps({
     required: true,
   },
   setAllowance: {
-    type: Function as PropType<() => Promise<ContractTransaction>>,
+    type: Function as PropType<() => Promise<Hash>>,
     required: true,
   },
   fetchBalance: {
@@ -183,7 +180,7 @@ const { destinations } = storeToRefs(useDestinationsStore());
 const { blockExplorerUrl } = storeToRefs(useNetworkStore());
 
 const status = ref<"not-started" | "waiting-for-signature" | "committing" | "processing" | "done">("not-started");
-const transactionReceipt = ref<TransactionResponse | undefined>();
+const transactionHash = ref<Hash | undefined>();
 const transactionCommitted = computed(() => status.value === "done");
 const transactionStarted = computed(() => status.value === "committing" || transactionCommitted.value);
 
@@ -191,11 +188,20 @@ const { execute: makeTransaction, error } = usePromise(
   async () => {
     try {
       status.value = "waiting-for-signature";
-      const tx = await props.setAllowance();
+      transactionHash.value = await props.setAllowance();
 
       status.value = "committing";
-      transactionReceipt.value = tx;
-      await tx.wait();
+
+      const publicClient = getPublicClient();
+      const receipt = await publicClient.waitForTransactionReceipt({
+        hash: transactionHash.value,
+        onReplaced: (replacement) => {
+          transactionHash.value = replacement.transaction.hash;
+        },
+      });
+      if (receipt.status !== "success") {
+        throw new Error("Transaction failed");
+      }
 
       await Promise.all([props.fetchBalance(), props.getAllowance()]);
       status.value = "done";
@@ -215,7 +221,7 @@ const checkAfterModalClose = () => {
 };
 const reset = () => {
   status.value = "not-started";
-  transactionReceipt.value = undefined;
+  transactionHash.value = undefined;
 };
 </script>
 

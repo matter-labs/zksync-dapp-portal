@@ -1,6 +1,5 @@
 import { watch } from "vue";
 
-/* import { fetchSigner } from "@wagmi/core"; */
 import { BigNumber, VoidSigner } from "ethers";
 import { ethers } from "ethers";
 import { defineStore, storeToRefs } from "pinia";
@@ -31,7 +30,8 @@ export const useLiteWalletStore = defineStore("liteWallet", () => {
     if (!provider) throw new Error("Provider is not available");
 
     /* TODO: Fix Argent connection */
-    const web3Provider = new ethers.providers.Web3Provider(await onboardStore.getEIP1193Provider(), "any");
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const web3Provider = new ethers.providers.Web3Provider((await onboardStore.getWallet()) as any, "any");
     return (await RemoteWallet.fromEthSigner(web3Provider, provider)) as unknown as Wallet;
   };
 
@@ -41,17 +41,17 @@ export const useLiteWalletStore = defineStore("liteWallet", () => {
       if (!provider) throw new Error("Provider is not available");
       const walletNetworkId = network.value.chain?.id;
       if (walletNetworkId !== selectedEthereumNetwork.value.id) {
-        const voidSigner = new VoidSigner(account.value.address!, onboardStore.getEthereumProvider());
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const web3Provider = new ethers.providers.Web3Provider(onboardStore.getPublicClient() as any, "any");
+        const voidSigner = new VoidSigner(account.value.address!, web3Provider);
         wallet = await Wallet.fromEthSignerNoKeys(voidSigner, provider);
       } else if (walletName.value === "Argent") {
         wallet = await getRemoteWallet();
         isRemoteWallet.value = true;
       } else {
-        // WC2 const signer = (await fetchSigner()) as any;
-        const signer = undefined;
-        if (!signer) throw new Error("Signer is not available");
-
-        wallet = await Wallet.fromEthSignerNoKeys(signer, provider);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const web3Provider = new ethers.providers.Web3Provider((await onboardStore.getWallet()) as any, "any");
+        wallet = await Wallet.fromEthSignerNoKeys(web3Provider.getSigner(), provider);
       }
       return wallet;
     },
@@ -77,11 +77,9 @@ export const useLiteWalletStore = defineStore("liteWallet", () => {
       wallet = await getRemoteWallet();
       isRemoteWallet.value = true;
     } else {
-      // WC2 const signer = (await fetchSigner()) as any;
-      const signer = undefined;
-      if (!signer) throw new Error("Signer is not available");
-
-      wallet = await Wallet.fromEthSigner(signer, provider);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const web3Provider = new ethers.providers.Web3Provider((await onboardStore.getWallet()) as any, "any");
+      wallet = await Wallet.fromEthSigner(web3Provider.getSigner(), provider);
     }
     return wallet;
   });

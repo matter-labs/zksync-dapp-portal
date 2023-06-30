@@ -12,13 +12,17 @@
     </transition>
 
     <div v-if="buttonStep === 'network'" class="transaction-footer-row">
-      <CommonButtonTopInfo>Incorrect network selected in your {{ walletName }} wallet</CommonButtonTopInfo>
+      <CommonButtonTopInfo>Incorrect network selected in your wallet</CommonButtonTopInfo>
       <CommonButton
+        v-if="connectorName !== 'WalletConnect'"
         :disabled="switchingNetworkInProgress"
         variant="primary-solid"
         @click="eraWalletStore.setCorrectNetwork"
       >
         Change wallet network to {{ eraNetwork.name }}
+      </CommonButton>
+      <CommonButton v-else disabled variant="primary-solid">
+        Change network manually to {{ eraNetwork.name }} in your {{ walletName }} wallet
       </CommonButton>
     </div>
     <div v-else-if="buttonStep === 'continue'" class="transaction-footer-row">
@@ -42,7 +46,7 @@ import { TransitionAlertScaleInOutTransition } from "@/utils/transitions";
 const onboardStore = useOnboardStore();
 const eraWalletStore = useEraWalletStore();
 
-const { walletName } = storeToRefs(onboardStore);
+const { connectorName, walletName } = storeToRefs(onboardStore);
 const { isCorrectNetworkSet, switchingNetworkInProgress, switchingNetworkError } = storeToRefs(eraWalletStore);
 const { eraNetwork } = storeToRefs(useEraProviderStore());
 
