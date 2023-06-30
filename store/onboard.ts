@@ -137,6 +137,7 @@ export const useOnboardStore = defineStore("onboard", () => {
       request: signer.provider.request ?? signer.provider.provider.request,
       send: signer.provider.send ?? signer.provider.provider.send,
       sendAsync: signer.provider.sendAsync ?? signer.provider.provider.sendAsync,
+      formatChainId: signer.provider.formatChainId ?? signer.provider.provider.formatChainId,
     });
     return provider;
   };
