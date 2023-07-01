@@ -6,7 +6,7 @@ import type { Provider } from "@wagmi/core";
 import type { BigNumber, BigNumberish, ContractTransaction, Signer } from "ethers";
 import type { Ref } from "vue";
 
-import { ETH_ADDRESS } from "@/utils/constants";
+import { ETH_L1_ADDRESS } from "@/utils/constants";
 
 export default (
   accountAddress: Ref<string | undefined>,
@@ -53,7 +53,7 @@ export default (
   };
 
   const requestAllowance = async () => {
-    if (accountAddress.value && tokenAddress.value && tokenAddress.value !== ETH_ADDRESS) {
+    if (accountAddress.value && tokenAddress.value && tokenAddress.value !== ETH_L1_ADDRESS) {
       await getAllowance();
     } else {
       reset();

@@ -7,7 +7,7 @@ import type { Provider as EthereumProvider } from "@wagmi/core";
 import type { Ref } from "vue";
 import type { L1Signer, Provider } from "zksync-web3";
 
-import { ETH_ADDRESS } from "@/utils/constants";
+import { ETH_L2_ADDRESS } from "@/utils/constants";
 import { calculateFee } from "@/utils/helpers";
 
 export type DepositFeeValues = {
@@ -23,7 +23,7 @@ export default (
   getEthereumProvider: () => EthereumProvider,
   getEraProvider: () => Provider,
   address: Ref<string | undefined>,
-  tokens: Ref<{ [tokenSymbol: string]: Token } | undefined>,
+  tokens: Ref<{ [tokenAddress: string]: Token } | undefined>,
   balances: Ref<TokenAmount[]>
 ) => {
   const params = {
@@ -54,7 +54,7 @@ export default (
   });
 
   const feeToken = computed(() => {
-    return tokens.value?.[ETH_ADDRESS];
+    return tokens.value?.[ETH_L2_ADDRESS];
   });
   const enoughBalanceToCoverFee = computed(() => {
     if (!feeToken.value || inProgress.value) {
@@ -73,7 +73,7 @@ export default (
     if (!signer) throw new Error("Signer is not available");
 
     return await signer.getFullRequiredDepositFee({
-      token: ETH_ADDRESS,
+      token: ETH_L1_ADDRESS,
       to: params.to,
     });
   };

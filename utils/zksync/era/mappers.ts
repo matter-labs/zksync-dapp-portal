@@ -4,6 +4,7 @@ import { BOOTLOADER_FORMAL_ADDRESS } from "zksync-web3/build/src/utils";
 import type { ApiTransaction, TokenTransfer } from "@/store/zksync/era/transactionsHistory";
 import type { Token } from "@/types";
 
+import { ETH_L2_ADDRESS } from "@/utils/constants";
 import { checksumAddress } from "@/utils/formatters";
 
 function mapBalanceChange(tokenTransfer: TokenTransfer) {
@@ -79,7 +80,7 @@ export function mapApiTransaction(transaction: ApiTransaction, tokens: Token[], 
       : undefined,
     amount:
       mainTransfer?.type === "fee" ? balanceChangesByToken[mainTransfer?.tokenInfo?.address] : mainTransfer?.amount,
-    feeToken: getTokenByAddress(ETH_ADDRESS),
+    feeToken: getTokenByAddress(ETH_L2_ADDRESS),
     feeAmount: transaction.fee,
     receivedAt: transaction.receivedAt,
   };

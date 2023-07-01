@@ -208,7 +208,6 @@ const displayedAddresses = computed<AddressesGroup[]>(() => {
     }
     return filtered;
   }
-  console.log(result.filter((group) => group.addresses.length));
   return result.filter((group) => group.addresses.length);
 });
 </script>
