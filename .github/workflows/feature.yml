@@ -4,7 +4,7 @@ on:
 
 jobs:
   build:
-    name: Build and Test
+    name: Build
     runs-on: ubuntu-latest
     outputs:
       dappUrl: ${{ steps.deploy.outputs.details_url }}
