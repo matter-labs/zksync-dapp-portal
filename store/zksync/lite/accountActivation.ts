@@ -49,8 +49,20 @@ export const useLiteAccountActivationStore = defineStore("liteAccountActivation"
 
     if (isAuthorized.value) {
       const newPubKeyHash = await liteWalletStore.getSignerPubKeyHash();
+      console.log("newPubKeyHash", newPubKeyHash);
+      console.log("current PubKey", accountState.committed.pubKeyHash);
+      console.log(
+        "return",
+        accountState.committed.pubKeyHash === newPubKeyHash,
+        `accountState.committed.pubKeyHash === newPubKeyHash`
+      );
       return accountState.committed.pubKeyHash === newPubKeyHash;
     } else {
+      console.log(
+        "return",
+        accountState.committed.pubKeyHash !== "sync:0000000000000000000000000000000000000000",
+        `accountState.committed.pubKeyHash !== "sync:0000000000000000000000000000000000000000"`
+      );
       return accountState.committed.pubKeyHash !== "sync:0000000000000000000000000000000000000000";
     }
   });

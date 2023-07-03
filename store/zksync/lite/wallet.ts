@@ -104,6 +104,11 @@ export const useLiteWalletStore = defineStore("liteWallet", () => {
   const getSignerPubKeyHash = async () => {
     const wallet = await getWalletInstance(true);
     if (!wallet) throw new Error("Wallet is not available");
+    console.log("isRemoteWallet.value", isRemoteWallet.value);
+    console.log(
+      "Pubkey",
+      isRemoteWallet.value ? await wallet.syncSignerPubKeyHash() : await wallet.signer!.pubKeyHash()
+    );
     return isRemoteWallet.value ? await wallet.syncSignerPubKeyHash() : await wallet.signer!.pubKeyHash();
   };
 
