@@ -26,7 +26,7 @@
     [
       "@semantic-release/exec",
       {
-        "prepareCmd": "VITE_VERSION=${nextRelease.version} npm run build",
+        "prepareCmd": "VITE_VERSION=${nextRelease.version} npm run generate",
         "publishCmd": "zip -r dist.zip dist",
         "successCmd": "echo '::set-output name=releaseVersion::${nextRelease.version}'"
       }
