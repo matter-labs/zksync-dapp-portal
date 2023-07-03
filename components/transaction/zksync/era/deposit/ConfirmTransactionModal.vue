@@ -52,6 +52,7 @@
             :disabled="buttonDisabled || newFeeAlert || status !== 'not-started'"
             class="mx-auto mt-3"
             variant="primary-solid"
+            autofocus
             @click="makeTransaction"
           >
             <transition v-bind="TransitionPrimaryButtonText" mode="out-in">

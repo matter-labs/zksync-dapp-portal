@@ -58,6 +58,7 @@
       <CommonButtonTopInfo>Incorrect network selected in your wallet</CommonButtonTopInfo>
       <CommonButton
         v-if="connectorName !== 'WalletConnect'"
+        type="submit"
         :disabled="switchingNetworkInProgress"
         variant="primary-solid"
         @click="onboardStore.setCorrectNetwork"
@@ -72,6 +73,7 @@
       <CommonButtonTopLink @click="modalWalletAuthorizationOpened = true">What is authorization?</CommonButtonTopLink>
       <CommonButton
         :disabled="authorizationInProgress || accountActivationCheckInProgress"
+        type="submit"
         variant="primary-solid"
         @click="authorizeWallet"
       >
@@ -84,6 +86,7 @@
       </CommonButtonTopLink>
       <CommonButton
         :disabled="!canSignAccountActivation || accountActivationSigningInProgress"
+        type="submit"
         variant="primary-solid"
         @click="signAccountActivation"
       >

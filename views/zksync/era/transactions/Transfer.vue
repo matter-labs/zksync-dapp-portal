@@ -37,7 +37,7 @@
     <CommonErrorBlock v-if="balanceError" @try-again="fetchBalances">
       {{ balanceError.message }}
     </CommonErrorBlock>
-    <form v-else class="transaction-form pb-2" @submit.prevent="">
+    <form v-else class="flex h-full flex-col" @submit.prevent="">
       <CommonAmountInput
         v-model.trim="amount"
         v-model:error="amountError"
@@ -69,24 +69,29 @@
           </p>
         </CommonAlert>
       </transition>
-    </form>
 
-    <EraTransactionFooter :authorization="false" :account-activation="false">
-      <template #after-checks>
-        <CommonButtonTopLink
-          v-if="type === 'withdrawal' && selectedEthereumNetwork.network === 'mainnet'"
-          as="a"
-          :href="ERA_WITHDRAWAL_DELAY"
-          target="_blank"
-        >
-          Arriving in ~24 hours
-          <ArrowUpRightIcon class="ml-1 mt-0.5 h-3.5 w-3.5" />
-        </CommonButtonTopLink>
-        <CommonButton :disabled="continueButtonDisabled" variant="primary-solid" @click="openConfirmationModal">
-          Continue
-        </CommonButton>
-      </template>
-    </EraTransactionFooter>
+      <EraTransactionFooter :authorization="false" :account-activation="false">
+        <template #after-checks>
+          <CommonButtonTopLink
+            v-if="type === 'withdrawal' && selectedEthereumNetwork.network === 'mainnet'"
+            as="a"
+            :href="ERA_WITHDRAWAL_DELAY"
+            target="_blank"
+          >
+            Arriving in ~24 hours
+            <ArrowUpRightIcon class="ml-1 mt-0.5 h-3.5 w-3.5" />
+          </CommonButtonTopLink>
+          <CommonButton
+            type="submit"
+            :disabled="continueButtonDisabled"
+            variant="primary-solid"
+            @click="openConfirmationModal"
+          >
+            Continue
+          </CommonButton>
+        </template>
+      </EraTransactionFooter>
+    </form>
   </div>
 </template>
 

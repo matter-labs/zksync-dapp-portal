@@ -55,7 +55,7 @@
     <CommonErrorBlock v-if="balanceError" @try-again="fetchBalances">
       {{ balanceError.message }}
     </CommonErrorBlock>
-    <form v-else class="transaction-form pb-2" @submit.prevent="">
+    <form v-else class="flex h-full flex-col" @submit.prevent="">
       <CommonAmountInput
         v-model.trim="amount"
         v-model:error="amountError"
@@ -108,19 +108,24 @@
           </a>
         </CommonAlert>
       </transition>
-    </form>
 
-    <ZksyncLiteTransactionFooter>
-      <template #after-checks>
-        <CommonButtonTopLink v-if="type === 'Withdraw'" :href="LITE_WITHDRAWAL_TIMES" target="_blank">
-          Will arrive in 10 minutes to 7 hours
-          <ArrowUpRightIcon class="ml-1 mt-0.5 h-3.5 w-3.5" />
-        </CommonButtonTopLink>
-        <CommonButton :disabled="continueButtonDisabled" variant="primary-solid" @click="openConfirmationModal">
-          Continue
-        </CommonButton>
-      </template>
-    </ZksyncLiteTransactionFooter>
+      <ZksyncLiteTransactionFooter>
+        <template #after-checks>
+          <CommonButtonTopLink v-if="type === 'Withdraw'" :href="LITE_WITHDRAWAL_TIMES" target="_blank">
+            Will arrive in 10 minutes to 7 hours
+            <ArrowUpRightIcon class="ml-1 mt-0.5 h-3.5 w-3.5" />
+          </CommonButtonTopLink>
+          <CommonButton
+            type="submit"
+            :disabled="continueButtonDisabled"
+            variant="primary-solid"
+            @click="openConfirmationModal"
+          >
+            Continue
+          </CommonButton>
+        </template>
+      </ZksyncLiteTransactionFooter>
+    </form>
   </div>
 </template>
 

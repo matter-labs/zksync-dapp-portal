@@ -45,7 +45,7 @@
     <CommonErrorBlock v-if="balanceError" @try-again="fetchBalances">
       {{ balanceError.message }}
     </CommonErrorBlock>
-    <form v-else class="transaction-form pb-2" @submit.prevent="">
+    <form v-else class="flex h-full flex-col" @submit.prevent="">
       <CommonAmountInput
         v-model.trim="amount"
         v-model:error="amountError"
@@ -102,15 +102,20 @@
       <CommonErrorBlock v-if="allowanceRequestError" class="mt-2" @try-again="requestAllowance">
         Checking allowance error: {{ allowanceRequestError.message }}
       </CommonErrorBlock>
-    </form>
 
-    <ZksyncLiteTransactionFooter :authorization="false" :account-activation="false">
-      <template #after-checks>
-        <CommonButton :disabled="continueButtonDisabled" variant="primary-solid" @click="openConfirmationModal">
-          Continue
-        </CommonButton>
-      </template>
-    </ZksyncLiteTransactionFooter>
+      <ZksyncLiteTransactionFooter :authorization="false" :account-activation="false">
+        <template #after-checks>
+          <CommonButton
+            type="submit"
+            :disabled="continueButtonDisabled"
+            variant="primary-solid"
+            @click="openConfirmationModal"
+          >
+            Continue
+          </CommonButton>
+        </template>
+      </ZksyncLiteTransactionFooter>
+    </form>
   </div>
 </template>
 

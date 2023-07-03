@@ -15,6 +15,7 @@
       <CommonButtonTopInfo>Incorrect network selected in your wallet</CommonButtonTopInfo>
       <CommonButton
         v-if="connectorName !== 'WalletConnect'"
+        type="submit"
         :disabled="switchingNetworkInProgress"
         variant="primary-solid"
         @click="eraWalletStore.setCorrectNetwork"
