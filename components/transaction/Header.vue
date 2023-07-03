@@ -19,6 +19,8 @@
 import type { TransactionDestination } from "@/store/destinations";
 import type { PropType } from "vue";
 
+import { shortenAddress } from "@/utils/formatters";
+
 defineProps({
   title: {
     type: String,

@@ -55,13 +55,17 @@
     </transition>
 
     <div v-if="buttonStep === 'network'" class="transaction-footer-row">
-      <CommonButtonTopInfo>Incorrect network selected in your {{ walletName }} wallet</CommonButtonTopInfo>
+      <CommonButtonTopInfo>Incorrect network selected in your wallet</CommonButtonTopInfo>
       <CommonButton
+        v-if="connectorName !== 'WalletConnect'"
         :disabled="switchingNetworkInProgress"
         variant="primary-solid"
         @click="onboardStore.setCorrectNetwork"
       >
         Change wallet network to {{ selectedEthereumNetwork.name }}
+      </CommonButton>
+      <CommonButton v-else disabled variant="primary-solid">
+        Change network manually to {{ selectedEthereumNetwork.name }} in your {{ walletName }} wallet
       </CommonButton>
     </div>
     <div v-else-if="buttonStep === 'authorize'" class="transaction-footer-row">
@@ -122,7 +126,7 @@ const onboardStore = useOnboardStore();
 const walletLiteStore = useLiteWalletStore();
 const liteAccountActivationStore = useLiteAccountActivationStore();
 
-const { isCorrectNetworkSet, switchingNetworkInProgress, switchingNetworkError, walletName } =
+const { isCorrectNetworkSet, switchingNetworkInProgress, switchingNetworkError, connectorName, walletName } =
   storeToRefs(onboardStore);
 const { selectedEthereumNetwork } = storeToRefs(useNetworkStore());
 const { destinations } = storeToRefs(useDestinationsStore());

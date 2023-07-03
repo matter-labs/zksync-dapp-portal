@@ -16,7 +16,8 @@
 
 <style lang="scss" scoped>
 .button-line-body-info {
-  @apply leading-tight;
+  @apply w-max leading-tight;
+
   .button-line-body-info-label,
   .button-line-body-info-secondary {
     @apply inline min-h-[1.5rem] overflow-hidden text-ellipsis align-middle;

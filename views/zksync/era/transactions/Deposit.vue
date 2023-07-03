@@ -207,7 +207,8 @@ const {
   computed(() => account.value.address),
   computed(() => selectedToken.value?.l1Address),
   async () => (await eraProviderStore.requestProvider().getDefaultBridgeAddresses()).erc20L1,
-  onboardStore.getEthereumProvider
+  onboardStore.getWallet,
+  onboardStore.getPublicClient
 );
 const enoughAllowance = computed(() => {
   if (!allowance.value || !selectedToken.value) {
@@ -253,11 +254,11 @@ const {
   enoughBalanceToCoverFee,
   estimateFee,
 } = useFee(
-  onboardStore.getEthereumProvider,
-  eraProviderStore.requestProvider,
   computed(() => account.value.address),
   tokens,
-  balance
+  balance,
+  eraProviderStore.requestProvider,
+  onboardStore.getPublicClient
 );
 watch(
   () => feeToken?.value?.address,

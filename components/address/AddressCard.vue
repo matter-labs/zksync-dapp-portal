@@ -24,6 +24,8 @@
 <script lang="ts" setup>
 import type { Component, PropType } from "vue";
 
+import { shortenAddress } from "@/utils/formatters";
+
 defineProps({
   as: {
     type: [String, Object] as PropType<string | Component>,

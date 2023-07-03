@@ -1,9 +1,10 @@
-import { fetchSigner } from "@wagmi/core";
-import { Contract } from "ethers";
-import { IERC20 } from "zksync-web3/build/src/utils";
+import { BigNumber } from "ethers";
 
-import type { Provider } from "@wagmi/core";
-import type { BigNumber, BigNumberish, ContractTransaction, Signer } from "ethers";
+import IERC20 from "zksync-web3/abi/IERC20.json";
+
+import type { Hash } from "@/types";
+import type { PublicClient, WalletClient } from "@wagmi/core";
+import type { BigNumberish } from "ethers";
 import type { Ref } from "vue";
 
 import { ETH_L1_ADDRESS } from "@/utils/constants";
@@ -12,14 +13,9 @@ export default (
   accountAddress: Ref<string | undefined>,
   tokenAddress: Ref<string | undefined>,
   getContractAddress: () => Promise<string | undefined>,
-  getEthereumProvider: () => Provider
+  getWallet: () => Promise<WalletClient>,
+  getPublicClient: () => PublicClient
 ) => {
-  const getContractInstance = async (providerOrSigner: Signer | Provider) => {
-    if (!tokenAddress.value) throw new Error("Token is not available");
-
-    return new Contract(tokenAddress.value, IERC20, providerOrSigner);
-  };
-
   const {
     result,
     inProgress,
@@ -33,8 +29,14 @@ export default (
       const contractAddress = await getContractAddress();
       if (!contractAddress) throw new Error("Contract address is not available");
 
-      const erc20contract = await getContractInstance(getEthereumProvider());
-      return (await erc20contract.allowance(accountAddress.value, contractAddress)) as BigNumber;
+      const publicClient = getPublicClient();
+      const allowance = (await publicClient.readContract({
+        address: tokenAddress.value as Hash,
+        abi: IERC20.abi,
+        functionName: "allowance",
+        args: [accountAddress.value, contractAddress],
+      })) as bigint;
+      return BigNumber.from(allowance);
     },
     { cache: false }
   );
@@ -45,11 +47,14 @@ export default (
     const contractAddress = await getContractAddress();
     if (!contractAddress) throw new Error("Contract address is not available");
 
-    const signer = await fetchSigner();
-    if (!signer) throw new Error("Signer is not available");
-
-    const erc20contract = await getContractInstance(signer);
-    return (await erc20contract.approve(contractAddress, amount)) as ContractTransaction;
+    const wallet = await getWallet();
+    const txHash = await wallet.writeContract({
+      address: tokenAddress.value as Hash,
+      abi: IERC20.abi,
+      functionName: "approve",
+      args: [contractAddress, amount.toString()],
+    });
+    return txHash;
   };
 
   const requestAllowance = async () => {

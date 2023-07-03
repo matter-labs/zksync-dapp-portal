@@ -77,6 +77,10 @@ export function capitalize(str: string) {
 
 export function formatError(error?: Error) {
   if (!error?.message) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    if (typeof error === "object" && (error as any).code === 4001) {
+      return undefined;
+    }
     error = Object.assign(new Error("Unknown error"), error);
   }
   const message = error?.message;
