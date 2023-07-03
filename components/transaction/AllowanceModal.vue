@@ -102,18 +102,11 @@
         </p>
       </CommonAlert>
 
-      <TransactionConfirmModalFooter>
-        <transition v-bind="TransitionAlertScaleInOutTransition">
-          <CommonButton
-            v-if="transactionCommitted"
-            class="mx-auto mt-4"
-            variant="primary-solid"
-            @click="emit('continue')"
-          >
-            Continue
-          </CommonButton>
-        </transition>
-      </TransactionConfirmModalFooter>
+      <transition v-bind="TransitionAlertScaleInOutTransition">
+        <TransactionConfirmModalFooter v-if="transactionCommitted">
+          <CommonButton class="mx-auto mt-4" variant="primary-solid" @click="emit('continue')">Continue</CommonButton>
+        </TransactionConfirmModalFooter>
+      </transition>
     </div>
   </CommonModal>
 </template>
