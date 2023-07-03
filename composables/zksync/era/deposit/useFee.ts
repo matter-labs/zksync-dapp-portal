@@ -43,6 +43,7 @@ export default (
   };
 
   const fee = ref<DepositFeeValues | undefined>();
+  const recommendedBalance = ref<string | undefined>();
 
   const totalFee = computed(() => {
     if (!fee.value) return undefined;
@@ -77,14 +78,6 @@ export default (
     const signer = getVoidL1Signer();
     if (!signer) throw new Error("Signer is not available");
 
-    /* const initialCall = signer.call;
-    signer.call = async (...params: unknown[]) => {
-      const result = await initialCall(...params);
-      if (typeof result === "object" && result.data) {
-        return result.data;
-      }
-      return result;
-    }; */
     return await signer.getFullRequiredDepositFee({
       token: ETH_L1_ADDRESS,
       to: params.to,
@@ -112,16 +105,29 @@ export default (
     execute: estimateFee,
   } = usePromise(
     async () => {
-      if (!feeToken.value) throw new Error("Fee tokens is not available");
+      try {
+        recommendedBalance.value = undefined;
+        if (!feeToken.value) throw new Error("Fee tokens is not available");
 
-      if (params.tokenAddress === feeToken.value?.address) {
-        fee.value = await getEthTransactionFee();
-      } else {
-        fee.value = await getERC20TransactionFee();
-      }
-      /* It can be either maxFeePerGas or gasPrice */
-      if (!fee.value?.maxFeePerGas) {
-        fee.value.gasPrice = await getGasPrice();
+        if (params.tokenAddress === feeToken.value?.address) {
+          fee.value = await getEthTransactionFee();
+        } else {
+          fee.value = await getERC20TransactionFee();
+        }
+        /* It can be either maxFeePerGas or gasPrice */
+        if (!fee.value?.maxFeePerGas) {
+          fee.value.gasPrice = await getGasPrice();
+        }
+      } catch (err) {
+        if (err instanceof Error && err.message.startsWith("Not enough balance for deposit.")) {
+          const match = err.message.match(/([\d\\.]+) ETH/);
+          if (feeToken.value && match?.length) {
+            const ethAmount = match[1].split(" ")?.[0];
+            recommendedBalance.value = ethAmount;
+            return;
+          }
+        }
+        throw err;
       }
     },
     { cache: false }
@@ -132,6 +138,7 @@ export default (
     result: totalFee,
     inProgress,
     error,
+    recommendedBalance,
     estimateFee: estimate,
 
     feeToken,
