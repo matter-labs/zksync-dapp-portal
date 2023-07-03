@@ -12,12 +12,12 @@ export const chains: ExtendedChain[] = [
     name: "Mainnet",
     network: "mainnet",
     iconUrl: "/img/ethereum.svg",
-    hostnames: [],
+    hostnames: ["https://portal.zksync.io", "https://staging-portal.zksync.dev"],
   },
   {
     ...goerli,
     name: "Goerli Testnet",
-    hostnames: [],
+    hostnames: ["https://goerli.portal.zksync.io", "https://goerli.staging-portal.zksync.dev"],
   },
 ];
 
