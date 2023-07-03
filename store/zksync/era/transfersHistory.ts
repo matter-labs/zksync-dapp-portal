@@ -19,10 +19,12 @@ export const useEraTransfersHistoryStore = defineStore("eraTransfersHistory", ()
   const { tokens } = storeToRefs(eraTokensStore);
   const { account } = storeToRefs(onboardStore);
 
-  const filterOutDuplicateDepositTransfers = (transfers: EraTransfer[]) => {
-    // we need to find all transactions (transfers with same transactionHash)
-    // if this transaction has just 2 transfers one of which is type deposit and another one is type transfer and they have same token and amount and to address
-    // then we should keep only deposit one
+  const filterOutDuplicateTransfers = (transfers: EraTransfer[]) => {
+    /*
+      Currently BE API Deposit and Withdrawal transaction generate 2 logs:
+        1 "transfer" and "deposit" or "withdrawal" depending on the type of the transaction.
+      We want to remove the "transfer" from the list for user convenience.
+    */
     const transactions = transfers.reduce((acc, transfer) => {
       if (!transfer.transactionHash) {
         return acc;
@@ -35,24 +37,22 @@ export const useEraTransfersHistoryStore = defineStore("eraTransfersHistory", ()
     }, {} as Record<string, EraTransfer[]>);
 
     const filteredTransfers = Object.values(transactions).reduce((acc, transfers) => {
-      const transferTransfer = transfers.find((e) => e.type === "transfer");
-      const depositTransfer = transfers.find((e) => e.type === "deposit");
+      const transfer = transfers.find((e) => e.type === "transfer");
+      const depositOrWithdrawal = transfers.find((e) => e.type === "deposit" || e.type === "withdrawal");
       if (
-        transferTransfer &&
-        depositTransfer &&
-        depositTransfer.type === "deposit" &&
-        transferTransfer.type === "transfer" &&
-        depositTransfer.token?.address === transferTransfer.token?.address &&
-        depositTransfer.amount === transferTransfer.amount &&
-        depositTransfer.to === transferTransfer.to
+        transfer &&
+        depositOrWithdrawal &&
+        depositOrWithdrawal.token?.address === transfer.token?.address &&
+        depositOrWithdrawal.amount === transfer.amount &&
+        ((depositOrWithdrawal.type === "deposit" && depositOrWithdrawal.to === transfer.to) ||
+          (depositOrWithdrawal.type === "withdrawal" && depositOrWithdrawal.from === transfer.from))
       ) {
-        acc.push(depositTransfer);
+        acc.push(depositOrWithdrawal);
         return acc;
       }
       acc.push(...transfers);
       return acc;
     }, [] as EraTransfer[]);
-    // sort by date descending
     return filteredTransfers.sort((a, b) => new Date(b.timestamp).valueOf() - new Date(a.timestamp).valueOf());
   };
 
@@ -88,7 +88,7 @@ export const useEraTransfersHistoryStore = defineStore("eraTransfersHistory", ()
       }
       const [response] = await Promise.all([loadNext(), eraTokensStore.requestTokens()]);
       const mappedTransfers = response.items.map((e) => mapApiTransfer(e));
-      transfers.value = filterOutDuplicateDepositTransfers(mappedTransfers);
+      transfers.value = filterOutDuplicateTransfers(mappedTransfers);
       getTransferTokenPrices(mappedTransfers);
     },
     { cache: 30000 }
@@ -107,7 +107,7 @@ export const useEraTransfersHistoryStore = defineStore("eraTransfersHistory", ()
       }
       const [response] = await Promise.all([loadNext(), eraTokensStore.requestTokens()]);
       const mappedTransfers = response.items.map((e) => mapApiTransfer(e));
-      transfers.value = filterOutDuplicateDepositTransfers([...transfers.value, ...mappedTransfers]);
+      transfers.value = filterOutDuplicateTransfers([...transfers.value, ...mappedTransfers]);
       getTransferTokenPrices(mappedTransfers);
     },
     { cache: false }
