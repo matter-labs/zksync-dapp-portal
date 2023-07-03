@@ -31,11 +31,11 @@
         as="a"
         target="_blank"
         :href="
-          buildUrl('https://zksync.banxa.com/', {
+          buildUrl('https://zksync.banxa.com', {
             walletAddress: account.address!,
             accountReference: account.address!,
-            returnUrlOnSuccess: 'https://zkplus.io',
-            returnUrlOnFailure: 'https://zkplus.io',
+            returnUrlOnSuccess: 'https://portal.zksync.io',
+            returnUrlOnFailure: 'https://portal.zksync.io',
           })
         "
       />
@@ -86,7 +86,7 @@ const { account } = storeToRefs(useOnboardStore());
 const { destinations } = storeToRefs(useDestinationsStore());
 
 function buildUrl(base: string, params: Record<string, string>) {
-  let url = new URL(base);
+  let url = new URL("/", base);
   Object.keys(params).forEach((key) => url.searchParams.append(key, params[key]));
   return url;
 }

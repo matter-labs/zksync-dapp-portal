@@ -23,15 +23,14 @@ export const useLiteTransactionsHistoryStore = defineStore("liteTransactionsHist
       throw new Error("Provider is not available");
     }
 
-    if (!(await liteTokensStore.requestTokens())) {
-      throw new Error("Tokens are not available");
-    }
-
     if (!account.value.address) {
       throw new Error("Account is not available");
     }
 
-    const response = await provider.accountTxsDetailed(account.value.address, pagination);
+    const [response] = await Promise.all([
+      provider.accountTxsDetailed(account.value.address, pagination),
+      liteTokensStore.requestTokens(),
+    ]);
 
     if (response.error) {
       throw new Error(response.error.message);
@@ -39,8 +38,11 @@ export const useLiteTransactionsHistoryStore = defineStore("liteTransactionsHist
       throw new Error("No result");
     }
 
-    const allTokens = tokens.value ? Object.values(tokens.value) : [];
-    return response.result.list.map((transaction) => mapApiTransaction(transaction, allTokens));
+    if (!tokens.value) {
+      throw new Error("Tokens are not available");
+    }
+
+    return response.result.list.map((transaction) => mapApiTransaction(transaction, Object.values(tokens.value!)));
   };
 
   const transactions = ref<ZkSyncLiteTransaction[]>([]);

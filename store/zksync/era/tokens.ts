@@ -4,6 +4,7 @@ import { defineStore, storeToRefs } from "pinia";
 import type { Token, TokenPrice } from "@/types";
 
 import { useEraProviderStore } from "@/store/zksync/era/provider";
+import { ETH_L1_ADDRESS, ETH_L2_ADDRESS } from "@/utils/constants";
 import { checksumAddress } from "@/utils/formatters";
 
 export const useEraTokensStore = defineStore("eraTokens", () => {
@@ -18,15 +19,18 @@ export const useEraTokensStore = defineStore("eraTokens", () => {
     reset: resetTokens,
   } = usePromise<Token[]>(async () => {
     const tokens = await getTokenCollection(eraNetwork.value.id);
-    return tokens.map((token) => ({
-      l1Address: checksumAddress(token.l1Address),
-      address: checksumAddress(token.l2Address),
-      symbol: token.symbol,
-      decimals: token.decimals,
-      iconUrl: token.imageUrl,
-      enabledForFees: token.l2Address === ETH_ADDRESS,
-      price: undefined,
-    }));
+    return tokens.map((token) => {
+      const l2Address = token.l2Address === ETH_L1_ADDRESS ? ETH_L2_ADDRESS : checksumAddress(token.l2Address);
+      return {
+        l1Address: checksumAddress(token.l1Address),
+        address: l2Address,
+        symbol: token.symbol,
+        decimals: token.decimals,
+        iconUrl: token.imageUrl,
+        enabledForFees: l2Address === ETH_L2_ADDRESS,
+        price: undefined,
+      };
+    });
   });
 
   const tokenPrices = ref<{ [tokenAddress: string]: TokenPrice }>({});
@@ -37,7 +41,7 @@ export const useEraTokensStore = defineStore("eraTokens", () => {
     try {
       const provider = eraProviderStore.requestProvider();
 
-      const price = await provider.getTokenPrice(tokenAddress);
+      const price = await provider.getTokenPrice(tokenAddress === ETH_L2_ADDRESS ? ETH_L1_ADDRESS : tokenAddress);
       tokenPrices.value[tokenAddress] = typeof price === "number" || typeof price === "string" ? parseFloat(price) : 0;
     } catch (error) {
       console.warn(`Failed to get price for Era token ${tokenAddress}`, error);
