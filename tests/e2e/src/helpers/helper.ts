@@ -224,4 +224,20 @@ export class Helper {
     }
     await this.closeBrowserTabs(context);
   }
+
+  async getClipboardValue() {
+    result = await this.world.page?.evaluate(async () => {
+      return await navigator.clipboard.readText();
+    });
+
+    return result;
+  }
+
+  async clearClipboard() {
+    result = await this.world.page?.evaluate(async () => {
+      return await navigator.clipboard.writeText("");
+    });
+
+    return result;
+  }
 }

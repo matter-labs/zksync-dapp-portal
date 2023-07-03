@@ -12,6 +12,7 @@ export const config = {
   browser: process.env.BROWSER || "chromium",
   browserOptions,
   BASE_URL: process.env.TARGET_ENV || "http://localhost:3000",
+  // BASE_URL: process.env.TARGET_ENV || "https://zkplus.io/",
   METAMASK_VERSION: process.env.METAMASK_VERSION || "10.14.1",
   IMG_THRESHOLD: { threshold: 0.4 },
   mainWindowSize: { width: 1280, height: 720 },

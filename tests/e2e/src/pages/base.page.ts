@@ -130,6 +130,12 @@ export class BasePage {
     return await element;
   }
 
+  async getElementBySrc(src: string) {
+    element = await this.world.page?.locator(`//*[@src='${src}']`).first();
+    await element.scrollIntoViewIfNeeded();
+    return await element;
+  }
+
   async getElementByTestId(testid: string) {
     element = await this.world.page?.locator(`${this.byTestId}${testid}`).first();
     await element.scrollIntoViewIfNeeded();
@@ -185,6 +191,8 @@ export class BasePage {
       element = await this.getElementByPlaceholder(value);
     } else if (elementType === "xpath") {
       element = await this.getElementByXpath(value);
+    } else if (elementType === "src") {
+      element = await this.getElementBySrc(value);
     }
     return element;
   }

@@ -4,6 +4,7 @@ import { expect } from "@playwright/test";
 
 import { Helper } from "../helpers/helper";
 import { BasePage } from "../pages/base.page";
+import { ContactsPage } from "../pages/contacts.page";
 import { LoginPage } from "../pages/login.page";
 import { MainPage } from "../pages/main.page";
 import { MetamaskPage } from "../pages/metamask.page";
@@ -13,7 +14,9 @@ import type { ICustomWorld } from "../support/custom-world";
 
 let basePage: BasePage;
 let mainPage: MainPage;
+let loginPage: LoginPage;
 let metamaskPage: MetamaskPage;
+let contactsPage: ContactsPage;
 let helper: Helper;
 let result: any;
 let element: any;
@@ -125,10 +128,68 @@ When("A wallet should be {string}", config.stepTimeout, async function (this: IC
   result = await mainPage.getTotalBalance();
 
   if (balanceValue === "fullfilled") {
-    expect(result).toBeGreaterThan(0.1);
+    await expect(result).toBeGreaterThan(0.1);
   } else if (balanceValue === "empty") {
-    expect(result).toBeLessThanOrEqual(0);
+    await expect(result).toBeLessThanOrEqual(0);
   } else {
     console.log("An incorrect value has been provided as a parameter: the correct ones only 'fullfilled' and 'empty'");
   }
+});
+
+When("I'm logged out", config.stepTimeout, async function (this: ICustomWorld) {
+  mainPage = new MainPage(this);
+  loginPage = new LoginPage(this);
+
+  await mainPage.performLogOut();
+  await this.page?.waitForLoadState();
+
+  result = await this.page?.locator(loginPage.loginBtn);
+
+  await expect(result).toBeVisible();
+});
+
+Then("Clipboard contains {string} value", async function (this: ICustomWorld, text: string) {
+  helper = new Helper(this);
+  result = await helper.getClipboardValue();
+
+  await expect(result).toBe(text);
+});
+
+Then("Clipboard is not empty", async function (this: ICustomWorld) {
+  helper = new Helper(this);
+  result = await helper.getClipboardValue();
+
+  await expect(typeof result).toBe("string");
+});
+
+Given(
+  "I fill the {string} input field by {string}",
+  async function (this: ICustomWorld, inputField: string, text: string) {
+    mainPage = new MainPage(this);
+    await mainPage.fillText(inputField, text);
+  }
+);
+
+Given(
+  "I fill the {string} input field on the Contacts page with {string} text",
+  async function (this: ICustomWorld, inputField: string, text: string) {
+    contactsPage = new ContactsPage(this);
+    await contactsPage.fill(inputField, text);
+  }
+);
+
+Given("I click on the Copy button", async function (this: ICustomWorld) {
+  await this.page?.locator("//button[@class='copy-button']").last().click();
+});
+
+Given("I click on the Save contact button", async function (this: ICustomWorld) {
+  await this.page?.locator("//button[@type='submit' and text()='Save contact']").first().click();
+});
+
+Given("I am on the Main page", async function (this: ICustomWorld) {
+  await expect(this.page?.url()).toContain(config.BASE_URL);
+});
+
+Given("The address includes {string} a part route", async function (this: ICustomWorld, route: string) {
+  await expect(this.page?.url()).toContain(config.BASE_URL + route);
 });
