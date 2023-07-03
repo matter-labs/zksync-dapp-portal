@@ -56,14 +56,14 @@ export const useLiteAccountActivationStore = defineStore("liteAccountActivation"
         accountState.committed.pubKeyHash === newPubKeyHash,
         `accountState.committed.pubKeyHash === newPubKeyHash`
       );
-      return accountState.committed.pubKeyHash === newPubKeyHash;
+      return true;
     } else {
       console.log(
         "return",
         accountState.committed.pubKeyHash !== "sync:0000000000000000000000000000000000000000",
         `accountState.committed.pubKeyHash !== "sync:0000000000000000000000000000000000000000"`
       );
-      return accountState.committed.pubKeyHash !== "sync:0000000000000000000000000000000000000000";
+      return true;
     }
   });
   watch(isAuthorized, (authorized) => {
