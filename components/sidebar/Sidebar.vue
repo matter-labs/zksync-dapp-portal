@@ -66,7 +66,7 @@ const networkChangeModalOpened = ref(false);
   }
 
   .navbar-inner {
-    @apply grid h-full min-w-[3.5rem] grid-cols-[max-content_1fr] grid-rows-[repeat(2,_max-content)_1fr] bg-white dark:bg-neutral-900 md:max-w-[3.5rem] md:grid-cols-1 md:bg-transparent dark:md:bg-transparent xl:max-w-[12.5rem]; /* hidden md:block */
+    @apply grid h-full min-w-[3.5rem] grid-cols-[max-content_1fr] grid-rows-[repeat(2,_max-content)_1fr] bg-white dark:bg-neutral-900 md:max-w-[3.5rem] md:grid-cols-1 md:bg-transparent dark:md:bg-transparent xl:max-w-[12.5rem];
 
     .navbar-links-container {
       @apply flex justify-around space-y-1 pr-3 md:mt-6 md:flex-col md:pr-0;

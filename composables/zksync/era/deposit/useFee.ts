@@ -77,14 +77,6 @@ export default (
     const signer = getVoidL1Signer();
     if (!signer) throw new Error("Signer is not available");
 
-    /* const initialCall = signer.call;
-    signer.call = async (...params: unknown[]) => {
-      const result = await initialCall(...params);
-      if (typeof result === "object" && result.data) {
-        return result.data;
-      }
-      return result;
-    }; */
     return await signer.getFullRequiredDepositFee({
       token: ETH_L1_ADDRESS,
       to: params.to,
