@@ -48,6 +48,7 @@ export declare namespace Api {
       amount: string | null;
       token: Token | null;
       tokenAddress: string;
+      timestamp: string;
       type: "deposit" | "transfer" | "withdrawal" | "fee" | "mint" | "refund";
     };
 

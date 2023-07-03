@@ -55,7 +55,7 @@ export const useEraWalletStore = defineStore("eraWallet", () => {
   } = usePromise<Api.Response.Account | Api.Response.Contract>(async () => {
     if (!account.value.address) throw new Error("Account is not available");
 
-    return await $fetch(`${eraNetwork.value.blockExplorerApiV2}/address/${account.value.address}`);
+    return await $fetch(`${eraNetwork.value.blockExplorerApi}/address/${account.value.address}`);
   });
   const {
     inProgress: balanceInProgress,

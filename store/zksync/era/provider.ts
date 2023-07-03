@@ -7,21 +7,19 @@ import { useNetworkStore } from "@/store/network";
 
 const eraNetworks: Record<
   EthereumNetworkName,
-  { id: 324 | 280; name: string; rpcUrl: string; blockExplorerApi: string; blockExplorerApiV2: string }
+  { id: 324 | 280; name: string; rpcUrl: string; blockExplorerApi: string }
 > = {
   mainnet: {
     id: 324,
     name: "zkSync Era Mainnet",
     rpcUrl: "https://mainnet.era.zksync.io",
-    blockExplorerApi: "https://zksync2-mainnet-explorer.zksync.io",
-    blockExplorerApiV2: "https://block-explorer-api.mainnet.zksync.io",
+    blockExplorerApi: "https://block-explorer-api.mainnet.zksync.io",
   },
   goerli: {
     id: 280,
     name: "zkSync Era Testnet",
     rpcUrl: "https://testnet.era.zksync.dev",
-    blockExplorerApi: "https://zksync2-testnet-explorer.zksync.dev",
-    blockExplorerApiV2: "https://block-explorer-api.testnets.zksync.dev",
+    blockExplorerApi: "https://block-explorer-api.testnets.zksync.dev",
   },
 } as const;
 

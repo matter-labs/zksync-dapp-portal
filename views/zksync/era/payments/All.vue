@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="recentTransactionsRequestInProgress">
+    <div v-if="recentTransfersRequestInProgress">
       <TypographyCategoryLabel>
         <CommonContentLoader :length="22" />
       </TypographyCategoryLabel>
@@ -8,24 +8,24 @@
         <TokenBalanceLoader v-for="index in 5" :key="index" />
       </CommonCardWithLineButtons>
     </div>
-    <CommonCardWithLineButtons v-else-if="recentTransactionsRequestError">
+    <CommonCardWithLineButtons v-else-if="recentTransfersRequestError">
       <CommonErrorBlock @try-again="fetch">
-        Loading transactions error: {{ recentTransactionsRequestError.message }}
+        Loading transactions error: {{ recentTransfersRequestError.message }}
       </CommonErrorBlock>
     </CommonCardWithLineButtons>
-    <div v-else-if="transactions.length">
+    <div v-else-if="transfers.length">
       <div v-for="(group, index) in transactionsGroups" :key="index">
         <TypographyCategoryLabel>
           {{ group.title }}
         </TypographyCategoryLabel>
         <CommonCardWithLineButtons>
-          <EraTransactionLineItem v-for="(item, index) in group.transactions" :key="index" :transaction="item" />
+          <EraTransferLineItem v-for="(item, index) in group.transactions" :key="index" :transfer="item" />
         </CommonCardWithLineButtons>
       </div>
 
       <!-- Load more -->
       <template v-if="canLoadMore">
-        <div v-if="previousTransactionsRequestInProgress">
+        <div v-if="previousTransfersRequestInProgress">
           <TypographyCategoryLabel>
             <CommonContentLoader :length="22" />
           </TypographyCategoryLabel>
@@ -33,9 +33,9 @@
             <TokenBalanceLoader v-for="index in 5" :key="index" />
           </CommonCardWithLineButtons>
         </div>
-        <CommonCardWithLineButtons v-else-if="previousTransactionsRequestError">
+        <CommonCardWithLineButtons v-else-if="previousTransfersRequestError">
           <CommonErrorBlock @try-again="fetchMore">
-            Loading transactions error: {{ previousTransactionsRequestError.message }}
+            Loading transactions error: {{ previousTransfersRequestError.message }}
           </CommonErrorBlock>
         </CommonCardWithLineButtons>
         <CommonButton v-else ref="loadMoreEl" class="mx-auto mt-4">Load more</CommonButton>
@@ -56,29 +56,29 @@ import { onBeforeUnmount, ref } from "vue";
 import { useIntersectionObserver } from "@vueuse/core";
 import { storeToRefs } from "pinia";
 
-import EraTransactionLineItem from "@/components/transaction/zksync/era/EraTransactionLineItem.vue";
+import EraTransferLineItem from "@/components/transaction/zksync/era/EraTransferLineItem.vue";
 
 import { useDestinationsStore } from "@/store/destinations";
 import { useOnboardStore } from "@/store/onboard";
-import { useEraTransactionsHistoryStore } from "@/store/zksync/era/transactionsHistory";
+import { useEraTransfersHistoryStore } from "@/store/zksync/era/transfersHistory";
 import { groupTransactionsByDate } from "@/utils/mappers";
 
 const onboardStore = useOnboardStore();
-const eraTransactionsHistoryStore = useEraTransactionsHistoryStore();
+const eraTransfersHistoryStore = useEraTransfersHistoryStore();
 const {
-  transactions,
-  recentTransactionsRequestInProgress,
-  recentTransactionsRequestError,
+  transfers,
+  recentTransfersRequestInProgress,
+  recentTransfersRequestError,
   canLoadMore,
-  previousTransactionsRequestInProgress,
-  previousTransactionsRequestError,
-} = storeToRefs(eraTransactionsHistoryStore);
+  previousTransfersRequestInProgress,
+  previousTransfersRequestError,
+} = storeToRefs(eraTransfersHistoryStore);
 const { destinations } = storeToRefs(useDestinationsStore());
 
-const transactionsGroups = groupTransactionsByDate(transactions, (transaction) => new Date(transaction.receivedAt));
+const transactionsGroups = groupTransactionsByDate(transfers, (transaction) => new Date(transaction.timestamp));
 
 const fetch = () => {
-  eraTransactionsHistoryStore.requestRecentTransactions();
+  eraTransfersHistoryStore.requestRecentTransfers();
 };
 fetch();
 
@@ -89,7 +89,7 @@ const unsubscribe = onboardStore.subscribeOnAccountChange((newAddress) => {
 
 const loadMoreEl = ref(null);
 const fetchMore = () => {
-  eraTransactionsHistoryStore.requestPreviousTransactions();
+  eraTransfersHistoryStore.requestPreviousTransfers();
 };
 const { stop: stopLoadMoreObserver } = useIntersectionObserver(loadMoreEl, ([{ isIntersecting }]) => {
   if (isIntersecting) {
