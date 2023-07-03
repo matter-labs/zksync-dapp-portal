@@ -6,7 +6,6 @@
 </template>
 
 <script lang="ts" setup>
-import type { Token } from "@/types";
 import type { PropType } from "vue";
 
 defineProps({
@@ -15,7 +14,11 @@ defineProps({
     required: true,
   },
   token: {
-    type: Object as PropType<Token>,
+    type: Object as PropType<{
+      decimals: number;
+      symbol: string;
+      iconUrl?: string;
+    }>,
     required: true,
   },
 });

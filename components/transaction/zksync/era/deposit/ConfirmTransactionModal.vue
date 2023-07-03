@@ -148,7 +148,7 @@ import { useNetworkStore } from "@/store/network";
 import { useOnboardStore } from "@/store/onboard";
 import { usePreferencesStore } from "@/store/preferences";
 import { useEraEthereumBalanceStore } from "@/store/zksync/era/ethereumBalance";
-import { useEraTransactionsHistoryStore } from "@/store/zksync/era/transactionsHistory";
+import { useEraTransfersHistoryStore } from "@/store/zksync/era/transfersHistory";
 import { useEraWalletStore } from "@/store/zksync/era/wallet";
 import { TransitionPrimaryButtonText } from "@/utils/transitions";
 
@@ -189,7 +189,7 @@ const emit = defineEmits<{
 }>();
 const closeModal = () => emit("update:opened", false);
 
-const eraTransactionsHistoryStore = useEraTransactionsHistoryStore();
+const eraTransfersHistoryStore = useEraTransfersHistoryStore();
 const walletEraStore = useEraWalletStore();
 const eraEthereumBalanceStore = useEraEthereumBalanceStore();
 const { account } = storeToRefs(useOnboardStore());
@@ -274,7 +274,7 @@ const makeTransaction = async () => {
   if (tx) {
     tx.waitL1Commit()
       .then(() => {
-        eraTransactionsHistoryStore.reloadRecentTransactions();
+        eraTransfersHistoryStore.reloadRecentTransfers();
         walletEraStore.requestBalance({ force: true });
         eraEthereumBalanceStore.requestBalance({ force: true });
       })

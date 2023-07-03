@@ -16,7 +16,7 @@
             <CommonAlert variant="error" :icon="ExclamationTriangleIcon">
               <p>
                 {{
-                  selectedToken?.address === ETH_ADDRESS ? "The fee has changed since the last estimation. " : ""
+                  selectedToken?.address === ETH_L2_ADDRESS ? "The fee has changed since the last estimation. " : ""
                 }}Insufficient <span class="font-medium">{{ selectedToken?.symbol }}</span> balance to pay for
                 transaction. Please go back and adjust the amount to proceed.
               </p>
@@ -114,6 +114,7 @@ import { useOnboardStore } from "@/store/onboard";
 import { useEraProviderStore } from "@/store/zksync/era/provider";
 import { useEraTokensStore } from "@/store/zksync/era/tokens";
 import { useEraWalletStore } from "@/store/zksync/era/wallet";
+import { ETH_L2_ADDRESS } from "@/utils/constants";
 import { ERA_WITHDRAWAL_DELAY } from "@/utils/doc-links";
 import { checksumAddress, decimalToBigNumber, formatRawTokenPrice } from "@/utils/formatters";
 import { TransitionAlertScaleInOutTransition, TransitionOpacity } from "@/utils/transitions";

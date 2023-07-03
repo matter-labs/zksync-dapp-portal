@@ -9,7 +9,7 @@
         :address="token.address"
         :icon-url="token.iconUrl"
       />
-      <span class="text-sm font-medium">{{ token.symbol }}</span>
+      <span :title="token.symbol" class="max-w-[5.5rem] truncate text-sm font-medium">{{ token.symbol }}</span>
     </div>
   </div>
 </template>
