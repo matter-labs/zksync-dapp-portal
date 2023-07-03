@@ -253,6 +253,7 @@ const {
   feeToken,
   enoughBalanceToCoverFee,
   estimateFee,
+  resetFee,
 } = useFee(
   computed(() => account.value.address),
   tokens,
@@ -332,6 +333,7 @@ const feeAutoUpdateEstimate = async () => {
 watch(
   [() => props.address, () => selectedToken.value?.address, () => account.value.address],
   () => {
+    resetFee();
     estimate();
   },
   { immediate: true }

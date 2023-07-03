@@ -78,6 +78,10 @@ export default (
     inProgress,
     error,
     estimateFee: estimate,
+    resetFee: () => {
+      gasLimit.value = undefined;
+      gasPrice.value = undefined;
+    },
 
     feeToken,
     enoughBalanceToCoverFee,

@@ -121,6 +121,9 @@ export default (
     inProgress,
     error,
     estimateFee: estimate,
+    resetFee: () => {
+      fee.value = undefined;
+    },
 
     feeToken,
     enoughBalanceToCoverFee,

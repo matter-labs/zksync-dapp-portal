@@ -203,6 +203,7 @@ const {
   feeToken,
   enoughBalanceToCoverFee,
   estimateFee,
+  resetFee,
 } = useFee(eraProviderStore.requestProvider, tokens, balance);
 watch(
   () => feeToken?.value?.address,
@@ -300,6 +301,7 @@ watch(
     () => selectedTokenZeroBalance.value,
   ],
   () => {
+    resetFee();
     estimate();
   },
   { immediate: true }
