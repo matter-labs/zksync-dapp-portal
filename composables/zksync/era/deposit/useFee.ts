@@ -1,6 +1,6 @@
 import { computed, ref } from "vue";
 
-import { BigNumber, VoidSigner } from "ethers";
+import { BigNumber, ethers, VoidSigner } from "ethers";
 import { L1VoidSigner } from "zksync-web3";
 import { L1_RECOMMENDED_MIN_ERC20_DEPOSIT_GAS_LIMIT } from "zksync-web3/build/src/utils";
 
@@ -37,7 +37,8 @@ export default (
     if (!address.value) throw new Error("Address is not available");
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const voidSigner = new VoidSigner(address.value, getPublicClient() as any);
+    const web3Provider = new ethers.providers.Web3Provider(getPublicClient() as any, "any");
+    const voidSigner = new VoidSigner(address.value, web3Provider);
     return L1VoidSigner.from(voidSigner, getEraProvider()) as unknown as L1Signer;
   };
 
@@ -76,6 +77,14 @@ export default (
     const signer = getVoidL1Signer();
     if (!signer) throw new Error("Signer is not available");
 
+    /* const initialCall = signer.call;
+    signer.call = async (...params: unknown[]) => {
+      const result = await initialCall(...params);
+      if (typeof result === "object" && result.data) {
+        return result.data;
+      }
+      return result;
+    }; */
     return await signer.getFullRequiredDepositFee({
       token: ETH_L1_ADDRESS,
       to: params.to,
