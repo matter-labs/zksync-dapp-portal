@@ -13,13 +13,13 @@ const eraNetworks: Record<
     id: 324,
     name: "zkSync Era Mainnet",
     rpcUrl: "https://mainnet.era.zksync.io",
-    blockExplorerApi: "https://zksync2-mainnet-explorer.zksync.io",
+    blockExplorerApi: "https://block-explorer-api.mainnet.zksync.io",
   },
   goerli: {
     id: 280,
     name: "zkSync Era Testnet",
     rpcUrl: "https://testnet.era.zksync.dev",
-    blockExplorerApi: "https://zksync2-testnet-explorer.zksync.dev",
+    blockExplorerApi: "https://block-explorer-api.testnets.zksync.dev",
   },
 } as const;
 

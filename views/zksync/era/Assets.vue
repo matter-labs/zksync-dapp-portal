@@ -100,7 +100,7 @@ import useSingleLoading from "@/composables/useSingleLoading";
 import { useDestinationsStore } from "@/store/destinations";
 import { useNetworkStore } from "@/store/network";
 import { useOnboardStore } from "@/store/onboard";
-import { useEraTransactionsHistoryStore } from "@/store/zksync/era/transactionsHistory";
+import { useEraTransfersHistoryStore } from "@/store/zksync/era/transfersHistory";
 import { useEraWalletStore } from "@/store/zksync/era/wallet";
 import { parseTokenAmount, removeSmallAmount } from "@/utils/formatters";
 import { calculateTotalTokensPrice, isOnlyZeroes } from "@/utils/helpers";
@@ -108,12 +108,12 @@ import { TransitionAlertScaleInOutTransition } from "@/utils/transitions";
 
 const onboardStore = useOnboardStore();
 const walletEraStore = useEraWalletStore();
-const eraTransactionsHistoryStore = useEraTransactionsHistoryStore();
+const eraTransfersHistoryStore = useEraTransfersHistoryStore();
 const { balance, balanceInProgress, balanceError, allBalancePricesLoaded } = storeToRefs(walletEraStore);
 const { destinations } = storeToRefs(useDestinationsStore());
 const { selectedEthereumNetwork } = storeToRefs(useNetworkStore());
-const { transactions, recentTransactionsRequestInProgress, recentTransactionsRequestError } =
-  storeToRefs(eraTransactionsHistoryStore);
+const { transfers, recentTransfersRequestInProgress, recentTransfersRequestError } =
+  storeToRefs(eraTransfersHistoryStore);
 
 const displayedBalances = computed(() => {
   return balance.value.filter(({ amount, decimals, price }) => {
@@ -130,12 +130,12 @@ const { loading, reset: resetSingleLoading } = useSingleLoading(
   computed(() => balanceInProgress.value || !allBalancePricesLoaded.value)
 );
 const { loading: transactionsLoading, reset: resetTransactionsSingleLoading } = useSingleLoading(
-  computed(() => recentTransactionsRequestInProgress.value)
+  computed(() => recentTransfersRequestInProgress.value)
 );
 const isFaucetDisplayed = computed(() => {
   if (loading.value || transactionsLoading.value) return false;
   if (selectedEthereumNetwork.value.network === "mainnet") {
-    if (recentTransactionsRequestError.value || transactions.value.length > 2) {
+    if (recentTransfersRequestError.value || transfers.value.length > 3) {
       return false;
     }
     return true;
@@ -145,7 +145,7 @@ const isFaucetDisplayed = computed(() => {
 
 const fetch = () => {
   walletEraStore.requestBalance();
-  eraTransactionsHistoryStore.requestRecentTransactions();
+  eraTransfersHistoryStore.requestRecentTransfers();
 };
 fetch();
 

@@ -63,7 +63,7 @@
       <template v-else>
         <CommonButtonTopInfo>You already requested test tokens in the last 24 hours</CommonButtonTopInfo>
         <CommonButton as="button" variant="primary-solid" disabled class="mx-auto">
-          You can use faucet in&nbsp;<CommonTimer :future-date="faucetAvailableTime" />
+          You can use faucet in&nbsp;<CommonTimer :future-date="faucetAvailableTime!" />
         </CommonButton>
       </template>
     </div>
@@ -84,8 +84,12 @@ import useFaucet from "@/composables/zksync/era/useFaucet";
 import { useNetworkStore } from "@/store/network";
 import { useOnboardStore } from "@/store/onboard";
 import { useEraTokensStore } from "@/store/zksync/era/tokens";
+import { useEraTransfersHistoryStore } from "@/store/zksync/era/transfersHistory";
+import { useEraWalletStore } from "@/store/zksync/era/wallet";
 
 const eraTokensStore = useEraTokensStore();
+const walletEraStore = useEraWalletStore();
+const eraTransfersHistoryStore = useEraTransfersHistoryStore();
 const { account } = storeToRefs(useOnboardStore());
 const { selectedEthereumNetwork } = storeToRefs(useNetworkStore());
 const { tokens, tokensRequestInProgress, tokensRequestError } = storeToRefs(eraTokensStore);
@@ -176,7 +180,12 @@ const status = computed<FaucetStep>(() => {
 });
 const requestTokens = () => {
   if (buttonDisabled.value) return;
-  requestTestTokens(turnstileToken.value!).catch(() => undefined);
+  requestTestTokens(turnstileToken.value!)
+    .then(() => {
+      walletEraStore.requestBalance({ force: true });
+      eraTransfersHistoryStore.reloadRecentTransfers();
+    })
+    .catch(() => undefined);
 };
 </script>
 

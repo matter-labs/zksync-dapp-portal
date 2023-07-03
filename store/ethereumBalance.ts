@@ -5,7 +5,7 @@ import type { TokenBalance } from "alchemy-sdk";
 
 import { useNetworkStore } from "@/store/network";
 import { useOnboardStore } from "@/store/onboard";
-import { ETH_ADDRESS } from "@/utils/constants";
+import { ETH_L1_ADDRESS } from "@/utils/constants";
 import { checksumAddress } from "@/utils/formatters";
 
 export const useEthereumBalanceStore = defineStore("ethereumBalance", () => {
@@ -44,7 +44,7 @@ export const useEthereumBalanceStore = defineStore("ethereumBalance", () => {
       };
       const [ethersBalance] = await Promise.all([alchemy.core.getBalance(account.value.address!), fetchBalances()]);
       balances.push({
-        contractAddress: ETH_ADDRESS,
+        contractAddress: ETH_L1_ADDRESS,
         tokenBalance: ethersBalance.toString(),
       } as TokenBalance);
       return balances;
