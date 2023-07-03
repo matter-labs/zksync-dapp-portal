@@ -21,19 +21,19 @@
           <CommonLabelButton as="RouterLink" :to="{ name: 'payments-all' }">View all</CommonLabelButton>
         </div>
         <div class="-mx-2 -mt-1 -mb-2">
-          <template v-if="recentTransactionsRequestInProgress">
+          <template v-if="recentTransfersRequestInProgress">
             <TokenBalanceLoader v-for="index in 5" :key="index" />
           </template>
-          <div v-else-if="recentTransactionsRequestError" class="m-3 mb-2.5 -mt-1">
+          <div v-else-if="recentTransfersRequestError" class="m-3 mb-2.5 -mt-1">
             <CommonErrorBlock @try-again="fetch">
-              {{ recentTransactionsRequestError.message }}
+              {{ recentTransfersRequestError.message }}
             </CommonErrorBlock>
           </div>
-          <template v-else-if="transactions.length">
-            <EraTransactionLineItem
-              v-for="(item, index) in transactions.slice(0, 5)"
+          <template v-else-if="transfers.length">
+            <EraTransferLineItem
+              v-for="(item, index) in transfers.slice(0, 5)"
               :key="index"
-              :transaction="item"
+              :transfer="item"
               display-date
             />
           </template>
@@ -55,20 +55,20 @@ import { onBeforeUnmount } from "vue";
 import { ArrowsRightLeftIcon, PaperAirplaneIcon } from "@heroicons/vue/24/outline";
 import { storeToRefs } from "pinia";
 
-import EraTransactionLineItem from "@/components/transaction/zksync/era/EraTransactionLineItem.vue";
+import EraTransferLineItem from "@/components/transaction/zksync/era/EraTransferLineItem.vue";
 
 import { useDestinationsStore } from "@/store/destinations";
 import { useOnboardStore } from "@/store/onboard";
-import { useEraTransactionsHistoryStore } from "@/store/zksync/era/transactionsHistory";
+import { useEraTransfersHistoryStore } from "@/store/zksync/era/transfersHistory";
 
 const onboardStore = useOnboardStore();
-const eraTransactionsHistoryStore = useEraTransactionsHistoryStore();
-const { transactions, recentTransactionsRequestInProgress, recentTransactionsRequestError } =
-  storeToRefs(eraTransactionsHistoryStore);
+const eraTransfersHistoryStore = useEraTransfersHistoryStore();
+const { transfers, recentTransfersRequestInProgress, recentTransfersRequestError } =
+  storeToRefs(eraTransfersHistoryStore);
 const { destinations } = storeToRefs(useDestinationsStore());
 
 const fetch = () => {
-  eraTransactionsHistoryStore.requestRecentTransactions();
+  eraTransfersHistoryStore.requestRecentTransfers();
 };
 fetch();
 

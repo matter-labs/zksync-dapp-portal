@@ -7,7 +7,7 @@
     <div class="flex h-full flex-col overflow-auto">
       <div class="h2 text-center sm:h1">Transaction submitted</div>
       <CommonCardWithLineButtons>
-        <EraTransactionLineItem :transaction="transaction" />
+        <EraTransferLineItem :transfer="transfer" />
       </CommonCardWithLineButtons>
 
       <CommonAlert class="mt-3" variant="neutral" :icon="InformationCircleIcon">
@@ -38,17 +38,17 @@
 import { ArrowUpRightIcon, InformationCircleIcon } from "@heroicons/vue/24/outline";
 import { storeToRefs } from "pinia";
 
-import EraTransactionLineItem from "@/components/transaction/zksync/era/EraTransactionLineItem.vue";
+import EraTransferLineItem from "@/components/transaction/zksync/era/EraTransferLineItem.vue";
 
-import type { EraTransaction } from "@/utils/zksync/era/mappers";
+import type { EraTransfer } from "@/utils/zksync/era/mappers";
 import type { PropType } from "vue";
 
 import { useDestinationsStore } from "@/store/destinations";
 import { ERA_WITHDRAWAL_DELAY } from "@/utils/doc-links";
 
 defineProps({
-  transaction: {
-    type: Object as PropType<EraTransaction>,
+  transfer: {
+    type: Object as PropType<EraTransfer>,
     required: true,
   },
 });
