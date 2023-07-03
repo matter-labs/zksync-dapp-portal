@@ -1,6 +1,6 @@
 {
-  "name": "zksync-portal",
-  "description": "zkSync Portal - all in one wallet for zkSync",
+  "name": "zksync-dapp-portal",
+  "description": "zkSync Portal provides all the required tools for working with Era and Lite networks such as Wallet, Bridge & Faucet functionality",
   "private": true,
   "scripts": {
     "build": "nuxt build",
