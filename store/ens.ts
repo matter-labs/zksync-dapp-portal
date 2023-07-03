@@ -12,8 +12,7 @@ export const useEnsStore = defineStore("ens", () => {
   const ensName = ref<string | null>(null);
   const ensAvatar = ref<string | null>(null);
 
-  const fetchName = async () => {
-    return;
+  const fetchEnsData = async () => {
     ensName.value = null;
     ensAvatar.value = null;
 
@@ -22,20 +21,24 @@ export const useEnsStore = defineStore("ens", () => {
     }
 
     const initialAddress = account.value.address;
-    const [name, avatar] = await Promise.all([
-      fetchEnsName({ address: account.value.address, chainId: 1 }),
-      fetchEnsAvatar({ address: account.value.address, chainId: 1 }),
-    ]);
+    const name = await fetchEnsName({ address: account.value.address, chainId: 1 });
     if (account.value.address === initialAddress) {
       ensName.value = name;
-      ensAvatar.value = avatar;
+    } else {
+      return;
+    }
+    if (name) {
+      const avatar = await fetchEnsAvatar({ name, chainId: 1 }).catch(() => null);
+      if (account.value.address === initialAddress) {
+        ensAvatar.value = avatar;
+      }
     }
   };
 
-  fetchName();
+  fetchEnsData();
 
   onboardStore.subscribeOnAccountChange(() => {
-    fetchName();
+    fetchEnsData();
   });
 
   return {
