@@ -4,7 +4,7 @@
       <PopoverButton
         ref="button"
         class="popover-toggle-button"
-        :class="[!open ? '' : 'text-primary-200']"
+        :class="[!open ? '' : 'opacity-70']"
         aria-label="Toggle menu list"
       >
         <slot />
@@ -50,7 +50,7 @@ function toggleMenu(isOpened: boolean, open: boolean) {
   @apply w-max;
 
   .popover-toggle-button {
-    @apply text-base outline-none ring-0 focus:text-primary-400;
+    @apply text-base outline-none ring-0;
   }
   .popover-panel {
     @apply absolute top-[4.5rem] left-1/2 z-20 w-[700px] -translate-x-1/2 transform rounded-lg bg-gray/10 text-left shadow-lg backdrop-blur-xl dark:bg-neutral-950/60;
