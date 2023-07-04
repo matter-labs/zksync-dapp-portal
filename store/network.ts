@@ -5,19 +5,29 @@ import { defineStore } from "pinia";
 import type { Chain } from "@wagmi/core/chains";
 export type EthereumNetworkName = "goerli" | "mainnet";
 
-export type ExtendedChain = Chain & { network: EthereumNetworkName; iconUrl?: string; hostnames: string[] };
+export type ExtendedChain = Chain & {
+  network: EthereumNetworkName;
+  iconUrl?: string;
+  hostnames: { staging: string; production: string };
+};
 export const chains: ExtendedChain[] = [
   {
     ...mainnet,
     name: "Mainnet",
     network: "mainnet",
     iconUrl: "/img/ethereum.svg",
-    hostnames: ["https://staging-portal.zksync.dev"],
+    hostnames: {
+      staging: "https://staging-portal.zksync.dev",
+      production: "https://portal.zksync.io",
+    },
   },
   {
     ...goerli,
     name: "Goerli Testnet",
-    hostnames: ["https://goerli.staging-portal.zksync.dev"],
+    hostnames: {
+      staging: "https://goerli.staging-portal.zksync.dev",
+      production: "https://goerli.portal.zksync.io",
+    },
   },
 ];
 
@@ -54,7 +64,7 @@ export const useNetworkStore = defineStore("network", () => {
   const identifyNetwork = () => {
     const windowLocation = window.location;
     const networkFromQueryParam = new URLSearchParams(windowLocation.search).get("network");
-    const networkOnDomain = chains.find((e) => e.hostnames.includes(windowLocation.origin));
+    const networkOnDomain = chains.find((e) => Object.values(e.hostnames).includes(windowLocation.origin));
     const defaultNetwork = chains[0];
     const defaultNetworkName = defaultNetwork.network;
     if (networkFromQueryParam && chains.some((e) => e.network === networkFromQueryParam)) {
