@@ -82,3 +82,17 @@ Feature: Artifacts - UI
     Then Element with "src" "/img/zksync-lite.svg" should be "clickable"
     Then Element with "src" "/img/ethereum.svg" should be "visible"
     Then Element with "src" "/img/ethereum.svg" should be "clickable"
+
+  @id1393
+  Scenario: Check artifacts on the Contact modal window
+    Given I am on the Main page
+    Given I click by "text" with "Contacts" value
+    When I click by "text" with "Add contact" value
+    Then Element with "xpath" "//*[@class='modal-card']//div[text()='Add contact']" should be "visible"
+    Then Element with "testId" "close-button" should be "visible"
+    Then Element with "text" "Name of the contact" should be "visible"
+    Then Element with "text" "Ethereum address" should be "visible"
+    Then Element with "text" "Save contact" should be "visible"
+    Then Element with "text" "Save contact" should be "clickable"
+
+

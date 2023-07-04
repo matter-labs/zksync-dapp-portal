@@ -32,7 +32,7 @@ BeforeAll(async function (this: ICustomWorld) {
       args: [
         `--disable-extensions-except=${pathToExtension}`,
         `--load-extension=${pathToExtension}`,
-        "--disable-web-security",
+        // "--disable-web-security",
       ],
       viewport: config.mainWindowSize,
       permissions: ["clipboard-read"],

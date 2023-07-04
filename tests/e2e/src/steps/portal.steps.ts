@@ -174,7 +174,7 @@ Given(
   "I fill the {string} input field on the Contacts page with {string} text",
   async function (this: ICustomWorld, inputField: string, text: string) {
     contactsPage = new ContactsPage(this);
-    await contactsPage.fill(inputField, text);
+    await contactsPage.fillContactFields(inputField, text);
   }
 );
 
@@ -186,10 +186,40 @@ Given("I click on the Save contact button", async function (this: ICustomWorld) 
   await this.page?.locator("//button[@type='submit' and text()='Save contact']").first().click();
 });
 
+Given("I click on the Edit contact button", async function (this: ICustomWorld) {
+  contactsPage = new ContactsPage(this);
+  await contactsPage.pressEditBtnModal();
+});
+
 Given("I am on the Main page", async function (this: ICustomWorld) {
   await expect(this.page?.url()).toContain(config.BASE_URL);
 });
 
-Given("The address includes {string} a part route", async function (this: ICustomWorld, route: string) {
-  await expect(this.page?.url()).toContain(config.BASE_URL + route);
+Then("Current page have {string} address", config.stepTimeout, async function (this: ICustomWorld, route: string) {
+  mainPage = new MainPage(this);
+  helper = new Helper(this);
+  await this.page?.waitForURL("**" + route);
+  result = await this.page?.url();
+
+  await expect(result).toContain(route);
 });
+
+Given("I click the Send button (modal) on the Contacts page", async function (this: ICustomWorld) {
+  contactsPage = new ContactsPage(this);
+  await contactsPage.pressSendBtnModal();
+});
+
+Given("I click on the First saved contact within the Contacts page", async function (this: ICustomWorld) {
+  contactsPage = new ContactsPage(this);
+  await contactsPage.clickOnSavedContact();
+});
+
+Given(
+  "The {string} contact name is visible on the modal window within the Contacts page",
+  async function (this: ICustomWorld, contactName: string) {
+    contactsPage = new ContactsPage(this);
+    element = await this.page?.locator(await contactsPage.contactNameModal(contactName));
+
+    await expect(element).toBeVisible();
+  }
+);
