@@ -56,9 +56,10 @@ export const useNetworkStore = defineStore("network", () => {
     const networkFromQueryParam = new URLSearchParams(windowLocation.search).get("network");
     const networkOnDomain = chains.find((e) => e.hostnames.includes(windowLocation.origin));
     const defaultNetwork = chains[0];
+    const defaultNetworkName = defaultNetwork.network;
     if (networkFromQueryParam && chains.some((e) => e.network === networkFromQueryParam)) {
       selectedEthereumNetworkName.value = networkFromQueryParam as EthereumNetworkName;
-    } else if (selectedEthereumNetworkName.value === defaultNetwork.name) {
+    } else if (selectedEthereumNetworkName.value === defaultNetworkName) {
       if (networkOnDomain) {
         selectedEthereumNetworkName.value = networkOnDomain.network;
       } else {
