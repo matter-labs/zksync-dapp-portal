@@ -1,9 +1,12 @@
 import { formatError } from "@/utils/formatters";
+import { retry } from "@/utils/helpers";
 
 const defaultOptions: {
   cache?: number | boolean;
+  retries?: number;
 } = {
   cache: true,
+  retries: 0,
 };
 type UsePromiseOptions = typeof defaultOptions;
 
@@ -30,7 +33,7 @@ export default <ResultType, ErrorType = Error>(fn: () => Promise<ResultType>, op
   const execute = async (options?: UsePromiseExecuteOptions): Promise<ResultType | undefined> => {
     const { force } = Object.assign({}, defaultExecuteOptions, options);
     if (!promise || force) {
-      promise = fn();
+      promise = retry(fn, { retries: opts.retries });
       removeCacheTimeoutClear();
       inProgress.value = true;
       error.value = undefined;

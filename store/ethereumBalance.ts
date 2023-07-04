@@ -7,6 +7,7 @@ import { useNetworkStore } from "@/store/network";
 import { useOnboardStore } from "@/store/onboard";
 import { ETH_L1_ADDRESS } from "@/utils/constants";
 import { checksumAddress } from "@/utils/formatters";
+import { retry } from "@/utils/helpers";
 
 export const useEthereumBalanceStore = defineStore("ethereumBalance", () => {
   const onboardStore = useOnboardStore();
@@ -42,7 +43,10 @@ export const useEthereumBalanceStore = defineStore("ethereumBalance", () => {
           await fetchBalances(result.pageKey);
         }
       };
-      const [ethersBalance] = await Promise.all([alchemy.core.getBalance(account.value.address!), fetchBalances()]);
+      const [ethersBalance] = await Promise.all([
+        retry(() => alchemy.core.getBalance(account.value.address!)),
+        retry(fetchBalances),
+      ]);
       balances.push({
         contractAddress: ETH_L1_ADDRESS,
         tokenBalance: ethersBalance.toString(),
