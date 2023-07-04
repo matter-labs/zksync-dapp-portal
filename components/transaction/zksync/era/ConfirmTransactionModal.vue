@@ -261,8 +261,8 @@ const makeTransaction = async () => {
     tx.wait()
       .then(async () => {
         transactionCommitted.value = true;
-        eraTransfersHistoryStore.reloadRecentTransfers();
-        walletEraStore.requestBalance({ force: true });
+        eraTransfersHistoryStore.reloadRecentTransfers().catch(() => undefined);
+        walletEraStore.requestBalance({ force: true }).catch(() => undefined);
       })
       .catch((err) => {
         transactionCommitted.value = false;
