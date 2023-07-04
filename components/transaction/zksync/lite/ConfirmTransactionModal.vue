@@ -267,10 +267,10 @@ const makeTransaction = async () => {
       await tx[0].awaitReceipt();
       transactionCommitted.value = true;
 
-      liteTransactionsHistoryStore.reloadRecentTransactions();
-      walletLiteStore.requestBalance({ force: true });
+      liteTransactionsHistoryStore.reloadRecentTransactions().catch(() => undefined);
+      walletLiteStore.requestBalance({ force: true }).catch(() => undefined);
       if (liteAccountActivationStore.isAccountActivated === false) {
-        liteAccountActivationStore.checkAccountActivation({ force: true });
+        liteAccountActivationStore.checkAccountActivation({ force: true }).catch(() => undefined);
       }
     } catch (err) {
       transactionCommitted.value = false;
