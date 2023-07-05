@@ -27,11 +27,11 @@ export class BasePage {
       selector = this.byTestId + element;
     }
     await this.world.page?.waitForSelector(selector, config.increasedTimeout);
-    await this.world.page?.locator(selector).first().click({ force: true, timeout: 5000 });
+    await this.world.page?.locator(selector).first().click({ force: true, timeout: config.increasedTimeout.timeout });
   }
 
   async dblClick(element: any) {
-    await this.world.page?.locator(element).first().dblclick({ force: true, timeout: 5000 });
+    await this.world.page?.locator(element).first().dblclick({ force: true, timeout: config.increasedTimeout.timeout });
   }
 
   async fill(element: any, text: string, testId?: boolean) {

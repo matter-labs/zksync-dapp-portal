@@ -2,7 +2,7 @@ import AdmZip from "adm-zip";
 import fs from "fs";
 import fetch from "node-fetch";
 
-const metamaskVersion = process.env.METAMASK_VERSION;
+const metamaskVersion = "10.14.1";
 const metamaskZipSource =
   "https://github.com/MetaMask/metamask-extension/releases/download/v" +
   metamaskVersion +
