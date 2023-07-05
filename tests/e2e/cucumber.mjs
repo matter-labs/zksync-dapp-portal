@@ -11,8 +11,8 @@ export default {
   paths: ["features/**/*.feature"],
   require: ["src/**/*.ts"],
   format: [
-    "json:reports/cucumber-report.json",
-    "html:reports/report.html",
+    // "json:reports/cucumber-report.json",
+    // "html:reports/report.html",
     "summary",
     "progress-bar",
     "@cucumber/pretty-formatter",
