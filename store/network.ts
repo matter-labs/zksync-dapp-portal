@@ -1,9 +1,9 @@
 import { useStorage } from "@vueuse/core";
-import { goerli, mainnet } from "@wagmi/core/chains";
+import { goerli, mainnet, sepolia } from "@wagmi/core/chains";
 import { defineStore } from "pinia";
 
 import type { Chain } from "@wagmi/core/chains";
-export type EthereumNetworkName = "goerli" | "mainnet";
+export type EthereumNetworkName = "goerli" | "sepolia" | "mainnet";
 
 export type ExtendedChain = Chain & {
   network: EthereumNetworkName;
@@ -27,6 +27,14 @@ export const chains: ExtendedChain[] = [
     hostnames: {
       staging: "https://goerli.staging-portal.zksync.dev",
       production: "https://goerli.portal.zksync.io",
+    },
+  },
+  {
+    ...sepolia,
+    name: "Sepolia Testnet",
+    hostnames: {
+      staging: "",
+      production: "",
     },
   },
 ];

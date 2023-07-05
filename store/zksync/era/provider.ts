@@ -6,20 +6,38 @@ import type { EthereumNetworkName } from "@/store/network";
 import { useNetworkStore } from "@/store/network";
 
 const eraNetworks: Record<
-  EthereumNetworkName,
-  { id: 324 | 280; name: string; rpcUrl: string; blockExplorerApi: string }
+  EthereumNetworkName & "stage",
+  {
+    id: 324 | 280 | 270;
+    name: string;
+    rpcUrl: string;
+    blockExplorerUrl: string;
+    blockExplorerApi: string;
+    faucetUrl?: string;
+  }
 > = {
   mainnet: {
     id: 324,
     name: "zkSync Era Mainnet",
     rpcUrl: "https://mainnet.era.zksync.io",
+    blockExplorerUrl: "https://explorer.zksync.io",
     blockExplorerApi: "https://block-explorer-api.mainnet.zksync.io",
   },
   goerli: {
     id: 280,
     name: "zkSync Era Testnet",
     rpcUrl: "https://testnet.era.zksync.dev",
+    blockExplorerUrl: "https://goerli.explorer.zksync.io",
     blockExplorerApi: "https://block-explorer-api.testnets.zksync.dev",
+    faucetUrl: "https://testnet2-faucet.zksync.dev",
+  },
+  stage: {
+    id: 270,
+    name: "zkSync Era Stage",
+    rpcUrl: "https://z2-dev-api.zksync.dev",
+    blockExplorerUrl: "https://goerli.explorer.zksync.io",
+    blockExplorerApi: "https://block-explorer-api.testnets.zksync.dev",
+    faucetUrl: "https://stage2-faucet.zksync.dev",
   },
 } as const;
 
