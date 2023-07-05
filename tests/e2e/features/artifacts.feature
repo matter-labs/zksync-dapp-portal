@@ -6,7 +6,6 @@ Feature: Artifacts - UI
 
   @id1332 @emptyWallet
   Scenario: Check artifacts for an empty wallet
-    # Given I click by "text" with "zkSync Era∎" value
     Then A wallet should be "empty"
     Then Message " You don't have any balances on " should be visible
     Then Message "zkSync Era∎ Goerli" should be visible
