@@ -1,6 +1,7 @@
 {
   "extends": "./.nuxt/tsconfig.json",
   "compilerOptions": {
-    "target": "es2020"
+    "target": "es2020",
+    "types": ["node"]
   }
 }
