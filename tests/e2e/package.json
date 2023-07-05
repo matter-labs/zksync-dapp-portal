@@ -5,6 +5,6 @@
   "scripts": {
     "metamask:install": "METAMASK_VERSION=10.14.1 node utils/metamaskDownloader.mjs",
     "postinstall": "npm run metamask:install",
-    "test:e2e": "../../node_modules/@cucumber/cucumber/bin/cucumber-js --tags \"@contacts and not @incognito\""
+    "test:e2e": "../../node_modules/@cucumber/cucumber/bin/cucumber-js --tags \"@id1332 and not @incognito\""
   }
 }

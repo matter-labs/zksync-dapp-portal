@@ -14,18 +14,10 @@ export class LoginPage extends BasePage {
     return "//button[2]";
   }
 
-  // get logo() {
-  //   return ".logo-container";
-  // }
-  //
   get loginBtn() {
     return `${this.byTestId}login-button`;
   }
-  //
-  // get networkSwitcher() {
-  //   return `${this.byTestId}network-switcher`;
-  // }
-  //
+
   get mainTitle() {
     return "//h1[text()='zkSync Portal']";
   }
@@ -34,14 +26,10 @@ export class LoginPage extends BasePage {
     const loginStatus = await this.checkLoginStatus();
     if (!loginStatus) {
       const metamaskPage = await new MetamaskPage(this.world);
-      // if (await this.world.page?.locator(this.loginBtn).isEnabled(config.stepTimeout)) {
-      // if (await helper.check(this.loginBtn, 40*1000)) {
+
       await this.world.page?.waitForSelector(this.loginBtn);
-      // await this.click(this.loginBtn); //click a login button
       await this.world.page?.locator(this.loginBtn).click(config.increasedTimeout); //click a login button
-      // } else {
-      //   console.warn("The login button is not enabled");
-      // }
+
       const popUp = await new MetamaskPage(this.world).catchPopUpByClick("w3m-wallet-image");
       await popUp?.locator(metamaskPage.unlockPasswordField).isVisible(config.defaultTimeout);
       await popUp?.setViewportSize(config.popUpWindowSize);
