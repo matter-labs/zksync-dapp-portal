@@ -27,12 +27,6 @@ yarn install
 pnpm install
 ```
 
-Make sure you have .env.local in your env: tests\e2e\src\support\.env.local
-
-```
-Create this file and use your wallets and private keys in this file for local debugging
-```
-
 ### Development Server
 
 Start the development server on http://localhost:3000
