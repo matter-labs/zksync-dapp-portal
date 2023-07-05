@@ -91,7 +91,7 @@ export class BasePage {
   }
 
   async getElementByHref(href: string) {
-    element = await this.world.page?.locator(`//*[@href="${href}"]`);
+    element = await this.world.page?.locator(`//*[@href="${href}"]`).first();
     await element.scrollIntoViewIfNeeded();
     return await element;
   }

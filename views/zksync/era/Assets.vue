@@ -51,7 +51,7 @@
             <CommonEmptyBlock class="mx-3 mb-3 mt-1">
               <div class="wrap-balance">
                 You don't have any balances on
-                <span class="font-medium">{{ destinations.era.label }} data-testid="no-balances-warning"</span>
+                <span class="font-medium" data-testid="no-balances-warning">{{ destinations.era.label }}</span>
               </div>
               <span class="mt-1.5 inline-block">
                 Proceed to

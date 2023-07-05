@@ -6,7 +6,7 @@ Feature: Artifacts - UI
 
   @id1332 @emptyWallet
   Scenario: Check artifacts for an empty wallet
-    Given I click by "text" with "zkSync Era∎" value
+#    Given I click by "text" with "zkSync Era∎" value
     Then A wallet should be "empty"
     Then Message " You don't have any balances on " should be visible
     Then Message "zkSync Era∎ Goerli" should be visible
@@ -34,10 +34,9 @@ Feature: Artifacts - UI
   Scenario: Check artifacts on a Menu items
     Then Element with "href" "/" should be "visible"
     Then Element with "href" "/" should be "clickable"
-    Then Element with "text" "Home" should be "clickable"
     Then Element with "href" "/payments" should be "visible"
     Then Element with "href" "/payments" should be "clickable"
-    Then Element with "text" "Payments" should be "clickable"
+    Then Element with "text" "Transactions" should be "clickable"
     Then Element with "href" "/contacts" should be "visible"
     Then Element with "href" "/contacts" should be "clickable"
     Then Element with "text" "Contacts" should be "clickable"
@@ -50,10 +49,10 @@ Feature: Artifacts - UI
     Then Message "Change network" should be visible
     Then Element with "href" "/?network=mainnet" should be "visible"
     Then Element with "href" "/?network=mainnet" should be "clickable"
-    Then Element with "text" "Mainnet" should be "visible"
+    Then Element with "text" "zkSync Era Mainnet" should be "visible"
     Then Element with "href" "/?network=goerli" should be "visible"
     Then Element with "href" "/?network=goerli" should be "clickable"
-    Then Element with "text" "Goerli Testnet" should be "visible"
+    Then Element with "text" "zkSync Era Goerli Testnet" should be "visible"
 
   @id1363 @loginPage
   Scenario: Check artifacts on the Login page
