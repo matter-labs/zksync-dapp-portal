@@ -10,6 +10,13 @@ Before the execution of the end-2-end tests there needs to install dependencies:
 npm install
 ```
 
+Make sure you have .env.local in your env: tests\e2e\src\support\.env.local
+
+```
+Create this file and use your wallets and private keys in this file for local debugging
+```
+
+
 After the above script would be finished, the "postinstall" script starts to download and extract appropriate version 
 of MetaMask Chrome extension into the 'tests/e2e/src/support/extension' directory
 
