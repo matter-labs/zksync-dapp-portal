@@ -59,14 +59,14 @@ const networkChangeModalOpened = ref(false);
   grid-area: menu / menu / menu / menu;
 
   @media screen and (min-width: 720px) {
-    @apply top-0 bottom-auto max-h-[calc(100vh_-_72px_-_12px)] px-4 py-8;
+    @apply top-0 bottom-auto max-h-[calc(100vh_-_72px)] px-4 py-8 lg:max-h-[calc(100vh_-_72px_-_12px)];
   }
   @media screen and (min-width: 1024px) {
     @apply px-6;
   }
 
   .navbar-inner {
-    @apply grid h-full min-w-[3.5rem] grid-cols-[max-content_1fr] grid-rows-[repeat(2,_max-content)_1fr] bg-white dark:bg-neutral-900 md:max-w-[3.5rem] md:grid-cols-1 md:bg-transparent dark:md:bg-transparent xl:max-w-[12.5rem]; /* hidden md:block */
+    @apply grid h-full min-w-[3.5rem] grid-cols-[max-content_1fr] grid-rows-[repeat(2,_max-content)_1fr] bg-white dark:bg-neutral-900 md:max-w-[3.5rem] md:grid-cols-1 md:bg-transparent dark:md:bg-transparent xl:max-w-[12.5rem];
 
     .navbar-links-container {
       @apply flex justify-around space-y-1 pr-3 md:mt-6 md:flex-col md:pr-0;

@@ -40,6 +40,8 @@ import useCopy from "@/composables/useCopy";
 import type { TransactionDestination } from "@/store/destinations";
 import type { PropType } from "vue";
 
+import { shortenAddress } from "@/utils/formatters";
+
 const props = defineProps({
   address: {
     type: String,

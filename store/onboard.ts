@@ -1,4 +1,4 @@
-import { configureChains, createClient, fetchSigner } from "@wagmi/core";
+import { configureChains, createConfig, getPublicClient, getWalletClient } from "@wagmi/core";
 import { zkSync, zkSyncTestnet } from "@wagmi/core/chains";
 import { publicProvider } from "@wagmi/core/providers/public";
 import { EthereumClient, w3mConnectors, w3mProvider } from "@web3modal/ethereum";
@@ -18,29 +18,23 @@ export const useOnboardStore = defineStore("onboard", () => {
   const { selectedColorMode } = useColorMode();
   const { selectedEthereumNetwork } = storeToRefs(useNetworkStore());
 
-  const { provider } = configureChains(extendedChains, [
+  const { publicClient } = configureChains(extendedChains, [
     w3mProvider({ projectId: env.walletConnectProjectID }),
     publicProvider(),
   ]);
-  const wagmiClient = createClient({
+  const wagmiClient = createConfig({
     autoConnect: true,
     connectors: w3mConnectors({
       projectId: env.walletConnectProjectID,
-      version: 2,
       chains: extendedChains,
     }),
-    provider,
+    publicClient,
   });
   const ethereumClient = new EthereumClient(wagmiClient, extendedChains);
 
   const getWalletName = () => {
-    if (wagmiClient.connector?.name === "WalletConnect" || wagmiClient.connector?.name === "WalletConnectLegacy") {
-      /* TODO: Figure our how to properly get wallet name from WalletConnect */
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      return wagmiClient.data?.provider?.provider?.connector?.peerMeta?.name;
-    }
-    return wagmiClient.connector?.name;
+    // TODO: Figure out how to get wallet name in WalletConnect v2
+    return undefined;
   };
 
   const account = ref(ethereumClient.getAccount());
@@ -68,7 +62,9 @@ export const useOnboardStore = defineStore("onboard", () => {
     connectorName.value = wagmiClient.connector?.name;
     walletName.value = getWalletName();
   });
-  ethereumClient.watchNetwork((updatedNetwork) => (network.value = updatedNetwork));
+  ethereumClient.watchNetwork((updatedNetwork) => {
+    network.value = updatedNetwork;
+  });
   web3modal.subscribeModal((state) => {
     if (!state.open && !account.value.isConnected) {
       disconnect();
@@ -128,23 +124,18 @@ export const useOnboardStore = defineStore("onboard", () => {
     }
   );
 
-  const getEIP1193Provider = async () => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const signer = (await fetchSigner()) as any;
-    if (!signer) throw new Error("Signer is not available");
+  const getWallet = async (chainId: number | undefined = selectedEthereumNetwork.value.id) => {
+    const client = await getWalletClient(chainId ? { chainId } : undefined);
+    if (!client) throw new Error("Wallet is not available");
 
-    const provider = Object.assign(signer.provider, signer.provider.provider, {
-      request: signer.provider.request ?? signer.provider.provider.request,
-      send: signer.provider.send ?? signer.provider.provider.send,
-      sendAsync: signer.provider.sendAsync ?? signer.provider.provider.sendAsync,
-    });
-    return provider;
+    return client;
   };
 
   return {
     account: computed(() => account.value),
     network: computed(() => network.value),
     isConnectingWallet: computed(() => account.value.isReconnecting || account.value.isConnecting),
+    connectorName,
     walletName,
     openModal,
     disconnect,
@@ -156,8 +147,9 @@ export const useOnboardStore = defineStore("onboard", () => {
     switchNetworkById,
 
     blockExplorerUrl,
-    getEthereumProvider: () => provider({ chainId: selectedEthereumNetwork.value.id }),
-    getEIP1193Provider,
+    getEthereumProvider: () => publicClient({ chainId: selectedEthereumNetwork.value.id }),
+    getWallet,
+    getPublicClient: () => getPublicClient({ chainId: selectedEthereumNetwork.value.id }),
 
     subscribeOnAccountChange,
   };

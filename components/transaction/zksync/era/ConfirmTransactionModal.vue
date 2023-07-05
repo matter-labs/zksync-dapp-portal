@@ -78,14 +78,14 @@
   <EraTransferSuccessfulModal
     v-else-if="transaction?.type === 'transfer'"
     opened
-    :transaction="transactionLineItem"
+    :transfer="transferLineItem"
     :in-progress="!transactionCommitted"
   />
   <EraWithdrawalSuccessfulModal
     v-else-if="transaction?.type === 'withdrawal'"
     opened
     v-bind="$attrs"
-    :transaction="transactionLineItem"
+    :transfer="transferLineItem"
   />
 </template>
 
@@ -104,7 +104,7 @@ import useTransaction from "@/composables/zksync/era/useTransaction";
 import type { FeeEstimationParams } from "@/composables/zksync/era/useFee";
 import type { TransactionDestination } from "@/store/destinations";
 import type { Token } from "@/types";
-import type { EraTransaction } from "@/utils/zksync/era/mappers";
+import type { EraTransfer } from "@/utils/zksync/era/mappers";
 import type { BigNumberish } from "ethers";
 import type { PropType } from "vue";
 
@@ -112,7 +112,7 @@ import { useDestinationsStore } from "@/store/destinations";
 import { useOnboardStore } from "@/store/onboard";
 import { usePreferencesStore } from "@/store/preferences";
 import { useEraProviderStore } from "@/store/zksync/era/provider";
-import { useEraTransactionsHistoryStore } from "@/store/zksync/era/transactionsHistory";
+import { useEraTransfersHistoryStore } from "@/store/zksync/era/transfersHistory";
 import { useEraWalletStore } from "@/store/zksync/era/wallet";
 import { ERA_WITHDRAWAL_DELAY } from "@/utils/doc-links";
 import { calculateFee } from "@/utils/helpers";
@@ -160,7 +160,7 @@ const emit = defineEmits<{
 }>();
 const closeModal = () => emit("update:opened", false);
 
-const eraTransactionsHistoryStore = useEraTransactionsHistoryStore();
+const eraTransfersHistoryStore = useEraTransfersHistoryStore();
 const walletEraStore = useEraWalletStore();
 const eraProviderStore = useEraProviderStore();
 const { account } = storeToRefs(useOnboardStore());
@@ -261,8 +261,8 @@ const makeTransaction = async () => {
     tx.wait()
       .then(async () => {
         transactionCommitted.value = true;
-        eraTransactionsHistoryStore.reloadRecentTransactions();
-        walletEraStore.requestBalance({ force: true });
+        eraTransfersHistoryStore.reloadRecentTransfers().catch(() => undefined);
+        walletEraStore.requestBalance({ force: true }).catch(() => undefined);
       })
       .catch((err) => {
         transactionCommitted.value = false;
@@ -271,21 +271,17 @@ const makeTransaction = async () => {
       });
   }
 };
-const transactionLineItem = computed(() => {
-  const transaction: EraTransaction = {
+const transferLineItem = computed(() => {
+  const transaction: EraTransfer = {
     transactionHash: transactionHash.value!,
-    status: "included",
-    blockNumber: 0,
     type: props.transaction!.type,
     from: account.value.address!,
     fromNetwork: "L2",
     to: props.transaction!.to,
     toNetwork: "L2",
     token: props.transaction!.token,
-    amount: BigNumber.from("0").sub(props.transaction!.amount).toString(),
-    feeToken: props.feeToken!,
-    feeAmount: "1",
-    receivedAt: new Date().toISOString(),
+    amount: BigNumber.from(props.transaction!.amount).toString(),
+    timestamp: new Date().toISOString(),
   };
   return transaction;
 });

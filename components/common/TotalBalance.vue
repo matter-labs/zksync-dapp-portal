@@ -15,7 +15,7 @@ import { computed } from "vue";
 import type { TokenAmount } from "@/types";
 import type { PropType } from "vue";
 
-import { parseTokenAmount } from "@/utils/formatters";
+import { calculateTotalTokensPrice } from "@/utils/helpers";
 
 const props = defineProps({
   balance: {
@@ -37,10 +37,7 @@ const total = computed(() => {
       currencySymbol: "$",
     };
   }
-  const num = props.balance.reduce((acc, { amount, decimals, price }) => {
-    if (typeof price !== "number") return acc;
-    return acc + parseFloat(parseTokenAmount(amount, decimals)) * price;
-  }, 0);
+  const num = calculateTotalTokensPrice(props.balance);
   return {
     int: Math.floor(num).toString(),
     decimal: (num % 1).toFixed(2).slice(2),

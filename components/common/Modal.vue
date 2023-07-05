@@ -40,7 +40,10 @@
                   <XMarkIcon class="h-6 w-6 text-neutral-700 dark:text-white" aria-hidden="true" />
                 </button>
               </div>
-              <div v-if="$slots.animation" class="flex h-36 w-full items-center justify-center overflow-visible">
+              <div
+                v-if="$slots.animation"
+                class="pointer-events-none flex h-36 w-full items-center justify-center overflow-visible"
+              >
                 <slot name="animation" />
               </div>
               <slot />

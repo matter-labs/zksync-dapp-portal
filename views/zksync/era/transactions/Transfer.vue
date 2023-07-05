@@ -16,7 +16,7 @@
             <CommonAlert variant="error" :icon="ExclamationTriangleIcon">
               <p>
                 {{
-                  selectedToken?.address === ETH_ADDRESS ? "The fee has changed since the last estimation. " : ""
+                  selectedToken?.address === ETH_L2_ADDRESS ? "The fee has changed since the last estimation. " : ""
                 }}Insufficient <span class="font-medium">{{ selectedToken?.symbol }}</span> balance to pay for
                 transaction. Please go back and adjust the amount to proceed.
               </p>
@@ -35,9 +35,9 @@
     />
 
     <CommonErrorBlock v-if="balanceError" @try-again="fetchBalances">
-      {{ balanceError.message }}
+      Getting balances error: {{ balanceError.message }}
     </CommonErrorBlock>
-    <form v-else class="transaction-form pb-2" @submit.prevent="">
+    <form v-else class="flex h-full flex-col" @submit.prevent="">
       <CommonAmountInput
         v-model.trim="amount"
         v-model:error="amountError"
@@ -52,7 +52,7 @@
       </CommonErrorBlock>
       <transition v-bind="TransitionOpacity()">
         <TransactionFeeDetails
-          v-if="fee || feeLoading"
+          v-if="!feeError && (fee || feeLoading)"
           class="mt-1"
           label="Fee:"
           :fee-token="feeToken"
@@ -69,24 +69,29 @@
           </p>
         </CommonAlert>
       </transition>
-    </form>
 
-    <EraTransactionFooter :authorization="false" :account-activation="false">
-      <template #after-checks>
-        <CommonButtonTopLink
-          v-if="type === 'withdrawal' && selectedEthereumNetwork.network === 'mainnet'"
-          as="a"
-          :href="ERA_WITHDRAWAL_DELAY"
-          target="_blank"
-        >
-          Arriving in ~24 hours
-          <ArrowUpRightIcon class="ml-1 mt-0.5 h-3.5 w-3.5" />
-        </CommonButtonTopLink>
-        <CommonButton :disabled="continueButtonDisabled" variant="primary-solid" @click="openConfirmationModal">
-          Continue
-        </CommonButton>
-      </template>
-    </EraTransactionFooter>
+      <EraTransactionFooter :authorization="false" :account-activation="false">
+        <template #after-checks>
+          <CommonButtonTopLink
+            v-if="type === 'withdrawal' && selectedEthereumNetwork.network === 'mainnet'"
+            as="a"
+            :href="ERA_WITHDRAWAL_DELAY"
+            target="_blank"
+          >
+            Arriving in ~24 hours
+            <ArrowUpRightIcon class="ml-1 mt-0.5 h-3.5 w-3.5" />
+          </CommonButtonTopLink>
+          <CommonButton
+            type="submit"
+            :disabled="continueButtonDisabled"
+            variant="primary-solid"
+            @click="openConfirmationModal"
+          >
+            Continue
+          </CommonButton>
+        </template>
+      </EraTransactionFooter>
+    </form>
   </div>
 </template>
 
@@ -114,6 +119,7 @@ import { useOnboardStore } from "@/store/onboard";
 import { useEraProviderStore } from "@/store/zksync/era/provider";
 import { useEraTokensStore } from "@/store/zksync/era/tokens";
 import { useEraWalletStore } from "@/store/zksync/era/wallet";
+import { ETH_L2_ADDRESS } from "@/utils/constants";
 import { ERA_WITHDRAWAL_DELAY } from "@/utils/doc-links";
 import { checksumAddress, decimalToBigNumber, formatRawTokenPrice } from "@/utils/formatters";
 import { TransitionAlertScaleInOutTransition, TransitionOpacity } from "@/utils/transitions";
@@ -203,6 +209,7 @@ const {
   feeToken,
   enoughBalanceToCoverFee,
   estimateFee,
+  resetFee,
 } = useFee(eraProviderStore.requestProvider, tokens, balance);
 watch(
   () => feeToken?.value?.address,
@@ -300,6 +307,7 @@ watch(
     () => selectedTokenZeroBalance.value,
   ],
   () => {
+    resetFee();
     estimate();
   },
   { immediate: true }

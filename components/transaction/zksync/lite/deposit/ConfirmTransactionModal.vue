@@ -131,6 +131,7 @@ import {
   PlusIcon,
 } from "@heroicons/vue/24/outline";
 import { BigNumber } from "ethers";
+import { Logger } from "ethers/lib/utils";
 import { storeToRefs } from "pinia";
 
 import TokenAmount from "@/components/transaction/transactionLineItem/TokenAmount.vue";
@@ -139,6 +140,7 @@ import TotalPrice from "@/components/transaction/transactionLineItem/TotalPrice.
 import useTransaction from "@/composables/zksync/lite/deposit/useTransaction";
 
 import type { ZkSyncLiteToken } from "@/types";
+import type { TransactionReceipt } from "@ethersproject/providers";
 import type { BigNumberish } from "ethers";
 import type { PropType } from "vue";
 
@@ -277,11 +279,21 @@ const makeTransaction = async () => {
   if (tx) {
     tx.awaitEthereumTxCommit()
       .then(() => {
-        liteTransactionsHistoryStore.reloadRecentTransactions();
-        walletLiteStore.requestBalance({ force: true });
-        liteEthereumBalanceStore.requestBalance({ force: true });
+        liteTransactionsHistoryStore.reloadRecentTransactions().catch(() => undefined);
+        walletLiteStore.requestBalance({ force: true }).catch(() => undefined);
+        liteEthereumBalanceStore.requestBalance({ force: true }).catch(() => undefined);
       })
-      .catch((err) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .catch((err: any) => {
+        if (err?.code === Logger.errors.TRANSACTION_REPLACED) {
+          if (err.cancelled) {
+            error.value = new Error("Transaction was cancelled by the user");
+            status.value = "not-started";
+          } else {
+            ethTransactionHash.value = (err.receipt as TransactionReceipt).transactionHash;
+          }
+          return;
+        }
         error.value = err as Error;
         status.value = "not-started";
       });

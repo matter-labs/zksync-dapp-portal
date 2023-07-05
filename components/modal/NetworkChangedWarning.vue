@@ -13,7 +13,7 @@
       <CommonButtonTopLink
         v-if="lastSelectedEthereumNetwork"
         as="a"
-        :href="getNetworkUrl(lastSelectedEthereumNetwork, route.path)"
+        :href="getNetworkUrl(lastSelectedEthereumNetwork, route.fullPath)"
       >
         Return to {{ lastSelectedEthereumNetworkName }}
       </CommonButtonTopLink>

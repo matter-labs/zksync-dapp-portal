@@ -117,7 +117,7 @@ const displayedAmount = computed(() => {
       @apply opacity-50;
     }
     .token-balance-amount {
-      @apply text-gray-secondary;
+      @apply text-gray-secondary dark:text-neutral-400;
     }
   }
 }

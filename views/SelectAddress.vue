@@ -180,7 +180,15 @@ const displayedAddresses = computed<AddressesGroup[]>(() => {
     };
   }
 
-  const result = Object.values(groups);
+  const result = Object.values(groups).sort((a, b) => {
+    if (a.title === null) {
+      return -1;
+    }
+    if (b.title === null) {
+      return 1;
+    }
+    return 0;
+  });
   if (search.value.length) {
     const filtered = result
       .map((group) => {

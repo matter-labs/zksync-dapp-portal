@@ -48,7 +48,7 @@
             />
           </template>
           <template v-else>
-            <CommonEmptyBlock class="mx-3 mb-3 mt-1">
+            <CommonEmptyBlock class="mx-3 mb-3 mt-1" data-testid="no-balances-warning">
               <div class="wrap-balance">
                 You don't have any balances on
                 <span class="font-medium" data-testid="no-balances-warning">{{ destinations.era.label }}</span>
@@ -63,6 +63,28 @@
         </div>
       </div>
     </CommonContentBlock>
+
+    <transition v-bind="TransitionAlertScaleInOutTransition">
+      <div v-if="isFaucetDisplayed">
+        <DestinationItem
+          as="div"
+          :icon-url="destinations.era.iconUrl"
+          :label="selectedEthereumNetwork.network === 'mainnet' ? 'New to zkSync Era?' : 'Not enough tokens?'"
+          :description="
+            selectedEthereumNetwork.network === 'mainnet'
+              ? 'Explore with free test tokens'
+              : 'Use official zkSync Era faucet'
+          "
+          class="mt-3"
+        >
+          <template #right>
+            <CommonButton as="RouterLink" :to="{ name: 'transaction-zksync-era-faucet' }">
+              Get free test tokens
+            </CommonButton>
+          </template>
+        </DestinationItem>
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -76,15 +98,22 @@ import useInterval from "@/composables/useInterval";
 import useSingleLoading from "@/composables/useSingleLoading";
 
 import { useDestinationsStore } from "@/store/destinations";
+import { useNetworkStore } from "@/store/network";
 import { useOnboardStore } from "@/store/onboard";
+import { useEraTransfersHistoryStore } from "@/store/zksync/era/transfersHistory";
 import { useEraWalletStore } from "@/store/zksync/era/wallet";
 import { parseTokenAmount, removeSmallAmount } from "@/utils/formatters";
-import { isOnlyZeroes } from "@/utils/helpers";
+import { calculateTotalTokensPrice, isOnlyZeroes } from "@/utils/helpers";
+import { TransitionAlertScaleInOutTransition } from "@/utils/transitions";
 
 const onboardStore = useOnboardStore();
 const walletEraStore = useEraWalletStore();
+const eraTransfersHistoryStore = useEraTransfersHistoryStore();
 const { balance, balanceInProgress, balanceError, allBalancePricesLoaded } = storeToRefs(walletEraStore);
 const { destinations } = storeToRefs(useDestinationsStore());
+const { selectedEthereumNetwork } = storeToRefs(useNetworkStore());
+const { transfers, recentTransfersRequestInProgress, recentTransfersRequestError } =
+  storeToRefs(eraTransfersHistoryStore);
 
 const displayedBalances = computed(() => {
   return balance.value.filter(({ amount, decimals, price }) => {
@@ -100,9 +129,23 @@ const displayedBalances = computed(() => {
 const { loading, reset: resetSingleLoading } = useSingleLoading(
   computed(() => balanceInProgress.value || !allBalancePricesLoaded.value)
 );
+const { loading: transactionsLoading, reset: resetTransactionsSingleLoading } = useSingleLoading(
+  computed(() => recentTransfersRequestInProgress.value)
+);
+const isFaucetDisplayed = computed(() => {
+  if (loading.value || transactionsLoading.value) return false;
+  if (selectedEthereumNetwork.value.network === "mainnet") {
+    if (recentTransfersRequestError.value || transfers.value.length > 3) {
+      return false;
+    }
+    return true;
+  }
+  return calculateTotalTokensPrice(balance.value) < 50;
+});
 
 const fetch = () => {
   walletEraStore.requestBalance();
+  eraTransfersHistoryStore.requestRecentTransfers();
 };
 fetch();
 
@@ -113,6 +156,7 @@ const { reset: resetAutoUpdate, stop: stopAutoUpdate } = useInterval(() => {
 const unsubscribe = onboardStore.subscribeOnAccountChange((newAddress) => {
   if (!newAddress) return;
   resetSingleLoading();
+  resetTransactionsSingleLoading();
   resetAutoUpdate();
   fetch();
 });

@@ -52,6 +52,7 @@
             :disabled="buttonDisabled || newFeeAlert || status !== 'not-started'"
             class="mx-auto mt-3"
             variant="primary-solid"
+            autofocus
             @click="makeTransaction"
           >
             <transition v-bind="TransitionPrimaryButtonText" mode="out-in">
@@ -131,6 +132,7 @@ import {
   PlusIcon,
 } from "@heroicons/vue/24/outline";
 import { BigNumber } from "ethers";
+import { Logger } from "ethers/lib/utils";
 import { storeToRefs } from "pinia";
 
 import TokenAmount from "@/components/transaction/transactionLineItem/TokenAmount.vue";
@@ -140,6 +142,7 @@ import useTransaction from "@/composables/zksync/era/deposit/useTransaction";
 
 import type { DepositFeeValues } from "@/composables/zksync/era/deposit/useFee";
 import type { Token } from "@/types";
+import type { TransactionReceipt } from "@ethersproject/providers";
 import type { BigNumberish } from "ethers";
 import type { PropType } from "vue";
 
@@ -148,7 +151,7 @@ import { useNetworkStore } from "@/store/network";
 import { useOnboardStore } from "@/store/onboard";
 import { usePreferencesStore } from "@/store/preferences";
 import { useEraEthereumBalanceStore } from "@/store/zksync/era/ethereumBalance";
-import { useEraTransactionsHistoryStore } from "@/store/zksync/era/transactionsHistory";
+import { useEraTransfersHistoryStore } from "@/store/zksync/era/transfersHistory";
 import { useEraWalletStore } from "@/store/zksync/era/wallet";
 import { TransitionPrimaryButtonText } from "@/utils/transitions";
 
@@ -189,7 +192,7 @@ const emit = defineEmits<{
 }>();
 const closeModal = () => emit("update:opened", false);
 
-const eraTransactionsHistoryStore = useEraTransactionsHistoryStore();
+const eraTransfersHistoryStore = useEraTransfersHistoryStore();
 const walletEraStore = useEraWalletStore();
 const eraEthereumBalanceStore = useEraEthereumBalanceStore();
 const { account } = storeToRefs(useOnboardStore());
@@ -274,11 +277,21 @@ const makeTransaction = async () => {
   if (tx) {
     tx.waitL1Commit()
       .then(() => {
-        eraTransactionsHistoryStore.reloadRecentTransactions();
-        walletEraStore.requestBalance({ force: true });
-        eraEthereumBalanceStore.requestBalance({ force: true });
+        eraTransfersHistoryStore.reloadRecentTransfers().catch(() => undefined);
+        walletEraStore.requestBalance({ force: true }).catch(() => undefined);
+        eraEthereumBalanceStore.requestBalance({ force: true }).catch(() => undefined);
       })
-      .catch((err) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .catch((err: any) => {
+        if (err?.code === Logger.errors.TRANSACTION_REPLACED) {
+          if (err.cancelled) {
+            error.value = new Error("Transaction was cancelled by the user");
+            status.value = "not-started";
+          } else {
+            ethTransactionHash.value = (err.receipt as TransactionReceipt).transactionHash;
+          }
+          return;
+        }
         error.value = err as Error;
         status.value = "not-started";
       });

@@ -44,9 +44,9 @@
     />
 
     <CommonErrorBlock v-if="balanceError" @try-again="fetchBalances">
-      {{ balanceError.message }}
+      Getting balances error: {{ balanceError.message }}
     </CommonErrorBlock>
-    <form v-else class="transaction-form pb-2" @submit.prevent="">
+    <form v-else class="flex h-full flex-col" @submit.prevent="">
       <CommonAmountInput
         v-model.trim="amount"
         v-model:error="amountError"
@@ -61,7 +61,7 @@
       </CommonErrorBlock>
       <transition v-bind="TransitionOpacity()">
         <TransactionFeeDetails
-          v-if="fee || feeLoading"
+          v-if="!feeError && (fee || feeLoading)"
           class="mt-1"
           label="Fee:"
           :fee-token="feeToken"
@@ -75,6 +75,15 @@
         <CommonAlert v-if="!enoughBalanceToCoverFee" class="mt-1" variant="error" :icon="ExclamationTriangleIcon">
           <p>
             Insufficient <span class="font-medium">{{ feeToken?.symbol }}</span> balance to cover the fee
+          </p>
+        </CommonAlert>
+      </transition>
+      <transition v-bind="TransitionAlertScaleInOutTransition">
+        <CommonAlert v-if="recommendedBalance && feeToken" class="mt-1" variant="error" :icon="ExclamationTriangleIcon">
+          <p>
+            Insufficient <span class="font-medium">{{ feeToken?.symbol }}</span> balance to cover the fee. We recommend
+            having at least <span class="font-medium">{{ recommendedBalance }} {{ feeToken?.symbol }}</span> on
+            {{ selectedEthereumNetwork.name }} for deposit.
           </p>
         </CommonAlert>
       </transition>
@@ -103,15 +112,20 @@
       <CommonErrorBlock v-if="allowanceRequestError" class="mt-2" @try-again="requestAllowance">
         Checking allowance error: {{ allowanceRequestError.message }}
       </CommonErrorBlock>
-    </form>
 
-    <EthereumTransactionFooter>
-      <template #after-checks>
-        <CommonButton :disabled="continueButtonDisabled" variant="primary-solid" @click="openConfirmationModal">
-          Continue
-        </CommonButton>
-      </template>
-    </EthereumTransactionFooter>
+      <EthereumTransactionFooter>
+        <template #after-checks>
+          <CommonButton
+            type="submit"
+            :disabled="continueButtonDisabled"
+            variant="primary-solid"
+            @click="openConfirmationModal"
+          >
+            Continue
+          </CommonButton>
+        </template>
+      </EthereumTransactionFooter>
+    </form>
   </div>
 </template>
 
@@ -133,6 +147,7 @@ import type { ConfirmationModalTransaction } from "@/components/transaction/zksy
 
 import { useRoute } from "#app";
 import { useDestinationsStore } from "@/store/destinations";
+import { useNetworkStore } from "@/store/network";
 import { useOnboardStore } from "@/store/onboard";
 import { useEraEthereumBalanceStore } from "@/store/zksync/era/ethereumBalance";
 import { useEraProviderStore } from "@/store/zksync/era/provider";
@@ -155,6 +170,7 @@ const eraTokensStore = useEraTokensStore();
 const eraProviderStore = useEraProviderStore();
 const eraEthereumBalance = useEraEthereumBalanceStore();
 const { account } = storeToRefs(onboardStore);
+const { selectedEthereumNetwork } = storeToRefs(useNetworkStore());
 const { destinations } = storeToRefs(useDestinationsStore());
 const { tokens } = storeToRefs(eraTokensStore);
 const { balance, balanceInProgress, allBalancePricesLoaded, balanceError } = storeToRefs(eraEthereumBalance);
@@ -207,7 +223,8 @@ const {
   computed(() => account.value.address),
   computed(() => selectedToken.value?.l1Address),
   async () => (await eraProviderStore.requestProvider().getDefaultBridgeAddresses()).erc20L1,
-  onboardStore.getEthereumProvider
+  onboardStore.getWallet,
+  onboardStore.getPublicClient
 );
 const enoughAllowance = computed(() => {
   if (!allowance.value || !selectedToken.value) {
@@ -249,15 +266,17 @@ const {
   result: fee,
   inProgress: feeInProgress,
   error: feeError,
+  recommendedBalance,
   feeToken,
   enoughBalanceToCoverFee,
   estimateFee,
+  resetFee,
 } = useFee(
-  onboardStore.getEthereumProvider,
-  eraProviderStore.requestProvider,
   computed(() => account.value.address),
   tokens,
-  balance
+  balance,
+  eraProviderStore.requestProvider,
+  onboardStore.getPublicClient
 );
 watch(
   () => feeToken?.value?.address,
@@ -331,6 +350,7 @@ const feeAutoUpdateEstimate = async () => {
 watch(
   [() => props.address, () => selectedToken.value?.address, () => account.value.address],
   () => {
+    resetFee();
     estimate();
   },
   { immediate: true }

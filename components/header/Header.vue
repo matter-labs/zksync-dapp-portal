@@ -7,9 +7,12 @@
         :class="{ 'bg-gray dark:bg-black lg:bg-transparent dark:lg:bg-transparent': open }"
       >
         <div class="logo-container">
-          <a href="https://zksync.io" target="_blank">
+          <a v-if="!account.address" href="https://zksync.io" target="_blank">
             <IconsZkSync class="w-[120px]" />
           </a>
+          <NuxtLink v-else :to="{ name: 'index' }">
+            <IconsZkSync class="w-[120px]" />
+          </NuxtLink>
         </div>
         <div class="navigation-container">
           <PopoverGroup class="popover-group">
@@ -59,11 +62,16 @@ import { reactive } from "vue";
 
 import { Popover, PopoverButton, PopoverGroup, PopoverPanel } from "@headlessui/vue";
 import { Bars3Icon, XMarkIcon } from "@heroicons/vue/24/outline";
+import { storeToRefs } from "pinia";
 
 import DropdownContent from "./DropdownContent.vue";
 import DropdownPopover from "./DropdownPopover.vue";
 import PopoverFunctional from "./PopoverFunctional.vue";
 import RightSideMenu from "./RightSideMenu.vue";
+
+import { useOnboardStore } from "@/store/onboard";
+
+const { account } = storeToRefs(useOnboardStore());
 
 export interface Navigation {
   title?: string;
@@ -167,10 +175,10 @@ const networkNav: Navigation[] = reactive([
   .panel-container-desktop {
     @apply relative z-20 mx-auto flex h-full items-center justify-between px-5;
     @media screen and (min-width: 720px) {
-      @apply grid grid-cols-[216px_1fr_216px] px-6;
+      @apply px-6;
     }
     @media screen and (min-width: 1024px) {
-      @apply px-9;
+      @apply grid grid-cols-[216px_1fr_216px] px-9;
     }
 
     .logo-container {

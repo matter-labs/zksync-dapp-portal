@@ -43,9 +43,9 @@
     />
 
     <CommonErrorBlock v-if="balanceError" @try-again="fetchBalances">
-      {{ balanceError.message }}
+      Getting balances error: {{ balanceError.message }}
     </CommonErrorBlock>
-    <form v-else class="transaction-form pb-2" @submit.prevent="">
+    <form v-else class="flex h-full flex-col" @submit.prevent="">
       <CommonAmountInput
         v-model.trim="amount"
         v-model:error="amountError"
@@ -60,7 +60,7 @@
       </CommonErrorBlock>
       <transition v-bind="TransitionOpacity()">
         <TransactionFeeDetails
-          v-if="fee || feeLoading"
+          v-if="!feeError && (fee || feeLoading)"
           class="mt-1"
           label="Fee:"
           :fee-token="feeToken"
@@ -102,15 +102,20 @@
       <CommonErrorBlock v-if="allowanceRequestError" class="mt-2" @try-again="requestAllowance">
         Checking allowance error: {{ allowanceRequestError.message }}
       </CommonErrorBlock>
-    </form>
 
-    <ZksyncLiteTransactionFooter :authorization="false" :account-activation="false">
-      <template #after-checks>
-        <CommonButton :disabled="continueButtonDisabled" variant="primary-solid" @click="openConfirmationModal">
-          Continue
-        </CommonButton>
-      </template>
-    </ZksyncLiteTransactionFooter>
+      <ZksyncLiteTransactionFooter :authorization="false" :account-activation="false">
+        <template #after-checks>
+          <CommonButton
+            type="submit"
+            :disabled="continueButtonDisabled"
+            variant="primary-solid"
+            @click="openConfirmationModal"
+          >
+            Continue
+          </CommonButton>
+        </template>
+      </ZksyncLiteTransactionFooter>
+    </form>
   </div>
 </template>
 
@@ -208,7 +213,8 @@ const {
   computed(() => account.value.address),
   computed(() => selectedToken.value?.address),
   async () => (await liteProviderStore.requestProvider())?.contractAddress.mainContract,
-  onboardStore.getEthereumProvider
+  onboardStore.getWallet,
+  onboardStore.getPublicClient
 );
 const enoughAllowance = computed(() => {
   if (!allowance.value || !selectedToken.value) {
@@ -254,7 +260,8 @@ const {
   feeToken,
   enoughBalanceToCoverFee,
   estimateFee,
-} = useFee(onboardStore.getEthereumProvider, walletLiteStore.getWalletInstance, tokens, balance);
+  resetFee,
+} = useFee(tokens, balance, walletLiteStore.getWalletInstance, onboardStore.getPublicClient);
 watch(
   () => feeToken?.value?.symbol,
   (symbol) => {
@@ -336,6 +343,7 @@ const feeAutoUpdateEstimate = async () => {
 watch(
   [() => props.address, () => selectedToken.value?.symbol, () => account.value.address],
   () => {
+    resetFee();
     estimate();
   },
   { immediate: true }

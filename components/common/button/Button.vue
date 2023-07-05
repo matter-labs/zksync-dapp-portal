@@ -67,12 +67,12 @@ defineProps({
       &:enabled,
       &:is(a, label) {
         &:not([aria-disabled="true"]) {
-          @apply hover:bg-primary-400;
+          @apply hover:bg-primary-400 dark:hover:bg-primary-200;
         }
       }
       &:disabled,
       &[aria-disabled="true"] {
-        @apply bg-opacity-50 dark:bg-neutral-900 dark:bg-opacity-50;
+        @apply bg-opacity-50 dark:bg-neutral-800 dark:bg-opacity-50;
       }
     }
     &error {

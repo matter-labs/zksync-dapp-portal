@@ -2,11 +2,11 @@ import { watch } from "vue";
 
 import { BigNumber } from "ethers";
 import { ethers } from "ethers";
+import { $fetch } from "ohmyfetch";
 import { defineStore, storeToRefs } from "pinia";
 import { L1Signer, Web3Provider } from "zksync-web3";
 
-import type { TokenAmount } from "@/types";
-import type { BigNumberish } from "ethers";
+import type { Api, TokenAmount } from "@/types";
 
 import { useNetworkStore } from "@/store/network";
 import { useOnboardStore } from "@/store/onboard";
@@ -30,9 +30,9 @@ export const useEraWalletStore = defineStore("eraWallet", () => {
       );
     }
 
-    const web3Provider = new Web3Provider(await onboardStore.getEIP1193Provider());
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const web3Provider = new Web3Provider((await onboardStore.getWallet(eraNetwork.value.id)) as any, "any");
     const eraL2Signer = web3Provider.getSigner();
-    eraL2Signer.provider.getSigner();
     return eraL2Signer;
   });
   const { execute: getL1Signer, reset: resetL1Signer } = usePromise(async () => {
@@ -43,62 +43,51 @@ export const useEraWalletStore = defineStore("eraWallet", () => {
       );
     }
 
-    const web3Provider = new ethers.providers.Web3Provider(await onboardStore.getEIP1193Provider());
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const web3Provider = new ethers.providers.Web3Provider((await onboardStore.getWallet()) as any, "any");
     const eraL1Signer = L1Signer.from(web3Provider.getSigner(), eraProviderStore.requestProvider());
     return eraL1Signer;
   });
 
   const {
-    result: balanceRaw,
+    result: accountState,
+    execute: requestAccountState,
+    reset: resetAccountState,
+  } = usePromise<Api.Response.Account | Api.Response.Contract>(async () => {
+    if (!account.value.address) throw new Error("Account is not available");
+
+    return await $fetch(`${eraNetwork.value.blockExplorerApi}/address/${account.value.address}`);
+  });
+  const {
     inProgress: balanceInProgress,
     error: balanceError,
     execute: requestBalance,
     reset: resetBalance,
-  } = usePromise<{ [tokenAddress: string]: BigNumberish }>(
+  } = usePromise<void>(
     async () => {
-      await eraTokensStore.requestTokens();
+      await Promise.all([requestAccountState({ force: true }), eraTokensStore.requestTokens()]);
+      if (!accountState.value) throw new Error("Account state is not available");
       if (!tokens.value) throw new Error("Tokens are not available");
-
-      if (!account.value.address) throw new Error("Account is not available");
-
-      const provider = eraProviderStore.requestProvider();
-      const balances = await Promise.all(
-        Object.entries(tokens.value).map(async ([, token]) => {
-          const amount = await provider.getBalance(onboardStore.account.address!, undefined, token.address);
-          if (!amount.isZero()) {
-            eraTokensStore.requestTokenPrice(token.address);
-          }
-          return {
-            address: token.address,
-            amount: amount.toString(),
-          };
-        })
-      );
-
-      return balances.reduce((accumulator: { [tokenAddress: string]: BigNumberish }, { address, amount }) => {
-        accumulator[address] = amount;
-        return accumulator;
-      }, {});
     },
     { cache: 30000 }
-  );
-  watch(
-    balanceRaw,
-    (balances) => {
-      Object.entries(balances ?? {}).map(([tokenAddress, amount]) => {
-        if (BigNumber.from(amount).isZero()) return;
-        eraTokensStore.requestTokenPrice(tokenAddress);
-      });
-    },
-    { immediate: true }
   );
 
   const balance = computed<TokenAmount[]>(() => {
     return Object.entries(tokens.value ?? {}).map(([, token]) => {
-      const amount = balanceRaw.value?.[token.address] ?? "0";
+      const amount = accountState.value?.balances[token.address]?.balance ?? "0";
       return { ...token, amount };
     });
   });
+  watch(
+    balance,
+    (balances) => {
+      balances.map((e) => {
+        if (BigNumber.from(e.amount).isZero()) return;
+        eraTokensStore.requestTokenPrice(e.address);
+      });
+    },
+    { immediate: true }
+  );
   const allBalancePricesLoaded = computed(
     () => !balance.value.some((e) => e.price === "loading") && !balanceInProgress.value
   );
@@ -124,6 +113,7 @@ export const useEraWalletStore = defineStore("eraWallet", () => {
   onboardStore.subscribeOnAccountChange(() => {
     resetSigner();
     resetL1Signer();
+    resetAccountState();
     resetBalance();
   });
 

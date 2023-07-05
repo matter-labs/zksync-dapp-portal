@@ -3,7 +3,7 @@ import { useMemoize } from "@vueuse/core";
 import type { BigNumberish } from "ethers";
 import type { Provider, Signer } from "zksync-web3";
 
-import { ETH_ADDRESS } from "@/utils/constants";
+import { ETH_L1_ADDRESS, ETH_L2_ADDRESS } from "@/utils/constants";
 import { formatError } from "@/utils/formatters";
 
 type TransactionParams = {
@@ -32,7 +32,7 @@ export default (getSigner: () => Promise<Signer | undefined>, getProvider: () =>
       if (!signer) throw new Error("Era Signer is not available");
 
       const getRequiredBridgeAddress = async () => {
-        if (transaction.tokenAddress === ETH_ADDRESS) return undefined;
+        if (transaction.tokenAddress === ETH_L2_ADDRESS) return undefined;
         const bridgeAddresses = await retrieveBridgeAddresses();
         return bridgeAddresses.erc20L2;
       };
@@ -40,7 +40,7 @@ export default (getSigner: () => Promise<Signer | undefined>, getProvider: () =>
       status.value = "waiting-for-signature";
       const tx = await signer[transaction.type === "transfer" ? "transfer" : "withdraw"]({
         to: transaction.to,
-        token: transaction.tokenAddress,
+        token: transaction.tokenAddress === ETH_L2_ADDRESS ? ETH_L1_ADDRESS : transaction.tokenAddress,
         amount: transaction.amount,
         bridgeAddress: transaction.type === "withdrawal" ? await getRequiredBridgeAddress() : undefined,
         overrides: {

@@ -30,10 +30,7 @@ import LoginPage from "@/views/Login.vue";
 
 useColorMode();
 const route = useRoute();
-const router = useRouter();
-router.onError((err) => {
-  console.log("\n\n\n\n\n\nrouter error", err, "\n\n\n\n\n\n");
-});
+
 const { account, isConnectingWallet } = storeToRefs(useOnboardStore());
 const { version } = storeToRefs(usePreferencesStore());
 watch(
@@ -57,6 +54,15 @@ watch(
   },
   { immediate: true }
 );
+
+const router = useRouter();
+router.onError((error, to) => {
+  // Happens when new version is deployed and user has active session on the old version
+  if (error?.message?.includes("Failed to fetch dynamically imported module")) {
+    const win: Window = window; // ts error hack: https://github.com/microsoft/TypeScript/issues/48949
+    win.location = to.fullPath;
+  }
+});
 </script>
 
 <style lang="scss" scoped>

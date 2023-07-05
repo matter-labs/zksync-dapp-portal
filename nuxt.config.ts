@@ -14,7 +14,7 @@ export default defineNuxtConfig({
       meta: [
         {
           property: "og:image",
-          content: "https://zkplus.io/preview.jpg",
+          content: "https://portal.zksync.io/preview.jpg",
         },
         {
           property: "og:image:type",
@@ -33,6 +33,11 @@ export default defineNuxtConfig({
           content: "zkSync Portal",
         },
       ],
+      script: [
+        {
+          src: "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit",
+        },
+      ],
     },
   },
   plugins: [],
@@ -40,15 +45,16 @@ export default defineNuxtConfig({
   ssr: false,
   pwa: {
     meta: {
-      name: "zkSync Portal",
-      description: "All in one wallet for zkSync Era∎ and zkSync Lite",
+      name: "zkSync Portal | Wallet, Bridge and Faucet",
+      description:
+        "zkSync Portal provides all the required tools for working with Era and Lite networks such as Wallet, Bridge & Faucet functionality.",
     },
     manifest: {
-      name: "zkSync Portal",
-      short_name: "zkPlus",
+      name: "zkSync Portal | Wallet, Bridge and Faucet",
+      short_name: "Portal",
     },
   },
-  css: ["@/assets/css/tailwind.css", "web3-avatar-vue/dist/style.css"],
+  css: ["@/assets/css/tailwind.css", "@/assets/css/style.scss", "web3-avatar-vue/dist/style.css"],
   postcss: {
     plugins: {
       tailwindcss: {},
@@ -58,6 +64,17 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       walletConnectProjectID: process.env.WALLET_CONNECT_PROJECT_ID,
+      turnstileKey: process.env.TURNSTILE_KEY,
+    },
+  },
+  vite: {
+    build: {
+      target: "es2020",
+    },
+    optimizeDeps: {
+      esbuildOptions: {
+        target: "es2020",
+      },
     },
   },
 });

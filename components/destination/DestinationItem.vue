@@ -48,15 +48,5 @@ defineProps({
       @apply box-content bg-white;
     }
   }
-  .destination-item-label,
-  .destination-item-description {
-    @apply truncate whitespace-nowrap;
-  }
-  .destination-item-label {
-    @apply font-medium leading-relaxed;
-  }
-  .destination-item-description {
-    @apply text-sm leading-tight text-gray-secondary dark:text-neutral-400;
-  }
 }
 </style>
