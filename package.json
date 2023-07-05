@@ -68,6 +68,7 @@
     "@web3modal/ethereum": "^2.6.2",
     "@web3modal/html": "^2.6.2",
     "alchemy-sdk": "^2.8.1",
+    "crypto-js": "^4.1.1",
     "date-fns": "^2.29.3",
     "dotenv": "^16.0.3",
     "ethers": "^5.7.2",

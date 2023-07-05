@@ -2,9 +2,9 @@
 import { setTimeout } from "timers/promises";
 
 import { BasePage } from "./base.page";
-import { Extension, MetamaskWallet } from "../data/data";
+import { Extension } from "../data/data";
 import { Helper } from "../helpers/helper";
-import { config } from "../support/config";
+import { config, wallet } from "../support/config";
 
 import type { ICustomWorld } from "../support/custom-world";
 
@@ -150,6 +150,7 @@ export class MetamaskPage extends BasePage {
   }
 
   async authorizeInMetamaskExtension(secretPhrase: Array<string>, password: string) {
+    const helper = await new Helper(this.world);
     page = this.world.page;
 
     if (metamaskWelcomeUrl === undefined) {
@@ -162,7 +163,7 @@ export class MetamaskPage extends BasePage {
     } else {
       await page.goto(metamaskWelcomeUrl);
       if (logoutTrigger && (await page.$(this.unlockPasswordField)) !== null) {
-        await page.locator(this.unlockPasswordField).fill(MetamaskWallet.mainWalletPassword);
+        await page.locator(this.unlockPasswordField).fill(await helper.decrypt(wallet.password));
         await page.locator(this.confirmUnlockBtn).click();
       }
     }
