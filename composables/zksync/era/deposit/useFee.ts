@@ -104,7 +104,7 @@ export default (
     };
   };
   const getGasPrice = async () => {
-    return BigNumber.from(await retry(getPublicClient().getGasPrice))
+    return BigNumber.from(await retry(() => getPublicClient().getGasPrice()))
       .mul(110)
       .div(100);
   };

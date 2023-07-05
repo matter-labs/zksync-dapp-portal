@@ -45,7 +45,7 @@ export const useEthereumBalanceStore = defineStore("ethereumBalance", () => {
       };
       const [ethersBalance] = await Promise.all([
         retry(() => alchemy.core.getBalance(account.value.address!)),
-        retry(fetchBalances),
+        retry(() => fetchBalances()),
       ]);
       balances.push({
         contractAddress: ETH_L1_ADDRESS,

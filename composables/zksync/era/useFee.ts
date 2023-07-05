@@ -60,7 +60,7 @@ export default (
 
       const provider = getProvider();
       await Promise.all([
-        retry(provider.getGasPrice).then((price) => (gasPrice.value = price)),
+        retry(() => provider.getGasPrice()).then((price) => (gasPrice.value = price)),
         retry(() => {
           if (!params) throw new Error("Params are not available");
           return provider[params.type === "transfer" ? "estimateGasTransfer" : "estimateGasWithdraw"]({
