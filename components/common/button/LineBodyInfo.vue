@@ -16,7 +16,7 @@
 
 <style lang="scss" scoped>
 .button-line-body-info {
-  @apply w-max leading-tight;
+  @apply w-max max-w-full leading-tight;
 
   .button-line-body-info-label,
   .button-line-body-info-secondary {

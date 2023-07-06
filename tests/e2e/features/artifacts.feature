@@ -33,10 +33,9 @@ Feature: Artifacts - UI
   Scenario: Check artifacts on a Menu items
     Then Element with "href" "/" should be "visible"
     Then Element with "href" "/" should be "clickable"
-    Then Element with "text" "Home" should be "clickable"
     Then Element with "href" "/payments" should be "visible"
     Then Element with "href" "/payments" should be "clickable"
-    Then Element with "text" "Payments" should be "clickable"
+    Then Element with "text" "Transactions" should be "clickable"
     Then Element with "href" "/contacts" should be "visible"
     Then Element with "href" "/contacts" should be "clickable"
     Then Element with "text" "Contacts" should be "clickable"
@@ -49,7 +48,49 @@ Feature: Artifacts - UI
     Then Message "Change network" should be visible
     Then Element with "href" "/?network=mainnet" should be "visible"
     Then Element with "href" "/?network=mainnet" should be "clickable"
-    Then Element with "text" "Mainnet" should be "visible"
+    Then Element with "text" "zkSync Era Mainnet" should be "visible"
     Then Element with "href" "/?network=goerli" should be "visible"
     Then Element with "href" "/?network=goerli" should be "clickable"
-    Then Element with "text" "Goerli Testnet" should be "visible"
+    Then Element with "text" "zkSync Era Goerli Testnet" should be "visible"
+
+  @id1363 @loginPage
+  Scenario: Check artifacts on the Login page
+    Given I'm logged out
+    Then Element with "text" "Connect your Ethereum wallet to zkSync Portal" should be "visible"
+    Then Element with "testId" "network-switcher" should be "visible"
+    Then Element with "title" "zkSync Portal GitHub page" should be "visible"
+
+  @id1409
+  Scenario: Check artifacts on the View on Explorer menu
+    Given I click by "class" with "account-name-container" value
+    Given I click by "text" with " View on explorer " value
+    Then Element with "text" "View on explorer" should be "visible"
+    Then Element with "testId" "close-button" should be "visible"
+    Then Element with "testId" "close-button" should be "clickable"
+    Then Element with "text" "Selected network" should be "visible"
+    Then Element with "text" "Other networks" should be "visible"
+    Then Element with "text" "zkSync Era∎ Goerli" should be "visible"
+    Then Element with "text" "zkSync Era∎ Goerli" should be "clickable"
+    Then Element with "text" "zkSync Lite Goerli" should be "visible"
+    Then Element with "text" "Ethereum Goerli" should be "visible"
+    Then Element with "text" "Ethereum Goerli" should be "clickable"
+    Then Element with "src" "/img/era.svg" should be "visible"
+    Then Element with "src" "/img/era.svg" should be "clickable"
+    Then Element with "src" "/img/zksync-lite.svg" should be "visible"
+    Then Element with "src" "/img/zksync-lite.svg" should be "clickable"
+    Then Element with "src" "/img/ethereum.svg" should be "visible"
+    Then Element with "src" "/img/ethereum.svg" should be "clickable"
+
+  @id1393
+  Scenario: Check artifacts on the Contact modal window
+    Given I am on the Main page
+    Given I click by "text" with "Contacts" value
+    When I click by "text" with "Add contact" value
+    Then Element with "xpath" "//*[@class='modal-card']//div[text()='Add contact']" should be "visible"
+    Then Element with "testId" "close-button" should be "visible"
+    Then Element with "text" "Name of the contact" should be "visible"
+    Then Element with "text" "Ethereum address" should be "visible"
+    Then Element with "text" "Save contact" should be "visible"
+    Then Element with "text" "Save contact" should be "clickable"
+
+

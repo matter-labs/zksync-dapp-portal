@@ -10,6 +10,7 @@ import type { Ref } from "vue";
 import type { L1Signer, Provider } from "zksync-web3";
 
 import { ETH_L2_ADDRESS } from "@/utils/constants";
+import { retry } from "@/utils/helpers";
 import { calculateFee } from "@/utils/helpers";
 
 export type DepositFeeValues = {
@@ -52,6 +53,7 @@ export default (
       return fee.value.l1GasLimit
         .mul(fee.value.maxFeePerGas)
         .add(fee.value.l1GasLimit.mul(fee.value.maxPriorityFeePerGas))
+        .add(fee.value.baseCost || "0")
         .toString();
     } else if (fee.value.l1GasLimit && fee.value.gasPrice) {
       return calculateFee(fee.value.l1GasLimit, fee.value.gasPrice).toString();
@@ -78,9 +80,23 @@ export default (
     const signer = getVoidL1Signer();
     if (!signer) throw new Error("Signer is not available");
 
-    return await signer.getFullRequiredDepositFee({
-      token: ETH_L1_ADDRESS,
-      to: params.to,
+    return retry(async () => {
+      try {
+        return await signer.getFullRequiredDepositFee({
+          token: ETH_L1_ADDRESS,
+          to: params.to,
+        });
+      } catch (err) {
+        if (err instanceof Error && err.message.startsWith("Not enough balance for deposit.")) {
+          const match = err.message.match(/([\d\\.]+) ETH/);
+          if (feeToken.value && match?.length) {
+            const ethAmount = match[1].split(" ")?.[0];
+            recommendedBalance.value = ethAmount;
+            return;
+          }
+        }
+        throw err;
+      }
     });
   };
   const getERC20TransactionFee = async () => {
@@ -89,7 +105,7 @@ export default (
     };
   };
   const getGasPrice = async () => {
-    return BigNumber.from(await getPublicClient().getGasPrice())
+    return BigNumber.from(await retry(() => getPublicClient().getGasPrice()))
       .mul(110)
       .div(100);
   };
@@ -105,29 +121,17 @@ export default (
     execute: estimateFee,
   } = usePromise(
     async () => {
-      try {
-        recommendedBalance.value = undefined;
-        if (!feeToken.value) throw new Error("Fee tokens is not available");
+      recommendedBalance.value = undefined;
+      if (!feeToken.value) throw new Error("Fee tokens is not available");
 
-        if (params.tokenAddress === feeToken.value?.address) {
-          fee.value = await getEthTransactionFee();
-        } else {
-          fee.value = await getERC20TransactionFee();
-        }
-        /* It can be either maxFeePerGas or gasPrice */
-        if (!fee.value?.maxFeePerGas) {
-          fee.value.gasPrice = await getGasPrice();
-        }
-      } catch (err) {
-        if (err instanceof Error && err.message.startsWith("Not enough balance for deposit.")) {
-          const match = err.message.match(/([\d\\.]+) ETH/);
-          if (feeToken.value && match?.length) {
-            const ethAmount = match[1].split(" ")?.[0];
-            recommendedBalance.value = ethAmount;
-            return;
-          }
-        }
-        throw err;
+      if (params.tokenAddress === feeToken.value?.address) {
+        fee.value = await getEthTransactionFee();
+      } else {
+        fee.value = await getERC20TransactionFee();
+      }
+      /* It can be either maxFeePerGas or gasPrice */
+      if (fee.value && !fee.value?.maxFeePerGas) {
+        fee.value.gasPrice = await getGasPrice();
       }
     },
     { cache: false }

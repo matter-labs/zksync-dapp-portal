@@ -31,6 +31,7 @@ BeforeAll(async function (this: ICustomWorld) {
       headless: config.headless,
       args: [`--disable-extensions-except=${pathToExtension}`, `--load-extension=${pathToExtension}`],
       viewport: config.mainWindowSize,
+      permissions: ["clipboard-read"],
     });
   }
   await browser;

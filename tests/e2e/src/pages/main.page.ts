@@ -100,4 +100,21 @@ export class MainPage extends BasePage {
 
     return result;
   }
+
+  async performLogOut() {
+    const helper = new Helper(this.world);
+    await helper.clearLocalStorage();
+    await this.world.page?.reload();
+  }
+
+  async fillText(inputField: string, text: string) {
+    const helper = new Helper(this.world);
+
+    if (text !== "clipboard") {
+      await this.fill(inputField, text);
+    } else {
+      result = await helper.getClipboardValue();
+      await this.fill(inputField, result);
+    }
+  }
 }

@@ -11,6 +11,7 @@ import type { BigNumberish } from "ethers";
 import type { Ref } from "vue";
 import type { Wallet } from "zksync";
 
+import { retry } from "@/utils/helpers";
 import { calculateFee } from "@/utils/helpers";
 
 export default (
@@ -57,15 +58,17 @@ export default (
 
     const nonce = wallet.getNonce();
     const mainZkSyncContract = wallet.getZkSyncMainContract();
-    const gasEstimate = await mainZkSyncContract.estimateGas
-      .depositERC20(params.tokenAddress, "1000000000", params.from, {
-        nonce,
-        gasPrice: gasPrice,
-      })
-      .then(
-        (estimate) => estimate,
-        () => BigNumber.from("0")
-      );
+    const gasEstimate = await retry(() =>
+      mainZkSyncContract.estimateGas
+        .depositERC20(params.tokenAddress, "1000000000", params.from, {
+          nonce,
+          gasPrice: gasPrice,
+        })
+        .then(
+          (estimate) => estimate,
+          () => BigNumber.from("0")
+        )
+    );
     const recommendedGasLimit =
       publicClient.chain.id === 1 && ERC20_DEPOSIT_GAS_LIMIT[params.tokenAddress!]
         ? BigNumber.from(ERC20_DEPOSIT_GAS_LIMIT[params.tokenAddress!])
