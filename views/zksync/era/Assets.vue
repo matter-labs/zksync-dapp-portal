@@ -65,25 +65,33 @@
     </CommonContentBlock>
 
     <transition v-bind="TransitionAlertScaleInOutTransition">
-      <div v-if="isFaucetDisplayed">
-        <DestinationItem
-          as="div"
-          :icon-url="destinations.era.iconUrl"
-          :label="selectedEthereumNetwork.network === 'mainnet' ? 'New to zkSync Era?' : 'Not enough tokens?'"
-          :description="
-            selectedEthereumNetwork.network === 'mainnet'
-              ? 'Explore with free test tokens'
-              : 'Use official zkSync Era faucet'
-          "
-          class="mt-3"
-        >
-          <template #right>
-            <CommonButton as="RouterLink" :to="{ name: 'transaction-zksync-era-faucet' }">
-              Get free test tokens
-            </CommonButton>
-          </template>
-        </DestinationItem>
-      </div>
+      <CommonContentBlock v-if="isFaucetDisplayed" class="faucet-notification">
+        <div class="-m-3">
+          <DestinationItem
+            as="div"
+            :icon-url="destinations.era.iconUrl"
+            :label="selectedEthereumNetwork.network === 'mainnet' ? 'New to zkSync Era?' : 'Not enough tokens?'"
+            :description="
+              selectedEthereumNetwork.network === 'mainnet'
+                ? 'Explore with free test tokens'
+                : 'Use official zkSync Era faucet'
+            "
+          >
+            <template #right>
+              <CommonButton
+                as="RouterLink"
+                :to="{ name: 'transaction-zksync-era-faucet' }"
+                class="destination-item-button"
+              >
+                Get free test tokens
+              </CommonButton>
+            </template>
+          </DestinationItem>
+          <CommonButton as="RouterLink" :to="{ name: 'transaction-zksync-era-faucet' }" class="outside-button">
+            Get free test tokens
+          </CommonButton>
+        </div>
+      </CommonContentBlock>
     </transition>
   </div>
 </template>
@@ -167,4 +175,15 @@ onBeforeUnmount(() => {
 });
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.faucet-notification {
+  @apply mt-3;
+
+  .destination-item-button {
+    @apply -my-1 max-xs:hidden;
+  }
+  .outside-button {
+    @apply w-full xs:hidden;
+  }
+}
+</style>
