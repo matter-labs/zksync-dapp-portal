@@ -91,7 +91,7 @@ export class BasePage {
   }
 
   async getElementByHref(href: string) {
-    element = await this.world.page?.locator(`//*[@href="${href}"]`);
+    element = await this.world.page?.locator(`//*[@href="${href}"]`).first();
     await element.scrollIntoViewIfNeeded();
     return await element;
   }
@@ -126,6 +126,12 @@ export class BasePage {
 
   async getElementByXpath(xpath: string) {
     element = await this.world.page?.locator(`${xpath}`).first();
+    await element.scrollIntoViewIfNeeded();
+    return await element;
+  }
+
+  async getElementBySrc(src: string) {
+    element = await this.world.page?.locator(`//*[@src='${src}']`).first();
     await element.scrollIntoViewIfNeeded();
     return await element;
   }
@@ -185,6 +191,8 @@ export class BasePage {
       element = await this.getElementByPlaceholder(value);
     } else if (elementType === "xpath") {
       element = await this.getElementByXpath(value);
+    } else if (elementType === "src") {
+      element = await this.getElementBySrc(value);
     }
     return element;
   }

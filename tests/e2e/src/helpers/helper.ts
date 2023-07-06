@@ -11,7 +11,7 @@ import { config, wallet } from "../support/config";
 
 import type { ICustomWorld } from "../support/custom-world";
 import type { Pickle } from "@cucumber/messages";
-const tracesDir = "tests/e2e/artifacts/";
+const tracesDir = "./artifacts/";
 const algorithm = "aes-256-cbc";
 const key = Buffer.from(wallet.secret, "hex"); // crypto.randomBytes(32);
 const iv = Buffer.from(wallet.salt, "hex"); //crypto.randomBytes(16);
@@ -98,6 +98,7 @@ export class Helper {
       const image: any = await this.world.page?.screenshot({ path: tracesDir + this.world.testName + ".png" });
       return image;
     } else if (result.status === Status.PASSED) {
+      console.log(process.cwd());
       console.log("======== " + result.status + ": " + this.world.testName);
     } else if (result.status === Status.SKIPPED) {
       console.log("======== " + result.status + ": " + this.world.testName);
@@ -249,5 +250,21 @@ export class Helper {
       await context?.clearCookies();
     }
     await this.closeBrowserTabs(context);
+  }
+
+  async getClipboardValue() {
+    result = await this.world.page?.evaluate(async () => {
+      return await navigator.clipboard.readText();
+    });
+
+    return result;
+  }
+
+  async clearClipboard() {
+    result = await this.world.page?.evaluate(async () => {
+      return await navigator.clipboard.writeText("");
+    });
+
+    return result;
   }
 }

@@ -36,7 +36,7 @@
             >
               <div class="mb-4 flex items-center justify-between">
                 <DialogTitle as="div" class="h2 py-0">{{ title }}</DialogTitle>
-                <button v-if="closable" @click="closeModal">
+                <button v-if="closable" @click="closeModal" data-testid="close-button">
                   <XMarkIcon class="h-6 w-6 text-neutral-700 dark:text-white" aria-hidden="true" />
                 </button>
               </div>

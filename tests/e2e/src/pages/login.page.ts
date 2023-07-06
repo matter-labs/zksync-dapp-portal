@@ -14,12 +14,23 @@ export class LoginPage extends BasePage {
     return "//button[2]";
   }
 
+  get loginBtn() {
+    return `${this.byTestId}login-button`;
+  }
+
+  get mainTitle() {
+    return "//h1[text()='zkSync Portal']";
+  }
+
   async connectMetamask() {
     const helper = await new Helper(this.world);
     const loginStatus = await this.checkLoginStatus();
     if (!loginStatus) {
       const metamaskPage = await new MetamaskPage(this.world);
-      await this.world.page?.locator("data-testid=login-button").click(); //click a login button
+
+      await this.world.page?.waitForSelector(this.loginBtn);
+      await this.world.page?.locator(this.loginBtn).click(config.increasedTimeout); //click a login button
+
       const popUp = await new MetamaskPage(this.world).catchPopUpByClick("w3m-wallet-image");
       await popUp?.locator(metamaskPage.unlockPasswordField).isVisible(config.defaultTimeout);
       await popUp?.setViewportSize(config.popUpWindowSize);

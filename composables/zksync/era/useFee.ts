@@ -6,6 +6,7 @@ import type { Ref } from "vue";
 import type { Provider } from "zksync-web3";
 
 import { ETH_L1_ADDRESS, ETH_L2_ADDRESS } from "@/utils/constants";
+import { retry } from "@/utils/helpers";
 import { calculateFee } from "@/utils/helpers";
 
 export type FeeEstimationParams = {
@@ -59,12 +60,15 @@ export default (
 
       const provider = getProvider();
       await Promise.all([
-        provider.getGasPrice().then((price) => (gasPrice.value = price)),
-        provider[params.type === "transfer" ? "estimateGasTransfer" : "estimateGasWithdraw"]({
-          from: params.from,
-          to: params.to,
-          token: params.tokenAddress === ETH_L2_ADDRESS ? ETH_L1_ADDRESS : params.tokenAddress,
-          amount: "1",
+        retry(() => provider.getGasPrice()).then((price) => (gasPrice.value = price)),
+        retry(() => {
+          if (!params) throw new Error("Params are not available");
+          return provider[params.type === "transfer" ? "estimateGasTransfer" : "estimateGasWithdraw"]({
+            from: params.from,
+            to: params.to,
+            token: params.tokenAddress === ETH_L2_ADDRESS ? ETH_L1_ADDRESS : params.tokenAddress,
+            amount: "1",
+          });
         }).then((limit) => (gasLimit.value = limit)),
       ]);
     },
