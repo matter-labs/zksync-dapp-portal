@@ -41,4 +41,13 @@ jobs:
           expires: 7d
           projectId: zksync-dapp-wallet-v2
           channelID: ${{ github.event.inputs.version }}
-      
+
+  e2e:
+    needs: deploy
+    uses: ./.github/workflows/e2e.yml
+    secrets: inherit
+    with:
+      targetUrl: ${{ needs.deploy.outputs.dappUrl }}
+      network: Goerli
+      publish_to_allure: true # this for button --> ${{ github.event.inputs.publish_to_allure == 'true' }}
+      environmentTags: "and not @featureEnv"

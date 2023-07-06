@@ -41,3 +41,15 @@ jobs:
           firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_STAGING_ZKSYNC_DAPP_WALLET_V2 }}"
           projectId: staging-zksync-dapp-wallet-v2
           expires: 7d
+
+  e2e:
+    needs: build
+    uses: ./.github/workflows/e2e.yml
+    name: E2E testing
+    secrets: inherit
+    with:
+      targetUrl: ${{ needs.build.outputs.dappUrl }}
+      network: Goerli
+      publish_to_allure: true
+      environmentTags: "and not @stagingEnv"
+          

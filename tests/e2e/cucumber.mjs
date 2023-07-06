@@ -16,11 +16,11 @@ export default {
     "summary",
     "progress-bar",
     "@cucumber/pretty-formatter",
-    // "./tests/e2e/src/support/reporters/allure-reporter.js",
+    "./src/support/reporters/allure-reporter.js",
   ],
   formatOptions: { snippetInterface: "async-await" },
   worldParameters: getWorldParams(),
   publishQuiet: true,
-  // retry: 2,
+  retry: 1,
   // retryTagFilter: '@flaky',
 };
