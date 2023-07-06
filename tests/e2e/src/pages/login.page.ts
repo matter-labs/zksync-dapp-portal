@@ -25,6 +25,8 @@ export class LoginPage extends BasePage {
   async connectMetamask() {
     const helper = await new Helper(this.world);
     const loginStatus = await this.checkLoginStatus();
+    const wallet_password = await helper.decrypt(wallet.password);
+
     if (!loginStatus) {
       const metamaskPage = await new MetamaskPage(this.world);
 
@@ -38,7 +40,7 @@ export class LoginPage extends BasePage {
         ?.locator(metamaskPage.unlockPasswordField)
         .isVisible(config.defaultTimeout);
       if (passwordFieldVisible) {
-        await popUp?.locator(metamaskPage.unlockPasswordField).fill(await helper.decrypt(wallet.password));
+        await popUp?.locator(metamaskPage.unlockPasswordField).fill(wallet_password);
         await popUp?.locator(metamaskPage.confirmUnlockBtn).click();
       }
       await popUp?.waitForTimeout(700);
