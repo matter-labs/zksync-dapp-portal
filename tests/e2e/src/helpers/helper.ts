@@ -26,6 +26,10 @@ let emptyWalletTag: boolean;
 let incognitoTag: boolean;
 let transactionsTag: boolean;
 let noBlockChain: boolean;
+let wallet_1: string[];
+let wallet_2: string[];
+let wallet_0: string[];
+let wallet_password: string;
 
 export class Helper {
   world: ICustomWorld;
@@ -50,6 +54,13 @@ export class Helper {
 
   async clearLocalStorage() {
     await this.world.page?.evaluate(() => window.localStorage.clear());
+  }
+
+  async decryptVars() {
+    wallet_0 = (await this.decrypt(wallet._0_public_key)).split(" ");
+    wallet_1 = (await this.decrypt(wallet._1_public_key)).split(" ");
+    wallet_2 = (await this.decrypt(wallet._2_public_key)).split(" ");
+    wallet_password = await this.decrypt(wallet.password);
   }
 
   async predefineTags(filteredTag: any) {
@@ -205,37 +216,26 @@ export class Helper {
   }
 
   async metamaskAuthorization(metamaskPage: any, basePage: any, pickle: Pickle) {
+    await this.decryptVars();
     const targetUrl = config.BASE_URL + config.DAPP_NETWORK;
     const tags = pickle.tags;
     const filteredTag = (tag: string) => tags.filter((i) => i.name.includes(tag)).length > 0;
     await this.predefineTags(filteredTag);
     if (!incognitoTag && !transactionsTag && !emptyWalletTag) {
-      await metamaskPage.authorizeInMetamaskExtension(
-        (await this.decrypt(wallet._1_public_key)).split(" "),
-        await this.decrypt(wallet.password)
-      );
+      await metamaskPage.authorizeInMetamaskExtension(wallet_1, wallet_password);
       await basePage.goTo(targetUrl);
     } else if (transactionsTag && !incognitoTag) {
       const isLogout = await metamaskPage.isLogout();
       if (isLogout === undefined && depositTag) {
         // await this.thresholdBalanceIsOk();
-        await metamaskPage.authorizeInMetamaskExtension(
-          (await this.decrypt(wallet._1_public_key)).split(" "),
-          await this.decrypt(wallet.password)
-        ); // L1 wallet
+        await metamaskPage.authorizeInMetamaskExtension(wallet_1, wallet_password); // L1 wallet
       } else if (isLogout === undefined && !depositTag) {
         // await this.thresholdBalanceIsOk();
-        await metamaskPage.authorizeInMetamaskExtension(
-          (await this.decrypt(wallet._2_public_key)).split(" "),
-          await this.decrypt(wallet.password)
-        ); // L2 wallet
+        await metamaskPage.authorizeInMetamaskExtension(wallet_2, wallet_password); // L2 wallet
       }
       await basePage.goTo(targetUrl);
     } else if (emptyWalletTag) {
-      await metamaskPage.authorizeInMetamaskExtension(
-        (await this.decrypt(wallet._0_public_key)).split(" "),
-        await this.decrypt(wallet.password)
-      );
+      await metamaskPage.authorizeInMetamaskExtension(wallet_0, wallet_password);
       await basePage.goTo(targetUrl);
     } else if (process.env.INCOGNITO_MODE === "true" && incognitoTag) {
       await basePage.goTo(targetUrl);

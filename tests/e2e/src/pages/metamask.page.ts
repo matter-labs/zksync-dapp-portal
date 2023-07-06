@@ -151,6 +151,7 @@ export class MetamaskPage extends BasePage {
 
   async authorizeInMetamaskExtension(secretPhrase: Array<string>, password: string) {
     const helper = await new Helper(this.world);
+    const wallet_password = await helper.decrypt(wallet.password);
     page = this.world.page;
 
     if (metamaskWelcomeUrl === undefined) {
@@ -163,7 +164,7 @@ export class MetamaskPage extends BasePage {
     } else {
       await page.goto(metamaskWelcomeUrl);
       if (logoutTrigger && (await page.$(this.unlockPasswordField)) !== null) {
-        await page.locator(this.unlockPasswordField).fill(await helper.decrypt(wallet.password));
+        await page.locator(this.unlockPasswordField).fill(wallet_password);
         await page.locator(this.confirmUnlockBtn).click();
       }
     }
