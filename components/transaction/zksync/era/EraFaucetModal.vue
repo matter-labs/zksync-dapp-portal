@@ -40,7 +40,7 @@
           <CommonButtonTopInfo>Test tokens are available on zkSync Era Testnet</CommonButtonTopInfo>
           <CommonButton
             as="a"
-            :href="getNetworkUrl(chains.find(e => e.network === 'goerli')!, '/')"
+            :href="getNetworkUrl(eraNetworks.find(e => e.key === 'era-goerli')!, '/')"
             class="mx-auto"
             variant="primary-solid"
           >
@@ -58,7 +58,7 @@ import { storeToRefs } from "pinia";
 
 import type { PropType } from "vue";
 
-import { chains, useNetworkStore } from "@/store/network";
+import { eraNetworks, useNetworkStore } from "@/store/network";
 
 export type FaucetStep = "not-started" | "processing" | "done";
 

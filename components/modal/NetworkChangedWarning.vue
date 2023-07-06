@@ -5,21 +5,18 @@
     @after-leave="networkStore.resetNetworkChangeWarning"
   >
     <p class="leading-normal">
-      The selected network has been automatically changed from
-      <span class="font-medium">{{ lastSelectedEthereumNetworkName }}</span> to
-      <span class="font-medium">{{ selectedEthereumNetwork.name }}</span> since your last use of zkSync Portal.
+      The selected network has been automatically changed
+      <span v-if="lastSelectedNetwork"
+        >from <span class="font-medium">{{ lastSelectedNetwork.name }}</span>
+      </span>
+      to
+      <span class="font-medium">{{ selectedNetwork.name }}</span> since your last use of zkSync Portal.
     </p>
     <div class="mt-10 flex flex-col items-center">
-      <CommonButtonTopLink
-        v-if="lastSelectedEthereumNetwork"
-        as="a"
-        :href="getNetworkUrl(lastSelectedEthereumNetwork, route.fullPath)"
-      >
-        Return to {{ lastSelectedEthereumNetworkName }}
+      <CommonButtonTopLink v-if="lastSelectedNetwork" as="a" :href="getNetworkUrl(lastSelectedNetwork, route.fullPath)">
+        Return to {{ lastSelectedNetwork?.name }}
       </CommonButtonTopLink>
-      <CommonButton variant="primary-solid" @click="closeModal">
-        Continue on {{ selectedEthereumNetwork.name }}
-      </CommonButton>
+      <CommonButton variant="primary-solid" @click="closeModal">Continue on {{ selectedNetwork.name }}</CommonButton>
     </div>
   </CommonModal>
 </template>
@@ -34,17 +31,12 @@ import { useNetworkStore } from "@/store/network";
 import { getNetworkUrl } from "@/utils/helpers";
 
 const networkStore = useNetworkStore();
-const {
-  selectedEthereumNetwork,
-  ethereumNetworkChangedWarning,
-  lastSelectedEthereumNetworkName,
-  lastSelectedEthereumNetwork,
-} = storeToRefs(networkStore);
+const { selectedNetwork, networkChangedWarning, lastSelectedNetwork } = storeToRefs(networkStore);
 
 const route = useRoute();
 
-const modalOpened = ref(ethereumNetworkChangedWarning.value);
-watch(ethereumNetworkChangedWarning, (val) => {
+const modalOpened = ref(networkChangedWarning.value);
+watch(networkChangedWarning, (val) => {
   modalOpened.value = val;
 });
 

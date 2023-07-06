@@ -27,10 +27,7 @@
         >
           <IconsEra v-if="version === 'era'" class="navbar-link-icon" />
           <IconsZkSyncLite v-else-if="version === 'lite'" class="navbar-link-icon" />
-          <span class="navbar-link-label">
-            <span class="capitalize">{{ version }}</span>
-            {{ selectedEthereumNetwork.network === "mainnet" ? selectedEthereumNetwork.name : "Testnet" }}
-          </span>
+          <span class="navbar-link-label">{{ selectedNetwork.shortName }}</span>
           <ChevronDownIcon class="dropdown-icon" aria-hidden="true" />
         </button>
       </div>
@@ -45,10 +42,8 @@ import { ArrowsRightLeftIcon, ChevronDownIcon, UserGroupIcon, WalletIcon } from 
 import { storeToRefs } from "pinia";
 
 import { useNetworkStore } from "@/store/network";
-import { usePreferencesStore } from "@/store/preferences";
 
-const { selectedEthereumNetwork } = storeToRefs(useNetworkStore());
-const { version } = storeToRefs(usePreferencesStore());
+const { selectedNetwork, version } = storeToRefs(useNetworkStore());
 
 const networkChangeModalOpened = ref(false);
 </script>

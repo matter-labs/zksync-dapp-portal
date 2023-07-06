@@ -47,8 +47,8 @@
 
     <div class="mt-5">
       <template v-if="isFaucetAvailable">
-        <CommonButtonTopInfo v-if="selectedEthereumNetwork.network === 'mainnet'">
-          Test tokens will be available on zkSync Era Testnet
+        <CommonButtonTopInfo v-if="selectedNetwork.key !== faucetNetwork.key">
+          Test tokens will be available on {{ faucetNetwork.name }}
         </CommonButtonTopInfo>
         <CommonButton
           as="button"
@@ -81,8 +81,9 @@ import useIsBeforeDate from "@/composables/useIsBeforeDate";
 import useTurnstile from "@/composables/useTurnstile";
 import useFaucet from "@/composables/zksync/era/useFaucet";
 
-import { useNetworkStore } from "@/store/network";
+import { eraNetworks, useNetworkStore } from "@/store/network";
 import { useOnboardStore } from "@/store/onboard";
+import { useEraProviderStore } from "@/store/zksync/era/provider";
 import { useEraTokensStore } from "@/store/zksync/era/tokens";
 import { useEraTransfersHistoryStore } from "@/store/zksync/era/transfersHistory";
 import { useEraWalletStore } from "@/store/zksync/era/wallet";
@@ -91,13 +92,20 @@ const eraTokensStore = useEraTokensStore();
 const walletEraStore = useEraWalletStore();
 const eraTransfersHistoryStore = useEraTransfersHistoryStore();
 const { account } = storeToRefs(useOnboardStore());
-const { selectedEthereumNetwork } = storeToRefs(useNetworkStore());
+const { selectedNetwork } = storeToRefs(useNetworkStore());
+const { eraNetwork } = storeToRefs(useEraProviderStore());
 const { tokens, tokensRequestInProgress, tokensRequestError } = storeToRefs(eraTokensStore);
 const fetch = () => {
   eraTokensStore.requestTokens();
 };
 fetch();
 
+const faucetNetwork = computed(() => {
+  if (!eraNetwork.value.faucetUrl) {
+    return eraNetworks.filter((network) => network.faucetUrl)[0];
+  }
+  return eraNetwork.value;
+});
 const faucetTokens = computed(() => {
   if (!tokens.value) return [];
 
@@ -150,7 +158,10 @@ const {
   error: faucetError,
   requestTestTokens,
   reset: resetFaucet,
-} = useFaucet(computed(() => account.value.address));
+} = useFaucet(
+  computed(() => account.value.address),
+  faucetNetwork
+);
 const { isBefore } = useIsBeforeDate(faucetAvailableTime);
 const isFaucetAvailable = computed(() => !faucetAvailableTime.value || !isBefore.value);
 
