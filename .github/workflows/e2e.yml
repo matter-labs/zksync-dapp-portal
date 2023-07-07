@@ -105,18 +105,8 @@ jobs:
           DAPP_NETWORK: ${{ inputs.network }}
         run: |
           echo "Run tests"
-          pwd
-          ls
           cd tests/e2e/
-          pwd
-          ls
-          if [ "${{ matrix.tags }}" = "@incognito" ]; then
-              echo "Run in Incognito"
-              INCOGNITO_MODE=true ${{ matrix.command }}'${{ matrix.tags }} ${{ inputs.environmentTags }}'
-          else
-              echo "Run in default mode"
-              ${{ matrix.command }}'${{ matrix.tags }} ${{ inputs.environmentTags }}'
-          fi
+          ${{ matrix.command }}'${{ matrix.tags }} ${{ inputs.environmentTags }}'
 
       - name: Reset tags quotes
         if: always()

@@ -51,5 +51,5 @@ jobs:
       targetUrl: ${{ needs.build.outputs.dappUrl }}
       network: Goerli
       publish_to_allure: true
-      environmentTags: "and not @stagingEnv"
+      environmentTags: ""
           
