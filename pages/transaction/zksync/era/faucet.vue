@@ -1,7 +1,7 @@
 <template>
   <FaucetModal :status="status" @close="resetFaucet">
     <template #tokens>
-      <div v-if="tokens" class="flex flex-wrap justify-center gap-1.5">
+      <div class="flex flex-wrap justify-center gap-1.5">
         <TokenBadge v-for="item in faucetTokens" v-bind="item" :key="item.token.symbol" />
       </div>
     </template>
@@ -10,25 +10,13 @@
   <BackButton :fallback="{ name: 'transaction-zksync-era-receive' }" />
   <h1 class="h1">Faucet</h1>
   <CommonContentBlock class="faucet-page">
-    <IconsFaucet class="mx-auto aspect-square h-auto w-24" />
+    <AnimationsIdleFaucet class="mx-auto w-80" />
     <p class="mt-3 text-center leading-tight wrap-balance">
       Ready to explore <span class="font-medium">zkSync Era</span>? Get started with our faucet tool, offering free test
       tokens, once per day, to enrich your crypto journey.
     </p>
     <div class="mt-5 flex flex-wrap justify-center gap-1.5 lg:px-4">
-      <template v-if="tokensRequestInProgress">
-        <TokenBadgeLoader />
-        <TokenBadgeLoader />
-        <TokenBadgeLoader />
-        <TokenBadgeLoader />
-        <TokenBadgeLoader />
-      </template>
-      <CommonErrorBlock v-else-if="tokensRequestError" @try-again="fetch">
-        {{ tokensRequestError.message }}
-      </CommonErrorBlock>
-      <template v-else>
-        <TokenBadge v-for="item in faucetTokens" v-bind="item" :key="item.token.symbol" />
-      </template>
+      <TokenBadge v-for="item in faucetTokens" v-bind="item" :key="item.token.symbol" />
     </div>
 
     <div
@@ -42,7 +30,7 @@
       Captcha error: {{ turnstileError }}
     </CommonErrorBlock>
     <CommonErrorBlock v-else-if="isFaucetAvailable && faucetError" class="mt-2" @try-again="requestTokens">
-      Requesting tokens error: {{ faucetError.message }}
+      Requesting test tokens error: {{ faucetError.message }}
     </CommonErrorBlock>
 
     <div class="mt-5">
@@ -83,60 +71,34 @@ import useFaucet from "@/composables/zksync/era/useFaucet";
 
 import { useNetworkStore } from "@/store/network";
 import { useOnboardStore } from "@/store/onboard";
-import { useEraTokensStore } from "@/store/zksync/era/tokens";
 import { useEraTransfersHistoryStore } from "@/store/zksync/era/transfersHistory";
 import { useEraWalletStore } from "@/store/zksync/era/wallet";
 
-const eraTokensStore = useEraTokensStore();
 const walletEraStore = useEraWalletStore();
 const eraTransfersHistoryStore = useEraTransfersHistoryStore();
 const { account } = storeToRefs(useOnboardStore());
 const { selectedEthereumNetwork } = storeToRefs(useNetworkStore());
-const { tokens, tokensRequestInProgress, tokensRequestError } = storeToRefs(eraTokensStore);
-const fetch = () => {
-  eraTokensStore.requestTokens();
-};
-fetch();
 
 const faucetTokens = computed(() => {
-  if (!tokens.value) return [];
-
-  const findTokenIconUrlBySymbol = (symbol: string) => {
-    const token = Object.values(tokens.value!).find((token) => token.symbol.toLowerCase() === symbol.toLowerCase());
-    return token?.iconUrl;
-  };
-
   return [
     {
-      token: { decimals: 18, symbol: "ETH", iconUrl: findTokenIconUrlBySymbol("ETH") },
+      token: { decimals: 18, symbol: "ETH" },
       amount: "1000000000000000",
     },
     {
-      token: { decimals: 8, symbol: "wBTC", iconUrl: findTokenIconUrlBySymbol("wBTC") },
+      token: { decimals: 8, symbol: "wBTC" },
       amount: "1000000",
     },
     {
-      token: {
-        decimals: 18,
-        symbol: "LINK",
-        iconUrl:
-          findTokenIconUrlBySymbol("LINK") ??
-          "https://firebasestorage.googleapis.com/v0/b/token-library.appspot.com/o/link.svg?alt=media&token=1985e3d8-3aa7-4d04-8839-565d4c341615",
-      },
+      token: { decimals: 18, symbol: "LINK" },
       amount: "100000000000000000000",
     },
     {
-      token: { decimals: 6, symbol: "USDC", iconUrl: findTokenIconUrlBySymbol("USDC") },
+      token: { decimals: 6, symbol: "USDC" },
       amount: "300000000",
     },
     {
-      token: {
-        decimals: 18,
-        symbol: "DAI",
-        iconUrl:
-          findTokenIconUrlBySymbol("DAI") ??
-          "https://firebasestorage.googleapis.com/v0/b/token-library.appspot.com/o/dai.svg?alt=media&token=1985e3d8-3aa7-4d04-8839-565d4c341615",
-      },
+      token: { decimals: 18, symbol: "DAI" },
       amount: "300000000000000000000",
     },
   ];
