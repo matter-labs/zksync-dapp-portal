@@ -2,6 +2,7 @@
 import { Given, Then, When } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
 
+import { NetworkSwitcher } from "../data/data";
 import { Helper } from "../helpers/helper";
 import { BasePage } from "../pages/base.page";
 import { ContactsPage } from "../pages/contacts.page";
@@ -27,6 +28,7 @@ Given("I go to {string} url", config.stepTimeout, async function (this: ICustomW
 });
 
 Given("I go to page {string}", config.stepTimeout, async function (this: ICustomWorld, route: string) {
+  await this.page?.waitForLoadState("load", { timeout: 3 * 1000 });
   await this.page?.goto(config.BASE_URL + route);
 });
 
@@ -192,7 +194,10 @@ Given("I click on the Edit contact button", async function (this: ICustomWorld) 
 });
 
 Given("I am on the Main page", async function (this: ICustomWorld) {
-  await expect(this.page?.url()).toContain(config.BASE_URL);
+  const basePage = new BasePage(this);
+  element = await basePage.returnElementByType("text", "Assets");
+  await expect(element).toBeVisible(config.defaultTimeout);
+  await expect(this.page?.url()).toBe(config.BASE_URL + NetworkSwitcher.zkSyncEraGoerli);
 });
 
 Then("Current page have {string} address", config.stepTimeout, async function (this: ICustomWorld, route: string) {
@@ -223,3 +228,11 @@ Given(
     await expect(element).toBeVisible();
   }
 );
+
+Then("Fee should have {string} value", config.stepTimeout, async function (this: ICustomWorld, fee: string) {
+  mainPage = new MainPage(this);
+  basePage = new BasePage(this);
+  element = mainPage.feeValue;
+  result = await this.page?.locator(element);
+  await expect(result).toContainText(fee);
+});

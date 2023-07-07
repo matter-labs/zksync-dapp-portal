@@ -45,6 +45,10 @@ export class MainPage extends BasePage {
     return `${this.byTestId}no-balances-warning`;
   }
 
+  get feeValue() {
+    return `${this.byTestId}fee-amount`;
+  }
+
   async selectTransaction(transactionType: string) {
     try {
       let route: string;

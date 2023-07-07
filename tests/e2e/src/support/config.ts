@@ -1,6 +1,7 @@
 import { NetworkSwitcher } from "../data/data";
 
 import type { LaunchOptions } from "@playwright/test";
+
 const browserOptions: LaunchOptions = {
   slowMo: 10,
   devtools: true,
@@ -23,7 +24,7 @@ export const config = {
   increasedTimeout: { timeout: 10 * 1000 },
   stepTimeout: { timeout: 60 * 1000 },
   feeLimitations: true,
-  feeBoundaryLevel: 0.2, //in ETH
+  feeBoundaryLevel: 0.2, // in ETH
   networkL1: "goerli",
   networkL2: "https://testnet.era.zksync.dev",
   thresholdBalance: 0.6,

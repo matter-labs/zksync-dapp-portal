@@ -50,7 +50,7 @@ export class BasePage {
   }
 
   async clickByText(text: string) {
-    selector = `//*[not(self::title)][contains(text(),'${text}')]`;
+    selector = `text=${text}`;
     await this.world.page?.locator(selector).first().click();
   }
 
