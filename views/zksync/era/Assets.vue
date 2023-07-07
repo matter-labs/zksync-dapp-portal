@@ -70,12 +70,8 @@
           <DestinationItem
             as="div"
             :icon-url="destinations.era.iconUrl"
-            :label="selectedEthereumNetwork.network === 'mainnet' ? 'New to zkSync Era?' : 'Not enough tokens?'"
-            :description="
-              selectedEthereumNetwork.network === 'mainnet'
-                ? 'Explore with free test tokens'
-                : 'Use official zkSync Era faucet'
-            "
+            label="Not enough tokens?"
+            description="Use official zkSync Era faucet"
           >
             <template #right>
               <CommonButton
