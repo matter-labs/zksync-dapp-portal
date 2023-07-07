@@ -87,6 +87,7 @@ jobs:
         run: |
           npm set-script prepare ""
           npm ci --force
+          npx playwright install --with-deps
 
       - name: Install Metamask extension
         run: npm run postinstall
