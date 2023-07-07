@@ -94,24 +94,8 @@ Then(
   config.stepTimeout,
   async function (this: ICustomWorld, elementType: string, value: string, checkType: string) {
     basePage = new BasePage(this);
-    helper = new Helper(this);
-    element = await basePage.returnElementByType(elementType, value);
 
-    if (checkType === "visible") {
-      await expect(element).toBeVisible();
-    } else if (checkType === "invisible") {
-      result = await helper.checkElementVisible(element);
-      await expect(result).toBe(false);
-    } else if (checkType === "clickable") {
-      result = await helper.checkElementClickable(element);
-      await expect(result).toBe(true);
-    } else if (checkType === "disabled") {
-      result = await element.isDisabled();
-      await expect(result).toBe(true);
-    } else if (checkType === "enabled") {
-      result = await element.isDisabled();
-      await expect(result).toBe(false);
-    }
+    await basePage.verifyElement(elementType, value, checkType);
   }
 );
 
@@ -236,3 +220,12 @@ Then("Fee should have {string} value", config.stepTimeout, async function (this:
   result = await this.page?.locator(element);
   await expect(result).toContainText(fee);
 });
+
+Then(
+  "Modal card element with the {string} xpath should be {string}",
+  config.stepTimeout,
+  async function (this: ICustomWorld, xpath: string, checkType: string) {
+    mainPage = new MainPage(this);
+    await mainPage.checkModalCardElement(xpath, checkType);
+  }
+);

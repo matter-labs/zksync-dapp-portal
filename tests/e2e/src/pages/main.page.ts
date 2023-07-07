@@ -21,6 +21,14 @@ export class MainPage extends BasePage {
     return "//*[@class='amount-input-field-container']//input";
   }
 
+  get modalCard() {
+    return "//*[@class='modal-card']";
+  }
+
+  get avatarModalCard() {
+    return '//*[contains(@class, "address-card-avatar")]';
+  }
+
   get totalIntBalance() {
     return ".total-int";
   }
@@ -69,6 +77,7 @@ export class MainPage extends BasePage {
   }
 
   async insertAmount(amount: string) {
+    await this.world.page?.waitForTimeout(3 * 1000);
     await this.fill(this.amountInputField, amount);
   }
 
@@ -120,5 +129,10 @@ export class MainPage extends BasePage {
       result = await helper.getClipboardValue();
       await this.fill(inputField, result);
     }
+  }
+
+  async checkModalCardElement(xpath: string, checkType: string) {
+    const selector = this.modalCard + xpath;
+    await this.verifyElement("xpath", selector, checkType);
   }
 }

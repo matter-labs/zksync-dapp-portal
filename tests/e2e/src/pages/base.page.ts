@@ -1,4 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { expect } from "@playwright/test";
+
+import { Helper } from "../helpers/helper";
 import { config } from "../support/config";
 
 import type { ICustomWorld } from "../support/custom-world";
@@ -80,7 +83,7 @@ export class BasePage {
   }
 
   async getElementByPartialText(text: string) {
-    element = await this.world.page?.locator(`//*[not(self::title)][contains(text(),'${text}')][1]`).first();
+    element = await this.world.page?.locator(`//*[contains(text(),'${text}')][1]`).first();
     return await element;
   }
 
@@ -204,6 +207,28 @@ export class BasePage {
     } catch {
       await this.world.page?.goto(address);
       console.warn("Retry the atteption reaching url ", address);
+    }
+  }
+
+  async verifyElement(elementType: string, value: string, checkType: string) {
+    const helper = new Helper(this.world);
+    element = await this.returnElementByType(elementType, value);
+    let result;
+
+    if (checkType === "visible") {
+      await expect(element).toBeVisible();
+    } else if (checkType === "invisible") {
+      result = await helper.checkElementVisible(element);
+      await expect(result).toBe(false);
+    } else if (checkType === "clickable") {
+      result = await helper.checkElementClickable(element);
+      await expect(result).toBe(true);
+    } else if (checkType === "disabled") {
+      result = await element.isDisabled();
+      await expect(result).toBe(true);
+    } else if (checkType === "enabled") {
+      result = await element.isDisabled();
+      await expect(result).toBe(false);
     }
   }
 }
