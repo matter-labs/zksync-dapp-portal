@@ -44,7 +44,7 @@ jobs:
 
   e2e:
     needs: build
-    uses: ./.github/workflows/e2e.yml@UEXP-3974-integrate-a-test-solution-to-cicd
+    uses: matter-labs/dapp-portal/.github/workflows/e2e.yml@UEXP-3974-integrate-a-test-solution-to-cicd
     name: E2E testing
     secrets: inherit
     with:

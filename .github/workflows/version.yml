@@ -44,7 +44,7 @@ jobs:
 
   e2e:
     needs: deploy
-    uses: ./.github/workflows/e2e.yml
+    uses: matter-labs/dapp-portal/.github/workflows/e2e.yml@UEXP-3974-integrate-a-test-solution-to-cicd
     secrets: inherit
     with:
       targetUrl: ${{ needs.deploy.outputs.dappUrl }}
