@@ -3,26 +3,24 @@ import { computed, ref } from "vue";
 import { useStorage } from "@vueuse/core";
 import { $fetch, FetchError } from "ohmyfetch";
 
-import type { Ref } from "vue";
+import type { EraNetwork } from "@/store/network";
+import type { ComputedRef } from "vue";
 
-const FAUCET_API_URL = "https://testnet2-faucet.zksync.dev/ask_money";
-
-export default (receiverAddress: Ref<string | undefined>) => {
+export default (receiverAddress: ComputedRef<string | undefined>, eraNetwork: ComputedRef<EraNetwork>) => {
   const success = ref(false);
   const data = {
     turnstileToken: "",
   };
-  const storageFaucetUsedTime = useStorage<{ [receiverAddress: string]: string | undefined }>("faucet-used-time", {});
+  const storageFaucetUsedTime = useStorage<{ [networkKey: string]: string | undefined }>("faucet-used-time", {});
   const faucetUsedTime = computed<string | undefined>({
     get: () => {
-      if (receiverAddress.value && typeof storageFaucetUsedTime.value[receiverAddress.value] === "string") {
-        return storageFaucetUsedTime.value[receiverAddress.value];
+      if (receiverAddress.value && typeof storageFaucetUsedTime.value[eraNetwork.value.key] === "string") {
+        return storageFaucetUsedTime.value[eraNetwork.value.key];
       }
       return undefined;
     },
     set: (timestamp: string | undefined) => {
-      if (!receiverAddress.value) return undefined;
-      storageFaucetUsedTime.value[receiverAddress.value] = timestamp;
+      storageFaucetUsedTime.value[eraNetwork.value.key] = timestamp;
     },
   });
   const faucetAvailableTime = computed(() => {
@@ -35,8 +33,10 @@ export default (receiverAddress: Ref<string | undefined>) => {
   const { inProgress, error, execute, reset } = usePromise(
     async () => {
       try {
+        if (!eraNetwork.value.faucetUrl) throw new Error("Faucet is not available for this network");
+
         success.value = false;
-        await $fetch(FAUCET_API_URL, {
+        await $fetch(eraNetwork.value.faucetUrl, {
           method: "POST",
           headers: {
             "Content-type": "application/json",

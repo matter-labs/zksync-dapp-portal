@@ -1,95 +1,196 @@
 import { useStorage } from "@vueuse/core";
-import { goerli, mainnet } from "@wagmi/core/chains";
+import { goerli, mainnet, sepolia } from "@wagmi/core/chains";
 import { defineStore } from "pinia";
 
-import type { Chain } from "@wagmi/core/chains";
-export type EthereumNetworkName = "goerli" | "mainnet";
+import { useRoute } from "#app";
 
-export type ExtendedChain = Chain & {
-  network: EthereumNetworkName;
-  iconUrl?: string;
-  hostnames: { staging: string; production: string };
+export type Version = "era" | "lite";
+export type L2Network = {
+  key: string;
+  name: string;
+  shortName: string;
+  l1Network: L1Network;
+  blockExplorerUrl: string;
+  visible: boolean;
 };
-export const chains: ExtendedChain[] = [
-  {
+export const l1Networks = {
+  mainnet: {
     ...mainnet,
     name: "Mainnet",
     network: "mainnet",
-    iconUrl: "/img/ethereum.svg",
-    hostnames: {
-      staging: "https://staging-portal.zksync.dev",
-      production: "https://portal.zksync.io",
-    },
   },
-  {
+  goerli: {
     ...goerli,
     name: "Goerli Testnet",
-    hostnames: {
-      staging: "https://goerli.staging-portal.zksync.dev",
-      production: "https://goerli.portal.zksync.io",
-    },
+  },
+  sepolia: {
+    ...sepolia,
+    name: "Sepolia Testnet",
+  },
+} as const;
+export type L1Network = (typeof l1Networks)[keyof typeof l1Networks];
+
+export type EraNetwork = L2Network & {
+  id: 324 | 280 | 270;
+  rpcUrl: string;
+  blockExplorerApi: string;
+  faucetUrl?: string;
+};
+export const eraNetworks: EraNetwork[] = [
+  {
+    id: 324,
+    key: "era-mainnet",
+    name: "zkSync Era Mainnet",
+    shortName: "Era Mainnet",
+    rpcUrl: "https://mainnet.era.zksync.io",
+    blockExplorerUrl: "https://explorer.zksync.io",
+    blockExplorerApi: "https://block-explorer-api.mainnet.zksync.io",
+    l1Network: l1Networks.mainnet,
+    visible: true,
+  },
+  {
+    id: 280,
+    key: "era-goerli",
+    name: "zkSync Era Testnet",
+    shortName: "Era Testnet",
+    rpcUrl: "https://testnet.era.zksync.dev",
+    blockExplorerUrl: "https://goerli.explorer.zksync.io",
+    blockExplorerApi: "https://block-explorer-api.testnets.zksync.dev",
+    faucetUrl: "https://testnet2-faucet.zksync.dev",
+    l1Network: l1Networks.goerli,
+    visible: true,
+  },
+  {
+    id: 270,
+    key: "era-stage",
+    name: "zkSync Era Stage",
+    shortName: "Era Stage",
+    rpcUrl: "https://z2-dev-api.zksync.dev",
+    blockExplorerUrl: "https://goerli.explorer.zksync.io",
+    blockExplorerApi: "https://block-explorer-api.testnets.zksync.dev",
+    faucetUrl: "https://stage2-faucet.zksync.dev",
+    l1Network: l1Networks.sepolia,
+    visible: false,
   },
 ];
+export const zkSyncLiteNetworks: L2Network[] = [
+  {
+    key: "lite-mainnet",
+    name: "zkSync Lite Mainnet",
+    shortName: "Lite Mainnet",
+    blockExplorerUrl: "https://zkscan.io",
+    l1Network: l1Networks.mainnet,
+    visible: true,
+  },
+  {
+    key: "lite-goerli",
+    name: "zkSync Lite Goerli",
+    shortName: "Lite Goerli",
+    blockExplorerUrl: "https://goerli.zkscan.io",
+    l1Network: l1Networks.goerli,
+    visible: true,
+  },
+];
+const l2Networks = [...eraNetworks, ...zkSyncLiteNetworks];
+const defaultNetwork = l2Networks[0];
 
 export const useNetworkStore = defineStore("network", () => {
-  const selectedEthereumNetworkName = useStorage<EthereumNetworkName>(
-    "selectedEthereumNetwork",
-    chains[0].network,
-    window.sessionStorage
+  const route = useRoute();
+
+  const networkUsesLocalStorage = useStorage<boolean>("networkUsesLocalStorage", false);
+  const selectedNetworkKey = useStorage<string>(
+    "selectedNetwork",
+    defaultNetwork.key,
+    networkUsesLocalStorage.value ? window.localStorage : window.sessionStorage
   );
-  const selectedEthereumNetwork = computed<ExtendedChain>(() => {
-    return chains.find((network) => network.network === selectedEthereumNetworkName.value) ?? chains[0];
+  const selectedNetwork = computed<L2Network>(() => {
+    return l2Networks.find((e) => e.key === selectedNetworkKey.value) ?? defaultNetwork;
   });
-  const blockExplorerUrl = computed<string | undefined>(
+
+  const version = computed<Version>(() => getVersionByNetwork(selectedNetwork.value));
+  const selectedEthereumNetwork = computed<L1Network>(() => selectedNetwork.value.l1Network);
+  const l1BlockExplorerUrl = computed<string | undefined>(
     () => selectedEthereumNetwork.value.blockExplorers?.default.url
   );
 
-  const lastSelectedEthereumNetworkName = useStorage<EthereumNetworkName | undefined>(
-    "lastSelectedEthereumNetwork",
-    undefined
-  );
-  const lastSelectedEthereumNetwork = computed<ExtendedChain | undefined>(() => {
-    return chains.find((network) => network.network === lastSelectedEthereumNetworkName.value);
+  const networkChangedWarningDisabled = useStorage<boolean>("networkChangedWarningDisabled", false);
+  const lastSelectedNetworkKey = useStorage<string | undefined>("lastSelectedNetworkKey", undefined);
+  const lastSelectedNetwork = computed<L2Network | undefined>(() => {
+    return l2Networks.find((network) => network.key === lastSelectedNetworkKey.value);
   });
-  const ethereumNetworkChangedWarning = computed(
+  const networkChangedWarning = computed(
     () =>
-      typeof lastSelectedEthereumNetworkName.value === "string" &&
-      (lastSelectedEthereumNetworkName.value as string) !== "undefined" &&
-      lastSelectedEthereumNetwork.value?.network !== selectedEthereumNetwork.value.network
+      !networkChangedWarningDisabled.value &&
+      typeof lastSelectedNetworkKey.value === "string" &&
+      (lastSelectedNetworkKey.value as string) !== "undefined" &&
+      lastSelectedNetwork.value?.key !== selectedNetwork.value.key
   );
-  watch(selectedEthereumNetworkName, (val) => {
-    lastSelectedEthereumNetworkName.value = val;
+  const resetNetworkChangeWarning = () => {
+    lastSelectedNetworkKey.value = selectedNetwork.value.key;
+  };
+  watch(selectedNetworkKey, (val) => {
+    lastSelectedNetworkKey.value = val;
+  });
+  watch([networkUsesLocalStorage, networkChangedWarningDisabled], () => {
+    selectedNetworkKey.value = selectedNetwork.value.key;
   });
 
-  const identifyNetwork = () => {
+  const identifyNetworkByQueryParam = () => {
     const windowLocation = window.location;
     const networkFromQueryParam = new URLSearchParams(windowLocation.search).get("network");
-    const networkOnDomain = chains.find((e) => Object.values(e.hostnames).includes(windowLocation.origin));
-    const defaultNetwork = chains[0];
-    const defaultNetworkName = defaultNetwork.network;
-    if (networkFromQueryParam && chains.some((e) => e.network === networkFromQueryParam)) {
-      selectedEthereumNetworkName.value = networkFromQueryParam as EthereumNetworkName;
-    } else if (selectedEthereumNetworkName.value === defaultNetworkName) {
-      if (networkOnDomain) {
-        selectedEthereumNetworkName.value = networkOnDomain.network;
-      } else {
-        selectedEthereumNetworkName.value = defaultNetwork.network;
-      }
+    if (networkFromQueryParam && l2Networks.some((e) => e.key === networkFromQueryParam)) {
+      selectedNetworkKey.value = networkFromQueryParam;
+      resetNetworkChangeWarning();
     }
   };
-  identifyNetwork();
+  const identifyNetworkByRoute = (routeName: string) => {
+    const getVersionFromRouteName = (): Version | undefined => {
+      if (/(-lite-|.*-lite$)/.test(routeName)) {
+        return "lite";
+      } else if (/(-era-|.*-era$)/.test(routeName)) {
+        return "era";
+      }
+    };
+    const versionFromRoute = getVersionFromRouteName();
+    if (!versionFromRoute || versionFromRoute === version.value) return;
+
+    const networkWithSameL1 = l2Networks.find(
+      (network) =>
+        getVersionByNetwork(network) === versionFromRoute &&
+        selectedNetwork.value.l1Network.network === network.l1Network.network
+    );
+    if (networkWithSameL1) {
+      selectedNetworkKey.value = networkWithSameL1.key;
+    } else {
+      const anyNetworkWithSameVersion = l2Networks.find(
+        (network) => getVersionByNetwork(network) === versionFromRoute
+      )!;
+      window.location.href = getNetworkUrl(anyNetworkWithSameVersion, route.fullPath);
+    }
+  };
+
+  identifyNetworkByQueryParam(); // need to be done only on load once
+  watch(
+    () => route.name,
+    (routeName) => {
+      if (!routeName) return;
+      identifyNetworkByRoute(routeName.toString());
+    },
+    { immediate: true }
+  );
 
   return {
-    selectedEthereumNetwork,
-    blockExplorerUrl,
+    networkUsesLocalStorage,
+    selectedNetworkKey,
+    selectedNetwork,
 
-    ethereumNetworkChangedWarning,
-    lastSelectedEthereumNetworkName: computed(
-      () => lastSelectedEthereumNetwork.value?.name ?? lastSelectedEthereumNetworkName.value
-    ),
-    lastSelectedEthereumNetwork,
-    resetNetworkChangeWarning: () => {
-      lastSelectedEthereumNetworkName.value = selectedEthereumNetwork.value.network;
-    },
+    version,
+    selectedEthereumNetwork,
+    l1BlockExplorerUrl,
+
+    networkChangedWarningDisabled,
+    networkChangedWarning,
+    lastSelectedNetwork,
+    resetNetworkChangeWarning,
   };
 });

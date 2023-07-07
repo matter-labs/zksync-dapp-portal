@@ -1,5 +1,5 @@
 <template>
-  <FaucetModal :status="status" @close="resetFaucet">
+  <FaucetModal :faucet-network="faucetNetwork" :status="status" @close="resetFaucet">
     <template #tokens>
       <div class="flex flex-wrap justify-center gap-1.5">
         <TokenBadge v-for="item in faucetTokens" v-bind="item" :key="item.token.symbol" />
@@ -22,7 +22,7 @@
     <div
       ref="turnstileElement"
       class="relative isolate mx-auto mt-5 flex h-[65px] w-[300px] justify-center"
-      :class="{ hidden: turnstileError || !isFaucetAvailable }"
+      :class="{ hidden: turnstileError || !isFaucetAvailable || !faucetAvailableOnCurrentNetwork }"
     >
       <CommonContentLoader class="absolute inset-0 z-[-1] block h-full w-full" />
     </div>
@@ -35,18 +35,23 @@
 
     <div class="mt-5">
       <template v-if="isFaucetAvailable">
-        <CommonButtonTopInfo v-if="selectedEthereumNetwork.network === 'mainnet'">
-          Test tokens will be available on zkSync Era Testnet
-        </CommonButtonTopInfo>
-        <CommonButton
-          as="button"
-          variant="primary-solid"
-          :disabled="buttonDisabled"
-          class="mx-auto"
-          @click="requestTokens"
-        >
-          Request free test tokens
-        </CommonButton>
+        <template v-if="!faucetAvailableOnCurrentNetwork">
+          <CommonButtonTopInfo>Switch to {{ faucetNetwork.name }} network to request test tokens</CommonButtonTopInfo>
+          <CommonButton as="button" variant="primary-solid" class="mx-auto" @click="changeNetwork">
+            Change network to {{ faucetNetwork.name }}
+          </CommonButton>
+        </template>
+        <template v-else>
+          <CommonButton
+            as="button"
+            variant="primary-solid"
+            :disabled="buttonDisabled"
+            class="mx-auto"
+            @click="requestTokens"
+          >
+            Request free test tokens
+          </CommonButton>
+        </template>
       </template>
       <template v-else>
         <CommonButtonTopInfo>You already requested test tokens in the last 24 hours</CommonButtonTopInfo>
@@ -60,6 +65,7 @@
 
 <script lang="ts" setup>
 import { computed, ref, watch } from "vue";
+import { useRoute } from "vue-router";
 
 import { storeToRefs } from "pinia";
 
@@ -69,16 +75,32 @@ import useIsBeforeDate from "@/composables/useIsBeforeDate";
 import useTurnstile from "@/composables/useTurnstile";
 import useFaucet from "@/composables/zksync/era/useFaucet";
 
-import { useNetworkStore } from "@/store/network";
+import { eraNetworks, useNetworkStore } from "@/store/network";
 import { useOnboardStore } from "@/store/onboard";
+import { useEraProviderStore } from "@/store/zksync/era/provider";
 import { useEraTransfersHistoryStore } from "@/store/zksync/era/transfersHistory";
 import { useEraWalletStore } from "@/store/zksync/era/wallet";
+import { getNetworkUrl } from "@/utils/helpers";
 
 const walletEraStore = useEraWalletStore();
 const eraTransfersHistoryStore = useEraTransfersHistoryStore();
-const { account } = storeToRefs(useOnboardStore());
-const { selectedEthereumNetwork } = storeToRefs(useNetworkStore());
+const onboardStore = useOnboardStore();
+const { account } = storeToRefs(onboardStore);
+const { selectedNetwork } = storeToRefs(useNetworkStore());
+const { eraNetwork } = storeToRefs(useEraProviderStore());
 
+const route = useRoute();
+
+const faucetNetwork = computed(() => {
+  if (!eraNetwork.value.faucetUrl) {
+    return eraNetworks.filter((network) => network.faucetUrl)[0];
+  }
+  return eraNetwork.value;
+});
+const faucetAvailableOnCurrentNetwork = computed(() => {
+  if (!faucetNetwork.value) return false;
+  return faucetNetwork.value.key === selectedNetwork.value.key;
+});
 const faucetTokens = computed(() => {
   return [
     {
@@ -112,9 +134,12 @@ const {
   error: faucetError,
   requestTestTokens,
   reset: resetFaucet,
-} = useFaucet(computed(() => account.value.address));
+} = useFaucet(
+  computed(() => account.value.address),
+  faucetNetwork
+);
 const { isBefore } = useIsBeforeDate(faucetAvailableTime);
-const isFaucetAvailable = computed(() => !faucetAvailableTime.value || !isBefore.value);
+const isFaucetAvailable = computed(() => true || !faucetAvailableTime.value || !isBefore.value);
 
 const turnstileElement = ref<HTMLElement | null>(null);
 const initializeTurnstile = () => {
@@ -123,14 +148,19 @@ const initializeTurnstile = () => {
   renderTurnstile(turnstileElement.value);
 };
 watch(
-  [isFaucetAvailable, turnstileElement],
-  ([available, element]) => {
-    if (available && element) {
+  [isFaucetAvailable, faucetAvailableOnCurrentNetwork, turnstileElement],
+  ([available, availableOnCurrentNetwork, element]) => {
+    if (available && availableOnCurrentNetwork && element) {
       initializeTurnstile();
     }
   },
   { immediate: true }
 );
+
+const changeNetwork = () => {
+  if (!faucetNetwork.value) return;
+  window.location.href = getNetworkUrl(faucetNetwork.value, route.fullPath);
+};
 
 const buttonDisabled = computed(() => {
   return !account.value.address || inFaucetRequestProgress.value || !turnstileToken.value || turnstileError.value;

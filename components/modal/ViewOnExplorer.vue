@@ -33,13 +33,13 @@ import { ArrowUpRightIcon } from "@heroicons/vue/24/outline";
 import { storeToRefs } from "pinia";
 
 import { useDestinationsStore } from "@/store/destinations";
+import { useNetworkStore } from "@/store/network";
 import { useOnboardStore } from "@/store/onboard";
-import { usePreferencesStore } from "@/store/preferences";
 import { useEraProviderStore } from "@/store/zksync/era/provider";
 import { useLiteProviderStore } from "@/store/zksync/lite/provider";
 
-const { version } = storeToRefs(usePreferencesStore());
-const { account, blockExplorerUrl: ethereumBlockExplorerUrl } = storeToRefs(useOnboardStore());
+const { l1BlockExplorerUrl, version } = storeToRefs(useNetworkStore());
+const { account } = storeToRefs(useOnboardStore());
 const { destinations } = storeToRefs(useDestinationsStore());
 const { blockExplorerUrl: eraBlockExplorerUrl } = storeToRefs(useEraProviderStore());
 const { blockExplorerUrl: liteBlockExplorerUrl } = storeToRefs(useLiteProviderStore());
@@ -51,12 +51,12 @@ const networks = computed(() => {
       link: `${eraBlockExplorerUrl.value}/address/${account.value.address}`,
     },
     {
-      destination: destinations.value.zkSyncLite,
-      link: `${liteBlockExplorerUrl.value}/address/${account.value.address}`,
+      destination: destinations.value.ethereum,
+      link: `${l1BlockExplorerUrl.value}/address/${account.value.address}`,
     },
     {
-      destination: destinations.value.ethereum,
-      link: `${ethereumBlockExplorerUrl.value}/address/${account.value.address}`,
+      destination: destinations.value.zkSyncLite,
+      link: `${liteBlockExplorerUrl.value}/address/${account.value.address}`,
     },
   ];
 });
