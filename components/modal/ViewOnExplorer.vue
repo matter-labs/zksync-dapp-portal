@@ -38,7 +38,7 @@ import { useOnboardStore } from "@/store/onboard";
 import { useEraProviderStore } from "@/store/zksync/era/provider";
 import { useLiteProviderStore } from "@/store/zksync/lite/provider";
 
-const { blockExplorerUrl: ethereumBlockExplorerUrl, version } = storeToRefs(useNetworkStore());
+const { l1BlockExplorerUrl, version } = storeToRefs(useNetworkStore());
 const { account } = storeToRefs(useOnboardStore());
 const { destinations } = storeToRefs(useDestinationsStore());
 const { blockExplorerUrl: eraBlockExplorerUrl } = storeToRefs(useEraProviderStore());
@@ -52,7 +52,7 @@ const networks = computed(() => {
     },
     {
       destination: destinations.value.ethereum,
-      link: `${ethereumBlockExplorerUrl.value}/address/${account.value.address}`,
+      link: `${l1BlockExplorerUrl.value}/address/${account.value.address}`,
     },
     {
       destination: destinations.value.zkSyncLite,

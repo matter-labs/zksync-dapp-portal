@@ -74,7 +74,7 @@
         {{ transactionCommitted ? "Allowance approved" : "Approving allowance" }}
       </div>
       <CommonCardWithLineButtons v-if="transaction">
-        <TransactionLineItem :icon="LockOpenIcon" :transaction-url="`${blockExplorerUrl}/tx/${transactionHash}`">
+        <TransactionLineItem :icon="LockOpenIcon" :transaction-url="`${l1BlockExplorerUrl}/tx/${transactionHash}`">
           <template #top-left>Allowance</template>
           <template #top-right>
             <TokenAmount :token="transaction.token" :amount="transaction.amount" />
@@ -90,7 +90,7 @@
           <span class="font-medium">{{ destinations.ethereum.label }}</span
           >.
         </p>
-        <a :href="`${blockExplorerUrl}/tx/${transactionHash}`" target="_blank" class="alert-link">
+        <a :href="`${l1BlockExplorerUrl}/tx/${transactionHash}`" target="_blank" class="alert-link">
           Track status
           <ArrowUpRightIcon class="ml-1 h-3 w-3" />
         </a>
@@ -170,7 +170,7 @@ const emit = defineEmits<{
 
 const { account } = storeToRefs(useOnboardStore());
 const { destinations } = storeToRefs(useDestinationsStore());
-const { blockExplorerUrl } = storeToRefs(useNetworkStore());
+const { l1BlockExplorerUrl } = storeToRefs(useNetworkStore());
 
 const status = ref<"not-started" | "waiting-for-signature" | "committing" | "processing" | "done">("not-started");
 const transactionHash = ref<Hash | undefined>();

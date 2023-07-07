@@ -97,24 +97,30 @@ const defaultNetwork = l2Networks[0];
 export const useNetworkStore = defineStore("network", () => {
   const route = useRoute();
 
-  const selectedNetworkKey = useStorage<string>("selectedNetwork", defaultNetwork.key, window.sessionStorage);
+  const networkUsesLocalStorage = useStorage<boolean>("networkUsesLocalStorage", false);
+  const selectedNetworkKey = useStorage<string>(
+    "selectedNetwork",
+    defaultNetwork.key,
+    networkUsesLocalStorage.value ? window.localStorage : window.sessionStorage
+  );
   const selectedNetwork = computed<L2Network>(() => {
     return l2Networks.find((e) => e.key === selectedNetworkKey.value) ?? defaultNetwork;
   });
+
   const version = computed<Version>(() => getVersionByNetwork(selectedNetwork.value));
-  const selectedEthereumNetwork = computed<L1Network>(() => {
-    return selectedNetwork.value.l1Network;
-  });
-  const blockExplorerUrl = computed<string | undefined>(
+  const selectedEthereumNetwork = computed<L1Network>(() => selectedNetwork.value.l1Network);
+  const l1BlockExplorerUrl = computed<string | undefined>(
     () => selectedEthereumNetwork.value.blockExplorers?.default.url
   );
 
+  const networkChangedWarningDisabled = useStorage<boolean>("networkChangedWarningDisabled", false);
   const lastSelectedNetworkKey = useStorage<string | undefined>("lastSelectedNetworkKey", undefined);
   const lastSelectedNetwork = computed<L2Network | undefined>(() => {
     return l2Networks.find((network) => network.key === lastSelectedNetworkKey.value);
   });
   const networkChangedWarning = computed(
     () =>
+      !networkChangedWarningDisabled.value &&
       typeof lastSelectedNetworkKey.value === "string" &&
       (lastSelectedNetworkKey.value as string) !== "undefined" &&
       lastSelectedNetwork.value?.key !== selectedNetwork.value.key
@@ -124,6 +130,9 @@ export const useNetworkStore = defineStore("network", () => {
   };
   watch(selectedNetworkKey, (val) => {
     lastSelectedNetworkKey.value = val;
+  });
+  watch([networkUsesLocalStorage, networkChangedWarningDisabled], () => {
+    selectedNetworkKey.value = selectedNetwork.value.key;
   });
 
   const identifyNetworkByQueryParam = () => {
@@ -159,11 +168,11 @@ export const useNetworkStore = defineStore("network", () => {
       window.location.href = getNetworkUrl(anyNetworkWithSameVersion, route.fullPath);
     }
   };
+
+  identifyNetworkByQueryParam(); // need to be done only on load once
   watch(
     () => route.name,
     (routeName) => {
-      identifyNetworkByQueryParam();
-
       if (!routeName) return;
       identifyNetworkByRoute(routeName.toString());
     },
@@ -171,12 +180,15 @@ export const useNetworkStore = defineStore("network", () => {
   );
 
   return {
+    networkUsesLocalStorage,
     selectedNetworkKey,
     selectedNetwork,
+
     version,
     selectedEthereumNetwork,
-    blockExplorerUrl,
+    l1BlockExplorerUrl,
 
+    networkChangedWarningDisabled,
     networkChangedWarning,
     lastSelectedNetwork,
     resetNetworkChangeWarning,
