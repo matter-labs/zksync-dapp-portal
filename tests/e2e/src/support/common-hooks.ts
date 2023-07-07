@@ -11,7 +11,8 @@ import { config } from "../support/config";
 import type { ICustomWorld } from "./custom-world";
 import type { ITestCaseHookParameter } from "@cucumber/cucumber/lib/support_code_library_builder/types";
 
-const pathToExtension = path.join(__dirname, "../support/extension/metamask-chrome-" + config.METAMASK_VERSION);
+console.log("__dirname: " + __dirname);
+const pathToExtension = path.join(__dirname, "src/support/extension/metamask-chrome-" + config.METAMASK_VERSION);
 const userDataDir = "";
 let browser: any;
 
