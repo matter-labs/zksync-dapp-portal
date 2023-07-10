@@ -56,7 +56,7 @@ jobs:
     name: '${{ matrix.tags }}'
     
     container:
-      image: mcr.microsoft.com/playwright:v1.34.0-focal
+      image: mcr.microsoft.com/playwright:v1.27.1-focal
       options: --user root
     steps:
       - uses: actions/checkout@v3
@@ -68,19 +68,6 @@ jobs:
           mkdir -p ./tests/e2e/src/support/extension
           chown -R root ./
           chmod 777 -R ./tests/e2e/src/support/extension
-
-      # - name: Cache node modules
-      #   id: cache-nodemodules
-      #   uses: actions/cache@v3
-      #   env:
-      #     cache-name: cache-node-modules
-      #   with:
-      #     path: node_modules
-      #     key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
-      #     restore-keys: |
-      #       ${{ runner.os }}-build-${{ env.cache-name }}-
-      #       ${{ runner.os }}-build-
-      #       ${{ runner.os }}-
 
       - name: Install Dependencies
         run: |
