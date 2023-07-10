@@ -32,28 +32,37 @@ export const useOnboardStore = defineStore("onboard", () => {
   });
   const ethereumClient = new EthereumClient(wagmiClient, extendedChains);
 
-  const getWalletName = async () => {
-    if (wagmiClient.connector?.name === "MetaMask") return "MetaMask";
-    const provider = await wagmiClient.connector?.getProvider();
-    console.log(provider?.session?.peer?.metadata?.name);
-    // TODO: Figure out how to get wallet name in WalletConnect v2
-    return undefined;
-  };
-
   const account = ref(ethereumClient.getAccount());
   const network = ref(ethereumClient.getNetwork());
   const connectorName = ref(wagmiClient.connector?.name);
-  const walletName = ref<string | undefined>(getWalletName());
+  const walletName = ref<string | undefined>();
+  const identifyWalletName = async () => {
+    const provider = await wagmiClient.connector?.getProvider();
+    const name = provider?.session?.peer?.metadata?.name;
+
+    if (!name && wagmiClient.connector?.name !== "WalletConnect") {
+      walletName.value = wagmiClient.connector?.name.replace(/ Wallet$/, "").trim();
+    } else {
+      walletName.value = name?.replace(/ Wallet$/, "").trim();
+    }
+  };
+  identifyWalletName();
   const web3modal = new Web3Modal(
     {
       projectId: env.walletConnectProjectID,
       enableNetworkView: false,
       enableAccountView: true,
       themeMode: selectedColorMode.value,
+      /* explorerExcludedWalletIds: "ALL",
+      explorerRecommendedWalletIds: [
+        "c57ca95b47569778a828d19178114f4db188b89b763c899ba0be274e97267d96",
+        "4622a2b2d6af1c9844944291e5e7351a6aa24cd7b23099efac1b2fd875da31a0",
+      ],
+      termsOfServiceUrl: "https://zksync.io/terms",
+      privacyPolicyUrl: "https://zksync.io/privacy", */
     },
     ethereumClient
   );
-  web3modal.setDefaultChain(selectedEthereumNetwork.value);
   ethereumClient.watchAccount(async (updatedAccount) => {
     // There is a bug in @wagmi/core@0.10.11 or @web3modal/ethereum@^2.3.7
     // On page update or after using `ethereumClient.disconnect` method
@@ -63,7 +72,7 @@ export const useOnboardStore = defineStore("onboard", () => {
     }
     account.value = updatedAccount;
     connectorName.value = wagmiClient.connector?.name;
-    walletName.value = getWalletName();
+    identifyWalletName();
   });
   ethereumClient.watchNetwork((updatedNetwork) => {
     network.value = updatedNetwork;
