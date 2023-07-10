@@ -14,7 +14,7 @@ import type { ITestCaseHookParameter } from "@cucumber/cucumber/lib/support_code
 console.log("__dirname: " + __dirname);
 const pathToExtension = path.join(__dirname, "extension/metamask-chrome-" + config.METAMASK_VERSION);
 console.log("pathToExtension: " + pathToExtension);
-const userDataDir = "";
+const userDataDir = __dirname;
 let browser: any;
 
 setDefaultTimeout(process.env.PWDEBUG ? -1 : 301 * 1000);
