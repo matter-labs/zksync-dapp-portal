@@ -89,7 +89,8 @@
       <transition v-bind="TransitionAlertScaleInOutTransition">
         <CommonAlert v-if="!enoughBalanceToCoverFee" class="mt-1" variant="error" :icon="ExclamationTriangleIcon">
           <p>
-            Insufficient <span class="font-medium">{{ feeToken?.symbol }}</span> balance to cover the fee
+            Insufficient <span class="font-medium">{{ feeToken?.symbol }}</span> balance on
+            {{ destinations.zkSyncLite.label }} to cover the fee
           </p>
           <button type="button" class="alert-link" @click="openFeeTokenModal">Change fee token</button>
         </CommonAlert>
