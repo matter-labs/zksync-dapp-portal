@@ -20,19 +20,18 @@ let browser: any;
 setDefaultTimeout(process.env.PWDEBUG ? -1 : 301 * 1000);
 
 BeforeAll(async function (this: ICustomWorld) {
-  console.log("-------- Base Url: ", config.BASE_URL + config.DAPP_NETWORK);
   if (process.env.INCOGNITO_MODE === "true") {
     browser = await chromium.launchPersistentContext(__dirname + userDataDir, {
       slowMo: config.slowMo,
       headless: config.headless,
-      // args: [`--disable-extensions`],
+      args: [`--disable-extensions`],
       viewport: config.mainWindowSize,
     });
   } else {
     browser = await chromium.launchPersistentContext(__dirname + userDataDir, {
       slowMo: config.slowMo,
       headless: config.headless,
-      // args: [`--disable-extensions-except=${pathToExtension}`, `--load-extension=${pathToExtension}`],
+      args: [`--disable-extensions-except=${pathToExtension}`, `--load-extension=${pathToExtension}`],
       viewport: config.mainWindowSize,
       permissions: ["clipboard-read"],
     });
