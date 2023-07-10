@@ -72,4 +72,40 @@ Feature: Withdraw
     When I click by text " Max "
     Then Element with "partial class" "has-error" should be "invisible"
 
+  @id1327
+  Scenario: Withdraw - Bridge - [WF] Withdraw
+    Given I am on the Main page
+    Given I go to "Withdraw" transaction section
+    Given I click by "text" with "Your account" value
+    When I confirm the network switching
+    When I choose "ETH" as token and insert "0.0001" as amount
+    #check an available balance
+    Then Element with "class" "break-all" should be "visible"
+    When I click by text " Max "
+    Then Element with "class" "amount-input-token" should be "visible"
+    Then Element with "class" "amount-input-token" should be "clickable"
 
+
+  @id1395
+  Scenario: Withdraw - Confirm transaction modal - Artifacts
+    Given I am on the Main page
+    Given I go to "Withdraw" transaction section
+    Given I click by "text" with "Your account" value
+    When I confirm the network switching
+    When I choose "ETH" as token and insert "0.0001" as amount
+    When I click by text " Continue "
+    Then Element with "text" "Confirm transaction" should be "visible"
+    Then Element with "text" "Your Ethereum Goerli account" should be "visible"
+    Then Element with "text" "Your zkSync Era∎ Goerli account" should be "visible"
+    Then Element with "partial class" "address-card-avatar" should be "visible"
+    Then Modal card element with the "//*[text()='0x26A4...C37']" xpath should be "visible"
+    Then Modal card element with the "//*[@alt='ETH token icon']" xpath should be "visible"
+    Then Modal card element with the "//*[text()='0x000000...00A']" xpath should be "visible"
+    Then Modal card element with the "//*[@class='token-balance-price']" xpath should be "visible"
+    Then Modal card element with the "//*[@src='/img/era.svg']" xpath should be "visible"
+    Then Modal card element with the "//*[contains(@class,'fee-details-container') and //span[contains(text(),'Fee')]]" xpath should be "visible"
+    Then Modal card element with the "//*[contains(@class,'fee-details-container') and //span[contains(text(),'Total to pay')]]" xpath should be "visible"
+    Then Modal card element with the "//*[text()=' Arriving in ~24 hours ']" xpath should be "visible"
+    Then Modal card element with the "//*[text()=' Arriving in ~24 hours ']" xpath should be "clickable"
+    Then Element with "text" "Send to Ethereum Goerli" should be "visible"
+    Then Element with "text" "Send to Ethereum Goerli" should be "clickable"

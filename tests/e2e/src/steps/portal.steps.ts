@@ -66,8 +66,8 @@ When(
   config.stepTimeout,
   async function (this: ICustomWorld, token: string, amount: string) {
     mainPage = new MainPage(this);
-    await mainPage.insertAmount(amount);
     await mainPage.chooseToken(token);
+    await mainPage.insertAmount(amount);
   }
 );
 

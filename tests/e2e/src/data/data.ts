@@ -23,4 +23,5 @@ export enum NetworkSwitcher {
 
 export enum Routes {
   withdraw = "/transaction/zksync/era/withdraw",
+  deposit = "/transaction/zksync/era/deposit",
 }

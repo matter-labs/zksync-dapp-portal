@@ -57,6 +57,10 @@ export class MainPage extends BasePage {
     return `${this.byTestId}fee-amount`;
   }
 
+  get balanceValue() {
+    return "//span[@class='break-all']";
+  }
+
   async selectTransaction(transactionType: string) {
     try {
       let route: string;
