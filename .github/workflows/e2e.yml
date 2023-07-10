@@ -85,7 +85,6 @@ jobs:
       - name: Install Dependencies
         run: |
           npm ci --force
-          npx playwright install --with-deps
 
       - name: Install Metamask extension
         run: npm run postinstall
@@ -104,6 +103,8 @@ jobs:
           DAPP_NETWORK: ${{ inputs.network }}
         run: |
           echo "Run tests"
+          export TERM=xterm
+          DEBUG=pw:api
           cd tests/e2e/
           ps -ef | grep Xvfb
           ${{ matrix.command }}
