@@ -58,3 +58,18 @@ Feature: Withdraw
     When I click by "text" with " Max " value
     Then Element with "title" "Max amount is set" should be "visible"
 
+  @id1554
+  Scenario: Withdraw - Bridge - [Transaction] insufficient funds
+    Given I am on the Main page
+    Given I go to "Withdraw" transaction section
+    Given I click by "text" with "Your account" value
+    When I choose "ETH" as token and insert "10000" as amount
+    When I confirm the network switching
+    Then Element with "partial class" "has-error" should be "enabled"
+    Then Element with "text" " Max " should be "visible"
+    Then Element with "text" " Max " should be "clickable"
+    Then Element with "text" " Continue " should be "disabled"
+    When I click by text " Max "
+    Then Element with "partial class" "has-error" should be "invisible"
+
+

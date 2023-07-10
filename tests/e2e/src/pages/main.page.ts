@@ -62,8 +62,14 @@ export class MainPage extends BasePage {
       let route: string;
       if (transactionType === "Withdraw") {
         route = Routes.withdraw;
-        await this.world.page?.goto(config.BASE_URL + route + config.DAPP_NETWORK);
+      } else if (transactionType === "Deposit") {
+        route = Routes.deposit;
+      } else {
+        throw new Error("Unknown transaction type");
       }
+
+      await this.world.page?.goto(config.BASE_URL + route + config.DAPP_NETWORK);
+      return route;
     } catch (e) {
       console.error(e);
     }

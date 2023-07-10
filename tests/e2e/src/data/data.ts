@@ -17,7 +17,7 @@ export enum MetamaskWallet {
 }
 
 export enum NetworkSwitcher {
-  zkSyncEraGoerli = "/?network=goerli",
+  zkSyncEraGoerli = "/?network=era-goerli",
   zkSyncEraMainnet = "/?network=mainnet",
 }
 
