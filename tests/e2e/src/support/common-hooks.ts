@@ -12,7 +12,7 @@ import type { ICustomWorld } from "./custom-world";
 import type { ITestCaseHookParameter } from "@cucumber/cucumber/lib/support_code_library_builder/types";
 
 console.log("__dirname: " + __dirname);
-const pathToExtension = path.join(__dirname, "extension/metamask-chrome-" + config.METAMASK_VERSION);
+const pathToExtension = path.join(__dirname, "../support/extension/metamask-chrome-" + config.METAMASK_VERSION);
 console.log("pathToExtension: " + pathToExtension);
 const userDataDir = "";
 let browser: any;
@@ -20,18 +20,19 @@ let browser: any;
 setDefaultTimeout(process.env.PWDEBUG ? -1 : 301 * 1000);
 
 BeforeAll(async function (this: ICustomWorld) {
+  console.log("-------- Base Url: ", config.BASE_URL + config.DAPP_NETWORK);
   if (process.env.INCOGNITO_MODE === "true") {
-    browser = await chromium.launchPersistentContext(userDataDir, {
+    browser = await chromium.launchPersistentContext(__dirname + userDataDir, {
       slowMo: config.slowMo,
       headless: config.headless,
-      args: [`--disable-extensions`],
+      // args: [`--disable-extensions`],
       viewport: config.mainWindowSize,
     });
   } else {
-    browser = await chromium.launchPersistentContext(userDataDir, {
+    browser = await chromium.launchPersistentContext(__dirname + userDataDir, {
       slowMo: config.slowMo,
       headless: config.headless,
-      args: [`--disable-extensions-except=${pathToExtension}`, `--load-extension=${pathToExtension}`],
+      // args: [`--disable-extensions-except=${pathToExtension}`, `--load-extension=${pathToExtension}`],
       viewport: config.mainWindowSize,
       permissions: ["clipboard-read"],
     });
