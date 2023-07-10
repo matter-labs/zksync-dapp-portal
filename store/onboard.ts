@@ -32,7 +32,10 @@ export const useOnboardStore = defineStore("onboard", () => {
   });
   const ethereumClient = new EthereumClient(wagmiClient, extendedChains);
 
-  const getWalletName = () => {
+  const getWalletName = async () => {
+    if (wagmiClient.connector?.name === "MetaMask") return "MetaMask";
+    const provider = await wagmiClient.connector?.getProvider();
+    console.log(provider?.session?.peer?.metadata?.name);
     // TODO: Figure out how to get wallet name in WalletConnect v2
     return undefined;
   };
