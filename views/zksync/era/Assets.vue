@@ -70,12 +70,8 @@
           <DestinationItem
             as="div"
             :icon-url="destinations.era.iconUrl"
-            :label="selectedEthereumNetwork.network === 'mainnet' ? 'New to zkSync Era?' : 'Not enough tokens?'"
-            :description="
-              selectedEthereumNetwork.network === 'mainnet'
-                ? 'Explore with free test tokens'
-                : 'Use official zkSync Era faucet'
-            "
+            label="Not enough tokens?"
+            description="Use official zkSync Era faucet"
           >
             <template #right>
               <CommonButton
@@ -106,9 +102,8 @@ import useInterval from "@/composables/useInterval";
 import useSingleLoading from "@/composables/useSingleLoading";
 
 import { useDestinationsStore } from "@/store/destinations";
-import { useNetworkStore } from "@/store/network";
 import { useOnboardStore } from "@/store/onboard";
-import { useEraTransfersHistoryStore } from "@/store/zksync/era/transfersHistory";
+import { useEraProviderStore } from "@/store/zksync/era/provider";
 import { useEraWalletStore } from "@/store/zksync/era/wallet";
 import { parseTokenAmount, removeSmallAmount } from "@/utils/formatters";
 import { calculateTotalTokensPrice, isOnlyZeroes } from "@/utils/helpers";
@@ -116,12 +111,9 @@ import { TransitionAlertScaleInOutTransition } from "@/utils/transitions";
 
 const onboardStore = useOnboardStore();
 const walletEraStore = useEraWalletStore();
-const eraTransfersHistoryStore = useEraTransfersHistoryStore();
 const { balance, balanceInProgress, balanceError, allBalancePricesLoaded } = storeToRefs(walletEraStore);
 const { destinations } = storeToRefs(useDestinationsStore());
-const { selectedEthereumNetwork } = storeToRefs(useNetworkStore());
-const { transfers, recentTransfersRequestInProgress, recentTransfersRequestError } =
-  storeToRefs(eraTransfersHistoryStore);
+const { eraNetwork } = storeToRefs(useEraProviderStore());
 
 const displayedBalances = computed(() => {
   return balance.value.filter(({ amount, decimals, price }) => {
@@ -137,23 +129,16 @@ const displayedBalances = computed(() => {
 const { loading, reset: resetSingleLoading } = useSingleLoading(
   computed(() => balanceInProgress.value || !allBalancePricesLoaded.value)
 );
-const { loading: transactionsLoading, reset: resetTransactionsSingleLoading } = useSingleLoading(
-  computed(() => recentTransfersRequestInProgress.value)
-);
 const isFaucetDisplayed = computed(() => {
-  if (loading.value || transactionsLoading.value) return false;
-  if (selectedEthereumNetwork.value.network === "mainnet") {
-    if (recentTransfersRequestError.value || transfers.value.length > 3) {
-      return false;
-    }
-    return true;
+  if (loading.value) return false;
+  if (eraNetwork.value.faucetUrl) {
+    return calculateTotalTokensPrice(balance.value) < 50;
   }
-  return calculateTotalTokensPrice(balance.value) < 50;
+  return false;
 });
 
 const fetch = () => {
   walletEraStore.requestBalance();
-  eraTransfersHistoryStore.requestRecentTransfers();
 };
 fetch();
 
@@ -164,7 +149,6 @@ const { reset: resetAutoUpdate, stop: stopAutoUpdate } = useInterval(() => {
 const unsubscribe = onboardStore.subscribeOnAccountChange((newAddress) => {
   if (!newAddress) return;
   resetSingleLoading();
-  resetTransactionsSingleLoading();
   resetAutoUpdate();
   fetch();
 });

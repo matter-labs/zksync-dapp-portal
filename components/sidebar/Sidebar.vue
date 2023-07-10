@@ -27,10 +27,7 @@
         >
           <IconsEra v-if="version === 'era'" class="navbar-link-icon" />
           <IconsZkSyncLite v-else-if="version === 'lite'" class="navbar-link-icon" />
-          <span class="navbar-link-label">
-            <span class="capitalize">{{ version }}</span>
-            {{ selectedEthereumNetwork.network === "mainnet" ? selectedEthereumNetwork.name : "Testnet" }}
-          </span>
+          <span class="navbar-link-label">{{ selectedNetwork.shortName }}</span>
           <ChevronDownIcon class="dropdown-icon" aria-hidden="true" />
         </button>
       </div>
@@ -45,10 +42,8 @@ import { ArrowsRightLeftIcon, ChevronDownIcon, UserGroupIcon, WalletIcon } from 
 import { storeToRefs } from "pinia";
 
 import { useNetworkStore } from "@/store/network";
-import { usePreferencesStore } from "@/store/preferences";
 
-const { selectedEthereumNetwork } = storeToRefs(useNetworkStore());
-const { version } = storeToRefs(usePreferencesStore());
+const { selectedNetwork, version } = storeToRefs(useNetworkStore());
 
 const networkChangeModalOpened = ref(false);
 </script>
@@ -86,7 +81,7 @@ const networkChangeModalOpened = ref(false);
       }
     }
     .navbar-bottom {
-      @apply mt-auto hidden space-y-2 md:block;
+      @apply fixed bottom-8 mt-auto hidden space-y-2 md:block xl:w-[200px];
 
       .navbar-bottom-button {
         @apply border bg-gray-100 hover:border-gray-300 dark:border-neutral-900 dark:bg-neutral-900;

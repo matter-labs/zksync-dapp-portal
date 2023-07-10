@@ -2,7 +2,7 @@
   <div class="fee-details-container">
     <span>{{ label }}</span>
     <div class="flex flex-col items-end xs:flex-row xs:items-center">
-      <div class="flex items-center">
+      <div class="flex items-center" data-testid="fee-amount">
         <template v-if="loading">
           <CommonContentLoader :length="30" />
         </template>

@@ -76,7 +76,7 @@
       <CommonCardWithLineButtons v-if="transaction">
         <TransactionLineItem
           :icon="transactionReceiptIcon"
-          :transaction-url="`${blockExplorerUrl}/tx/${ethTransactionHash}`"
+          :transaction-url="`${l1BlockExplorerUrl}/tx/${ethTransactionHash}`"
         >
           <template #top-left>Deposit</template>
           <template #top-right>
@@ -104,7 +104,7 @@
           processed on <span class="font-medium">{{ destinations.zkSyncLite.label }}</span
           >. You are free to close this page.
         </p>
-        <a :href="`${blockExplorerUrl}/tx/${ethTransactionHash}`" target="_blank" class="alert-link">
+        <a :href="`${l1BlockExplorerUrl}/tx/${ethTransactionHash}`" target="_blank" class="alert-link">
           Track status
           <ArrowUpRightIcon class="ml-1 h-3 w-3" />
         </a>
@@ -196,7 +196,7 @@ const walletLiteStore = useLiteWalletStore();
 const liteEthereumBalanceStore = useLiteEthereumBalanceStore();
 const { account } = storeToRefs(useOnboardStore());
 const { destinations } = storeToRefs(useDestinationsStore());
-const { blockExplorerUrl } = storeToRefs(useNetworkStore());
+const { l1BlockExplorerUrl } = storeToRefs(useNetworkStore());
 const { previousTransactionAddress } = storeToRefs(usePreferencesStore());
 const { status, error, ethTransactionHash, commitTransaction } = useTransaction(() =>
   walletLiteStore.getWalletInstance()
