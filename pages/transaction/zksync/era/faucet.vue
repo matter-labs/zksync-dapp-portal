@@ -117,7 +117,7 @@ const faucetTokens = computed(() => {
   return [
     {
       token: { decimals: 18, symbol: "ETH", iconUrl: findTokenIconUrlBySymbol("ETH") },
-      amount: "1000000000000000",
+      amount: "100000000000000",
     },
     {
       token: { decimals: 8, symbol: "wBTC", iconUrl: findTokenIconUrlBySymbol("wBTC") },
