@@ -74,15 +74,17 @@
       <transition v-bind="TransitionAlertScaleInOutTransition">
         <CommonAlert v-if="!enoughBalanceToCoverFee" class="mt-1" variant="error" :icon="ExclamationTriangleIcon">
           <p>
-            Insufficient <span class="font-medium">{{ feeToken?.symbol }}</span> balance to cover the fee
+            Insufficient <span class="font-medium">{{ feeToken?.symbol }}</span> balance on
+            {{ destinations.ethereum.label }} to cover the fee
           </p>
         </CommonAlert>
       </transition>
       <transition v-bind="TransitionAlertScaleInOutTransition">
         <CommonAlert v-if="recommendedBalance && feeToken" class="mt-1" variant="error" :icon="ExclamationTriangleIcon">
           <p>
-            Insufficient <span class="font-medium">{{ feeToken?.symbol }}</span> balance to cover the fee. We recommend
-            having at least <span class="font-medium">{{ recommendedBalance }} {{ feeToken?.symbol }}</span> on
+            Insufficient <span class="font-medium">{{ feeToken?.symbol }}</span> balance on
+            {{ destinations.ethereum.label }} to cover the fee. We recommend having at least
+            <span class="font-medium">{{ recommendedBalance }} {{ feeToken?.symbol }}</span> on
             {{ selectedEthereumNetwork.name }} for deposit.
           </p>
         </CommonAlert>
