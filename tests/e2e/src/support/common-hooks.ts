@@ -31,7 +31,7 @@ BeforeAll(async function (this: ICustomWorld) {
     browser = await chromium.launchPersistentContext(__dirname + userDataDir, {
       slowMo: config.slowMo,
       headless: config.headless,
-      args: [`--disable-extensions-except=${pathToExtension}`, `--load-extension=${pathToExtension}`],
+      // args: [`--disable-extensions-except=${pathToExtension}`, `--load-extension=${pathToExtension}`],
       viewport: config.mainWindowSize,
       permissions: ["clipboard-read"],
     });
