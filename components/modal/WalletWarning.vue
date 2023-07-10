@@ -23,12 +23,12 @@ import { storeToRefs } from "pinia";
 
 import { useOnboardStore } from "@/store/onboard";
 
-const { walletName } = storeToRefs(useOnboardStore());
+const { connectorName } = storeToRefs(useOnboardStore());
 
 const doNotShowWarning = useStorage("wallet-warning-hidden", false);
 const walletWarningModal = ref(false);
 watch(
-  walletName,
+  connectorName,
   (name) => {
     if (doNotShowWarning.value) return;
     if (name && name !== "MetaMask") {
