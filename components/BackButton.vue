@@ -9,7 +9,7 @@ import type { PropType } from "vue";
 import type { RouteLocationRaw } from "vue-router";
 
 import { useRouter } from "#app";
-import { usePreferencesStore } from "@/store/preferences";
+import { useNetworkStore } from "@/store/network";
 import { replaceVersionInString } from "@/utils/helpers";
 
 const props = defineProps({
@@ -20,7 +20,7 @@ const props = defineProps({
 });
 
 const router = useRouter();
-const { version: selectedZkSyncVersion } = storeToRefs(usePreferencesStore());
+const { version: selectedZkSyncVersion } = storeToRefs(useNetworkStore());
 
 const back = () => {
   if (!router.options.history.state.replaced && router.options.history.state.back) {

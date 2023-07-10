@@ -21,15 +21,12 @@
         <div class="menu-options">
           <MenuItem v-if="mdAndSmaller" v-slot="{ active }" as="template">
             <button class="account-menu-item" :class="{ active }" @click="networkChangeModalOpened = true">
-              <img
-                v-if="selectedEthereumNetwork.iconUrl"
-                :src="selectedEthereumNetwork.iconUrl"
-                :alt="selectedEthereumNetwork.name"
-                class="account-menu-item-icon p-1"
-              />
-              <div v-else class="account-menu-item-icon">{{ selectedEthereumNetwork.name.slice(0, 1) }}</div>
+              <div class="account-menu-item-icon p-1.5">
+                <IconsEra class="block h-full w-full" v-if="version === 'era'" />
+                <IconsZkSyncLite class="block h-full w-full" v-else-if="version === 'lite'" />
+              </div>
               <div class="flex items-center justify-between">
-                <span>{{ selectedEthereumNetwork.name }}</span>
+                <span>{{ selectedNetwork.shortName }}</span>
                 <ChevronDownIcon class="mr-1 ml-2 h-4 w-4 transition-transform" aria-hidden="true" />
               </div>
             </button>
@@ -82,7 +79,7 @@ import { useNetworkStore } from "@/store/network";
 import { useOnboardStore } from "@/store/onboard";
 
 const { selectedColorMode, switchColorMode } = useColorMode();
-const { selectedEthereumNetwork } = storeToRefs(useNetworkStore());
+const { selectedNetwork, version } = storeToRefs(useNetworkStore());
 const onboardStore = useOnboardStore();
 
 const breakpoints = useBreakpoints({

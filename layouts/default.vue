@@ -22,30 +22,17 @@ import { storeToRefs } from "pinia";
 
 import useColorMode from "@/composables/useColorMode";
 
-import { useRoute, useRouter } from "#app";
+import { useRouter } from "#app";
 import LoginLayout from "@/layouts/login.vue";
+import { useNetworkStore } from "@/store/network";
 import { useOnboardStore } from "@/store/onboard";
-import { usePreferencesStore } from "@/store/preferences";
 import LoginPage from "@/views/Login.vue";
 
 useColorMode();
-const route = useRoute();
 
 const { account, isConnectingWallet } = storeToRefs(useOnboardStore());
-const { version } = storeToRefs(usePreferencesStore());
-watch(
-  () => route.name,
-  (routeName) => {
-    if (!routeName) return;
+const { version } = storeToRefs(useNetworkStore());
 
-    if (/(-lite-|.*-lite$)/.test(routeName.toString())) {
-      version.value = "lite";
-    } else if (/(-era-|.*-era$)/.test(routeName.toString())) {
-      version.value = "era";
-    }
-  },
-  { immediate: true }
-);
 watch(
   version,
   () => {

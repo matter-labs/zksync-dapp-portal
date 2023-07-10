@@ -9,9 +9,9 @@ import useColorMode from "@/composables/useColorMode";
 import useObservable from "@/composables/useObservable";
 
 import { useRuntimeConfig } from "#imports";
-import { chains, useNetworkStore } from "@/store/network";
+import { l1Networks, useNetworkStore } from "@/store/network";
 
-const extendedChains = [...chains, zkSync, zkSyncTestnet];
+const extendedChains = [...Object.values(l1Networks), zkSync, zkSyncTestnet];
 const { public: env } = useRuntimeConfig();
 
 export const useOnboardStore = defineStore("onboard", () => {
@@ -109,13 +109,6 @@ export const useOnboardStore = defineStore("onboard", () => {
     await switchNetwork().catch(() => undefined);
   };
 
-  const blockExplorerUrl = computed(() => {
-    if (selectedEthereumNetwork.value.network === "mainnet") {
-      return "https://etherscan.io";
-    }
-    return `https://${selectedEthereumNetwork.value.network}.etherscan.io`;
-  });
-
   const { subscribe: subscribeOnAccountChange, notify: notifyOnAccountChange } = useObservable<string | undefined>();
   watch(
     () => account.value.address,
@@ -146,7 +139,6 @@ export const useOnboardStore = defineStore("onboard", () => {
     setCorrectNetwork,
     switchNetworkById,
 
-    blockExplorerUrl,
     getEthereumProvider: () => publicClient({ chainId: selectedEthereumNetwork.value.id }),
     getWallet,
     getPublicClient: () => getPublicClient({ chainId: selectedEthereumNetwork.value.id }),
