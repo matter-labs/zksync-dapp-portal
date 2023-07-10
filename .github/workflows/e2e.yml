@@ -48,7 +48,7 @@ jobs:
       fail-fast: false
       max-parallel: 20
       matrix:
-        command: ["xvfb-run --auto-servernum --server-args '-screen 0 1920x1080x24' top "]
+        command: ["xvfb-run --auto-servernum --server-args '-screen 0 1920x1080x24' npx cucumber-js --tags "]
         tags: [ "@withdraw",
                 "@artifacts"
               ]
@@ -103,8 +103,8 @@ jobs:
           DAPP_NETWORK: ${{ inputs.network }}
         run: |
           echo "Run tests"
-          export TERM=xterm
           DEBUG=pw:api
+          xvfb-run --auto-servernum --server-args '-screen 0 1920x1080x24' ls 
           cd tests/e2e/
           ps -ef | grep Xvfb
           ${{ matrix.command }}
