@@ -18,8 +18,8 @@
 
       <CommonAlert v-if="status === 'done'" class="mt-3" variant="success" :icon="InformationCircleIcon">
         <p>
-          Success! Your free test tokens are on their way and will be available on your account soon. Welcome to the
-          zkSync Era!
+          Success! Your free test tokens are on their way and will be available on your account soon. Welcome to zkSync
+          Era!
         </p>
       </CommonAlert>
       <CommonAlert v-else-if="status === 'processing'" class="mt-3" variant="neutral" :icon="InformationCircleIcon">
@@ -27,7 +27,7 @@
       </CommonAlert>
 
       <template v-if="status === 'done'">
-        <TransactionConfirmModalFooter v-if="selectedEthereumNetwork.network === 'goerli'">
+        <TransactionConfirmModalFooter v-if="faucetNetwork.key === selectedNetwork.key">
           <CommonButtonTopLink as="a" href="https://ecosystem.zksync.io" target="_blank">
             Explore zkSync Era ecosystem
             <ArrowUpRightIcon class="ml-1 mt-0.5 h-3.5 w-3.5" />
@@ -37,14 +37,9 @@
           </CommonButton>
         </TransactionConfirmModalFooter>
         <TransactionConfirmModalFooter v-else>
-          <CommonButtonTopInfo>Test tokens are available on zkSync Era Testnet</CommonButtonTopInfo>
-          <CommonButton
-            as="a"
-            :href="getNetworkUrl(eraNetworks.find(e => e.key === 'era-goerli')!, '/')"
-            class="mx-auto"
-            variant="primary-solid"
-          >
-            Switch to zkSync Era Testnet
+          <CommonButtonTopInfo>Test tokens are available on {{ faucetNetwork.name }}</CommonButtonTopInfo>
+          <CommonButton as="a" :href="getNetworkUrl(faucetNetwork, '/')" class="mx-auto" variant="primary-solid">
+            Switch to {{ faucetNetwork.name }}
           </CommonButton>
         </TransactionConfirmModalFooter>
       </template>
@@ -56,20 +51,25 @@
 import { ArrowUpRightIcon, InformationCircleIcon } from "@heroicons/vue/24/outline";
 import { storeToRefs } from "pinia";
 
+import type { EraNetwork } from "@/store/network";
 import type { PropType } from "vue";
 
-import { eraNetworks, useNetworkStore } from "@/store/network";
+import { useNetworkStore } from "@/store/network";
 
 export type FaucetStep = "not-started" | "processing" | "done";
 
 defineProps({
+  faucetNetwork: {
+    type: Object as PropType<EraNetwork>,
+    required: true,
+  },
   status: {
     type: String as PropType<"not-started" | "processing" | "done">,
     required: true,
   },
 });
 
-const { selectedEthereumNetwork } = storeToRefs(useNetworkStore());
+const { selectedNetwork } = storeToRefs(useNetworkStore());
 </script>
 
 <style lang="scss">

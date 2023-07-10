@@ -1,7 +1,7 @@
 <template>
-  <FaucetModal :status="status" @close="resetFaucet">
+  <FaucetModal :faucet-network="faucetNetwork" :status="status" @close="resetFaucet">
     <template #tokens>
-      <div v-if="tokens" class="flex flex-wrap justify-center gap-1.5">
+      <div class="flex flex-wrap justify-center gap-1.5">
         <TokenBadge v-for="item in faucetTokens" v-bind="item" :key="item.token.symbol" />
       </div>
     </template>
@@ -10,31 +10,19 @@
   <BackButton :fallback="{ name: 'transaction-zksync-era-receive' }" />
   <h1 class="h1">Faucet</h1>
   <CommonContentBlock class="faucet-page">
-    <IconsFaucet class="mx-auto aspect-square h-auto w-24" />
+    <AnimationsIdleFaucet class="mx-auto w-80" />
     <p class="mt-3 text-center leading-tight wrap-balance">
       Ready to explore <span class="font-medium">zkSync Era</span>? Get started with our faucet tool, offering free test
       tokens, once per day, to enrich your crypto journey.
     </p>
     <div class="mt-5 flex flex-wrap justify-center gap-1.5 lg:px-4">
-      <template v-if="tokensRequestInProgress">
-        <TokenBadgeLoader />
-        <TokenBadgeLoader />
-        <TokenBadgeLoader />
-        <TokenBadgeLoader />
-        <TokenBadgeLoader />
-      </template>
-      <CommonErrorBlock v-else-if="tokensRequestError" @try-again="fetch">
-        {{ tokensRequestError.message }}
-      </CommonErrorBlock>
-      <template v-else>
-        <TokenBadge v-for="item in faucetTokens" v-bind="item" :key="item.token.symbol" />
-      </template>
+      <TokenBadge v-for="item in faucetTokens" v-bind="item" :key="item.token.symbol" />
     </div>
 
     <div
       ref="turnstileElement"
       class="relative isolate mx-auto mt-5 flex h-[65px] w-[300px] justify-center"
-      :class="{ hidden: turnstileError || !isFaucetAvailable }"
+      :class="{ hidden: turnstileError || !isFaucetAvailable || !faucetAvailableOnCurrentNetwork }"
     >
       <CommonContentLoader class="absolute inset-0 z-[-1] block h-full w-full" />
     </div>
@@ -42,23 +30,28 @@
       Captcha error: {{ turnstileError }}
     </CommonErrorBlock>
     <CommonErrorBlock v-else-if="isFaucetAvailable && faucetError" class="mt-2" @try-again="requestTokens">
-      Requesting tokens error: {{ faucetError.message }}
+      Requesting test tokens error: {{ faucetError.message }}
     </CommonErrorBlock>
 
     <div class="mt-5">
       <template v-if="isFaucetAvailable">
-        <CommonButtonTopInfo v-if="selectedNetwork.key !== faucetNetwork.key">
-          Test tokens will be available on {{ faucetNetwork.name }}
-        </CommonButtonTopInfo>
-        <CommonButton
-          as="button"
-          variant="primary-solid"
-          :disabled="buttonDisabled"
-          class="mx-auto"
-          @click="requestTokens"
-        >
-          Request free test tokens
-        </CommonButton>
+        <template v-if="!faucetAvailableOnCurrentNetwork">
+          <CommonButtonTopInfo>Switch to {{ faucetNetwork.name }} network to request test tokens</CommonButtonTopInfo>
+          <CommonButton as="button" variant="primary-solid" class="mx-auto" @click="changeNetwork">
+            Change network to {{ faucetNetwork.name }}
+          </CommonButton>
+        </template>
+        <template v-else>
+          <CommonButton
+            as="button"
+            variant="primary-solid"
+            :disabled="buttonDisabled"
+            class="mx-auto"
+            @click="requestTokens"
+          >
+            Request free test tokens
+          </CommonButton>
+        </template>
       </template>
       <template v-else>
         <CommonButtonTopInfo>You already requested test tokens in the last 24 hours</CommonButtonTopInfo>
@@ -72,6 +65,7 @@
 
 <script lang="ts" setup>
 import { computed, ref, watch } from "vue";
+import { useRoute } from "vue-router";
 
 import { storeToRefs } from "pinia";
 
@@ -84,21 +78,18 @@ import useFaucet from "@/composables/zksync/era/useFaucet";
 import { eraNetworks, useNetworkStore } from "@/store/network";
 import { useOnboardStore } from "@/store/onboard";
 import { useEraProviderStore } from "@/store/zksync/era/provider";
-import { useEraTokensStore } from "@/store/zksync/era/tokens";
 import { useEraTransfersHistoryStore } from "@/store/zksync/era/transfersHistory";
 import { useEraWalletStore } from "@/store/zksync/era/wallet";
+import { getNetworkUrl } from "@/utils/helpers";
 
-const eraTokensStore = useEraTokensStore();
 const walletEraStore = useEraWalletStore();
 const eraTransfersHistoryStore = useEraTransfersHistoryStore();
-const { account } = storeToRefs(useOnboardStore());
+const onboardStore = useOnboardStore();
+const { account } = storeToRefs(onboardStore);
 const { selectedNetwork } = storeToRefs(useNetworkStore());
 const { eraNetwork } = storeToRefs(useEraProviderStore());
-const { tokens, tokensRequestInProgress, tokensRequestError } = storeToRefs(eraTokensStore);
-const fetch = () => {
-  eraTokensStore.requestTokens();
-};
-fetch();
+
+const route = useRoute();
 
 const faucetNetwork = computed(() => {
   if (!eraNetwork.value.faucetUrl) {
@@ -106,45 +97,30 @@ const faucetNetwork = computed(() => {
   }
   return eraNetwork.value;
 });
+const faucetAvailableOnCurrentNetwork = computed(() => {
+  if (!faucetNetwork.value) return false;
+  return faucetNetwork.value.key === selectedNetwork.value.key;
+});
 const faucetTokens = computed(() => {
-  if (!tokens.value) return [];
-
-  const findTokenIconUrlBySymbol = (symbol: string) => {
-    const token = Object.values(tokens.value!).find((token) => token.symbol.toLowerCase() === symbol.toLowerCase());
-    return token?.iconUrl;
-  };
-
   return [
     {
-      token: { decimals: 18, symbol: "ETH", iconUrl: findTokenIconUrlBySymbol("ETH") },
-      amount: "10000000000000000",
+      token: { decimals: 18, symbol: "ETH" },
+      amount: "1000000000000000",
     },
     {
-      token: { decimals: 8, symbol: "wBTC", iconUrl: findTokenIconUrlBySymbol("wBTC") },
+      token: { decimals: 8, symbol: "wBTC" },
       amount: "1000000",
     },
     {
-      token: {
-        decimals: 18,
-        symbol: "LINK",
-        iconUrl:
-          findTokenIconUrlBySymbol("LINK") ??
-          "https://firebasestorage.googleapis.com/v0/b/token-library.appspot.com/o/link.svg?alt=media&token=1985e3d8-3aa7-4d04-8839-565d4c341615",
-      },
+      token: { decimals: 18, symbol: "LINK" },
       amount: "100000000000000000000",
     },
     {
-      token: { decimals: 6, symbol: "USDC", iconUrl: findTokenIconUrlBySymbol("USDC") },
+      token: { decimals: 6, symbol: "USDC" },
       amount: "300000000",
     },
     {
-      token: {
-        decimals: 18,
-        symbol: "DAI",
-        iconUrl:
-          findTokenIconUrlBySymbol("DAI") ??
-          "https://firebasestorage.googleapis.com/v0/b/token-library.appspot.com/o/dai.svg?alt=media&token=1985e3d8-3aa7-4d04-8839-565d4c341615",
-      },
+      token: { decimals: 18, symbol: "DAI" },
       amount: "300000000000000000000",
     },
   ];
@@ -163,7 +139,7 @@ const {
   faucetNetwork
 );
 const { isBefore } = useIsBeforeDate(faucetAvailableTime);
-const isFaucetAvailable = computed(() => !faucetAvailableTime.value || !isBefore.value);
+const isFaucetAvailable = computed(() => true || !faucetAvailableTime.value || !isBefore.value);
 
 const turnstileElement = ref<HTMLElement | null>(null);
 const initializeTurnstile = () => {
@@ -172,14 +148,19 @@ const initializeTurnstile = () => {
   renderTurnstile(turnstileElement.value);
 };
 watch(
-  [isFaucetAvailable, turnstileElement],
-  ([available, element]) => {
-    if (available && element) {
+  [isFaucetAvailable, faucetAvailableOnCurrentNetwork, turnstileElement],
+  ([available, availableOnCurrentNetwork, element]) => {
+    if (available && availableOnCurrentNetwork && element) {
       initializeTurnstile();
     }
   },
   { immediate: true }
 );
+
+const changeNetwork = () => {
+  if (!faucetNetwork.value) return;
+  window.location.href = getNetworkUrl(faucetNetwork.value, route.fullPath);
+};
 
 const buttonDisabled = computed(() => {
   return !account.value.address || inFaucetRequestProgress.value || !turnstileToken.value || turnstileError.value;
