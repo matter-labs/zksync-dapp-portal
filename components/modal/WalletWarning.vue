@@ -33,17 +33,18 @@ import { storeToRefs } from "pinia";
 import { useNetworkStore } from "@/store/network";
 import { useOnboardStore } from "@/store/onboard";
 
-const { connectorName } = storeToRefs(useOnboardStore());
+const { walletName } = storeToRefs(useOnboardStore());
 const { version } = storeToRefs(useNetworkStore());
 
 const doNotShowWarning = useStorage("wallet-warning-hidden", false);
 const warningChecked = ref(false);
 const walletWarningModal = ref(false);
 watch(
-  [connectorName, version],
-  ([name, zkSyncVersion]) => {
+  [walletName, version],
+  ([wallet, zkSyncVersion]) => {
     if (doNotShowWarning.value) return;
-    if (zkSyncVersion === "era" && name && name !== "MetaMask") {
+    if (!wallet) return;
+    if (zkSyncVersion === "era" && walletName.value !== "MetaMask") {
       walletWarningModal.value = true;
     }
   },
