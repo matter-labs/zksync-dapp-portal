@@ -148,3 +148,8 @@ Feature: Artifacts - UI
     Then Element with "partial text" "Approve allowance" should be "visible"
     Then Element with "partial text" "Approve allowance" should be "clickable"
 
+  @id1534 @header
+  Scenario: Check artifacts on the Header
+    Given I am on the Main page
+    Then Element with "href" "/" should be "visible"
+    Then Element with "href" "/" should be "clickable"
