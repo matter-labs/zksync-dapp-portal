@@ -93,8 +93,8 @@ jobs:
           cd tests/e2e/
           echo "ls src/support"
           ls src/support
-          echo "ls src/support/exstension"
-          ls src/support/exstension
+          echo "ls src/support/extension"
+          ls src/support/extension
           echo "ls /__w/dapp-portal/dapp-portal/tests/e2e/src/support/extension/metamask-chrome-10.14.1"
           ls /__w/dapp-portal/dapp-portal/tests/e2e/src/support/extension/metamask-chrome-10.14.1
           ${{ matrix.command }}'${{ matrix.tags }} ${{ inputs.environmentTags }}'
