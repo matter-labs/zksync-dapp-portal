@@ -63,15 +63,14 @@ jobs:
         with:
           fetch-depth: 0
 
-      # - name: Create metamask extension folder
-      #   run: |
-      #     mkdir -p ./tests/e2e/src/support/extension
-      #     chown -R root ./
-      #     chmod 777 -R ./tests/e2e/src/support/extension
+      - name: Create metamask extension folder
+        run: |
+          mkdir -p ./tests/e2e/src/support/extension
+          chown -R root ./
+          chmod 777 -R ./tests/e2e/src/support/extension
 
       - name: Install Dependencies
         run: |
-          cd tests/e2e/
           npm ci --force
 
       - name: Install Metamask extension
