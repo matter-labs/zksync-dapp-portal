@@ -153,3 +153,16 @@ Feature: Artifacts - UI
     Given I am on the Main page
     Then Element with "href" "/" should be "visible"
     Then Element with "href" "/" should be "clickable"
+    Then Element with "aria-label" "Medium Blog" should be "visible"
+    Then Element with "aria-label" "Medium Blog" should be "clickable"
+    Then Element with "aria-label" "Discord Community" should be "visible"
+    Then Element with "aria-label" "Discord Community" should be "clickable"
+    Then Element with "aria-label" "Telegram Support" should be "visible"
+    Then Element with "aria-label" "Telegram Support" should be "clickable"
+    Then Element with "aria-label" "Twitter Community" should be "visible"
+    Then Element with "aria-label" "Twitter Community" should be "clickable"
+    Then Element with "aria-label" "Email" should be "visible"
+    Then Element with "aria-label" "Email" should be "clickable"
+
+
+

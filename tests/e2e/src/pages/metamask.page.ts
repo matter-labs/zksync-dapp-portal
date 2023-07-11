@@ -118,7 +118,8 @@ export class MetamaskPage extends BasePage {
   }
 
   async getCodePhraseField(indx: number) {
-    element = `id=import-srp__srp-word-` + indx.toString();
+    // element = `id=import-srp__srp-word-` + indx.toString();
+    element = `${this.byTestId}import-srp__srp-word-` + indx.toString();
     return await element;
   }
 
@@ -142,8 +143,9 @@ export class MetamaskPage extends BasePage {
   }
 
   private async fillSecretPhrase(walletPhrase: Array<string>) {
-    for (let i = 0; i < walletPhrase.length; i++) {
-      const secretWord: string = walletPhrase[i].toString();
+    const array = walletPhrase[0].split(",");
+    for (let i = 0; i < array.length; i++) {
+      const secretWord: string = array[i].toString();
       const codePhraseField: object = await this.getCodePhraseField(i);
       await page.locator(codePhraseField).fill(secretWord);
     }

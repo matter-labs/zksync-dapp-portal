@@ -139,6 +139,12 @@ export class BasePage {
     return await element;
   }
 
+  async getElementByAriaLabel(ariaLabel: string) {
+    element = await this.world.page?.locator(`//*[@aria-label='${ariaLabel}']`).first();
+    await element.scrollIntoViewIfNeeded();
+    return await element;
+  }
+
   async getElementByTestId(testid: string) {
     element = await this.world.page?.locator(`${this.byTestId}${testid}`).first();
     await element.scrollIntoViewIfNeeded();
@@ -196,6 +202,8 @@ export class BasePage {
       element = await this.getElementByXpath(value);
     } else if (elementType === "src") {
       element = await this.getElementBySrc(value);
+    } else if (elementType === "aria-label") {
+      element = await this.getElementByAriaLabel(value);
     }
     return element;
   }
