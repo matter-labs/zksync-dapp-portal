@@ -38,7 +38,7 @@ const { version } = storeToRefs(useNetworkStore());
 
 const doNotShowWarning = useStorage("wallet-warning-hidden", false);
 const warningChecked = ref(false);
-const walletWarningModal = ref(true);
+const walletWarningModal = ref(false);
 watch(
   [connectorName, version],
   ([name, zkSyncVersion]) => {
