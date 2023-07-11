@@ -80,8 +80,7 @@ jobs:
           pwd
           echo "ls src/support"
           ls src/support
-          echo "ls src/support/extension"
-          ls src/support/extension
+          echo "Postinstall"
           npm run postinstall
           echo "ls src/support"
           ls src/support
