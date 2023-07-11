@@ -45,6 +45,14 @@ export const useOnboardStore = defineStore("onboard", () => {
     } else {
       walletName.value = name?.replace(/ Wallet$/, "").trim();
     }
+    if (!wagmiClient.connector) return;
+    alert(
+      JSON.stringify(
+        { walletName: walletName.value, connectorName: wagmiClient.connector?.name, id: wagmiClient.connector?.id },
+        null,
+        4
+      )
+    );
   };
   identifyWalletName();
   const web3modal = new Web3Modal(
