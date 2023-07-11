@@ -118,7 +118,6 @@ export class MetamaskPage extends BasePage {
   }
 
   async getCodePhraseField(indx: number) {
-    // element = `id=import-srp__srp-word-` + indx.toString();
     element = `${this.byTestId}import-srp__srp-word-` + indx.toString();
     return await element;
   }
