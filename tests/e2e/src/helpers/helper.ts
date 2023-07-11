@@ -1,17 +1,20 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Status } from "@cucumber/cucumber";
+import crypto from "crypto";
 import * as dotenv from "dotenv";
 import { ethers } from "ethers";
 import https from "https";
 import { Provider } from "zksync-web3";
 
-import { emptyWalletPhrase, mainWalletPhrase, MetamaskWallet, secondWalletPhrase } from "../data/data";
 import { MainPage } from "../pages/main.page";
-import { config } from "../support/config";
+import { config, wallet } from "../support/config";
 
 import type { ICustomWorld } from "../support/custom-world";
 import type { Pickle } from "@cucumber/messages";
 const tracesDir = "./artifacts/";
+const algorithm = "aes-256-cbc";
+const key = Buffer.from(wallet.secret, "hex"); // crypto.randomBytes(32);
+const iv = Buffer.from(wallet.salt, "hex"); //crypto.randomBytes(16);
 
 let result: any;
 let depositTag: boolean;
@@ -23,6 +26,10 @@ let emptyWalletTag: boolean;
 let incognitoTag: boolean;
 let transactionsTag: boolean;
 let noBlockChain: boolean;
+let wallet_1: string[];
+let wallet_2: string[];
+let wallet_0: string[];
+let wallet_password: string;
 
 export class Helper {
   world: ICustomWorld;
@@ -47,6 +54,13 @@ export class Helper {
 
   async clearLocalStorage() {
     await this.world.page?.evaluate(() => window.localStorage.clear());
+  }
+
+  async decryptVars() {
+    wallet_0 = (await this.decrypt(wallet._0_public_key)).split(" ");
+    wallet_1 = (await this.decrypt(wallet._1_public_key)).split(" ");
+    wallet_2 = (await this.decrypt(wallet._2_public_key)).split(" ");
+    wallet_password = await this.decrypt(wallet.password);
   }
 
   async predefineTags(filteredTag: any) {
@@ -146,9 +160,9 @@ export class Helper {
   async thresholdBalanceIsOk() {
     const mainPage = new MainPage(this.world);
     if (depositTag && !noBlockChain) {
-      await mainPage.monitorBalance(MetamaskWallet.mainWallet, "L1");
+      await mainPage.monitorBalance(wallet._1, "L1");
     } else if (withdrawTag || transferTag) {
-      await mainPage.monitorBalance(MetamaskWallet.secondWallet, "L2");
+      await mainPage.monitorBalance(wallet._2, "L2");
     }
   }
 
@@ -190,26 +204,38 @@ export class Helper {
     }
   }
 
+  async decrypt(encryptedData: string) {
+    const encryptedText = Buffer.from(encryptedData, "hex");
+
+    const decipher = crypto.createDecipheriv(algorithm, Buffer.from(key), iv);
+
+    let decrypted = decipher.update(encryptedText);
+    decrypted = Buffer.concat([decrypted, decipher.final()]);
+
+    return decrypted.toString();
+  }
+
   async metamaskAuthorization(metamaskPage: any, basePage: any, pickle: Pickle) {
+    await this.decryptVars();
     const targetUrl = config.BASE_URL + config.DAPP_NETWORK;
     const tags = pickle.tags;
     const filteredTag = (tag: string) => tags.filter((i) => i.name.includes(tag)).length > 0;
     await this.predefineTags(filteredTag);
     if (!incognitoTag && !transactionsTag && !emptyWalletTag) {
-      await metamaskPage.authorizeInMetamaskExtension(mainWalletPhrase, MetamaskWallet.mainWalletPassword);
+      await metamaskPage.authorizeInMetamaskExtension(wallet_1, wallet_password);
       await basePage.goTo(targetUrl);
     } else if (transactionsTag && !incognitoTag) {
       const isLogout = await metamaskPage.isLogout();
       if (isLogout === undefined && depositTag) {
         // await this.thresholdBalanceIsOk();
-        await metamaskPage.authorizeInMetamaskExtension(mainWalletPhrase, MetamaskWallet.mainWalletPassword); // L1 wallet
+        await metamaskPage.authorizeInMetamaskExtension(wallet_1, wallet_password); // L1 wallet
       } else if (isLogout === undefined && !depositTag) {
         // await this.thresholdBalanceIsOk();
-        await metamaskPage.authorizeInMetamaskExtension(secondWalletPhrase, MetamaskWallet.mainWalletPassword); // L2 wallet
+        await metamaskPage.authorizeInMetamaskExtension(wallet_2, wallet_password); // L2 wallet
       }
       await basePage.goTo(targetUrl);
     } else if (emptyWalletTag) {
-      await metamaskPage.authorizeInMetamaskExtension(emptyWalletPhrase, MetamaskWallet.mainWalletPassword);
+      await metamaskPage.authorizeInMetamaskExtension(wallet_0, wallet_password);
       await basePage.goTo(targetUrl);
     } else if (process.env.INCOGNITO_MODE === "true" && incognitoTag) {
       await basePage.goTo(targetUrl);

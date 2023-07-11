@@ -81,7 +81,7 @@ const networkChangeModalOpened = ref(false);
       }
     }
     .navbar-bottom {
-      @apply mt-auto hidden space-y-2 md:block;
+      @apply fixed bottom-8 mt-auto hidden space-y-2 md:block xl:w-[200px];
 
       .navbar-bottom-button {
         @apply border bg-gray-100 hover:border-gray-300 dark:border-neutral-900 dark:bg-neutral-900;
