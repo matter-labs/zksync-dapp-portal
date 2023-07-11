@@ -27,7 +27,7 @@
         v-bind="destinations.era"
         as="RouterLink"
         :to="{ name: 'transaction-zksync-lite-send-era', query: $route.query }"
-        description="Send to zkSync Lite network"
+        description="Send to zkSync Era∎ network"
       />
     </CommonCardWithLineButtons>
 
