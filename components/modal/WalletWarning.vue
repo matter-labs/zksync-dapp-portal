@@ -1,12 +1,12 @@
 <template>
-  <CommonModal v-model:opened="walletWarningModal" :close-on-background-click="false" title="Wallet warning">
+  <CommonModal :initialFocus="checkbox" v-model:opened="walletWarningModal" :closable="false" title="Wallet warning">
     <p class="leading-normal">
       Make sure your wallet supports zkSync Era network before adding funds to your account. Otherwise, this can result
       in <span class="font-medium text-red-600">loss of funds</span>. See the list of supported wallets on the
       <a class="link" href="https://ecosystem.zksync.io/?filter=WALLET" target="_blank">Ecosystem</a> website.
     </p>
 
-    <CommonCheckbox v-model="warningChecked" class="mt-3">I understand the risk</CommonCheckbox>
+    <CommonCheckbox ref="checkbox" v-model="warningChecked" class="mt-3">I understand the risk</CommonCheckbox>
 
     <div class="mt-4">
       <CommonHeightTransition :opened="warningChecked">
@@ -35,6 +35,7 @@ import { useOnboardStore } from "@/store/onboard";
 
 const { walletName } = storeToRefs(useOnboardStore());
 const { version } = storeToRefs(useNetworkStore());
+const checkbox = ref<HTMLInputElement | undefined>();
 
 const doNotShowWarning = useStorage("wallet-warning-hidden", false);
 const warningChecked = ref(false);

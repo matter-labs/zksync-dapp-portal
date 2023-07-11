@@ -1,12 +1,14 @@
 <template>
-  <label class="flex w-full cursor-pointer items-center rounded-2xl bg-white px-3 py-2.5 dark:bg-white/5">
+  <label
+    class="flex w-full cursor-pointer items-center rounded-2xl bg-white px-3 py-2.5 outline-none ring-0 ring-primary-400 transition-colors hover:bg-primary-100/30 focus:ring-2 dark:bg-white/5 dark:hover:bg-white/10"
+    tabindex="0"
+    @keyup.enter="checked = !checked"
+  >
     <div class="relative">
       <input type="checkbox" v-model="checked" class="sr-only" tabindex="-1" />
       <div
-        class="flex h-6 w-6 items-center justify-center rounded-md border-2 border-gray-300 bg-white outline-none ring-primary-400 ring-offset-2 focus:ring-2"
+        class="flex h-6 w-6 items-center justify-center rounded-md border-2 border-gray-300 bg-white"
         v-bind:class="{ 'bg-primary-600 border-primary-600': checked }"
-        tabindex="0"
-        @keyup.enter="checked = !checked"
       >
         <svg v-if="checked" class="h-5 w-5 text-white" viewBox="0 0 20 20" fill="currentColor">
           <path
