@@ -91,6 +91,12 @@ jobs:
         run: |
           echo "Run tests"
           cd tests/e2e/
+          echo "ls src/support"
+          ls src/support
+          echo "ls src/support/exstension"
+          ls src/support/exstension
+          echo "ls /__w/dapp-portal/dapp-portal/tests/e2e/src/support/extension/metamask-chrome-10.14.1"
+          ls /__w/dapp-portal/dapp-portal/tests/e2e/src/support/extension/metamask-chrome-10.14.1
           ${{ matrix.command }}'${{ matrix.tags }} ${{ inputs.environmentTags }}'
 
       - name: Reset tags quotes
