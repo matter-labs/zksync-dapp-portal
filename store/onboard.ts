@@ -53,13 +53,15 @@ export const useOnboardStore = defineStore("onboard", () => {
       enableNetworkView: false,
       enableAccountView: true,
       themeMode: selectedColorMode.value,
-      /* explorerExcludedWalletIds: "ALL",
       explorerRecommendedWalletIds: [
         "c57ca95b47569778a828d19178114f4db188b89b763c899ba0be274e97267d96",
-        "4622a2b2d6af1c9844944291e5e7351a6aa24cd7b23099efac1b2fd875da31a0",
+        "38f5d18bd8522c244bdd70cb4a68e0e718865155811c043f052fb9f1c51de662",
+        "971e689d0a5be527bac79629b4ee9b925e82208e5168b733496a09c0faed0709",
+        "1aa28414c95f5024133faf5766d376bb9c853c280d158cd3e22dc2b7b0a95a2d",
+        "7674bb4e353bf52886768a3ddc2a4562ce2f4191c80831291218ebd90f5f5e26",
       ],
       termsOfServiceUrl: "https://zksync.io/terms",
-      privacyPolicyUrl: "https://zksync.io/privacy", */
+      privacyPolicyUrl: "https://zksync.io/privacy",
     },
     ethereumClient
   );
