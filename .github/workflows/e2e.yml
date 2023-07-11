@@ -71,6 +71,7 @@ jobs:
 
       - name: Install Dependencies
         run: |
+          cd tests/e2e/
           npm ci --force
 
       - name: Install Metamask extension
@@ -88,10 +89,14 @@ jobs:
           ls src/support/extension
 
       - name: Download allurectl
-        run: wget https://github.com/allure-framework/allurectl/releases/latest/download/allurectl_linux_386 -O ./allurectl
+        run: |
+          cd tests/e2e/
+          wget https://github.com/allure-framework/allurectl/releases/latest/download/allurectl_linux_386 -O ./allurectl
 
       - name: Change permission for allurectl
-        run: chmod +x ./allurectl
+        run: |
+          cd tests/e2e/
+          chmod +x ./allurectl
 
       - name: Launch tests
         id: launch
@@ -125,6 +130,7 @@ jobs:
       - name: Upload tests to the Allure proj
         if: always() && inputs.publish_to_allure == true # <-- no brackets, 'true' does not work here: https://github.com/actions/runner/issues/1483#issuecomment-1090972149
         run: |
+          cd tests/e2e/
           ./allurectl upload allure-results --launch-id ${{ env.ALLURE_LAUNCH_ID }}
           ./allurectl launch close ${{ env.ALLURE_LAUNCH_ID }}
 
