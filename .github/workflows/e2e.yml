@@ -121,6 +121,7 @@ jobs:
           ALLURE_LAUNCH_NAME: "#${{ github.run_number }} ${{ env.MATRIX_TAG_WITHOUT_QUOTES }}" 
           ALLURE_LAUNCH_TAGS: "${{ env.ALLURE_BASIC_TAGS }}, ${{ env.MATRIX_TAG_WITHOUT_QUOTES }}"
         run: |
+          cd tests/e2e/
           echo "ALLURE_LAUNCH_ID=$(./allurectl launch create --launch-name '${{ env.ALLURE_LAUNCH_NAME }}' --no-header --format ID | tail -n1)" >> $GITHUB_ENV
 
         #$(./allurectl launch get ${{ env.ALLURE_LAUNCH_ID }} --format ID,Passed,Failed,Broken,Skipped ) # used to show the table

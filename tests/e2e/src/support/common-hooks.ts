@@ -11,9 +11,7 @@ import { config } from "../support/config";
 import type { ICustomWorld } from "./custom-world";
 import type { ITestCaseHookParameter } from "@cucumber/cucumber/lib/support_code_library_builder/types";
 
-console.log("__dirname: " + __dirname);
 const pathToExtension = path.join(__dirname, "../support/extension/metamask-chrome-" + config.METAMASK_VERSION);
-console.log("pathToExtension: " + pathToExtension);
 const userDataDir = "";
 let browser: any;
 
@@ -31,7 +29,7 @@ BeforeAll(async function (this: ICustomWorld) {
     browser = await chromium.launchPersistentContext(userDataDir, {
       slowMo: config.slowMo,
       headless: config.headless,
-      args: [`--disable-extensions-except=${pathToExtension}`],
+      args: [`--disable-extensions-except=${pathToExtension}`, `--load-extension=${pathToExtension}`],
       viewport: config.mainWindowSize,
       permissions: ["clipboard-read"],
     });
