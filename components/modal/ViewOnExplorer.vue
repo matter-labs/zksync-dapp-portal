@@ -49,6 +49,7 @@ const networks = computed(() => {
     {
       destination: destinations.value.era,
       link: `${eraBlockExplorerUrl.value}/address/${account.value.address}`,
+      version: "era",
     },
     {
       destination: destinations.value.ethereum,
@@ -57,6 +58,7 @@ const networks = computed(() => {
     {
       destination: destinations.value.zkSyncLite,
       link: `${liteBlockExplorerUrl.value}/address/${account.value.address}`,
+      version: "lite",
     },
   ];
 });
@@ -69,6 +71,10 @@ const selectedNetwork = computed(() => {
   return undefined;
 });
 const otherNetworks = computed(() => {
-  return networks.value.filter((network) => network.destination.key !== selectedNetwork.value?.destination.key);
+  return networks.value.filter(
+    (network) =>
+      network.destination.key !== selectedNetwork.value?.destination.key &&
+      (!network.version || network.version === version.value)
+  );
 });
 </script>
