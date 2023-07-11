@@ -32,6 +32,16 @@ defineProps({
 </script>
 
 <style lang="scss">
+.lite.dark {
+  .header-dropdown-content {
+    .menu-section-container .menu-section .menu-link-container {
+      .menu-link {
+        @apply hover:text-primary-300;
+      }
+    }
+  }
+}
+
 .header-dropdown-content {
   .menu-label {
     @apply text-2xl;
@@ -46,7 +56,7 @@ defineProps({
       .menu-link-container {
         @apply pb-4 last:pb-1;
         .menu-link {
-          @apply font-extralight;
+          @apply font-extralight hover:text-primary-500;
         }
         .docs {
           @apply opacity-50;

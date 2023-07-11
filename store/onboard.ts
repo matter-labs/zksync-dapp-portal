@@ -50,7 +50,6 @@ export const useOnboardStore = defineStore("onboard", () => {
     },
     ethereumClient
   );
-  web3modal.setDefaultChain(selectedEthereumNetwork.value);
   ethereumClient.watchAccount(async (updatedAccount) => {
     // There is a bug in @wagmi/core@0.10.11 or @web3modal/ethereum@^2.3.7
     // On page update or after using `ethereumClient.disconnect` method

@@ -1,7 +1,7 @@
 import { BasePage } from "./base.page";
 import { MetamaskPage } from "./metamask.page";
-import { MetamaskWallet } from "../data/data";
-import { config } from "../support/config";
+import { Helper } from "../helpers/helper";
+import { config, wallet } from "../support/config";
 
 import type { ICustomWorld } from "../support/custom-world";
 
@@ -23,7 +23,10 @@ export class LoginPage extends BasePage {
   }
 
   async connectMetamask() {
+    const helper = await new Helper(this.world);
     const loginStatus = await this.checkLoginStatus();
+    const wallet_password = await helper.decrypt(wallet.password);
+
     if (!loginStatus) {
       const metamaskPage = await new MetamaskPage(this.world);
 
@@ -37,7 +40,7 @@ export class LoginPage extends BasePage {
         ?.locator(metamaskPage.unlockPasswordField)
         .isVisible(config.defaultTimeout);
       if (passwordFieldVisible) {
-        await popUp?.locator(metamaskPage.unlockPasswordField).fill(MetamaskWallet.mainWalletPassword);
+        await popUp?.locator(metamaskPage.unlockPasswordField).fill(wallet_password);
         await popUp?.locator(metamaskPage.confirmUnlockBtn).click();
       }
       await popUp?.waitForTimeout(700);
