@@ -56,9 +56,9 @@ jobs:
       max-parallel: 20
       matrix:
         command: ["xvfb-run --auto-servernum --server-args '-screen 0 1920x1080x24' npx cucumber-js --tags "]
-        tags: [ "@withdraw and not @incognito",
-                "@artifacts and not @incognito",
-                "@contacts and not @incognito"
+        tags: [ "@withdraw",
+                "@artifacts",
+                "@contacts"
         ]
 
     name: '${{ matrix.tags }}'
