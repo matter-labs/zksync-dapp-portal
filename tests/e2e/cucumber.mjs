@@ -21,6 +21,6 @@ export default {
   formatOptions: { snippetInterface: "async-await" },
   worldParameters: getWorldParams(),
   publishQuiet: true,
-  // retry: 2,
-  // retryTagFilter: '@flaky',
+  retry: 1,
+  retryTagFilter: '@flaky',
 };

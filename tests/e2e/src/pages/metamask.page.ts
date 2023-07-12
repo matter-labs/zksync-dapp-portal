@@ -142,9 +142,8 @@ export class MetamaskPage extends BasePage {
   }
 
   private async fillSecretPhrase(walletPhrase: Array<string>) {
-    const array = walletPhrase[0].split(",");
-    for (let i = 0; i < array.length; i++) {
-      const secretWord: string = array[i].toString();
+    for (let i = 0; i < walletPhrase.length; i++) {
+      const secretWord: string = walletPhrase[i].toString();
       const codePhraseField: object = await this.getCodePhraseField(i);
       await page.locator(codePhraseField).fill(secretWord);
     }
