@@ -123,7 +123,7 @@ jobs:
       - name: Upload tests to the Allure proj
         if: always() && inputs.publish_to_allure == true # <-- no brackets, 'true' does not work here: https://github.com/actions/runner/issues/1483#issuecomment-1090972149
         run: |
-          ./allurectl upload allure-results --launch-id ${{ env.ALLURE_LAUNCH_ID }}
+          ./allurectl upload tests/e2e/allure-results --launch-id ${{ env.ALLURE_LAUNCH_ID }}
           ./allurectl launch close ${{ env.ALLURE_LAUNCH_ID }}
 
 
