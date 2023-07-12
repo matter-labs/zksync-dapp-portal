@@ -10,13 +10,9 @@
 </template>
 
 <script lang="ts">
-import useColorMode from "@/composables/useColorMode";
-
 export default {
   props: ["error"],
 };
-
-useColorMode();
 </script>
 
 <style lang="scss" scoped>
