@@ -22,5 +22,5 @@ export default {
   worldParameters: getWorldParams(),
   publishQuiet: true,
   retry: 1,
-  retryTagFilter: "@flaky",
+  // retryTagFilter: "@flaky",
 };
