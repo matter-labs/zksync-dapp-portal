@@ -85,24 +85,24 @@ watch(
       @apply bg-transparent;
     }
     .active-tab-bg {
-      @apply bg-white transition-all;
+      @apply bg-white transition-all dark:bg-neutral-800;
     }
   }
   &:not(.active-tab-bg-inited) {
     .badge-tab.active {
-      @apply bg-white;
+      @apply bg-white dark:bg-neutral-800;
     }
   }
 
   .badge-tab,
   .active-tab-bg {
-    @apply rounded-xl;
+    @apply rounded-2xl;
   }
   .badge-tab {
-    @apply w-max cursor-pointer whitespace-nowrap py-1 px-4 text-sm font-medium leading-loose text-gray-secondary transition-colors;
+    @apply w-max cursor-pointer whitespace-nowrap py-1 px-4 font-medium leading-loose text-gray-secondary transition-colors dark:text-neutral-400;
     &:hover,
     &.active {
-      @apply text-black;
+      @apply text-black dark:text-white;
     }
   }
   .active-tab-bg {

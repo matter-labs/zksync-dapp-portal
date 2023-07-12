@@ -137,7 +137,6 @@ import { formatError } from "@/utils/formatters";
 import { TransitionAlertScaleInOutTransition, TransitionPrimaryButtonText } from "@/utils/transitions";
 
 export type ConfirmationModalTransaction = {
-  to: string;
   token: Token;
   amount: BigNumberish;
 };

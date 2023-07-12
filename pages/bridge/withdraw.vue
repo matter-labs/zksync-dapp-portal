@@ -1,4 +1,4 @@
-<template>asd</template>
+<template>withdraw</template>
 
 <script lang="ts" setup>
 import { definePageMeta } from "#imports";

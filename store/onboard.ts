@@ -60,6 +60,7 @@ export const useOnboardStore = defineStore("onboard", () => {
         "1aa28414c95f5024133faf5766d376bb9c853c280d158cd3e22dc2b7b0a95a2d",
         "7674bb4e353bf52886768a3ddc2a4562ce2f4191c80831291218ebd90f5f5e26",
       ],
+
       termsOfServiceUrl: "https://zksync.io/terms",
       privacyPolicyUrl: "https://zksync.io/privacy",
     },

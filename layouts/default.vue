@@ -10,7 +10,7 @@
     <Header />
     <Sidebar />
     <main class="app-layout-main">
-      <slot />
+      <NuxtPage />
     </main>
   </div>
 </template>

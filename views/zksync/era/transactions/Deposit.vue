@@ -37,6 +37,7 @@
     </ConfirmTransactionModal>
 
     <TransactionHeader
+      v-if="layout === 'default'"
       title="Add funds to"
       :address="props.address"
       :destination="destination"
@@ -56,6 +57,9 @@
         :loading="balancesLoading"
         autofocus
       />
+
+      <slot name="form" />
+
       <CommonErrorBlock v-if="feeError" class="mt-2" @try-again="estimate().catch(() => {})">
         Fee estimation error: {{ feeError.message }}
       </CommonErrorBlock>
@@ -146,6 +150,7 @@ import useAllowance from "@/composables/transaction/useAllowance";
 import useFee from "@/composables/zksync/era/deposit/useFee";
 
 import type { ConfirmationModalTransaction } from "@/components/transaction/zksync/era/deposit/ConfirmTransactionModal.vue";
+import type { PropType } from "vue";
 
 import { useRoute } from "#app";
 import { useDestinationsStore } from "@/store/destinations";
@@ -159,9 +164,12 @@ import { checksumAddress, decimalToBigNumber, formatRawTokenPrice, parseTokenAmo
 import { TransitionAlertScaleInOutTransition, TransitionOpacity } from "@/utils/transitions";
 
 const props = defineProps({
+  layout: {
+    type: String as PropType<"default" | "bridge">,
+    default: "default",
+  },
   address: {
     type: String,
-    required: true,
   },
 });
 
@@ -331,17 +339,22 @@ const enoughBalanceForTransaction = computed(() => {
 });
 
 const transaction = computed<ConfirmationModalTransaction | undefined>(() => {
-  if (!selectedToken.value) {
+  const toAddress = props.address ?? account.value.address;
+  if (!toAddress || !selectedToken.value) {
     return undefined;
   }
-  return { token: selectedToken.value, to: props.address, amount: totalComputeAmount.value.toString() };
+  return {
+    token: selectedToken.value,
+    to: toAddress,
+    amount: totalComputeAmount.value.toString(),
+  };
 });
 
 const estimate = async () => {
-  if (!account.value.address || !selectedToken.value) {
+  if (!transaction.value?.to || !selectedToken.value) {
     return;
   }
-  await estimateFee(account.value.address, selectedToken.value.address);
+  await estimateFee(transaction.value.to, selectedToken.value.address);
 };
 const feeAutoUpdateEstimate = async () => {
   if (transactionConfirmModalOpened.value || allowanceModalOpened.value) {
@@ -350,7 +363,7 @@ const feeAutoUpdateEstimate = async () => {
   await estimate();
 };
 watch(
-  [() => props.address, () => selectedToken.value?.address, () => account.value.address],
+  [() => transaction.value?.to, () => selectedToken.value?.address, () => account.value.address],
   () => {
     resetFee();
     estimate();
@@ -366,10 +379,10 @@ const balancesLoading = computed(() => {
 
 const continueButtonDisabled = computed(() => {
   if (
-    !selectedToken.value ||
+    !transaction.value ||
     !enoughBalanceToCoverFee.value ||
     !!amountError.value ||
-    totalComputeAmount.value.isZero()
+    BigNumber.from(transaction.value.amount).isZero()
   )
     return true;
   if (allowanceRequestInProgress.value || allowanceRequestError.value) return true;
@@ -379,6 +392,7 @@ const continueButtonDisabled = computed(() => {
 });
 
 const fetchBalances = async (force = false) => {
+  if (!account.value.address) return;
   await eraEthereumBalance.requestBalance({ force }).then(() => {
     if (allBalancePricesLoaded.value && !selectedToken.value) {
       selectedTokenAddress.value = tokenWithHighestBalancePrice.value?.address;

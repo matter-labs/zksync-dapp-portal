@@ -48,17 +48,17 @@ const addressCard = computed(() => {
   if (props.address === previousTransactionAddress.value) {
     return {
       name: contact?.name ?? "Previous transaction address",
-      icon: ClockIcon,
       address: props.address,
+      icon: ClockIcon,
     };
   } else if (contact) {
     return {
-      name: contact.name,
-      address: props.address,
+      ...contact,
+      icon: undefined,
     };
   }
   return {
-    name: "",
+    name: props.destination ? props.destination.label + " account" : "",
     address: props.address,
   };
 });
