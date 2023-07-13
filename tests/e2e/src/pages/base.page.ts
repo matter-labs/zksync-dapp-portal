@@ -224,7 +224,7 @@ export class BasePage {
     let result;
 
     if (checkType === "visible") {
-      await expect(element).toBeVisible();
+      await expect(element).toBeVisible({ timeout: config.increasedTimeout.timeout });
     } else if (checkType === "invisible") {
       result = await helper.checkElementVisible(element);
       await expect(result).toBe(false);

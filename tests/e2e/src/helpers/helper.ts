@@ -225,23 +225,19 @@ export class Helper {
     const filteredTag = (tag: string) => tags.filter((i) => i.name.includes(tag)).length > 0;
     await this.predefineTags(filteredTag);
     if (!incognitoTag && !transactionsTag && !emptyWalletTag) {
-      console.log("and I going to choose wallet_1");
       await metamaskPage.authorizeInMetamaskExtension(wallet_1, wallet_password);
       await basePage.goTo(targetUrl);
     } else if (transactionsTag && !incognitoTag) {
       const isLogout = await metamaskPage.isLogout();
       if (isLogout === undefined && depositTag) {
         // await this.thresholdBalanceIsOk();
-        console.log("and I going to choose wallet_1");
         await metamaskPage.authorizeInMetamaskExtension(wallet_1, wallet_password); // L1 wallet
       } else if (isLogout === undefined && !depositTag) {
         // await this.thresholdBalanceIsOk();
-        console.log("and I going to choose wallet_2");
         await metamaskPage.authorizeInMetamaskExtension(wallet_2, wallet_password); // L2 wallet
       }
       await basePage.goTo(targetUrl);
     } else if (emptyWalletTag) {
-      console.log("and I going to choose wallet_0");
       await metamaskPage.authorizeInMetamaskExtension(wallet_0, wallet_password);
       await basePage.goTo(targetUrl);
     } else if (process.env.INCOGNITO_MODE === "true" && incognitoTag) {
