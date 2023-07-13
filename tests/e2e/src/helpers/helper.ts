@@ -29,6 +29,8 @@ let noBlockChain: boolean;
 let wallet_1: string[];
 let wallet_2: string[];
 let wallet_0: string[];
+// let wallet_3: string;
+// let wallet_4: string;
 let wallet_password: string;
 
 export class Helper {
@@ -60,6 +62,8 @@ export class Helper {
     wallet_0 = (await this.decrypt(wallet._0_public_key)).split(" ");
     wallet_1 = (await this.decrypt(wallet._1_public_key)).split(" ");
     wallet_2 = (await this.decrypt(wallet._2_public_key)).split(" ");
+    // wallet_3 = (await this.decrypt(wallet._3_public_key));
+    // wallet_4 = (await this.decrypt(wallet._4_public_key));
     wallet_password = await this.decrypt(wallet.password);
   }
 
@@ -109,7 +113,7 @@ export class Helper {
       const image: any = await this.world.page?.screenshot({ path: tracesDir + this.world.testName + ".png" });
       return image;
     } else if (result.status === Status.PASSED) {
-      console.log(process.cwd());
+      // console.log(process.cwd());
       console.log("======== " + result.status + ": " + this.world.testName);
     } else if (result.status === Status.SKIPPED) {
       console.log("======== " + result.status + ": " + this.world.testName);
@@ -222,19 +226,23 @@ export class Helper {
     const filteredTag = (tag: string) => tags.filter((i) => i.name.includes(tag)).length > 0;
     await this.predefineTags(filteredTag);
     if (!incognitoTag && !transactionsTag && !emptyWalletTag) {
+      console.log("and I going to choose wallet_1");
       await metamaskPage.authorizeInMetamaskExtension(wallet_1, wallet_password);
       await basePage.goTo(targetUrl);
     } else if (transactionsTag && !incognitoTag) {
       const isLogout = await metamaskPage.isLogout();
       if (isLogout === undefined && depositTag) {
         // await this.thresholdBalanceIsOk();
+        console.log("and I going to choose wallet_1");
         await metamaskPage.authorizeInMetamaskExtension(wallet_1, wallet_password); // L1 wallet
       } else if (isLogout === undefined && !depositTag) {
         // await this.thresholdBalanceIsOk();
+        console.log("and I going to choose wallet_2");
         await metamaskPage.authorizeInMetamaskExtension(wallet_2, wallet_password); // L2 wallet
       }
       await basePage.goTo(targetUrl);
     } else if (emptyWalletTag) {
+      console.log("and I going to choose wallet_0");
       await metamaskPage.authorizeInMetamaskExtension(wallet_0, wallet_password);
       await basePage.goTo(targetUrl);
     } else if (process.env.INCOGNITO_MODE === "true" && incognitoTag) {
