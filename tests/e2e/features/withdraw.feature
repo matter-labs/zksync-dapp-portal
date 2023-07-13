@@ -96,7 +96,7 @@ Feature: Withdraw
     Then Element with "text" "Your Ethereum Goerli account" should be "visible"
     Then Element with "text" "Your zkSync Era∎ Goerli account" should be "visible"
     Then Element with "partial class" "address-card-avatar" should be "visible"
-    Then Modal card element with the "//*[text()='0x26A4...C37']" xpath should be "visible"
+    Then Modal card element with the "//*[text()='0x5aA8...537']" xpath should be "visible"
     Then Modal card element with the "//*[@alt='ETH token icon']" xpath should be "visible"
     Then Modal card element with the "//*[text()='0x000000...00A']" xpath should be "visible"
     Then Modal card element with the "//*[@class='token-balance-price']" xpath should be "visible"
