@@ -65,7 +65,7 @@ export class LoginPage extends BasePage {
 
   async logout() {
     await this.world.page?.evaluate(() => window.localStorage.clear());
-    await this.world.page?.waitForTimeout(5000);
+    await this.world.page?.waitForTimeout(500);
     await this.world.page?.reload();
     await this.world.page?.waitForURL(config.BASE_URL);
   }
