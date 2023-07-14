@@ -270,3 +270,4 @@ Feature: Artifacts - UI
       Then Modal card element with the "//*[text()='Edit']" xpath should be "clickable"
       Then Modal card element with the "//*[text()='Remove']" xpath should be "visible"
       Then Modal card element with the "//*[text()='Remove']" xpath should be "clickable"
+      
