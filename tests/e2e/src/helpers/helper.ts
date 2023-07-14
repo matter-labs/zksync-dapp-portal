@@ -109,7 +109,6 @@ export class Helper {
       const image: any = await this.world.page?.screenshot({ path: tracesDir + this.world.testName + ".png" });
       return image;
     } else if (result.status === Status.PASSED) {
-      console.log(process.cwd());
       console.log("======== " + result.status + ": " + this.world.testName);
     } else if (result.status === Status.SKIPPED) {
       console.log("======== " + result.status + ": " + this.world.testName);

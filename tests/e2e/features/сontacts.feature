@@ -44,7 +44,7 @@ Feature: Contacts
     Then Element with "text" "Save contact" should be "visible"
     Then Element with "text" "Save contact" should be "clickable"
     When I fill the "Name of the contact" input field on the Contacts page with "Test1" text
-    When I fill the "Ethereum address" input field on the Contacts page with "0x26A4c5Dfe2cA3c9E7E8C417B689F41b6b5745C37" text
+    When I fill the "Ethereum address" input field on the Contacts page with "0x5aA876bC32BC76EFf5124b19744B5B3C38b35537" text
     When I click on the Save contact button
     Then The "Test1" contact name is visible on the modal window within the Contacts page
-    Then Element with "xpath" "//*[@class='info-content']//*[text()='0x26A4c5...C37']" should be "visible"
+    Then Element with "xpath" "//*[@class='info-content']//*[text()='0x5aA876...537']" should be "visible"
