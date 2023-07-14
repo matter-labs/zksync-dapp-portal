@@ -238,3 +238,14 @@ Then("I close modal card", config.stepTimeout, async function (this: ICustomWorl
 
   await basePage.click(element);
 });
+
+Then(
+  "I hover the {string} element with {string} value",
+  config.stepTimeout,
+  async function (this: ICustomWorld, elementType: string, value: string) {
+    const basePage = new BasePage(this);
+    element = await basePage.returnElementByType(elementType, value);
+
+    await element.hover();
+  }
+);
