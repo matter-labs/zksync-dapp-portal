@@ -333,3 +333,6 @@ Feature: Artifacts - UI
     Then Element with "href and text" "'https://ecosystem.zksync.io/' and 'Explore the Ecosystem'" should be "clickable"
     Then Element with "href and text" "'https://matterlabs.notion.site/zkSync-Brand-Resources-750bb7b1f3d14ebe9f539a86901c4a1c/' and 'Brand assets'" should be "visible"
     Then Element with "href and text" "'https://matterlabs.notion.site/zkSync-Brand-Resources-750bb7b1f3d14ebe9f539a86901c4a1c/' and 'Brand assets'" should be "clickable"
+    Then Element with "partial text" "zkSync Era (v2)" should be "visible"
+    Then Element with "partial text" "zkSync Lite (v1)" should be "visible"
+    Then Element with "partial text" "zkSync Lite (v1)" should be "visible"
