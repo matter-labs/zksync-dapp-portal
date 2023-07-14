@@ -29,6 +29,8 @@ let noBlockChain: boolean;
 let wallet_1: string[];
 let wallet_2: string[];
 let wallet_0: string[];
+// let wallet_3: string;
+// let wallet_4: string;
 let wallet_password: string;
 
 export class Helper {
@@ -60,6 +62,8 @@ export class Helper {
     wallet_0 = (await this.decrypt(wallet._0_public_key)).split(" ");
     wallet_1 = (await this.decrypt(wallet._1_public_key)).split(" ");
     wallet_2 = (await this.decrypt(wallet._2_public_key)).split(" ");
+    // wallet_3 = (await this.decrypt(wallet._3_public_key));
+    // wallet_4 = (await this.decrypt(wallet._4_public_key));
     wallet_password = await this.decrypt(wallet.password);
   }
 
