@@ -26,8 +26,6 @@ Feature: Withdraw
     When I confirm the network switching
     Then Element with "text" " Continue " should be "disabled"
 
-
-
   @id1290
   Scenario: Withdraw - Send - [Transaction] 0 funds
     When I go to "Withdraw" transaction section

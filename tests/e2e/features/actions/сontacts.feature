@@ -16,7 +16,6 @@ Feature: Contacts
     When I click on the Save contact button
     Then Element with "text" "Can't add own account to contacts" should be "visible"
 
-
   @id1390  @id1407
   Scenario: Check the adding a new contact
     Given I am on the Main page

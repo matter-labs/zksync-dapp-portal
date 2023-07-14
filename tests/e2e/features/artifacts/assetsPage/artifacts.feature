@@ -61,7 +61,6 @@ Feature: Artifacts - UI
     Then Element with "text" "zkSync Era∎ Goerli" should be "visible"
     Then Element with "text" " to successfully receive them " should be "visible"
 
-
   @id1315
   Scenario: Check artifacts on a Menu address
     Then Element with "partial class" "account-name" should be "visible"
