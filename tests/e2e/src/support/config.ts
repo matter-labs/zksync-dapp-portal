@@ -18,15 +18,11 @@ export const wallet = {
   _1_public_key: process.env.E2E_WALLET_1_MAIN_PUB_KEY || "undefined",
   _2_public_key: process.env.E2E_WALLET_2_SECOND_PUB_KEY || "undefined",
   _0_public_key: process.env.E2E_WALLET_0_EMPTY_PUB_KEY || "undefined",
-  _3_public_key: process.env.E2E_WALLET_3_DEPOSIT_PUB_KEY || "undefined",
-  _4_public_key: process.env.E2E_WALLET_4_WITHDRAW_PUB_KEY || "undefined",
   secret: process.env.E2E_WALLET_SECRET_PK || "undefined", // key for wallets to decrypt
   salt: process.env.E2E_WALLET_SALT_IV || "undefined",
   _1: process.env.E2E_WALLET_1_MAIN || "undefined",
   _2: process.env.E2E_WALLET_2_SECOND || "undefined",
   _0: process.env.E2E_WALLET_0_EMPTY || "undefined",
-  _3: process.env.E2E_WALLET_3_DEPOSIT || "undefined",
-  _4: process.env.E2E_WALLET_4_WITHDRAW || "undefined",
   password: process.env.E2E_WALLET_PASSWORD_MM || "undefined", // password MM
 };
 
