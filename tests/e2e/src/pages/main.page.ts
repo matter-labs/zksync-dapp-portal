@@ -61,6 +61,10 @@ export class MainPage extends BasePage {
     return "//span[@class='break-all']";
   }
 
+  get closeBtnModalCard() {
+    return "//*[@data-testid='close-button']";
+  }
+
   async selectTransaction(transactionType: string) {
     try {
       let route: string;

@@ -229,3 +229,12 @@ Then(
     await mainPage.checkModalCardElement(xpath, checkType);
   }
 );
+
+Then("I close modal card", config.stepTimeout, async function (this: ICustomWorld) {
+  const basePage = new BasePage(this);
+  const mainPage = new MainPage(this);
+  const modalCardElement = mainPage.modalCard;
+  element = modalCardElement + mainPage.closeBtnModalCard;
+
+  await basePage.click(element);
+});
