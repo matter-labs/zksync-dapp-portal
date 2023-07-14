@@ -144,3 +144,4 @@ jobs:
         run: |
           LINK="${{ vars.ALLURE_ENDPOINT }}project/${{ vars.ALLURE_PROJECT_ID }}/launches?search=${{ env.BASE64_SEARCH_REQUEST }}"
           echo "Allure [e2e tests]($LINK) :rocket: in git run #${{ github.run_number }}" >> $GITHUB_STEP_SUMMARY
+
