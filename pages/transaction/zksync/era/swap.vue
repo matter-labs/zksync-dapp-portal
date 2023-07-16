@@ -26,7 +26,7 @@
         :icon="ArrowUpRightIcon"
         as="a"
         target="_blank"
-        href="https://izumi.finance/trade/swap"
+        href="https://zksync.izumi.finance/swap"
       />
       <DestinationItem
         label="Velocore"
