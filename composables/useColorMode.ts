@@ -7,7 +7,10 @@ export default () => {
 
   const selectedColorMode = computed(() => (store.value === "auto" ? "dark" : store.value));
 
-  const switchColorMode = () => {
+  const switchColorMode = (colorMode?: "dark" | "light") => {
+    if (colorMode) {
+      return (store.value = colorMode);
+    }
     if (selectedColorMode.value === "dark") {
       store.value = "light";
     } else {

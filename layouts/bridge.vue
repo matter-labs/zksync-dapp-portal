@@ -34,6 +34,8 @@ import { computed, ref } from "vue";
 import { ExclamationCircleIcon } from "@heroicons/vue/24/outline";
 import { storeToRefs } from "pinia";
 
+import useColorMode from "@/composables/useColorMode";
+
 import { useHead } from "#app";
 import { useOnboardStore } from "@/store/onboard";
 import SelectAddress from "@/views/SelectAddress.vue";
@@ -60,6 +62,8 @@ useHead({
     },
   ],
 });
+
+useColorMode().switchColorMode("dark");
 
 const { account, isConnectingWallet } = storeToRefs(useOnboardStore());
 
