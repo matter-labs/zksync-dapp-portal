@@ -100,7 +100,7 @@ export const useOnboardStore = defineStore("onboard", () => {
     const walletNetworkId = network.value.chain?.id;
     return walletNetworkId === selectedEthereumNetwork.value.id;
   });
-  const switchNetworkById = async (chainId: number, networkName = selectedEthereumNetwork.value.name) => {
+  const switchNetworkById = async (chainId: number, networkName = selectedEthereumNetwork.value.name as string) => {
     try {
       await ethereumClient.switchNetwork({ chainId });
     } catch (err) {

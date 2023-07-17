@@ -120,7 +120,13 @@
         </template>
         <template v-else-if="layout === 'bridge'">
           <CommonButtonTopLink @click="emit('newTransaction')">Make another transaction</CommonButtonTopLink>
-          <CommonButton as="a" href="https://ecosystem.zksync.io" class="mx-auto" variant="primary-solid">
+          <CommonButton
+            as="a"
+            href="https://ecosystem.zksync.io"
+            target="_blank"
+            class="mx-auto"
+            variant="primary-solid"
+          >
             Explore ecosystem
             <ArrowUpRightIcon class="ml-1 mt-0.5 h-3.5 w-3.5" aria-hidden="true" />
           </CommonButton>

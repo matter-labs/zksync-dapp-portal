@@ -11,6 +11,11 @@
       </CommonErrorBlock>
     </transition>
 
+    <div v-if="buttonStep === 'connect'" class="transaction-footer-row">
+      <CommonButton variant="primary-solid" :disabled="isConnectingWallet" @click="onboardStore.openModal">
+        Connect wallet
+      </CommonButton>
+    </div>
     <div v-if="buttonStep === 'network'" class="transaction-footer-row">
       <CommonButtonTopInfo>Incorrect network selected in your wallet</CommonButtonTopInfo>
       <CommonButton
@@ -47,12 +52,14 @@ import { TransitionAlertScaleInOutTransition } from "@/utils/transitions";
 const onboardStore = useOnboardStore();
 const eraWalletStore = useEraWalletStore();
 
-const { connectorName, walletName } = storeToRefs(onboardStore);
+const { account, isConnectingWallet, connectorName, walletName } = storeToRefs(onboardStore);
 const { isCorrectNetworkSet, switchingNetworkInProgress, switchingNetworkError } = storeToRefs(eraWalletStore);
 const { eraNetwork } = storeToRefs(useEraProviderStore());
 
 const buttonStep = computed(() => {
-  if (!isCorrectNetworkSet.value) {
+  if (!account.value.address || isConnectingWallet.value) {
+    return "connect";
+  } else if (!isCorrectNetworkSet.value) {
     return "network";
   } else {
     return "continue";

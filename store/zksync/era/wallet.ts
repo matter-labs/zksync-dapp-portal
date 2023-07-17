@@ -73,6 +73,7 @@ export const useEraWalletStore = defineStore("eraWallet", () => {
   );
 
   const balance = computed<TokenAmount[]>(() => {
+    if (!accountState.value) return [];
     return Object.entries(tokens.value ?? {}).map(([, token]) => {
       const amount = accountState.value?.balances[token.address]?.balance ?? "0";
       return { ...token, amount };
@@ -91,6 +92,13 @@ export const useEraWalletStore = defineStore("eraWallet", () => {
   const allBalancePricesLoaded = computed(
     () => !balance.value.some((e) => e.price === "loading") && !balanceInProgress.value
   );
+  const deductBalance = (tokenAddress: string, amount: string) => {
+    if (!balance.value) return;
+    const tokenBalance = balance.value.find((balance) => balance.address === tokenAddress);
+    if (!tokenBalance) return;
+    const newBalance = BigNumber.from(tokenBalance.amount).sub(amount);
+    tokenBalance.amount = newBalance.isNegative() ? "0" : newBalance.toString();
+  };
 
   const isCorrectNetworkSet = computed(() => {
     const walletNetworkId = network.value.chain?.id;
@@ -126,6 +134,7 @@ export const useEraWalletStore = defineStore("eraWallet", () => {
     balanceError: computed(() => balanceError.value),
     allBalancePricesLoaded,
     requestBalance,
+    deductBalance,
 
     isCorrectNetworkSet,
     switchingNetworkInProgress,

@@ -13,7 +13,7 @@
 
     <div v-if="buttonStep === 'connect'" class="transaction-footer-row">
       <CommonButton variant="primary-solid" :disabled="isConnectingWallet" @click="onboardStore.openModal">
-        {{ isConnectingWallet ? `Connecting wallet...` : "Connect wallet" }}
+        Connect wallet
       </CommonButton>
     </div>
     <div v-if="buttonStep === 'network'" class="transaction-footer-row">

@@ -85,7 +85,9 @@
     v-else-if="transaction?.type === 'withdrawal'"
     opened
     v-bind="$attrs"
+    :layout="layout"
     :transfer="transferLineItem"
+    @new-transaction="emit('newTransaction')"
   />
 </template>
 
@@ -129,6 +131,10 @@ const props = defineProps({
   opened: {
     type: Boolean,
   },
+  layout: {
+    type: String as PropType<"default" | "bridge">,
+    default: "default",
+  },
   transaction: {
     type: Object as PropType<ConfirmationModalTransaction>,
   },
@@ -157,6 +163,7 @@ const props = defineProps({
 
 const emit = defineEmits<{
   (eventName: "update:opened", value: boolean): void;
+  (eventName: "newTransaction"): void;
 }>();
 const closeModal = () => emit("update:opened", false);
 
@@ -258,6 +265,11 @@ const makeTransaction = async () => {
   }
 
   if (tx) {
+    for (const tokenAddress in totalOfEachToken.value) {
+      const token = totalOfEachToken.value[tokenAddress];
+      if (!token) continue;
+      walletEraStore.deductBalance(token.token.address, token.amount.toString());
+    }
     tx.wait()
       .then(async () => {
         transactionCommitted.value = true;

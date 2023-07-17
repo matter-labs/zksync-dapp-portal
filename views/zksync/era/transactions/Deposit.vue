@@ -427,6 +427,7 @@ const resetForm = () => {
 const fetchBalances = async (force = false) => {
   eraTokensStore.requestTokens();
   if (!account.value.address) return;
+
   await eraEthereumBalance.requestBalance({ force }).then(() => {
     if (allBalancePricesLoaded.value && !selectedToken.value) {
       selectedTokenAddress.value = tokenWithHighestBalancePrice.value?.address;
