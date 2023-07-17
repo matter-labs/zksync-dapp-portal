@@ -34,8 +34,32 @@ import { computed, ref } from "vue";
 import { ExclamationCircleIcon } from "@heroicons/vue/24/outline";
 import { storeToRefs } from "pinia";
 
+import { useHead } from "#app";
 import { useOnboardStore } from "@/store/onboard";
 import SelectAddress from "@/views/SelectAddress.vue";
+
+const meta = {
+  title: "zkSync Era Bridge | Transfer funds between zkSync Era Network and Ethereum Mainnet",
+  description:
+    "With the zkSync Era Bridge you can easily transfer funds between Ethereum Mainnet and zkSync Era Network. Enjoy faster, cheaper and more efficient transactions with the future proof zkEVM scaling Ethereum's security and values.",
+};
+useHead({
+  title: "zkSync Era Bridge | Transfer funds between zkSync Era Network and Ethereum Mainnet",
+  meta: [
+    {
+      name: "og:title",
+      content: meta.title,
+    },
+    {
+      name: "description",
+      content: meta.description,
+    },
+    {
+      name: "og:description",
+      content: meta.description,
+    },
+  ],
+});
 
 const { account, isConnectingWallet } = storeToRefs(useOnboardStore());
 
