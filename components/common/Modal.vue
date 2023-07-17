@@ -113,7 +113,7 @@ const afterLeave = () => {
 
 <style lang="scss" scoped>
 .modal-card {
-  @apply relative max-h-[570px] w-full max-w-[500px] transform overflow-hidden rounded-2xl bg-gray p-3 text-left shadow-xl transition-all xs:p-5 xs:pb-6;
+  @apply relative max-h-[570px] w-full max-w-[500px] transform overflow-hidden rounded-3xl bg-gray p-3 text-left shadow-xl transition-all xs:p-5 xs:pb-6;
   @apply dark:bg-neutral-950;
   @media screen and (max-height: 640px) {
     @apply max-h-[90vh];

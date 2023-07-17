@@ -60,5 +60,7 @@ export const useEraEthereumBalanceStore = defineStore("eraEthereumBalances", () 
     balanceError,
     allBalancePricesLoaded,
     requestBalance,
+
+    deductBalance: ethereumBalancesStore.deductBalance,
   };
 });

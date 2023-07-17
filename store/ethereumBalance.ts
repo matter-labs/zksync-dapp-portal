@@ -1,4 +1,4 @@
-import { Alchemy, Network, TokenBalanceType } from "alchemy-sdk";
+import { Alchemy, BigNumber, Network, TokenBalanceType } from "alchemy-sdk";
 import { defineStore, storeToRefs } from "pinia";
 
 import type { TokenBalance } from "alchemy-sdk";
@@ -56,6 +56,14 @@ export const useEthereumBalanceStore = defineStore("ethereumBalance", () => {
     { cache: false }
   );
 
+  const deductBalance = (tokenL1Address: string, amount: string) => {
+    if (!balance.value) return;
+    const tokenBalance = balance.value.find((balance) => balance.contractAddress === tokenL1Address);
+    if (!tokenBalance) return;
+    const newBalance = BigNumber.from(tokenBalance.tokenBalance).sub(amount);
+    tokenBalance.tokenBalance = newBalance.isNegative() ? "0" : newBalance.toString();
+  };
+
   onboardStore.subscribeOnAccountChange(() => {
     resetBalance();
   });
@@ -65,5 +73,7 @@ export const useEthereumBalanceStore = defineStore("ethereumBalance", () => {
     balanceInProgress,
     balanceError,
     requestBalance,
+
+    deductBalance,
   };
 });

@@ -15,7 +15,7 @@
             :destination="destinations.era"
             :tooltip="`${transactionActionName} from ${destinations.era.label}`"
           />
-          <TokenBalance v-bind="transaction.token" as="div" :amount="transaction.amount" />
+          <TokenBalance v-bind="transaction.token" as="div" :amount="transaction.amount" amount-display="full" />
         </CommonCardWithLineButtons>
         <TransactionItemIcon :icon="ArrowDownIcon" />
         <CommonCardWithLineButtons>
@@ -48,15 +48,15 @@
               {{ error.message }}
             </CommonErrorBlock>
           </div>
-          <a
+          <CommonButtonTopLink
             v-if="destination.key === 'ethereum'"
-            class="link mx-auto mt-2 -mb-1 flex items-center justify-center text-center text-sm"
+            as="a"
             :href="ERA_WITHDRAWAL_DELAY"
             target="_blank"
           >
             Arriving in ~24 hours
             <ArrowUpRightIcon class="ml-1 mt-0.5 h-3.5 w-3.5" />
-          </a>
+          </CommonButtonTopLink>
           <CommonButton
             :disabled="buttonDisabled || newFeeAlert || status !== 'not-started'"
             class="mx-auto mt-3"

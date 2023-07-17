@@ -1,39 +1,43 @@
 <template>
   <CommonModal v-bind="$attrs" title="Change network" @close="closeModal">
-    <div class="mb-2 flex items-center justify-between gap-2">
-      <DestinationLabel label="zkSync Era∎" :icon="IconsEra" />
-      <div class="text-right text-sm leading-tight text-gray-secondary dark:text-neutral-400 md:text-base">
-        Preferred network
+    <template v-if="networks.includes('era')">
+      <div v-if="networks.length > 1" class="mb-2 flex items-center justify-between gap-2">
+        <DestinationLabel label="zkSync Era∎" :icon="IconsEra" />
+        <div class="text-right text-sm leading-tight text-gray-secondary dark:text-neutral-400 md:text-base">
+          Preferred network
+        </div>
       </div>
-    </div>
-    <CommonCardWithLineButtons>
-      <DestinationItem
-        v-for="item in eraNetworks.filter((e) => e.visible || isNetworkSelected(e))"
-        :key="item.key"
-        :label="item.name"
-        :icon="isNetworkSelected(item) ? CheckIcon : undefined"
-        @click="buttonClicked(item)"
-      >
-        <template #image>
-          <IconsEra class="aspect-square h-full w-full object-center p-2" />
-        </template>
-      </DestinationItem>
-    </CommonCardWithLineButtons>
+      <CommonCardWithLineButtons>
+        <DestinationItem
+          v-for="item in eraNetworks.filter((e) => e.visible || isNetworkSelected(e))"
+          :key="item.key"
+          :label="item.name"
+          :icon="isNetworkSelected(item) ? CheckIcon : undefined"
+          @click="buttonClicked(item)"
+        >
+          <template #image>
+            <IconsEra class="aspect-square h-full w-full object-center p-2" />
+          </template>
+        </DestinationItem>
+      </CommonCardWithLineButtons>
+    </template>
 
-    <DestinationLabel label="zkSync Lite" :icon="IconsZkSyncLite" class="mb-2 mt-4" />
-    <CommonCardWithLineButtons>
-      <DestinationItem
-        v-for="item in zkSyncLiteNetworks.filter((e) => e.visible || isNetworkSelected(e))"
-        :key="item.key"
-        :label="item.name"
-        :icon="isNetworkSelected(item) ? CheckIcon : undefined"
-        @click="buttonClicked(item)"
-      >
-        <template #image>
-          <IconsZkSyncLite class="aspect-square h-full w-full object-center p-2" />
-        </template>
-      </DestinationItem>
-    </CommonCardWithLineButtons>
+    <template v-if="networks.includes('lite')">
+      <DestinationLabel v-if="networks.length > 1" label="zkSync Lite" :icon="IconsZkSyncLite" class="mb-2 mt-4" />
+      <CommonCardWithLineButtons>
+        <DestinationItem
+          v-for="item in zkSyncLiteNetworks.filter((e) => e.visible || isNetworkSelected(e))"
+          :key="item.key"
+          :label="item.name"
+          :icon="isNetworkSelected(item) ? CheckIcon : undefined"
+          @click="buttonClicked(item)"
+        >
+          <template #image>
+            <IconsZkSyncLite class="aspect-square h-full w-full object-center p-2" />
+          </template>
+        </DestinationItem>
+      </CommonCardWithLineButtons>
+    </template>
   </CommonModal>
 </template>
 
@@ -46,11 +50,19 @@ import IconsZkSyncLite from "@/components/icons/zkSyncLite.vue";
 
 import type { L2Network } from "@/store/network";
 import type { Version } from "@/store/preferences";
+import type { PropType } from "vue";
 
 import { useRoute, useRouter } from "#app";
 import { eraNetworks, useNetworkStore, zkSyncLiteNetworks } from "@/store/network";
 import { getNetworkUrl, replaceVersionInString } from "@/utils/helpers";
 import { getVersionByNetwork } from "@/utils/helpers";
+
+defineProps({
+  networks: {
+    type: Array as PropType<Version[]>,
+    default: () => ["era", "lite"],
+  },
+});
 
 const emit = defineEmits<{
   (eventName: "update:opened", state: boolean): void;

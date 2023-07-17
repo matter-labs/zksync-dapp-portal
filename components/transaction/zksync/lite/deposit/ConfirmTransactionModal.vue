@@ -15,7 +15,7 @@
             :destination="destinations.ethereum"
             :tooltip="`Add funds from ${destinations.ethereum.label}`"
           />
-          <TokenBalance v-bind="transaction.token" as="div" :amount="transaction.amount" />
+          <TokenBalance v-bind="transaction.token" as="div" :amount="transaction.amount" amount-display="full" />
         </CommonCardWithLineButtons>
         <TransactionItemIcon :icon="ArrowDownIcon" />
         <CommonCardWithLineButtons>

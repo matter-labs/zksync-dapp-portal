@@ -37,8 +37,8 @@ defineProps({
 const { account } = storeToRefs(useOnboardStore());
 const { name, avatar } = storeToRefs(useEnsStore());
 
-const contactAddress = computed(() => account.value.address || "");
-const { copy, copied } = useCopy(contactAddress, 700);
+const accountAddress = computed(() => account.value.address || "");
+const { copy, copied } = useCopy(accountAddress, 700);
 </script>
 
 <style lang="scss" scoped>

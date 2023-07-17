@@ -6,6 +6,7 @@
         <CommonCardWithLineButtons>
           <AddressCardParsed
             as="button"
+            type="button"
             :address="address"
             :destination="destinations.era"
             :tooltip="`Deposit to ${destinations.era.label}`"

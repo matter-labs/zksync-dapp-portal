@@ -15,7 +15,7 @@
             :destination="destinations.ethereum"
             :tooltip="`Add funds from ${destinations.ethereum.label}`"
           />
-          <TokenBalance v-bind="transaction.token" as="div" :amount="transaction.amount" />
+          <TokenBalance v-bind="transaction.token" as="div" :amount="transaction.amount" amount-display="full" />
         </CommonCardWithLineButtons>
         <TransactionItemIcon :icon="ArrowDownIcon" />
         <CommonCardWithLineButtons>
@@ -48,9 +48,10 @@
               {{ error.message }}
             </CommonErrorBlock>
           </div>
+          <CommonButtonTopInfo class="mt-2">Arriving in ~15 minutes</CommonButtonTopInfo>
           <CommonButton
             :disabled="buttonDisabled || newFeeAlert || status !== 'not-started'"
-            class="mx-auto mt-3"
+            class="mx-auto"
             variant="primary-solid"
             autofocus
             @click="makeTransaction"
@@ -112,9 +113,18 @@
       </CommonAlert>
 
       <TransactionConfirmModalFooter>
-        <CommonButton as="RouterLink" :to="{ name: 'index' }" class="mx-auto mt-4" variant="primary-solid">
-          Go to Assets page
-        </CommonButton>
+        <template v-if="layout === 'default'">
+          <CommonButton as="RouterLink" :to="{ name: 'index' }" class="mx-auto mt-4" variant="primary-solid">
+            Go to Assets page
+          </CommonButton>
+        </template>
+        <template v-else-if="layout === 'bridge'">
+          <CommonButtonTopLink @click="emit('newTransaction')">Make another transaction</CommonButtonTopLink>
+          <CommonButton as="a" href="https://ecosystem.zksync.io" class="mx-auto" variant="primary-solid">
+            Explore ecosystem
+            <ArrowUpRightIcon class="ml-1 mt-0.5 h-3.5 w-3.5" aria-hidden="true" />
+          </CommonButton>
+        </template>
       </TransactionConfirmModalFooter>
     </div>
   </CommonModal>
@@ -165,6 +175,10 @@ const props = defineProps({
   opened: {
     type: Boolean,
   },
+  layout: {
+    type: String as PropType<"default" | "bridge">,
+    default: "default",
+  },
   transaction: {
     type: Object as PropType<ConfirmationModalTransaction>,
   },
@@ -189,6 +203,7 @@ const props = defineProps({
 
 const emit = defineEmits<{
   (eventName: "update:opened", value: boolean): void;
+  (eventName: "newTransaction"): void;
 }>();
 const closeModal = () => emit("update:opened", false);
 
@@ -275,12 +290,12 @@ const makeTransaction = async () => {
   }
 
   if (tx) {
+    for (const tokenAddress in totalOfEachToken.value) {
+      const token = totalOfEachToken.value[tokenAddress];
+      if (!token?.token.l1Address) continue;
+      eraEthereumBalanceStore.deductBalance(token.token.l1Address, token.amount.toString());
+    }
     tx.waitL1Commit()
-      .then(() => {
-        eraTransfersHistoryStore.reloadRecentTransfers().catch(() => undefined);
-        walletEraStore.requestBalance({ force: true }).catch(() => undefined);
-        eraEthereumBalanceStore.requestBalance({ force: true }).catch(() => undefined);
-      })
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       .catch((err: any) => {
         if (err?.code === Logger.errors.TRANSACTION_REPLACED) {
@@ -294,6 +309,11 @@ const makeTransaction = async () => {
         }
         error.value = err as Error;
         status.value = "not-started";
+      })
+      .finally(() => {
+        eraTransfersHistoryStore.reloadRecentTransfers().catch(() => undefined);
+        walletEraStore.requestBalance({ force: true }).catch(() => undefined);
+        eraEthereumBalanceStore.requestBalance({ force: true }).catch(() => undefined);
       });
   }
 };

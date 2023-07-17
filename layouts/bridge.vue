@@ -2,18 +2,28 @@
   <ModalNetworkChangedWarning v-if="!isConnectingWallet" />
   <ModalWalletWarning />
 
-  <div class="bridge-layout">
+  <div class="bridge-layout dark">
     <Header />
     <main class="bridge-layout-main">
       <template v-if="step === 'select-address'">
         <CommonBackButton @click="step = 'bridge'" class="-mt-6" />
-        <SelectAddress title="Bridge to" />
+        <SelectAddress title="Bridge to" @selected="selectAddress">
+          <template #after-address>
+            <CommonAlert variant="warning" :icon="ExclamationCircleIcon" class="mt-2">
+              <p>
+                Please make sure the destination address is supported on zkSync Era network. Transfers to unsupported
+                addresses may result in the permanent
+                <span class="text-red-500">loss of funds</span>
+              </p>
+            </CommonAlert>
+          </template>
+        </SelectAddress>
       </template>
 
-      <template v-else>
+      <div class="flex h-full flex-col" :class="{ hidden: step !== 'bridge' }">
         <BridgeNavigation />
         <NuxtPage :address="toAddress" @select-address="step = 'select-address'" />
-      </template>
+      </div>
     </main>
   </div>
 </template>
@@ -21,6 +31,7 @@
 <script lang="ts" setup>
 import { computed, ref } from "vue";
 
+import { ExclamationCircleIcon } from "@heroicons/vue/24/outline";
 import { storeToRefs } from "pinia";
 
 import { useOnboardStore } from "@/store/onboard";
@@ -34,6 +45,11 @@ const toAddress = computed(() => {
   if (!address.value) return account.value.address;
   return address.value;
 });
+
+const selectAddress = (newAddress: string) => {
+  address.value = newAddress;
+  step.value = "bridge";
+};
 </script>
 
 <style lang="scss" scoped>
@@ -48,7 +64,7 @@ const toAddress = computed(() => {
   .bridge-layout-main {
     @apply mx-auto my-auto flex h-full w-11/12 max-w-[500px] flex-col py-4;
     @media screen and (min-width: 640px) and (min-height: 720px) {
-      @apply max-h-[525px];
+      @apply max-h-[545px];
     }
   }
 }

@@ -4,6 +4,7 @@
       v-model:opened="selectTokenModalOpened"
       v-model:token-address="selectedTokenAddress"
       :loading="loading"
+      :tokens="tokens"
       :balances="balances"
     />
     <label for="amount-input" class="amount-input-container" :class="{ focused, loading, 'has-error': !!amountError }">
@@ -30,7 +31,7 @@
           class="amount-input-field"
           placeholder="0"
           type="text"
-          maxlength="20"
+          maxlength="25"
           spellcheck="false"
           autocomplete="off"
           :style="{ width: `${inputWidth}px` }"
@@ -51,22 +52,20 @@
       </div>
       <div class="amount-input-select-asset">
         <CommonContentLoader v-if="loading" :length="35" />
-        <button
-          v-else
-          type="button"
-          class="grid grid-cols-[1fr_calc(1rem_+_0.375rem)] items-center"
-          @click.prevent="selectTokenModalOpened = true"
-        >
-          <template v-if="selectedToken">
-            <span>
-              Balance:
-              <span class="break-all">
-                {{ parseTokenAmount(selectedToken.amount, selectedToken.decimals) }}
-              </span>
+        <span v-else class="text-left leading-tight wrap-balance" @click="selectTokenModalOpened = true">
+          <template v-if="tokenBalance">
+            Balance:
+            <span class="break-all" :title="formattedTokenBalance">
+              {{
+                typeof tokenBalance.price === "number"
+                  ? removeSmallAmount(tokenBalance.amount, tokenBalance.decimals, tokenBalance.price)
+                  : formattedTokenBalance
+              }}
             </span>
           </template>
-          <template v-else>Select token</template>
-        </button>
+          <template v-else-if="!selectedToken">Select token</template>
+          <template v-else>Connect wallet to see balance</template>
+        </span>
       </div>
       <transition v-bind="TransitionOpacity()">
         <div v-if="amountError" class="amount-input-error">
@@ -105,7 +104,7 @@ import { ChevronDownIcon } from "@heroicons/vue/24/outline";
 import { useFocus } from "@vueuse/core";
 import { BigNumber } from "ethers";
 
-import type { TokenAmount } from "@/types";
+import type { Token, TokenAmount } from "@/types";
 import type { BigNumberish } from "ethers";
 import type { PropType } from "vue";
 
@@ -116,6 +115,10 @@ const props = defineProps({
   modelValue: {
     type: String,
     default: "",
+  },
+  tokens: {
+    type: Array as PropType<Token[]>,
+    default: () => [],
   },
   balances: {
     type: Array as PropType<TokenAmount[]>,
@@ -153,10 +156,23 @@ const selectedTokenAddress = computed({
   set: (value?: string) => emit("update:tokenAddress", value),
 });
 const selectedToken = computed(() => {
-  if (!props.balances) {
+  const tokens = props.balances.length ? props.balances : props.tokens;
+  if (!tokens) {
     return undefined;
   }
-  return props.balances.find((e) => e.address === props.tokenAddress);
+  return tokens.find((e) => e.address === props.tokenAddress);
+});
+const tokenBalance = computed(() => {
+  if (!props.balances.length || !selectedToken.value) {
+    return undefined;
+  }
+  return props.balances.find((e) => e.address === selectedToken.value?.address);
+});
+const formattedTokenBalance = computed(() => {
+  if (!tokenBalance.value) {
+    return undefined;
+  }
+  return parseTokenAmount(tokenBalance.value.amount, tokenBalance.value.decimals);
 });
 const selectTokenModalOpened = ref(false);
 
@@ -279,7 +295,11 @@ const recalculateInputWidth = () => {
   .amount-input-select-asset,
   .amount-input-note,
   .amount-input-error {
-    @apply mt-1 text-sm text-gray-secondary dark:text-neutral-400;
+    @apply mt-1 text-sm leading-tight;
+  }
+  .amount-input-select-asset,
+  .amount-input-note {
+    @apply text-gray-secondary dark:text-neutral-400;
   }
   .amount-input-select-asset {
     @apply flex cursor-pointer items-start whitespace-pre-line transition-colors hover:text-gray-400 xs:w-max;

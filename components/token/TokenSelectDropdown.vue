@@ -16,6 +16,13 @@
             {{ error.message }}
           </CommonErrorBlock>
         </CommonCardWithLineButtons>
+        <template v-else-if="!hasBalances">
+          <div class="category">
+            <CommonCardWithLineButtons>
+              <TokenLine v-for="item in tokens" :key="item.address" v-bind="item" @click="selectedToken = item" />
+            </CommonCardWithLineButtons>
+          </div>
+        </template>
         <template v-else-if="balanceGroups.length || !search">
           <div v-for="(group, index) in balanceGroups" :key="index" class="category">
             <TypographyCategoryLabel v-if="group.title" class="group-category-label">
@@ -50,7 +57,7 @@ import { MagnifyingGlassIcon } from "@heroicons/vue/24/outline";
 
 import CommonCardWithLineButtons from "@/components/common/CardWithLineButtons.vue";
 
-import type { TokenAmount } from "@/types";
+import type { Token, TokenAmount } from "@/types";
 import type { PropType } from "vue";
 
 import { groupBalancesByAmount } from "@/utils/mappers";
@@ -74,6 +81,10 @@ const props = defineProps({
   error: {
     type: Error,
   },
+  tokens: {
+    type: Array as PropType<Token[]>,
+    default: () => [],
+  },
   balances: {
     type: Array as PropType<TokenAmount[]>,
     default: () => [],
@@ -87,6 +98,7 @@ const emit = defineEmits<{
 }>();
 
 const search = ref("");
+const hasBalances = computed(() => props.balances.length > 0);
 const displayedBalances = computed(() => {
   const lowercaseSearch = search.value.toLowerCase();
   return props.balances.filter(({ address, symbol }) =>
@@ -103,10 +115,10 @@ const selectedTokenAddress = computed({
 });
 const selectedToken = computed({
   get: () => {
-    if (!props.balances) {
+    if (!props.tokens) {
       return undefined;
     }
-    return props.balances.find((e) => e.address === selectedTokenAddress.value);
+    return props.tokens.find((e) => e.address === selectedTokenAddress.value);
   },
   set: (value) => {
     if (value) {

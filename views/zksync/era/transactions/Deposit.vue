@@ -7,10 +7,12 @@
       :get-allowance="requestAllowance"
       :set-allowance="setTokenAllowance"
       :fetch-balance="() => fetchBalances(true)"
+      :key="`${account.address}-${transactionKey}`"
       @continue="allowanceModalContinue"
     />
     <ConfirmTransactionModal
       v-model:opened="transactionConfirmModalOpened"
+      :layout="layout"
       :fee="fee"
       :fee-token="feeToken"
       :fee-values="feeValues"
@@ -18,7 +20,8 @@
       :transaction="transaction"
       :button-disabled="continueButtonDisabled || !enoughBalanceForTransaction"
       :estimate="estimate"
-      :key="account.address"
+      :key="`${account.address}-${transactionKey}`"
+      @new-transaction="resetForm"
     >
       <template #alerts>
         <transition v-bind="TransitionAlertScaleInOutTransition">
@@ -44,17 +47,21 @@
       :destination-tooltip="`Adding funds to ${destination.label}`"
     />
 
-    <CommonErrorBlock v-if="balanceError" @try-again="fetchBalances">
+    <CommonErrorBlock v-if="tokensRequestError" @try-again="fetchBalances">
+      Getting tokens error: {{ tokensRequestError.message }}
+    </CommonErrorBlock>
+    <CommonErrorBlock v-else-if="balanceError" @try-again="fetchBalances">
       Getting balances error: {{ balanceError.message }}
     </CommonErrorBlock>
     <form v-else class="flex h-full flex-col" @submit.prevent="">
       <CommonAmountInput
         v-model.trim="amount"
         v-model:error="amountError"
-        v-model:token-address="selectedTokenAddress"
+        v-model:token-address="amountInputTokenAddress"
+        :tokens="Object.values(tokens ?? [])"
         :balances="balance"
         :maxAmount="maxAmount"
-        :loading="balancesLoading"
+        :loading="tokensRequestInProgress || balancesLoading"
         autofocus
       />
 
@@ -121,6 +128,7 @@
 
       <EthereumTransactionFooter>
         <template #after-checks>
+          <CommonButtonTopInfo>Arriving in ~15 minutes</CommonButtonTopInfo>
           <CommonButton
             type="submit"
             :disabled="continueButtonDisabled"
@@ -150,6 +158,8 @@ import useAllowance from "@/composables/transaction/useAllowance";
 import useFee from "@/composables/zksync/era/deposit/useFee";
 
 import type { ConfirmationModalTransaction } from "@/components/transaction/zksync/era/deposit/ConfirmTransactionModal.vue";
+import type { Token } from "@/types";
+import type { BigNumberish } from "ethers";
 import type { PropType } from "vue";
 
 import { useRoute } from "#app";
@@ -182,7 +192,7 @@ const eraEthereumBalance = useEraEthereumBalanceStore();
 const { account } = storeToRefs(onboardStore);
 const { selectedEthereumNetwork } = storeToRefs(useNetworkStore());
 const { destinations } = storeToRefs(useDestinationsStore());
-const { tokens } = storeToRefs(eraTokensStore);
+const { tokens, tokensRequestInProgress, tokensRequestError } = storeToRefs(eraTokensStore);
 const { balance, balanceInProgress, allBalancePricesLoaded, balanceError } = storeToRefs(eraEthereumBalance);
 
 const destination = computed(() => destinations.value.era);
@@ -201,12 +211,24 @@ const tokenWithHighestBalancePrice = computed(() => {
   });
   return tokenWithHighestBalancePrice[0] ? tokenWithHighestBalancePrice[0] : undefined;
 });
-const selectedTokenAddress = ref(routeTokenAddress.value ?? tokenWithHighestBalancePrice.value?.address);
-const selectedToken = computed(() => {
-  if (!balance.value) {
+const defaultToken = computed(() => (tokens.value ? Object.values(tokens.value)[0] : undefined));
+const selectedTokenAddress = ref(
+  routeTokenAddress.value ?? tokenWithHighestBalancePrice.value?.address ?? defaultToken.value?.address
+);
+const selectedToken = computed<Token | undefined>(() => {
+  if (!tokens.value) {
     return undefined;
   }
-  return balance.value.find((e) => e.address === selectedTokenAddress.value);
+  return selectedTokenAddress.value ? tokens.value[selectedTokenAddress.value] : defaultToken.value;
+});
+const amountInputTokenAddress = computed({
+  get: () => selectedToken.value?.address,
+  set: (address) => {
+    selectedTokenAddress.value = address;
+  },
+});
+const tokenBalance = computed<BigNumberish | undefined>(() => {
+  return balance.value.find((e) => e.address === selectedToken.value?.address)?.amount;
 });
 watch(
   () => selectedToken?.value?.address,
@@ -216,11 +238,16 @@ watch(
   }
 );
 watch(allBalancePricesLoaded, (loaded) => {
-  if (loaded && !selectedToken.value) {
-    selectedTokenAddress.value = tokenWithHighestBalancePrice.value?.address;
+  if (loaded && !selectedTokenAddress.value) {
+    if (totalComputeAmount.value.isZero()) {
+      selectedTokenAddress.value = tokenWithHighestBalancePrice.value?.address;
+    } else {
+      selectedTokenAddress.value = selectedToken.value?.address;
+    }
   }
 });
 
+const transactionKey = ref(0);
 const allowanceModalOpened = ref(false);
 const {
   result: allowance,
@@ -304,19 +331,19 @@ watch(enoughBalanceToCoverFee, (isEnough) => {
 const amount = ref("");
 const amountError = ref<string | undefined>();
 const maxAmount = computed(() => {
-  if (!selectedToken.value) {
+  if (!selectedToken.value || !tokenBalance.value) {
     return undefined;
   }
   if (feeToken.value?.address === selectedToken.value.address) {
     if (!fee.value) {
       return undefined;
     }
-    if (BigNumber.from(fee.value).gt(selectedToken.value.amount)) {
+    if (BigNumber.from(fee.value).gt(tokenBalance.value)) {
       return "0";
     }
-    return BigNumber.from(selectedToken.value.amount).sub(fee.value).toString();
+    return BigNumber.from(tokenBalance.value).sub(fee.value).toString();
   }
-  return selectedToken.value.amount.toString();
+  return tokenBalance.value.toString();
 });
 const totalComputeAmount = computed(() => {
   try {
@@ -329,13 +356,13 @@ const totalComputeAmount = computed(() => {
   }
 });
 const enoughBalanceForTransaction = computed(() => {
-  if (!fee.value || !selectedToken.value) {
+  if (!fee.value || !tokenBalance.value || !selectedToken.value) {
     return true;
   }
   const totalToPay = totalComputeAmount.value.add(
     selectedToken.value.address === feeToken.value?.address ? fee.value : "0"
   );
-  return BigNumber.from(selectedToken.value.amount).gte(totalToPay);
+  return BigNumber.from(tokenBalance.value).gte(totalToPay);
 });
 
 const transaction = computed<ConfirmationModalTransaction | undefined>(() => {
@@ -374,7 +401,7 @@ watch(
 const feeLoading = computed(() => feeInProgress.value || (!fee.value && balancesLoading.value));
 
 const balancesLoading = computed(() => {
-  return balanceInProgress.value || (!selectedToken.value && !allBalancePricesLoaded.value);
+  return balanceInProgress.value || (!selectedTokenAddress.value && !allBalancePricesLoaded.value);
 });
 
 const continueButtonDisabled = computed(() => {
@@ -391,7 +418,14 @@ const continueButtonDisabled = computed(() => {
   return false;
 });
 
+const resetForm = () => {
+  amount.value = "";
+  transactionKey.value += 1;
+  transactionConfirmModalOpened.value = false;
+};
+
 const fetchBalances = async (force = false) => {
+  eraTokensStore.requestTokens();
   if (!account.value.address) return;
   await eraEthereumBalance.requestBalance({ force }).then(() => {
     if (allBalancePricesLoaded.value && !selectedToken.value) {

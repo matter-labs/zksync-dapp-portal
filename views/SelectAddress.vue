@@ -29,6 +29,8 @@
           </AddressCard>
         </CommonCardWithLineButtons>
       </template>
+
+      <slot name="after-address" />
     </div>
     <div v-else-if="!search">
       <CommonEmptyBlock class="search-empty-block">

@@ -27,7 +27,7 @@
             :destination="destinations.zkSyncLite"
             :tooltip="`${getActionName(item.type)} from ${destinations.zkSyncLite.label}`"
           />
-          <TokenBalance v-bind="item.token" as="div" :amount="item.amount" />
+          <TokenBalance v-bind="item.token" as="div" :amount="item.amount" amount-display="full" />
         </CommonCardWithLineButtons>
         <TransactionItemIcon :icon="ArrowDownIcon" />
         <CommonCardWithLineButtons>
