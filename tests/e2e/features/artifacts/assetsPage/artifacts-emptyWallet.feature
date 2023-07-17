@@ -1,11 +1,11 @@
-@artifacts @regression @assetsPage
+@artifacts @regression @assetsPage @emptyWallet
 Feature: Artifacts - UI
 
   Background:
     Given Connect Metamask extension with login action
 
 
-  @id1332 @emptyWallet
+  @id1332
   Scenario: Check artifacts for an empty wallet
     Then A wallet should be "empty"
     Then Message " You don't have any balances on " should be visible

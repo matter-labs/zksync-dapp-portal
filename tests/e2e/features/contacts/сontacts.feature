@@ -1,4 +1,4 @@
-@contacts @regression @contactsPage @actions
+@contacts @regression @actions
 Feature: Contacts
 
   Background:
