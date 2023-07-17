@@ -57,16 +57,16 @@ jobs:
       matrix:
         command: ["xvfb-run --auto-servernum --server-args '-screen 0 1920x1080x24' npx cucumber-js --tags "]
         tags: [
-                "@withdraw",
                 "@artifacts and @assetsPage",
                 "@artifacts and @contactsPage",
                 "@artifacts and @depositPage",
                 "@artifacts and @loginPage",
                 "@artifacts and @header",
                 "@artifacts and @menuItems",
-                "@withdraw and @artifacts",
-                "@withdraw @transactions",
-                "@contacts"
+                "@artifacts and @contacts",
+                "@artifacts and @withdraw",
+                "@withdraw and @transactions",
+                "@contacts and @actions"
         ]
 
     name: '${{ matrix.tags }}'
