@@ -3,7 +3,7 @@ import { setTimeout } from "timers/promises";
 
 import { BasePage } from "./base.page";
 import { Extension } from "../data/data";
-import { Helper } from "../helpers/helper";
+import { depositTag, Helper } from "../helpers/helper";
 import { config, wallet } from "../support/config";
 
 import type { ICustomWorld } from "../support/custom-world";
@@ -212,7 +212,9 @@ export class MetamaskPage extends BasePage {
     if (await switchNetworkBtnElement.isEnabled()) {
       const popUpContext = await this.catchPopUpByClick(switchNetworkBtnSelector);
       await popUpContext?.setViewportSize(config.popUpWindowSize);
-      await popUpContext?.click(this.confirmBtn);
+      if (!depositTag) {
+        await popUpContext?.click(this.confirmBtn);
+      }
       await popUpContext?.click(this.confirmBtn);
     }
   }

@@ -38,14 +38,10 @@ env:
   E2E_WALLET_1_MAIN: ${{ vars.E2E_WALLET_1_MAIN }}
   E2E_WALLET_2_SECOND: ${{ vars.E2E_WALLET_2_SECOND }}
   E2E_WALLET_0_EMPTY: ${{ vars.E2E_WALLET_0_EMPTY }}
-  E2E_WALLET_3_DEPOSIT: ${{ vars.E2E_WALLET_3_DEPOSIT }}
-  E2E_WALLET_4_WITHDRAW: ${{ vars.E2E_WALLET_4_WITHDRAW }}
 
   E2E_WALLET_1_MAIN_PUB_KEY: ${{ vars.E2E_WALLET_1_MAIN_PUB_KEY }}
   E2E_WALLET_2_SECOND_PUB_KEY: ${{ vars.E2E_WALLET_2_SECOND_PUB_KEY }}
   E2E_WALLET_0_EMPTY_PUB_KEY: ${{ vars.E2E_WALLET_0_EMPTY_PUB_KEY }}
-  E2E_WALLET_3_DEPOSIT_PUB_KEY: ${{ vars.E2E_WALLET_3_DEPOSIT_PUB_KEY }}
-  E2E_WALLET_4_WITHDRAW_PUB_KEY: ${{ vars.E2E_WALLET_4_WITHDRAW_PUB_KEY }}
 
 
 jobs:
@@ -56,9 +52,16 @@ jobs:
       max-parallel: 20
       matrix:
         command: ["xvfb-run --auto-servernum --server-args '-screen 0 1920x1080x24' npx cucumber-js --tags "]
-        tags: [ "@withdraw",
-#                "@artifacts",
-#                "@contacts"
+        tags: [
+                "@artifacts and @emptyWallet and @assetsPage",
+                "@artifacts and @contactsPage",
+                "@artifacts and @depositPage",
+                "@artifacts and @header+",
+                "@artifacts and @menuItems",
+                "@artifacts and @contactsPage",
+                "@artifacts and @withdraw",
+                "@transactions and @withdraw",
+                "@actions and @contacts"
         ]
 
     name: '${{ matrix.tags }}'

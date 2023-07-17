@@ -180,7 +180,7 @@ Given("I click on the Edit contact button", async function (this: ICustomWorld) 
 Given("I am on the Main page", async function (this: ICustomWorld) {
   const basePage = new BasePage(this);
   element = await basePage.returnElementByType("text", "Assets");
-  await expect(element).toBeVisible(config.defaultTimeout);
+  await expect(element).toBeVisible(config.increasedTimeout);
   await expect(this.page?.url()).toBe(config.BASE_URL + NetworkSwitcher.zkSyncEraGoerli);
 });
 

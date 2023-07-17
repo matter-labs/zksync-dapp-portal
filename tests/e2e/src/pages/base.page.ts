@@ -54,7 +54,7 @@ export class BasePage {
 
   async clickByText(text: string) {
     selector = `text=${text}`;
-    await this.world.page?.locator(selector).first().click();
+    await this.world.page?.locator(selector).first().click(config.increasedTimeout);
   }
 
   async pressButton(buttonName: string) {
@@ -224,11 +224,12 @@ export class BasePage {
     let result;
 
     if (checkType === "visible") {
-      await expect(element).toBeVisible();
+      await expect(element).toBeVisible({ timeout: config.increasedTimeout.timeout });
     } else if (checkType === "invisible") {
       result = await helper.checkElementVisible(element);
       await expect(result).toBe(false);
     } else if (checkType === "clickable") {
+      await expect(element).toBeVisible({ timeout: config.increasedTimeout.timeout });
       result = await helper.checkElementClickable(element);
       await expect(result).toBe(true);
     } else if (checkType === "disabled") {
