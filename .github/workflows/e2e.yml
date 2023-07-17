@@ -63,7 +63,7 @@ jobs:
                 "@artifacts and @loginPage",
                 "@artifacts and @header",
                 "@artifacts and @menuItems",
-                "@artifacts and @contacts",
+                "@artifacts and @contactsPage",
                 "@artifacts and @withdraw",
                 "@withdraw and @transactions",
                 "@contacts and @actions"
