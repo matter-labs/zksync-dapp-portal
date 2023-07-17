@@ -35,9 +35,9 @@ Feature: External Redirection on the Main Page
 
 
     Examples:
-      | Network Name       | Modal card network                | url                                                                                  |
+      | Network Name        | Modal card network                | url                                                                                   |
       | zkSync Lite Mainnet | //*[text()='zkSync Lite Mainnet'] | https://zkscan.io/explorer/accounts/0xa439ba06da84afc566ee710ba12541a73e3a1046        |
-      | zkSync Lite Mainnet | //*[text()='Ethereum Mainnet']    | https://etherscan.io/address/0xa439ba06dA84AFc566Ee710Ba12541A73e3a1046              |
-      | zkSync Lite Goerli | //*[text()='zkSync Lite Goerli']  | https://goerli.zkscan.io/explorer/accounts/0xa439ba06da84afc566ee710ba12541a73e3a1046 |
-      | zkSync Lite Goerli | //*[text()='Ethereum Goerli']     | https://goerli.etherscan.io/address/0xa439ba06dA84AFc566Ee710Ba12541A73e3a1046       |
+      | zkSync Lite Mainnet | //*[text()='Ethereum Mainnet']    | https://etherscan.io/address/0xa439ba06dA84AFc566Ee710Ba12541A73e3a1046               |
+      | zkSync Lite Goerli  | //*[text()='zkSync Lite Goerli']  | https://goerli.zkscan.io/explorer/accounts/0xa439ba06da84afc566ee710ba12541a73e3a1046 |
+      | zkSync Lite Goerli  | //*[text()='Ethereum Goerli']     | https://goerli.etherscan.io/address/0xa439ba06dA84AFc566Ee710Ba12541A73e3a1046        |
 
