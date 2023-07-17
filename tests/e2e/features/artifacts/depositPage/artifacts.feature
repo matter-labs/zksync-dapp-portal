@@ -1,4 +1,4 @@
-@artifacts @regression @deposit
+@artifacts @regression @depositPage
 Feature: Artifacts - UI
 
   Background:

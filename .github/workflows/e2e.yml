@@ -58,10 +58,14 @@ jobs:
         command: ["xvfb-run --auto-servernum --server-args '-screen 0 1920x1080x24' npx cucumber-js --tags "]
         tags: [
                 "@withdraw",
-                "@artifactsSuite1 and not @emptyWallet",
-                "@artifactsSuite2 and not @emptyWallet",
-                "@artifactsSuite3 and not @emptyWallet",
-                "@artifacts and @emptyWallet",
+                "@artifacts and @assetsPage",
+                "@artifacts and @contactsPage",
+                "@artifacts and @depositPage",
+                "@artifacts and @loginPage",
+                "@artifacts and @header",
+                "@artifacts and @menuItems",
+                "@withdraw and @artifacts",
+                "@withdraw @transactions",
                 "@contacts"
         ]
 

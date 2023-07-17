@@ -1,4 +1,4 @@
-@artifactsSuite3 @artifacts @regression
+@contactsPage @artifacts @regression
 Feature: Artifacts - UI
 
   Background:

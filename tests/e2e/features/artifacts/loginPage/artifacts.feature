@@ -1,4 +1,4 @@
-@artifactsSuite2 @artifacts @regression
+@loginPage @artifacts @regression
 Feature: Artifacts - UI
 
   Background:

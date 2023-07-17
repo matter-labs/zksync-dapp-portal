@@ -1,4 +1,4 @@
-@artifactsSuite2 @artifacts @regression
+@menuItems @artifacts @regression
 Feature: Artifacts - UI
 
   Background:

@@ -1,4 +1,4 @@
-@artifacts @regression @assets
+@artifacts @regression @header
 Feature: Artifacts - UI
 
   Background:

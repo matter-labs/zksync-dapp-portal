@@ -1,4 +1,4 @@
-@withdraw @regression @transactions @bridgePage
+@withdraw @regression @transactions @artifacts @bridgePage
 Feature: Withdraw
 
   Background:
