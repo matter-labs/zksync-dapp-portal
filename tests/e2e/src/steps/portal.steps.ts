@@ -249,14 +249,3 @@ Then(
     await element.hover();
   }
 );
-
-Then(
-  "I hover the {string} element with {string} value",
-  config.stepTimeout,
-  async function (this: ICustomWorld, elementType: string, value: string) {
-    const basePage = new BasePage(this);
-    element = await basePage.returnElementByType(elementType, value);
-
-    await element.hover();
-  }
-);
