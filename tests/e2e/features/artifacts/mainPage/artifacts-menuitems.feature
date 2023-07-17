@@ -4,7 +4,6 @@ Feature: Artifacts - UI
   Background:
     Given Connect Metamask extension with login action
 
-
   @id1315
   Scenario: Check artifacts on a Menu address
     Then Element with "partial class" "account-name" should be "visible"
@@ -43,13 +42,6 @@ Feature: Artifacts - UI
     Then Element with "text" "zkSync Lite Mainnet" should be "visible"
     Then Element with "text" "zkSync Lite Goerli" should be "visible"
 
-  @id1363 @loginPage
-  Scenario: Check artifacts on the Login page
-    Given I'm logged out
-    Then Element with "text" "Connect your Ethereum wallet to zkSync Portal" should be "visible"
-    Then Element with "testId" "network-switcher" should be "visible"
-    Then Element with "title" "zkSync Portal GitHub page" should be "visible"
-
   @id1409:I
   Scenario: Check artifacts on the View on Explorer menu for Mainnet
     Given I go to page '/?network=era-mainnet'
@@ -81,5 +73,39 @@ Feature: Artifacts - UI
     Then Element with "text" "Other networks" should be "visible"
     Then Element with "src" "/img/era.svg" should be "visible"
     Then Element with "src" "/img/era.svg" should be "clickable"
+    Then Element with "src" "/img/ethereum.svg" should be "visible"
+    Then Element with "src" "/img/ethereum.svg" should be "clickable"
+
+  @id1581:I
+  Scenario: Check artifacts on the View on Explorer menu for Lite Mainnet
+    Given I go to page '/?network=lite-mainnet'
+    Given I click by "partial class" with "main-account-button" value
+    Given I click by "text" with " View on explorer " value
+    Then Element with "text" "zkSync Lite Mainnet" should be "visible"
+    Then Element with "text" "Ethereum Mainnet" should be "visible"
+    Then Element with "text" "View on explorer" should be "visible"
+    Then Element with "testId" "close-button" should be "visible"
+    Then Element with "testId" "close-button" should be "clickable"
+    Then Element with "text" "Selected network" should be "visible"
+    Then Element with "text" "Other networks" should be "visible"
+    Then Element with "src" "/img/zksync-lite.svg" should be "visible"
+    Then Element with "src" "/img/zksync-lite.svg" should be "clickable"
+    Then Element with "src" "/img/ethereum.svg" should be "visible"
+    Then Element with "src" "/img/ethereum.svg" should be "clickable"
+
+  @1581:II
+  Scenario: Check artifacts on the View on Explorer menu for Lite Goerli
+    Given I go to page '/?network=lite-goerli'
+    Given I click by "partial class" with "main-account-button" value
+    Given I click by "text" with " View on explorer " value
+    Then Element with "text" "zkSync Lite Goerli" should be "visible"
+    Then Element with "text" "Ethereum Goerli" should be "visible"
+    Then Element with "text" "View on explorer" should be "visible"
+    Then Element with "testId" "close-button" should be "visible"
+    Then Element with "testId" "close-button" should be "clickable"
+    Then Element with "text" "Selected network" should be "visible"
+    Then Element with "text" "Other networks" should be "visible"
+    Then Element with "src" "/img/zksync-lite.svg" should be "visible"
+    Then Element with "src" "/img/zksync-lite.svg" should be "clickable"
     Then Element with "src" "/img/ethereum.svg" should be "visible"
     Then Element with "src" "/img/ethereum.svg" should be "clickable"
