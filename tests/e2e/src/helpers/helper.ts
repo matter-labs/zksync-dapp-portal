@@ -141,6 +141,7 @@ export class Helper {
       }
     }
   }
+
   async getBalanceETH(walletAddress: string, layer: string) {
     let network: any;
     let provider: any;

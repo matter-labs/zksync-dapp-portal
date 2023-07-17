@@ -21,6 +21,10 @@ export class MainPage extends BasePage {
     return "//*[@class='amount-input-field-container']//input";
   }
 
+  get accountDropdown() {
+    return `${this.byTestId}account-dropdown`;
+  }
+
   get modalCard() {
     return "//*[@class='modal-card']";
   }
@@ -63,6 +67,10 @@ export class MainPage extends BasePage {
 
   get closeBtnModalCard() {
     return "//*[@data-testid='close-button']";
+  }
+
+  get networkSwitcher() {
+    return `${this.byTestId}network-switcher`;
   }
 
   async selectTransaction(transactionType: string) {
@@ -148,5 +156,34 @@ export class MainPage extends BasePage {
   async checkModalCardElement(xpath: string, checkType: string) {
     const selector = this.modalCard + xpath;
     await this.verifyElement("xpath", selector, checkType);
+  }
+
+  async clickModalCardElement(selectorValue: string) {
+    let selector: string;
+    const regex = /\/\/\*/g;
+    const matchXpath = selectorValue.match(regex);
+
+    if (!matchXpath) {
+      selector = `//*[contains(text(),'${selectorValue}')]`;
+    } else {
+      selector = selectorValue;
+    }
+    await this.click(this.modalCard + selector);
+  }
+
+  async selectNetwork(networkName: string) {
+    await this.click(this.networkSwitcher);
+
+    if (
+      networkName === "zkSync Era Mainnet" ||
+      networkName === "zkSync Era Testnet" ||
+      networkName === "zkSync Lite Mainnet" ||
+      networkName === "zkSync Lite Goerli"
+    ) {
+      result = `//*[text()='${networkName}']`;
+    } else {
+      console.log("An incorrect value of the Network name");
+    }
+    await this.click(this.modalCard + result);
   }
 }

@@ -230,6 +230,15 @@ Then(
   }
 );
 
+When(
+  "I click by the {string} text element on the Modal card",
+  config.stepTimeout,
+  async function (this: ICustomWorld, textElement: string) {
+    mainPage = new MainPage(this);
+    await mainPage.clickModalCardElement(textElement);
+  }
+);
+
 Then("I close modal card", config.stepTimeout, async function (this: ICustomWorld) {
   const basePage = new BasePage(this);
   const mainPage = new MainPage(this);
@@ -237,4 +246,18 @@ Then("I close modal card", config.stepTimeout, async function (this: ICustomWorl
   element = modalCardElement + mainPage.closeBtnModalCard;
 
   await basePage.click(element);
+});
+
+Then("I select the {string} network", config.stepTimeout, async function (this: ICustomWorld, networkName: string) {
+  const mainPage = new MainPage(this);
+
+  await mainPage.selectNetwork(networkName);
+});
+
+Then("New page has {string} address", config.stepTimeout, async function (this: ICustomWorld, url: string) {
+  mainPage = new MainPage(this);
+  helper = new Helper(this);
+  await this.page?.waitForTimeout(5000);
+  result = await helper.checkTabByUrl(url);
+  await expect(result).toBe(url);
 });
