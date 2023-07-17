@@ -120,7 +120,11 @@
         </template>
         <template v-else-if="layout === 'bridge'">
           <CommonButtonTopLink @click="emit('newTransaction')">Make another transaction</CommonButtonTopLink>
+          <CommonButton v-if="refererName" class="mx-auto" variant="primary-solid" @click="closeWindow">
+            Go back to {{ refererName }}
+          </CommonButton>
           <CommonButton
+            v-else
             as="a"
             href="https://ecosystem.zksync.io"
             target="_blank"
@@ -147,6 +151,7 @@ import {
   InformationCircleIcon,
   PlusIcon,
 } from "@heroicons/vue/24/outline";
+import { useRouteQuery } from "@vueuse/router";
 import { BigNumber } from "ethers";
 import { Logger } from "ethers/lib/utils";
 import { storeToRefs } from "pinia";
@@ -323,6 +328,9 @@ const makeTransaction = async () => {
       });
   }
 };
+
+const refererName = useRouteQuery("refererName");
+const closeWindow = () => window.close();
 </script>
 
 <style lang="scss">

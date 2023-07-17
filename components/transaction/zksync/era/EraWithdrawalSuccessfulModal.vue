@@ -33,7 +33,11 @@
         </template>
         <template v-else-if="layout === 'bridge'">
           <CommonButtonTopLink @click="emit('newTransaction')">Make another transaction</CommonButtonTopLink>
+          <CommonButton v-if="refererName" class="mx-auto" variant="primary-solid" @click="closeWindow">
+            Go back to {{ refererName }}
+          </CommonButton>
           <CommonButton
+            v-else
             as="a"
             href="https://ecosystem.zksync.io"
             target="_blank"
@@ -51,6 +55,7 @@
 
 <script lang="ts" setup>
 import { ArrowUpRightIcon, InformationCircleIcon } from "@heroicons/vue/24/outline";
+import { useRouteQuery } from "@vueuse/router";
 import { storeToRefs } from "pinia";
 
 import EraTransferLineItem from "@/components/transaction/zksync/era/EraTransferLineItem.vue";
@@ -77,6 +82,9 @@ const emit = defineEmits<{
 }>();
 
 const { destinations } = storeToRefs(useDestinationsStore());
+
+const refererName = useRouteQuery("refererName");
+const closeWindow = () => window.close();
 </script>
 
 <style lang="scss">
