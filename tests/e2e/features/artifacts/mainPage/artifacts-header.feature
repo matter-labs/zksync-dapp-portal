@@ -1,11 +1,17 @@
-@artifacts @regression @header
+@artifacts @regression @header+
 Feature: Artifacts - UI
 
   Background:
     Given Connect Metamask extension with login action
 
+  @id1363 @loginPage
+  Scenario: Check artifacts on the Login page
+    Given I'm logged out
+    Then Element with "text" "Connect your Ethereum wallet to zkSync Portal" should be "visible"
+    Then Element with "testId" "network-switcher" should be "visible"
+    Then Element with "title" "zkSync Portal GitHub page" should be "visible"
 
-  @id1534 @header
+  @id1534
   Scenario: Check artifacts on the Header
     Given I am on the Main page
     Then Element with "href" "/" should be "visible"
@@ -21,7 +27,7 @@ Feature: Artifacts - UI
     Then Element with "aria-label" "Email" should be "visible"
     Then Element with "aria-label" "Email" should be "clickable"
 
-  @id1428 @header
+  @id1428
   Scenario: Check artifacts on the Receive page
     Given I am on the Main page
     When I go to page "/transaction/zksync/era/receive"
@@ -48,7 +54,7 @@ Feature: Artifacts - UI
     Then Element with "text" "Orbiter" should be "visible"
     Then Element with "href" "https://www.orbiter.finance/?dest=zkSync%20Era" should be "clickable"
 
-  @id1352 @header
+  @id1352
   Scenario: Check artifacts on the Receive Address (QR) page
     Given I am on the Main page
     When I go to page "/transaction/zksync/era/receive-address"
