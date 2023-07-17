@@ -29,6 +29,7 @@ Feature: Artifacts - UI
     Then Element with "testId" "network-switcher" should be "visible"
     Then Element with "testId" "network-switcher" should be "clickable"
 
+
   @id1379
   Scenario: Check artifacts on the Networks switcher
     #Given I click by "testId" with "network-switcher" value
@@ -93,7 +94,7 @@ Feature: Artifacts - UI
     Then Element with "src" "/img/ethereum.svg" should be "visible"
     Then Element with "src" "/img/ethereum.svg" should be "clickable"
 
-  @1581:II
+  @id1581:II
   Scenario: Check artifacts on the View on Explorer menu for Lite Goerli
     Given I go to page '/?network=lite-goerli'
     Given I click by "partial class" with "main-account-button" value
