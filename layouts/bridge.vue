@@ -1,4 +1,18 @@
 <template>
+  <Head>
+    <Title>{{ meta.title }}</Title>
+    <Meta name="og:title" :content="meta.title" />
+    <Meta name="og:site_name" :content="meta.title" />
+    <Meta name="description" :content="meta.description" />
+    <Meta name="og:description" :content="meta.description" />
+
+    <Meta property="og:image:type" content="image/jpeg" />
+    <Meta property="og:image:width" content="1200" />
+    <Meta property="og:image:height" content="630" />
+    <Meta property="og:image:alt" content="zkSync Bridge" />
+    <Meta property="og:image" content="https://portal.zksync.io/preview-bridge.jpg" />
+  </Head>
+
   <ModalNetworkChangedWarning v-if="!isConnectingWallet" />
   <ModalWalletWarning />
 
@@ -50,7 +64,7 @@ import { storeToRefs } from "pinia";
 
 import useColorMode from "@/composables/useColorMode";
 
-import { useHead, useRoute } from "#app";
+import { useRoute } from "#app";
 import { eraNetworks, useNetworkStore } from "@/store/network";
 import { useOnboardStore } from "@/store/onboard";
 import { checksumAddress } from "@/utils/formatters";
@@ -62,23 +76,6 @@ const meta = {
   description:
     "With the zkSync Era Bridge you can easily transfer funds between Ethereum Mainnet and zkSync Era Network. Enjoy faster, cheaper and more efficient transactions with the future proof zkEVM scaling Ethereum's security and values.",
 };
-useHead({
-  title: "zkSync Era Bridge | Transfer funds between zkSync Era Network and Ethereum Mainnet",
-  meta: [
-    {
-      name: "og:title",
-      content: meta.title,
-    },
-    {
-      name: "description",
-      content: meta.description,
-    },
-    {
-      name: "og:description",
-      content: meta.description,
-    },
-  ],
-});
 
 const route = useRoute();
 
