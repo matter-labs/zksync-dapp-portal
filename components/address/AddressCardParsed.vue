@@ -58,7 +58,7 @@ const addressCard = computed(() => {
     };
   }
   return {
-    name: props.destination ? props.destination.label + " account" : "",
+    name: props.destination ? props.destination.label + " address" : "",
     address: props.address,
   };
 });

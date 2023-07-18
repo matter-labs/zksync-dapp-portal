@@ -8,8 +8,8 @@
             as="button"
             type="button"
             :address="address"
-            :destination="destinations.era"
-            :tooltip="`Deposit to ${destinations.era.label}`"
+            :destination="destinations.ethereum"
+            :tooltip="`Withdraw to ${destinations.ethereum.label}`"
             @click="emit('select-address')"
           />
         </CommonCardWithLineButtons>

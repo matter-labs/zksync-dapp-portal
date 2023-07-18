@@ -7,7 +7,7 @@
     <main class="bridge-layout-main">
       <template v-if="step === 'select-address'">
         <CommonBackButton @click="step = 'bridge'" class="-mt-6" />
-        <SelectAddress title="Bridge to" @selected="selectAddress">
+        <SelectAddress title="Bridge to" own-address-displayed @selected="selectAddress">
           <template #after-address>
             <CommonAlert variant="warning" :icon="ExclamationCircleIcon" class="mt-2">
               <p>
@@ -32,12 +32,15 @@
 import { computed, ref } from "vue";
 
 import { ExclamationCircleIcon } from "@heroicons/vue/24/outline";
+import { useRouteQuery } from "@vueuse/router";
+import { isAddress } from "ethers/lib/utils";
 import { storeToRefs } from "pinia";
 
 import useColorMode from "@/composables/useColorMode";
 
 import { useHead } from "#app";
 import { useOnboardStore } from "@/store/onboard";
+import { checksumAddress } from "@/utils/formatters";
 import SelectAddress from "@/views/SelectAddress.vue";
 
 const meta = {
@@ -68,14 +71,28 @@ useColorMode().switchColorMode("dark");
 const { account, isConnectingWallet } = storeToRefs(useOnboardStore());
 
 const step = ref<"bridge" | "select-address">("bridge");
-const address = ref("");
+
+const queryAddress = useRouteQuery<string | undefined>("address", undefined, {
+  transform: String,
+  mode: "replace",
+});
+const address = computed(() => {
+  if (queryAddress.value && isAddress(queryAddress.value)) {
+    return checksumAddress(queryAddress.value);
+  }
+  return undefined;
+});
 const toAddress = computed(() => {
   if (!address.value) return account.value.address;
   return address.value;
 });
 
 const selectAddress = (newAddress: string) => {
-  address.value = newAddress;
+  if (newAddress === account.value.address) {
+    queryAddress.value = undefined;
+  } else {
+    queryAddress.value = newAddress;
+  }
   step.value = "bridge";
 };
 </script>
