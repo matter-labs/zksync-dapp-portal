@@ -20,7 +20,7 @@ export default (
   getWalletInstance: () => Promise<Wallet | undefined>,
   getPublicClient: () => PublicClient
 ) => {
-  const params = {
+  let params = {
     from: undefined as string | undefined,
     tokenAddress: undefined as string | undefined,
   };
@@ -76,16 +76,11 @@ export default (
     const gasLimit = gasEstimate.gte(recommendedGasLimit) ? gasEstimate : recommendedGasLimit;
     return BigNumber.from(gasLimit);
   };
-  const estimate = async (from: string, tokenAddress: string) => {
-    params.from = from;
-    params.tokenAddress = tokenAddress;
-
-    await estimateFee();
-  };
   const {
     inProgress,
     error,
-    execute: estimateFee,
+    execute: executeEstimateFee,
+    reset: resetEstimateFee,
   } = usePromise(
     async () => {
       gasPrice.value = await getPublicClient().getGasPrice();
@@ -100,6 +95,10 @@ export default (
     },
     { cache: false }
   );
+  const cacheEstimateFee = useTimedCache<void, [typeof params]>(() => {
+    resetEstimateFee();
+    return executeEstimateFee();
+  }, 1000 * 8);
 
   return {
     gasLimit,
@@ -107,7 +106,13 @@ export default (
     result: totalFee,
     inProgress,
     error,
-    estimateFee: estimate,
+    estimateFee: async (from: string, tokenAddress: string) => {
+      params = {
+        from,
+        tokenAddress,
+      };
+      await cacheEstimateFee(params);
+    },
     resetFee: () => {
       gasLimit.value = undefined;
       gasPrice.value = undefined;

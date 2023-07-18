@@ -1,5 +1,7 @@
 import { BigNumber } from "ethers";
 
+import useTimedCache from "@/composables/useTimedCache";
+
 import type { Token, TokenAmount } from "@/types";
 import type { BigNumberish } from "ethers";
 import type { Ref } from "vue";
@@ -46,14 +48,11 @@ export default (
     return true;
   });
 
-  const estimate = async (estimationParams: FeeEstimationParams) => {
-    params = estimationParams;
-    await estimateFee();
-  };
   const {
     inProgress,
     error,
-    execute: estimateFee,
+    execute: executeEstimateFee,
+    reset: resetEstimateFee,
   } = usePromise(
     async () => {
       if (!params) throw new Error("Params are not available");
@@ -76,6 +75,10 @@ export default (
     },
     { cache: false }
   );
+  const cacheEstimateFee = useTimedCache<void, [FeeEstimationParams]>(() => {
+    resetEstimateFee();
+    return executeEstimateFee();
+  }, 1000 * 8);
 
   return {
     gasLimit,
@@ -83,7 +86,10 @@ export default (
     result: totalFee,
     inProgress,
     error,
-    estimateFee: estimate,
+    estimateFee: async (estimationParams: FeeEstimationParams) => {
+      params = estimationParams;
+      await cacheEstimateFee(params);
+    },
     resetFee: () => {
       gasLimit.value = undefined;
       gasPrice.value = undefined;

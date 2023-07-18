@@ -4,6 +4,8 @@ import { BigNumber, ethers, VoidSigner } from "ethers";
 import { L1VoidSigner } from "zksync-web3";
 import { L1_RECOMMENDED_MIN_ERC20_DEPOSIT_GAS_LIMIT } from "zksync-web3/build/src/utils";
 
+import useTimedCache from "@/composables/useTimedCache";
+
 import type { Token, TokenAmount } from "@/types";
 import type { PublicClient } from "@wagmi/core";
 import type { Ref } from "vue";
@@ -29,7 +31,7 @@ export default (
   getEraProvider: () => Provider,
   getPublicClient: () => PublicClient
 ) => {
-  const params = {
+  let params = {
     to: undefined as string | undefined,
     tokenAddress: undefined as string | undefined,
   };
@@ -109,16 +111,11 @@ export default (
       .mul(110)
       .div(100);
   };
-  const estimate = async (to: string, tokenAddress: string) => {
-    params.to = to;
-    params.tokenAddress = tokenAddress;
-
-    await estimateFee();
-  };
   const {
     inProgress,
     error,
-    execute: estimateFee,
+    execute: executeEstimateFee,
+    reset: resetEstimateFee,
   } = usePromise(
     async () => {
       recommendedBalance.value = undefined;
@@ -136,6 +133,10 @@ export default (
     },
     { cache: false }
   );
+  const cacheEstimateFee = useTimedCache<void, [typeof params]>(() => {
+    resetEstimateFee();
+    return executeEstimateFee();
+  }, 1000 * 8);
 
   return {
     fee,
@@ -143,7 +144,13 @@ export default (
     inProgress,
     error,
     recommendedBalance,
-    estimateFee: estimate,
+    estimateFee: async (to: string, tokenAddress: string) => {
+      params = {
+        to,
+        tokenAddress,
+      };
+      await cacheEstimateFee(params);
+    },
     resetFee: () => {
       fee.value = undefined;
     },
