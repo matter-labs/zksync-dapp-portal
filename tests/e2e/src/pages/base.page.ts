@@ -54,6 +54,7 @@ export class BasePage {
 
   async clickByText(text: string) {
     selector = `text=${text}`;
+    await this.world.page?.waitForSelector(selector);
     await this.world.page?.locator(selector).first().click(config.increasedTimeout);
   }
 
