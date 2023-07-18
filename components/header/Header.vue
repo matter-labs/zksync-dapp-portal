@@ -7,12 +7,12 @@
         :class="{ 'bg-gray dark:bg-black lg:bg-transparent dark:lg:bg-transparent': open }"
       >
         <div class="logo-container">
-          <a v-if="!account.address" href="https://zksync.io" target="_blank">
-            <IconsZkSync class="w-[120px]" />
-          </a>
-          <NuxtLink v-else :to="{ name: 'index' }">
+          <NuxtLink v-if="logoLeadsHome" :to="{ name: 'index' }">
             <IconsZkSync class="w-[120px]" />
           </NuxtLink>
+          <a v-else href="https://zksync.io" target="_blank">
+            <IconsZkSync class="w-[120px]" />
+          </a>
         </div>
         <div class="navigation-container">
           <PopoverGroup class="popover-group">
@@ -58,7 +58,7 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive } from "vue";
+import { computed, reactive } from "vue";
 
 import { Popover, PopoverButton, PopoverGroup, PopoverPanel } from "@headlessui/vue";
 import { Bars3Icon, XMarkIcon } from "@heroicons/vue/24/outline";
@@ -69,9 +69,16 @@ import DropdownPopover from "./DropdownPopover.vue";
 import PopoverFunctional from "./PopoverFunctional.vue";
 import RightSideMenu from "./RightSideMenu.vue";
 
+import { tabs as bridgeTabs } from "@/components/bridge/Navigation.vue";
+
+import { useRoute } from "#app";
 import { useOnboardStore } from "@/store/onboard";
 
+const route = useRoute();
 const { account } = storeToRefs(useOnboardStore());
+const logoLeadsHome = computed(() => {
+  return !bridgeTabs.map((e) => e.routeName).includes(route.name as string) && account.value.address;
+});
 
 export interface Navigation {
   title?: string;

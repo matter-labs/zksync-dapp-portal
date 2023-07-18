@@ -35,10 +35,12 @@
     <div v-else-if="!search">
       <CommonEmptyBlock class="search-empty-block">
         Enter address in the search bar
-        <br />
-        <span class="mt-1.5 inline-block">
-          Or <NuxtLink class="link" :to="{ name: 'contacts' }">create a contact</NuxtLink>
-        </span>
+        <template v-if="account.address">
+          <br />
+          <span class="mt-1.5 inline-block">
+            Or <NuxtLink class="link" :to="{ name: 'contacts' }">create a contact</NuxtLink>
+          </span>
+        </template>
       </CommonEmptyBlock>
     </div>
     <div v-else-if="ensParseInProgress">
@@ -135,11 +137,15 @@ const inputtedAddressAccount = computed<ContactWithIcon | null>(() => {
   }
   return null;
 });
-const ownAccount = computed<ContactWithIcon>(() => ({
-  name: "Your account",
-  address: account.value.address!,
-  icon: UserIcon,
-}));
+const ownAccount = computed<ContactWithIcon | undefined>(() =>
+  account.value.address
+    ? {
+        name: "Your account",
+        address: account.value.address!,
+        icon: UserIcon,
+      }
+    : undefined
+);
 const lastAddressAccount = computed<ContactWithIcon | null>(() => {
   if (!previousTransactionAddress.value) {
     return null;
@@ -167,7 +173,7 @@ const displayedAddresses = computed<AddressesGroup[]>(() => {
     },
   };
 
-  if (props.ownAddressDisplayed) {
+  if (props.ownAddressDisplayed && ownAccount.value) {
     groups.default.addresses.push(ownAccount.value);
   }
 

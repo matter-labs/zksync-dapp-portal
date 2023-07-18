@@ -12,6 +12,21 @@
   </div>
 </template>
 
+<script lang="ts">
+export const tabs: (TabsOption & { routeName: string })[] = [
+  {
+    label: "Deposit",
+    key: "deposit",
+    routeName: "bridge",
+  },
+  {
+    label: "Withdraw",
+    key: "withdraw",
+    routeName: "bridge-withdraw",
+  },
+];
+</script>
+
 <script lang="ts" setup>
 import { computed } from "vue";
 
@@ -27,19 +42,6 @@ const router = useRouter();
 
 const onboardStore = useOnboardStore();
 const { account } = storeToRefs(onboardStore);
-
-const tabs: (TabsOption & { routeName: string })[] = [
-  {
-    label: "Deposit",
-    key: "deposit",
-    routeName: "bridge",
-  },
-  {
-    label: "Withdraw",
-    key: "withdraw",
-    routeName: "bridge-withdraw",
-  },
-];
 
 const activeTab = computed(() => tabs.find((tab) => tab.routeName === route.name)?.key);
 const tabClicked = (tabKey: string) => {
