@@ -3,7 +3,7 @@
     <span>From</span>
     <DestinationLabel :label="destinations.era.label" :icon="IconsEra" />
   </div>
-  <EraTransferForm layout="bridge" type="withdrawal">
+  <EraTransferForm layout="bridge" type="withdrawal" :address="address">
     <template #form>
       <template v-if="address">
         <TransactionItemIcon :icon="ArrowDownIcon" />

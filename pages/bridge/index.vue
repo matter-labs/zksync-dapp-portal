@@ -3,7 +3,7 @@
     <span>From</span>
     <DestinationLabel :label="destinations.ethereum.label" :icon="IconsEthereum" />
   </div>
-  <EraDepositForm layout="bridge">
+  <EraDepositForm layout="bridge" :address="address">
     <template #form>
       <template v-if="address">
         <TransactionItemIcon :icon="ArrowDownIcon" />
