@@ -9,10 +9,22 @@
         <CommonBackButton @click="step = 'bridge'" class="-mt-6" />
         <SelectAddress title="Bridge to" own-address-displayed @selected="selectAddress">
           <template #after-address>
-            <CommonAlert variant="warning" :icon="ExclamationCircleIcon" class="mt-2">
+            <CommonAlert v-if="route.name === 'bridge'" variant="warning" :icon="ExclamationCircleIcon" class="mt-2">
               <p>
                 Please make sure the destination address is supported on zkSync Era network. Transfers to unsupported
                 addresses may result in the permanent
+                <span class="text-red-500">loss of funds</span>
+              </p>
+            </CommonAlert>
+            <CommonAlert
+              v-else-if="route.name === 'bridge-withdraw'"
+              variant="warning"
+              :icon="ExclamationCircleIcon"
+              class="mt-2"
+            >
+              <p>
+                When withdrawing to an exchange account, please make sure that your exchange supports transfers from
+                smart contracts. Otherwise, this can result in
                 <span class="text-red-500">loss of funds</span>
               </p>
             </CommonAlert>
@@ -119,7 +131,7 @@ const selectAddress = (newAddress: string) => {
   .bridge-layout-main {
     @apply mx-auto my-auto flex h-full w-11/12 max-w-[500px] flex-col py-4;
     @media screen and (min-width: 640px) and (min-height: 720px) {
-      @apply max-h-[545px];
+      @apply max-h-[575px];
     }
   }
 }
