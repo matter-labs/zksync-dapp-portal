@@ -1,6 +1,6 @@
 import { BigNumber } from "ethers";
 
-import type { L2Network } from "@/store/network";
+import type { L1Network, L2Network } from "@/store/network";
 import type { Version } from "@/store/preferences";
 import type { TokenAmount } from "@/types";
 import type { BigNumberish } from "ethers";
@@ -67,6 +67,10 @@ export const calculateTotalTokensPrice = (tokens: TokenAmount[]) => {
     if (typeof price !== "number") return acc;
     return acc + parseFloat(parseTokenAmount(amount, decimals)) * price;
   }, 0);
+};
+
+export const findNetworkWithSameL1 = (l1Network: L1Network, networks: L2Network[]) => {
+  return networks.find((network) => l1Network.network === network.l1Network.network);
 };
 
 interface RetryOptions {

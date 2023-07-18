@@ -38,9 +38,11 @@ import { storeToRefs } from "pinia";
 
 import useColorMode from "@/composables/useColorMode";
 
-import { useHead } from "#app";
+import { useHead, useRoute } from "#app";
+import { eraNetworks, useNetworkStore } from "@/store/network";
 import { useOnboardStore } from "@/store/onboard";
 import { checksumAddress } from "@/utils/formatters";
+import { findNetworkWithSameL1, getNetworkUrl } from "@/utils/helpers";
 import SelectAddress from "@/views/SelectAddress.vue";
 
 const meta = {
@@ -66,9 +68,17 @@ useHead({
   ],
 });
 
+const route = useRoute();
+
 useColorMode().switchColorMode("dark");
 
+const networkStore = useNetworkStore();
 const { account, isConnectingWallet } = storeToRefs(useOnboardStore());
+const { selectedNetwork, version } = storeToRefs(networkStore);
+if (version.value !== "era") {
+  const newNetwork = findNetworkWithSameL1(selectedNetwork.value.l1Network, eraNetworks) || eraNetworks[0];
+  window.location.href = getNetworkUrl(newNetwork, route.fullPath);
+}
 
 const step = ref<"bridge" | "select-address">("bridge");
 
