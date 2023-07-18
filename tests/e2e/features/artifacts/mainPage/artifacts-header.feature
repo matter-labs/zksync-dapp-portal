@@ -4,13 +4,6 @@ Feature: Artifacts - UI
   Background:
     Given Connect Metamask extension with login action
 
-  @id1363 @loginPage
-  Scenario: Check artifacts on the Login page
-    Given I'm logged out
-    Then Element with "text" "Connect your Ethereum wallet to zkSync Portal" should be "visible"
-    Then Element with "testId" "network-switcher" should be "visible"
-    Then Element with "title" "zkSync Portal GitHub page" should be "visible"
-
   @id1534
   Scenario: Check artifacts on the Header
     Given I am on the Main page
@@ -65,5 +58,12 @@ Feature: Artifacts - UI
     Then Element with "text" "Copy" should be "visible"
     Then Element with "text" "Copy" should be "clickable"
     Then Element with "text" " Please transfer funds to this address using " should be "visible"
-    Then Element with "text" "zkSync Era∎ Goerli" should be "visible"
+    Then Element with "text" "zkSync Era Testnet" should be "visible"
     Then Element with "text" " to successfully receive them " should be "visible"
+
+  @id1363 @loginPage
+  Scenario: Check artifacts on the Login page
+    Given I'm logged out
+    Then Element with "text" "Connect your Ethereum wallet to zkSync Portal" should be "visible"
+    Then Element with "testId" "network-switcher" should be "visible"
+    Then Element with "title" "zkSync Portal GitHub page" should be "visible"

@@ -36,7 +36,7 @@ Feature: Withdraw
     When I click by text " Continue "
     Then Element with "text" "Confirm transaction" should be "visible"
     Then Element with "text" "Your Ethereum Goerli account" should be "visible"
-    Then Element with "text" "Your zkSync Era∎ Goerli account" should be "visible"
+    Then Element with "text" "Your zkSync Era Testnet account" should be "visible"
     Then Element with "partial class" "address-card-avatar" should be "visible"
     Then Modal card element with the "//*[text()='0xa439...046']" xpath should be "visible"
     Then Modal card element with the "//*[@alt='ETH token icon']" xpath should be "visible"
