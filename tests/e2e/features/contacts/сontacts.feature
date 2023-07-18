@@ -1,4 +1,4 @@
-@contacts @regression @contactsPage
+@contacts @regression @actions
 Feature: Contacts
 
   Background:
@@ -22,7 +22,7 @@ Feature: Contacts
     Given I am on the Main page
     Given I click by "text" with "Contacts" value
     Given I click by "text" with "Add contact" value
-    When I fill the "Name of the contact" input field on the Contacts page with "Test" text
+    When I fill the "Name of the contact" input field on the Contacts page with "Testo" text
     When I fill the "Ethereum address" input field on the Contacts page with "0x038fA18b8a7708112e086C777B2107042174E541" text
     When I click on the Save contact button
     Then Element with "text" "Send" should be "visible"
@@ -30,11 +30,11 @@ Feature: Contacts
     When I click the Send button modal on the Contacts page
     Then Current page have "/transaction/send?address=0x038fA18b8a7708112e086C777B2107042174E541" address
     Given I go to page "/contacts"
-    Then Element with "text" "Test" should be "visible"
-    Then Element with "text" "Test" should be "clickable"
+    Then Element with "text" "Testo" should be "visible"
+    Then Element with "text" "Testo" should be "clickable"
 #    @id1407
     When I go to page "/contacts"
-    When I click on the First saved contact within the Contacts page
+    When I click by text "Testo"
     Then Element with "text" "Edit" should be "visible"
     Then Element with "text" "Edit" should be "clickable"
     When I click on the Edit contact button

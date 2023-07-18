@@ -180,7 +180,7 @@ Given("I click on the Edit contact button", async function (this: ICustomWorld) 
 Given("I am on the Main page", async function (this: ICustomWorld) {
   const basePage = new BasePage(this);
   element = await basePage.returnElementByType("text", "Assets");
-  await expect(element).toBeVisible(config.defaultTimeout);
+  await expect(element).toBeVisible(config.increasedTimeout);
   await expect(this.page?.url()).toBe(config.BASE_URL + NetworkSwitcher.zkSyncEraGoerli);
 });
 
@@ -227,5 +227,48 @@ Then(
   async function (this: ICustomWorld, xpath: string, checkType: string) {
     mainPage = new MainPage(this);
     await mainPage.checkModalCardElement(xpath, checkType);
+  }
+);
+
+When(
+  "I click by the {string} text element on the Modal card",
+  config.stepTimeout,
+  async function (this: ICustomWorld, textElement: string) {
+    mainPage = new MainPage(this);
+    await mainPage.clickModalCardElement(textElement);
+  }
+);
+
+Then("I close modal card", config.stepTimeout, async function (this: ICustomWorld) {
+  const basePage = new BasePage(this);
+  const mainPage = new MainPage(this);
+  const modalCardElement = mainPage.modalCard;
+  element = modalCardElement + mainPage.closeBtnModalCard;
+
+  await basePage.click(element);
+});
+
+Then("I select the {string} network", config.stepTimeout, async function (this: ICustomWorld, networkName: string) {
+  const mainPage = new MainPage(this);
+
+  await mainPage.selectNetwork(networkName);
+});
+
+Then("New page has {string} address", config.stepTimeout, async function (this: ICustomWorld, url: string) {
+  mainPage = new MainPage(this);
+  helper = new Helper(this);
+  await this.page?.waitForTimeout(5000);
+  result = await helper.checkTabByUrl(url);
+  await expect(result).toBe(url);
+});
+
+Then(
+  "I hover the {string} element with {string} value",
+  config.stepTimeout,
+  async function (this: ICustomWorld, elementType: string, value: string) {
+    const basePage = new BasePage(this);
+    element = await basePage.returnElementByType(elementType, value);
+
+    await element.hover();
   }
 );

@@ -55,8 +55,8 @@ export const useOnboardStore = defineStore("onboard", () => {
       themeMode: selectedColorMode.value,
       explorerRecommendedWalletIds: [
         "c57ca95b47569778a828d19178114f4db188b89b763c899ba0be274e97267d96",
-        "38f5d18bd8522c244bdd70cb4a68e0e718865155811c043f052fb9f1c51de662",
         "971e689d0a5be527bac79629b4ee9b925e82208e5168b733496a09c0faed0709",
+        "38f5d18bd8522c244bdd70cb4a68e0e718865155811c043f052fb9f1c51de662",
         "1aa28414c95f5024133faf5766d376bb9c853c280d158cd3e22dc2b7b0a95a2d",
         "7674bb4e353bf52886768a3ddc2a4562ce2f4191c80831291218ebd90f5f5e26",
       ],

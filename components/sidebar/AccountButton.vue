@@ -1,5 +1,5 @@
 <template>
-  <Menu as="div" class="account-button-container">
+  <Menu as="div" class="account-button-container" data-testid="account-dropdown">
     <ModalNetworkChange v-model:opened="networkChangeModalOpened" />
     <ModalViewOnExplorer v-model:opened="viewOnExplorerModalOpened" />
 

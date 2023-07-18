@@ -71,11 +71,6 @@ export const useDestinationsStore = defineStore("destinations", () => {
       label: "ZigZag",
       iconUrl: "/img/zigzag.png",
     },
-    syncswap: {
-      key: "syncswap",
-      label: "SyncSwap",
-      iconUrl: "/img/syncswap.svg",
-    },
   }));
 
   return {

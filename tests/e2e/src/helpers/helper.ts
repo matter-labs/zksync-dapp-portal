@@ -17,7 +17,7 @@ const key = Buffer.from(wallet.secret, "hex"); // crypto.randomBytes(32);
 const iv = Buffer.from(wallet.salt, "hex"); //crypto.randomBytes(16);
 
 let result: any;
-let depositTag: boolean;
+export let depositTag: boolean;
 let withdrawTag: boolean;
 let transferTag: boolean;
 let authorizedTag: boolean;
@@ -109,7 +109,6 @@ export class Helper {
       const image: any = await this.world.page?.screenshot({ path: tracesDir + this.world.testName + ".png" });
       return image;
     } else if (result.status === Status.PASSED) {
-      console.log(process.cwd());
       console.log("======== " + result.status + ": " + this.world.testName);
     } else if (result.status === Status.SKIPPED) {
       console.log("======== " + result.status + ": " + this.world.testName);
@@ -141,6 +140,7 @@ export class Helper {
       }
     }
   }
+
   async getBalanceETH(walletAddress: string, layer: string) {
     let network: any;
     let provider: any;
