@@ -86,7 +86,7 @@
         <CommonAlert v-if="!enoughBalanceToCoverFee" class="mt-1" variant="error" :icon="ExclamationTriangleIcon">
           <p>
             Insufficient <span class="font-medium">{{ feeToken?.symbol }}</span> balance on
-            {{ destinations.ethereum.label }} to cover the fee
+            <span class="font-medium">{{ destinations.ethereum.label }}</span> to cover the fee
           </p>
         </CommonAlert>
       </transition>

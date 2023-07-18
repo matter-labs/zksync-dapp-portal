@@ -21,29 +21,13 @@
           <template #default>
             <CommonButtonLineBodyInfo class="text-left">
               <template #label>{{ selectedNetwork.name }} </template>
-              <template #underline>Selected network</template>
+              <template #underline>Bridge network</template>
             </CommonButtonLineBodyInfo>
           </template>
           <template #right>
             <ChevronDownIcon class="mr-2 h-5 w-5" aria-hidden="true" />
           </template>
         </CommonButtonLineWithImg>
-        <!-- <CommonButtonLineWithImg @click="viewOnExplorerModalOpened = true">
-          <template #image>
-            <Squares2X2Icon class="account-modal-icon" />
-          </template>
-          <template #default>
-            <div class="text-left">View account on Explorer</div>
-          </template>
-        </CommonButtonLineWithImg>
-        <CommonButtonLineWithImg @click="logout">
-          <template #image>
-            <PowerIcon class="account-modal-icon" />
-          </template>
-          <template #default>
-            <div class="text-left">Logout</div>
-          </template>
-        </CommonButtonLineWithImg> -->
       </CommonCardWithLineButtons>
       <CommonButtonGroup class="mt-4">
         <CommonButton @click="viewOnExplorerModalOpened = true">

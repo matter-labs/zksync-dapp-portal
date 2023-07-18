@@ -1,5 +1,5 @@
 <template>
-  <AddressCard as="div" :name="addressCard.name" :address="addressCard.address" :icon="addressCard.icon">
+  <AddressCard as="div" :name="addressCard.name" :address="addressCard.address" :icon="icon ?? addressCard.icon">
     <template #address-icon v-if="destination">
       <img v-tooltip="tooltip" :src="destination!.iconUrl" :alt="destination!.label" />
     </template>
@@ -13,7 +13,7 @@ import { ClockIcon, UserIcon } from "@heroicons/vue/24/outline";
 import { storeToRefs } from "pinia";
 
 import type { TransactionDestination } from "@/store/destinations";
-import type { PropType } from "vue";
+import type { Component, PropType } from "vue";
 
 import { useContactsStore } from "@/store/contacts";
 import { useOnboardStore } from "@/store/onboard";
@@ -29,6 +29,9 @@ const props = defineProps({
   },
   tooltip: {
     type: String,
+  },
+  icon: {
+    type: [String, Object, Function] as PropType<string | Component>,
   },
 });
 

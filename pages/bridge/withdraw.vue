@@ -11,6 +11,7 @@
           <AddressCardParsed
             as="button"
             type="button"
+            :icon="PencilIcon"
             :address="address"
             :destination="destinations.ethereum"
             :tooltip="`Withdraw to ${destinations.ethereum.label}`"
@@ -23,7 +24,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ArrowDownIcon } from "@heroicons/vue/24/outline";
+import { ArrowDownIcon, PencilIcon } from "@heroicons/vue/24/outline";
 import { storeToRefs } from "pinia";
 
 import IconsEra from "@/components/icons/Era.vue";

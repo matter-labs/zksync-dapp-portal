@@ -182,7 +182,7 @@ const signAccountActivation = () => {
 
 <style lang="scss" scoped>
 .transaction-footer {
-  @apply sticky bottom-0 z-[2] mt-auto flex flex-col items-center bg-gray bg-opacity-60 pb-2 pt-4 backdrop-blur-sm dark:bg-neutral-950;
+  @apply sticky bottom-0 z-10 mt-auto flex flex-col items-center bg-gray bg-opacity-60 pb-2 pt-4 backdrop-blur-sm dark:bg-neutral-950;
 
   .transaction-footer-row {
     @apply flex w-full flex-col items-center;
