@@ -31,7 +31,7 @@ filePaths.forEach((filePath) => {
     $('meta[name="description"]').attr("content", meta.description);
     $('meta[property="og:description"]').attr("content", meta.description);
     $('meta[property="og:image:alt"]').attr("content", meta.previewImg.alt);
-    $('meta[property="og:image"]').attr("content", meta.previewImg.alt);
+    $('meta[property="og:image"]').attr("content", meta.previewImg.src);
 
     // Write the changes to the file
     fs.writeFile(filePath, $.html(), "utf8", function (err: any) {
