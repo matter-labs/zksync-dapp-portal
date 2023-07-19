@@ -193,7 +193,7 @@ const tokenBalance = computed<BigNumberish | undefined>(() => {
 });
 const selectedTokenZeroBalance = computed(() => {
   if (!tokenBalance.value) {
-    return undefined;
+    return true;
   }
   return BigNumber.from(tokenBalance.value).isZero();
 });
@@ -310,6 +310,7 @@ const transaction = computed<ConfirmationModalTransaction | undefined>(() => {
 });
 
 const estimate = async () => {
+  // estimation fails when token balance is 0
   if (!account.value.address || !transaction.value?.to || !selectedToken.value || selectedTokenZeroBalance.value) {
     return;
   }
