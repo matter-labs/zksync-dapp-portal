@@ -1,18 +1,4 @@
 <template>
-  <Head>
-    <Title>{{ meta.title }}</Title>
-    <Meta name="og:title" :content="meta.title" />
-    <Meta name="og:site_name" :content="meta.title" />
-    <Meta name="description" :content="meta.description" />
-    <Meta name="og:description" :content="meta.description" />
-
-    <Meta property="og:image:type" content="image/jpeg" />
-    <Meta property="og:image:width" content="1200" />
-    <Meta property="og:image:height" content="630" />
-    <Meta property="og:image:alt" content="zkSync Bridge" />
-    <Meta property="og:image" content="https://portal.zksync.io/preview-bridge.jpg" />
-  </Head>
-
   <ModalNetworkChangedWarning v-if="!isConnectingWallet" />
   <ModalWalletWarning />
 
@@ -70,12 +56,6 @@ import { useOnboardStore } from "@/store/onboard";
 import { checksumAddress } from "@/utils/formatters";
 import { findNetworkWithSameL1, getNetworkUrl } from "@/utils/helpers";
 import SelectAddress from "@/views/SelectAddress.vue";
-
-const meta = {
-  title: "zkSync Era Bridge | Transfer funds between zkSync Era Network and Ethereum Mainnet",
-  description:
-    "With the zkSync Era Bridge you can easily transfer funds between Ethereum Mainnet and zkSync Era Network. Enjoy faster, cheaper and more efficient transactions with the future proof zkEVM scaling Ethereum's security and values.",
-};
 
 const route = useRoute();
 

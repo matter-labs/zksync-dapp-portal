@@ -1,18 +1,4 @@
 <template>
-  <Head>
-    <Title>{{ meta.title }}</Title>
-    <Meta name="og:title" :content="meta.title" />
-    <Meta name="og:site_name" :content="meta.title" />
-    <Meta name="description" :content="meta.description" />
-    <Meta name="og:description" :content="meta.description" />
-
-    <Meta property="og:image:type" content="image/jpeg" />
-    <Meta property="og:image:width" content="1200" />
-    <Meta property="og:image:height" content="630" />
-    <Meta property="og:image:alt" content="zkSync Portal" />
-    <Meta property="og:image" content="https://portal.zksync.io/preview.jpg" />
-  </Head>
-
   <div class="error-layout">
     <Header />
     <div class="error-info-container">
@@ -26,15 +12,6 @@
 <script lang="ts">
 export default {
   props: ["error"],
-  data() {
-    return {
-      meta: {
-        title: "zkSync Portal | Wallet, Bridge and Faucet",
-        description:
-          "zkSync Portal provides all the required tools for working with Era and Lite networks such as Wallet, Bridge & Faucet functionality.",
-      },
-    };
-  },
 };
 </script>
 

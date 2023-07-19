@@ -7,7 +7,7 @@
     "dev": "nuxt dev",
     "test:unit": "vitest --environment jsdom",
     "test:unit:ci": "TZ=UTC-3 vitest --environment jsdom --run",
-    "generate": "nuxt generate",
+    "generate": "nuxt generate && ts-node scripts/updateBridgeMetaTags.ts",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
     "prepare": "husky install",
@@ -41,7 +41,9 @@
     "prettier": "^2.8.3",
     "prettier-plugin-tailwindcss": "^0.2.2",
     "tailwindcss": "^3.2.4",
-    "tailwindcss-themer": "^3.1.0"
+    "tailwindcss-themer": "^3.1.0",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.1.6"
   },
   "prettier": "@matterlabs/prettier-config",
   "lint-staged": {
@@ -68,6 +70,7 @@
     "@web3modal/ethereum": "^2.6.2",
     "@web3modal/html": "^2.6.2",
     "alchemy-sdk": "^2.8.1",
+    "cheerio": "^1.0.0-rc.12",
     "crypto-js": "^4.1.1",
     "date-fns": "^2.29.3",
     "dotenv": "^16.0.3",
