@@ -4,7 +4,7 @@ Feature: Navigation
   Background:
     Given Connect Metamask extension with login action
 
-  @id1546 @emptyWallet
+  @id1546 @emptyWallet @various
   Scenario: Check navigation for the Faucet page (empty wallet)
     Given I am on the Main page
     When I click by text " Get free test tokens "
