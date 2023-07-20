@@ -1,7 +1,9 @@
 export default defineNuxtPlugin(() => {
-  const url = window.location.origin;
-  if (url.includes("https://goerli.portal.zksync.io")) {
-    navigateTo("https://portal.zksync.io/?network=era-goerli", {
+  const currentUrl = new URL(window.location.href);
+  if (currentUrl.origin === "https://goerli.portal.zksync.io") {
+    const newUrl = new URL(currentUrl, "https://portal.zksync.io");
+    newUrl.searchParams.set("network", "era-goerli");
+    navigateTo(newUrl.href, {
       external: true,
     });
   }

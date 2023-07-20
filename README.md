@@ -7,6 +7,8 @@ zkSync Portal is a unique wallet dapp that brings the best of zkSync Era∎ and 
 
 Visit [portal.zksync.io](https://portal.zksync.io/) to use the latest version of zkSync Portal.
 
+You can also find zkSync Era Bridge on [bridge.zksync.io](https://bridge.zksync.io)
+
 ## Contributing
 All contributions are welcome! Feel free to make the codebase better and submit your pull request [here](https://github.com/matter-labs/dapp-portal/pulls).
 
@@ -17,14 +19,7 @@ All contributions are welcome! Feel free to make the codebase better and submit 
 Make sure to install the dependencies:
 
 ```bash
-# npm
 npm install
-
-# yarn
-yarn install
-
-# pnpm
-pnpm install
 ```
 
 ### Development Server

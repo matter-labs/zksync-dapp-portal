@@ -378,7 +378,7 @@ const transaction = computed<ConfirmationModalTransaction | undefined>(() => {
 });
 
 const estimate = async () => {
-  if (!transaction.value?.to || !selectedToken.value) {
+  if (!account.value.address || !transaction.value?.to || !selectedToken.value) {
     return;
   }
   await estimateFee(transaction.value.to, selectedToken.value.address);
