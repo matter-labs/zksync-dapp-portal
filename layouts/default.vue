@@ -1,6 +1,8 @@
 <template>
   <LoadersConnecting />
   <ModalNetworkChangedWarning v-if="!isConnectingWallet" />
+  <ModalConnectingWalletError />
+
   <LoginLayout v-if="!account.isConnected">
     <LoginPage />
   </LoginLayout>
