@@ -22,7 +22,7 @@ Feature: Artifacts - UI
     Then Modal card element with the "//*[text()='0x3e7676...D4b']" xpath should be "visible"
     Then Modal card element with the "//*[@class='token-balance-price']" xpath should be "visible"
     Then Modal card element with the "//*[text()='Approving allowance for deposit']" xpath should be "visible"
-    Then Modal card element with the "//*[@src='https://firebasestorage.googleapis.com/v0/b/token-library.appspot.com/o/eth.svg?alt=media&token=1985e3d8-3aa7-4d04-8839-565d4c341615']" xpath should be "visible"
+    Then Modal card element with the "//*[@src='https://firebasestorage.googleapis.com/v0/b/token-library.appspot.com/o/dai.svg?alt=media&token=1985e3d8-3aa7-4d04-8839-565d4c341615']" xpath should be "visible"
     Then Element with "partial text" " Allowance lets you safely authorize the deposit process to access a specific amount of your tokens. No funds will be deducted after signing, except for " should be "visible"
     Then Element with "partial text" "Learn more" should be "visible"
     Then Element with "partial text" "Learn more" should be "clickable"
@@ -34,8 +34,8 @@ Feature: Artifacts - UI
     Given I am on the Main page
     Given I go to page "/transaction/zksync/era/deposit/?network=era-goerli"
     When I click by "testId" with "your-account" value
-    When I choose "ETH" as token and insert "0.0001" as amount
     When I confirm the network switching
+    When I choose "ETH" as token and insert "0.0001" as amount
     Then Element with "text" " Continue " should be "clickable"
     When I click by text " Continue "
     Then Element with "text" "Confirm transaction" should be "visible"

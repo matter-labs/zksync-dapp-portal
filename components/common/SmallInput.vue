@@ -1,20 +1,21 @@
 <template>
-  <component :is="as" class="small-input-container" :class="{ focused }">
+  <component :is="as" :class="{ focused }" class="small-input-container">
     <div v-if="$slots.icon" class="small-input-icon-container">
       <slot name="icon" />
     </div>
     <input
       ref="inputElement"
       v-model="inputted"
-      class="small-input-field"
+      :maxlength="maxLength"
       :placeholder="placeholder"
       :type="type"
-      :maxlength="maxLength"
+      class="small-input-field"
+      data-testid="search_tokens"
       spellcheck="false"
     />
-    <transition v-bind="TransitionOpacity()" mode="out-in">
+    <transition mode="out-in" v-bind="TransitionOpacity()">
       <button v-if="inputted" class="small-input-clear-button" type="button" @click="inputted = ''">
-        <XMarkIcon class="small-input-clear-button-icon" aria-hidden="true" />
+        <XMarkIcon aria-hidden="true" class="small-input-clear-button-icon" />
       </button>
       <slot v-else name="right" />
     </transition>
@@ -93,9 +94,11 @@ const inputted = computed({
       @apply block aspect-square h-full w-full;
     }
   }
+
   .small-input-field {
     @apply mx-2 w-full truncate border-none bg-transparent outline-none placeholder:text-gray-secondary dark:placeholder:text-neutral-400;
   }
+
   .small-input-clear-button {
     @apply block aspect-square h-6 w-6 self-end rounded-full bg-gray-300 p-1 transition-all dark:bg-neutral-800;
     &:hover {
