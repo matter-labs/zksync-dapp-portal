@@ -84,7 +84,8 @@ Feature: Artifacts - UI
     Then I click by "testId" with "token-dropDown" value
     Then I fill the "data-testid=search_tokens" input field by "0x3355df6D4c9C3035724Fd0e3914dE96A5a83aaf4"
     Then Element with "text" "USDC" should be "visible"
-    Then I fill the "data-testid=search_tokens" input field by "AAAA"
-   #Then Element with "partial text" "Make sure you are using correct zkSync network" should be "visible"
-    Then Element with "partial text" " No tokens was found for " should be "visible"
+    Then I fill the "data-testid=search_tokens" input field by "0xd35CCeEAD182dcee0F148EbaC9447DAas2c4D449c4"
+    #Then Element with "partial text" "No tokens was found for" should be "visible"
+    #Then Element with "partial text" "0xd35CCeEAD182dcee0F148EbaC9447DAas2c4D449c4" should be "visible"
+    Then Element with "partial text" "Make sure you are using correct zkSync network" should be "visible"
 
