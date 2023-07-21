@@ -1,6 +1,7 @@
 <template>
   <ModalNetworkChangedWarning v-if="!isConnectingWallet" />
   <ModalWalletWarning />
+  <ModalConnectingWalletError />
 
   <div class="bridge-layout dark">
     <Header />
@@ -51,7 +52,8 @@ import { storeToRefs } from "pinia";
 import useColorMode from "@/composables/useColorMode";
 
 import { useRoute } from "#app";
-import { eraNetworks, useNetworkStore } from "@/store/network";
+import { eraNetworks } from "@/data/networks";
+import { useNetworkStore } from "@/store/network";
 import { useOnboardStore } from "@/store/onboard";
 import { checksumAddress } from "@/utils/formatters";
 import { findNetworkWithSameL1, getNetworkUrl } from "@/utils/helpers";

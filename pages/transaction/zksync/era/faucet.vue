@@ -75,7 +75,8 @@ import useIsBeforeDate from "@/composables/useIsBeforeDate";
 import useTurnstile from "@/composables/useTurnstile";
 import useFaucet from "@/composables/zksync/era/useFaucet";
 
-import { eraNetworks, useNetworkStore } from "@/store/network";
+import { eraNetworks } from "@/data/networks";
+import { useNetworkStore } from "@/store/network";
 import { useOnboardStore } from "@/store/onboard";
 import { useEraProviderStore } from "@/store/zksync/era/provider";
 import { useEraTransfersHistoryStore } from "@/store/zksync/era/transfersHistory";
