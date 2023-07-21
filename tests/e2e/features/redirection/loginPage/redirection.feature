@@ -1,4 +1,4 @@
-@redirections @regression @loginPage @authorized @smoke
+@redirection @regression @loginPage @authorized @smoke
 
 Feature: External Redirection on the Login Page
 
