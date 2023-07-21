@@ -1,4 +1,4 @@
-@redirections @regression @mainPage @authorized @smoke
+@redirection @regression @mainPage @authorized @smoke
 
 Feature: External Redirection on the Main Page
 
