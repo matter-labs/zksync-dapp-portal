@@ -64,9 +64,3 @@ Feature: Withdraw
     Then Modal card element with the "//*[@src='/img/era.svg']" xpath should be "visible"
     Then Modal card element with the "//*[text()='Ethereum Mainnet']" xpath should be "visible"
     Then Modal card element with the "//*[@src='/img/ethereum.svg']" xpath should be "visible"
-
-
-
-
-
-
