@@ -63,10 +63,10 @@
         variant="primary-solid"
         @click="onboardStore.setCorrectNetwork"
       >
-        Change wallet network to {{ selectedEthereumNetwork.name }}
+        Change wallet network to {{ l1Network.name }}
       </CommonButton>
       <CommonButton v-else disabled variant="primary-solid">
-        Change network manually to {{ selectedEthereumNetwork.name }} in your {{ walletName }} wallet
+        Change network manually to {{ l1Network.name }} in your {{ walletName }} wallet
       </CommonButton>
     </div>
     <div v-else-if="buttonStep === 'authorize'" class="transaction-footer-row">
@@ -131,7 +131,7 @@ const liteAccountActivationStore = useLiteAccountActivationStore();
 
 const { isCorrectNetworkSet, switchingNetworkInProgress, switchingNetworkError, connectorName, walletName } =
   storeToRefs(onboardStore);
-const { selectedEthereumNetwork } = storeToRefs(useNetworkStore());
+const { l1Network } = storeToRefs(useNetworkStore());
 const { destinations } = storeToRefs(useDestinationsStore());
 const { isAuthorized, authorizationInProgress, authorizationError } = storeToRefs(walletLiteStore);
 const {

@@ -17,7 +17,7 @@
         <CommonButton
           as="a"
           target="_blank"
-          :href="`https://zkexport.netlify.app/export/account/transactions?address=${account.address}&network=${selectedEthereumNetwork.network}`"
+          :href="`https://zkexport.netlify.app/export/account/transactions?address=${account.address}&network=${l1Network.network}`"
         >
           <template #icon>
             <DocumentArrowDownIcon aria-hidden="true" />
@@ -75,7 +75,7 @@ import { useLiteTransactionsHistoryStore } from "@/store/zksync/lite/transaction
 const onboardStore = useOnboardStore();
 const liteTransactionsHistoryStore = useLiteTransactionsHistoryStore();
 const { account } = storeToRefs(onboardStore);
-const { selectedEthereumNetwork } = storeToRefs(useNetworkStore());
+const { l1Network } = storeToRefs(useNetworkStore());
 const { transactions, recentTransactionsRequestInProgress, recentTransactionsRequestError } =
   storeToRefs(liteTransactionsHistoryStore);
 const { destinations } = storeToRefs(useDestinationsStore());

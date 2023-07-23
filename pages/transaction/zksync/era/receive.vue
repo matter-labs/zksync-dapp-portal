@@ -22,7 +22,7 @@
         </template>
       </DestinationItem>
       <DestinationItem
-        v-if="selectedEthereumNetwork.network === 'goerli'"
+        v-if="l1Network.network === 'goerli'"
         label="Receive test tokens"
         as="RouterLink"
         :to="{ name: 'transaction-zksync-era-faucet' }"
@@ -73,7 +73,7 @@ import { useDestinationsStore } from "@/store/destinations";
 import { useNetworkStore } from "@/store/network";
 
 const { destinations } = storeToRefs(useDestinationsStore());
-const { selectedEthereumNetwork } = storeToRefs(useNetworkStore());
+const { l1Network } = storeToRefs(useNetworkStore());
 </script>
 
 <style lang="scss" scoped></style>

@@ -17,7 +17,7 @@ export const useEraWalletStore = defineStore("eraWallet", () => {
   const onboardStore = useOnboardStore();
   const eraProviderStore = useEraProviderStore();
   const eraTokensStore = useEraTokensStore();
-  const { selectedEthereumNetwork } = storeToRefs(useNetworkStore());
+  const { l1Network } = storeToRefs(useNetworkStore());
   const { eraNetwork } = storeToRefs(eraProviderStore);
   const { tokens } = storeToRefs(eraTokensStore);
   const { account, network } = storeToRefs(onboardStore);
@@ -37,9 +37,9 @@ export const useEraWalletStore = defineStore("eraWallet", () => {
   });
   const { execute: getL1Signer, reset: resetL1Signer } = usePromise(async () => {
     const walletNetworkId = network.value.chain?.id;
-    if (walletNetworkId !== selectedEthereumNetwork.value.id) {
+    if (walletNetworkId !== l1Network.value.id) {
       throw new Error(
-        `Incorrect wallet network selected: #${walletNetworkId} (expected: ${selectedEthereumNetwork.value.name} #${selectedEthereumNetwork.value.id})`
+        `Incorrect wallet network selected: #${walletNetworkId} (expected: ${l1Network.value.name} #${l1Network.value.id})`
       );
     }
 

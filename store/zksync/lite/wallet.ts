@@ -19,7 +19,7 @@ export const useLiteWalletStore = defineStore("liteWallet", () => {
   const liteTokensStore = useLiteTokensStore();
   const { tokens } = storeToRefs(liteTokensStore);
   const { account, network, walletName } = storeToRefs(onboardStore);
-  const { selectedEthereumNetwork } = storeToRefs(useNetworkStore());
+  const { l1Network } = storeToRefs(useNetworkStore());
 
   let wallet: Wallet | undefined = undefined;
   const isAuthorized = ref(false);
@@ -40,7 +40,7 @@ export const useLiteWalletStore = defineStore("liteWallet", () => {
       const provider = await liteProviderStore.requestProvider();
       if (!provider) throw new Error("Provider is not available");
       const walletNetworkId = network.value.chain?.id;
-      if (walletNetworkId !== selectedEthereumNetwork.value.id) {
+      if (walletNetworkId !== l1Network.value.id) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const web3Provider = new ethers.providers.Web3Provider(onboardStore.getPublicClient() as any, "any");
         const voidSigner = new VoidSigner(account.value.address!, web3Provider);
@@ -64,9 +64,9 @@ export const useLiteWalletStore = defineStore("liteWallet", () => {
     error: authorizationError,
   } = usePromise<Wallet>(async () => {
     const walletNetworkId = network.value.chain?.id;
-    if (walletNetworkId !== selectedEthereumNetwork.value.id) {
+    if (walletNetworkId !== l1Network.value.id) {
       throw new Error(
-        `Incorrect wallet network selected: #${walletNetworkId} (expected: ${selectedEthereumNetwork.value.name} #${selectedEthereumNetwork.value.id})`
+        `Incorrect wallet network selected: #${walletNetworkId} (expected: ${l1Network.value.name} #${l1Network.value.id})`
       );
     }
 

@@ -24,10 +24,8 @@ export const useNetworkStore = defineStore("network", () => {
   });
 
   const version = computed<Version>(() => getVersionByNetwork(selectedNetwork.value));
-  const selectedEthereumNetwork = computed<L1Network>(() => selectedNetwork.value.l1Network);
-  const l1BlockExplorerUrl = computed<string | undefined>(
-    () => selectedEthereumNetwork.value.blockExplorers?.default.url
-  );
+  const l1Network = computed<L1Network>(() => selectedNetwork.value.l1Network);
+  const l1BlockExplorerUrl = computed<string | undefined>(() => l1Network.value.blockExplorers?.default.url);
 
   const networkChangedWarningDisabled = useStorage<boolean>("networkChangedWarningDisabled", false);
   const lastSelectedNetworkKey = useStorage<string | undefined>("lastSelectedNetworkKey", undefined);
@@ -101,7 +99,7 @@ export const useNetworkStore = defineStore("network", () => {
     selectedNetwork,
 
     version,
-    selectedEthereumNetwork,
+    l1Network,
     l1BlockExplorerUrl,
 
     networkChangedWarningDisabled,

@@ -12,7 +12,7 @@ import { retry } from "@/utils/helpers";
 export const useEthereumBalanceStore = defineStore("ethereumBalance", () => {
   const onboardStore = useOnboardStore();
   const { account } = storeToRefs(onboardStore);
-  const { selectedEthereumNetwork } = storeToRefs(useNetworkStore());
+  const { l1Network } = storeToRefs(useNetworkStore());
 
   const {
     result: balance,
@@ -25,7 +25,7 @@ export const useEthereumBalanceStore = defineStore("ethereumBalance", () => {
       if (!account.value.address) throw new Error("Account is not available");
 
       const alchemy = new Alchemy({
-        network: selectedEthereumNetwork.value.id === 1 ? Network.ETH_MAINNET : Network.ETH_GOERLI,
+        network: l1Network.value.id === 1 ? Network.ETH_MAINNET : Network.ETH_GOERLI,
       });
       const balances: TokenBalance[] = [];
       const fetchBalances = async (pageKey?: string) => {

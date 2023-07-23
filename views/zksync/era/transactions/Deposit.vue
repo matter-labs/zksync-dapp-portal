@@ -95,8 +95,8 @@
           <p>
             Insufficient <span class="font-medium">{{ feeToken?.symbol }}</span> balance on
             {{ destinations.ethereum.label }} to cover the fee. We recommend having at least
-            <span class="font-medium">{{ recommendedBalance }} {{ feeToken?.symbol }}</span> on
-            {{ selectedEthereumNetwork.name }} for deposit.
+            <span class="font-medium">{{ recommendedBalance }} {{ feeToken?.symbol }}</span> on {{ l1Network.name }} for
+            deposit.
           </p>
         </CommonAlert>
       </transition>
@@ -190,7 +190,7 @@ const eraTokensStore = useEraTokensStore();
 const eraProviderStore = useEraProviderStore();
 const eraEthereumBalance = useEraEthereumBalanceStore();
 const { account } = storeToRefs(onboardStore);
-const { selectedEthereumNetwork } = storeToRefs(useNetworkStore());
+const { l1Network } = storeToRefs(useNetworkStore());
 const { destinations } = storeToRefs(useDestinationsStore());
 const { tokens, tokensRequestInProgress, tokensRequestError } = storeToRefs(eraTokensStore);
 const { balance, balanceInProgress, allBalancePricesLoaded, balanceError } = storeToRefs(eraEthereumBalance);
