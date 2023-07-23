@@ -5,6 +5,7 @@
 
     <CommonCardWithLineButtons>
       <DestinationItem
+        v-if="eraNetwork.l1Network"
         label="Official bridge"
         :icon-url="destinations.ethereum.iconUrl"
         as="RouterLink"
@@ -22,7 +23,7 @@
         </template>
       </DestinationItem>
       <DestinationItem
-        v-if="l1Network.network === 'goerli'"
+        v-if="eraNetwork.faucetUrl"
         label="Receive test tokens"
         as="RouterLink"
         :to="{ name: 'transaction-zksync-era-faucet' }"
@@ -70,10 +71,10 @@ import { ArrowUpRightIcon, QrCodeIcon } from "@heroicons/vue/24/outline";
 import { storeToRefs } from "pinia";
 
 import { useDestinationsStore } from "@/store/destinations";
-import { useNetworkStore } from "@/store/network";
+import { useEraProviderStore } from "@/store/zksync/era/provider";
 
 const { destinations } = storeToRefs(useDestinationsStore());
-const { l1Network } = storeToRefs(useNetworkStore());
+const { eraNetwork } = storeToRefs(useEraProviderStore());
 </script>
 
 <style lang="scss" scoped></style>

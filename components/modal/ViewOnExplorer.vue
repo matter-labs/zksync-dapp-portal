@@ -3,25 +3,43 @@
     <TypographyCategoryLabel>Selected network</TypographyCategoryLabel>
     <CommonCardWithLineButtons>
       <DestinationItem
-        v-bind="selectedNetwork?.destination"
+        v-if="selectedNetworkLink.link"
+        v-bind="selectedNetworkLink.destination"
         as="a"
         :icon="ArrowUpRightIcon"
-        :href="selectedNetwork?.link"
+        :href="selectedNetworkLink.link"
+        target="_blank"
+      />
+      <DestinationItem
+        v-else
+        disabled
+        as="button"
+        v-bind="selectedNetworkLink.destination"
+        description="No explorer available"
         target="_blank"
       />
     </CommonCardWithLineButtons>
 
     <TypographyCategoryLabel>Other networks</TypographyCategoryLabel>
     <CommonCardWithLineButtons>
-      <DestinationItem
-        v-for="item in otherNetworks"
-        v-bind="item.destination"
-        :key="item.destination.key"
-        as="a"
-        :icon="ArrowUpRightIcon"
-        :href="item.link"
-        target="_blank"
-      />
+      <template v-for="item in otherNetworks" :key="item.destination.key">
+        <DestinationItem
+          v-if="item.link"
+          v-bind="item.destination"
+          as="a"
+          :icon="ArrowUpRightIcon"
+          :href="item.link"
+          target="_blank"
+        />
+        <DestinationItem
+          v-else
+          disabled
+          as="button"
+          v-bind="item.destination"
+          description="No explorer available"
+          target="_blank"
+        />
+      </template>
     </CommonCardWithLineButtons>
   </CommonModal>
 </template>
@@ -44,37 +62,32 @@ const { destinations } = storeToRefs(useDestinationsStore());
 const { blockExplorerUrl: eraBlockExplorerUrl } = storeToRefs(useEraProviderStore());
 const { blockExplorerUrl: liteBlockExplorerUrl } = storeToRefs(useLiteProviderStore());
 
-const networks = computed(() => {
-  return [
-    {
-      destination: destinations.value.era,
-      link: `${eraBlockExplorerUrl.value}/address/${account.value.address}`,
-      version: "era",
-    },
-    {
-      destination: destinations.value.ethereum,
-      link: `${l1BlockExplorerUrl.value}/address/${account.value.address}`,
-    },
-    {
-      destination: destinations.value.zkSyncLite,
-      link: `${liteBlockExplorerUrl.value}/address/${account.value.address}`,
-      version: "lite",
-    },
-  ];
-});
-const selectedNetwork = computed(() => {
-  if (version.value === "era") {
-    return networks.value.find((network) => network.destination.key === "era");
-  } else if (version.value === "lite") {
-    return networks.value.find((network) => network.destination.key === "zkSyncLite");
+const eraNetworkLink = computed(() => ({
+  destination: destinations.value.era,
+  link: eraBlockExplorerUrl.value ? `${eraBlockExplorerUrl.value}/address/${account.value.address}` : undefined,
+}));
+const zkSyncLiteNetworkLink = computed(() => ({
+  destination: destinations.value.zkSyncLite,
+  link: liteBlockExplorerUrl.value ? `${liteBlockExplorerUrl.value}/address/${account.value.address}` : undefined,
+}));
+const l1NetworkLink = computed(() => ({
+  destination: destinations.value.ethereum,
+  link: l1BlockExplorerUrl.value ? `${l1BlockExplorerUrl.value}/address/${account.value.address}` : undefined,
+}));
+
+const selectedNetworkLink = computed(() => {
+  if (version.value === "lite") {
+    return zkSyncLiteNetworkLink.value;
   }
-  return undefined;
+  return eraNetworkLink.value;
 });
 const otherNetworks = computed(() => {
-  return networks.value.filter(
-    (network) =>
-      network.destination.key !== selectedNetwork.value?.destination.key &&
-      (!network.version || network.version === version.value)
-  );
+  const list = [l1NetworkLink.value];
+  if (version.value === "lite") {
+    list.push(eraNetworkLink.value);
+  } else {
+    list.push(zkSyncLiteNetworkLink.value);
+  }
+  return list;
 });
 </script>

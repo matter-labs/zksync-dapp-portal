@@ -18,7 +18,7 @@ const { public: env } = useRuntimeConfig();
 
 export const useOnboardStore = defineStore("onboard", () => {
   const { selectedColorMode } = useColorMode();
-  const { l1Network } = storeToRefs(useNetworkStore());
+  const { selectedNetwork, l1Network } = storeToRefs(useNetworkStore());
 
   const { publicClient } = configureChains(extendedChains, [
     w3mProvider({ projectId: env.walletConnectProjectID }),
@@ -119,9 +119,9 @@ export const useOnboardStore = defineStore("onboard", () => {
 
   const isCorrectNetworkSet = computed(() => {
     const walletNetworkId = network.value.chain?.id;
-    return walletNetworkId === l1Network.value.id;
+    return walletNetworkId === l1Network.value?.id;
   });
-  const switchNetworkById = async (chainId: number, networkName = l1Network.value.name as string) => {
+  const switchNetworkById = async (chainId: number, networkName?: string) => {
     try {
       await ethereumClient.switchNetwork({ chainId });
     } catch (err) {
@@ -137,6 +137,7 @@ export const useOnboardStore = defineStore("onboard", () => {
     execute: switchNetwork,
   } = usePromise(
     async () => {
+      if (!l1Network.value) throw new Error(`L1 network is not available on ${selectedNetwork.value.name}`);
       await switchNetworkById(l1Network.value.id);
     },
     { cache: false }
@@ -153,7 +154,7 @@ export const useOnboardStore = defineStore("onboard", () => {
     }
   );
 
-  const getWallet = async (chainId: number | undefined = l1Network.value.id) => {
+  const getWallet = async (chainId: number | undefined = l1Network.value?.id) => {
     const client = await getWalletClient(chainId ? { chainId } : undefined);
     if (!client) throw new Error("Wallet is not available");
 
@@ -177,9 +178,11 @@ export const useOnboardStore = defineStore("onboard", () => {
     setCorrectNetwork,
     switchNetworkById,
 
-    getEthereumProvider: () => publicClient({ chainId: l1Network.value.id }),
     getWallet,
-    getPublicClient: () => getPublicClient({ chainId: l1Network.value.id }),
+    getPublicClient: () => {
+      if (!l1Network.value) throw new Error(`L1 network is not available on ${selectedNetwork.value.name}`);
+      return getPublicClient({ chainId: l1Network.value?.id });
+    },
 
     subscribeOnAccountChange,
   };

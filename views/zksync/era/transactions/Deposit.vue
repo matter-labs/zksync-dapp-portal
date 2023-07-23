@@ -95,8 +95,8 @@
           <p>
             Insufficient <span class="font-medium">{{ feeToken?.symbol }}</span> balance on
             {{ destinations.ethereum.label }} to cover the fee. We recommend having at least
-            <span class="font-medium">{{ recommendedBalance }} {{ feeToken?.symbol }}</span> on {{ l1Network.name }} for
-            deposit.
+            <span class="font-medium">{{ recommendedBalance }} {{ feeToken?.symbol }}</span> on
+            {{ eraNetwork.l1Network?.name ?? "L1" }} for deposit.
           </p>
         </CommonAlert>
       </transition>
@@ -164,7 +164,6 @@ import type { PropType } from "vue";
 
 import { useRoute } from "#app";
 import { useDestinationsStore } from "@/store/destinations";
-import { useNetworkStore } from "@/store/network";
 import { useOnboardStore } from "@/store/onboard";
 import { useEraEthereumBalanceStore } from "@/store/zksync/era/ethereumBalance";
 import { useEraProviderStore } from "@/store/zksync/era/provider";
@@ -190,7 +189,7 @@ const eraTokensStore = useEraTokensStore();
 const eraProviderStore = useEraProviderStore();
 const eraEthereumBalance = useEraEthereumBalanceStore();
 const { account } = storeToRefs(onboardStore);
-const { l1Network } = storeToRefs(useNetworkStore());
+const { eraNetwork } = storeToRefs(eraProviderStore);
 const { destinations } = storeToRefs(useDestinationsStore());
 const { tokens, tokensRequestInProgress, tokensRequestError } = storeToRefs(eraTokensStore);
 const { balance, balanceInProgress, allBalancePricesLoaded, balanceError } = storeToRefs(eraEthereumBalance);

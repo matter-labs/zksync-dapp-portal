@@ -24,8 +24,8 @@ export const useNetworkStore = defineStore("network", () => {
   });
 
   const version = computed<Version>(() => getVersionByNetwork(selectedNetwork.value));
-  const l1Network = computed<L1Network>(() => selectedNetwork.value.l1Network);
-  const l1BlockExplorerUrl = computed<string | undefined>(() => l1Network.value.blockExplorers?.default.url);
+  const l1Network = computed<L1Network | undefined>(() => selectedNetwork.value.l1Network);
+  const l1BlockExplorerUrl = computed<string | undefined>(() => l1Network.value?.blockExplorers?.default.url);
 
   const networkChangedWarningDisabled = useStorage<boolean>("networkChangedWarningDisabled", false);
   const lastSelectedNetworkKey = useStorage<string | undefined>("lastSelectedNetworkKey", undefined);
@@ -70,8 +70,9 @@ export const useNetworkStore = defineStore("network", () => {
 
     const networkWithSameL1 = l2Networks.find(
       (network) =>
+        network.l1Network &&
         getVersionByNetwork(network) === versionFromRoute &&
-        selectedNetwork.value.l1Network.network === network.l1Network.network
+        l1Network.value?.network === network.l1Network.network
     );
     if (networkWithSameL1) {
       selectedNetworkKey.value = networkWithSameL1.key;

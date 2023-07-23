@@ -70,7 +70,7 @@ export const calculateTotalTokensPrice = (tokens: TokenAmount[]) => {
 };
 
 export const findNetworkWithSameL1 = (l1Network: L1Network, networks: L2Network[]) => {
-  return networks.find((network) => l1Network.network === network.l1Network.network);
+  return networks.find((network) => l1Network.network === network.l1Network?.network);
 };
 
 interface RetryOptions {

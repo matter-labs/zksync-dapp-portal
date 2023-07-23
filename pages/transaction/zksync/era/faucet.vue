@@ -1,5 +1,5 @@
 <template>
-  <FaucetModal :faucet-network="faucetNetwork" :status="status" @close="resetFaucet">
+  <FaucetModal v-if="faucetNetwork" :faucet-network="faucetNetwork" :status="status" @close="resetFaucet">
     <template #tokens>
       <div class="flex flex-wrap justify-center gap-1.5">
         <TokenBadge v-for="item in faucetTokens" v-bind="item" :key="item.token.symbol" />
@@ -36,10 +36,17 @@
     <div class="mt-5">
       <template v-if="isFaucetAvailable">
         <template v-if="!faucetAvailableOnCurrentNetwork">
-          <CommonButtonTopInfo>Switch to {{ faucetNetwork.name }} network to request test tokens</CommonButtonTopInfo>
-          <CommonButton as="button" variant="primary-solid" class="mx-auto" @click="changeNetwork">
-            Change network to {{ faucetNetwork.name }}
-          </CommonButton>
+          <template v-if="faucetNetwork">
+            <CommonButtonTopInfo>Switch to {{ faucetNetwork.name }} network to request test tokens</CommonButtonTopInfo>
+            <CommonButton as="button" variant="primary-solid" class="mx-auto" @click="changeNetwork">
+              Change network to {{ faucetNetwork.name }}
+            </CommonButton>
+          </template>
+          <template v-else>
+            <CommonButton as="button" variant="primary-solid" disabled class="mx-auto">
+              Faucet is not available on {{ eraNetwork.name }} network
+            </CommonButton>
+          </template>
         </template>
         <template v-else>
           <CommonButton
@@ -75,6 +82,8 @@ import useIsBeforeDate from "@/composables/useIsBeforeDate";
 import useTurnstile from "@/composables/useTurnstile";
 import useFaucet from "@/composables/zksync/era/useFaucet";
 
+import type { EraNetwork } from "@/data/networks";
+
 import { eraNetworks } from "@/data/networks";
 import { useNetworkStore } from "@/store/network";
 import { useOnboardStore } from "@/store/onboard";
@@ -92,11 +101,11 @@ const { eraNetwork } = storeToRefs(useEraProviderStore());
 
 const route = useRoute();
 
-const faucetNetwork = computed(() => {
-  if (!eraNetwork.value.faucetUrl) {
-    return eraNetworks.filter((network) => network.faucetUrl)[0];
+const faucetNetwork = computed<EraNetwork | undefined>(() => {
+  if (eraNetwork.value.faucetUrl) {
+    return eraNetwork.value;
   }
-  return eraNetwork.value;
+  return eraNetworks.filter((network) => network.faucetUrl)[0];
 });
 const faucetAvailableOnCurrentNetwork = computed(() => {
   if (!faucetNetwork.value) return false;
@@ -137,7 +146,7 @@ const {
   reset: resetFaucet,
 } = useFaucet(
   computed(() => account.value.address),
-  faucetNetwork
+  computed(() => faucetNetwork.value ?? eraNetwork.value)
 );
 const { isBefore } = useIsBeforeDate(faucetAvailableTime);
 const isFaucetAvailable = computed(() => true || !faucetAvailableTime.value || !isBefore.value);
