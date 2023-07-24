@@ -58,6 +58,12 @@ export class BasePage {
     await this.world.page?.locator(selector).first().click(config.increasedTimeout);
   }
 
+  async clickByPartialText(text: string) {
+    selector = `//*[contains(text(), '${text}')]`;
+    await this.world.page?.waitForSelector(selector);
+    await this.world.page?.locator(selector).first().click(config.increasedTimeout);
+  }
+
   async pressButton(buttonName: string) {
     await this.world.page?.keyboard.press(buttonName);
     await this.world.page?.keyboard.up(buttonName);

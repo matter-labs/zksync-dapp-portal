@@ -37,6 +37,11 @@ When("I click by text {string}", config.stepTimeout, async function (this: ICust
   await basePage.clickByText(text);
 });
 
+When("I click by partial text {string}", config.stepTimeout, async function (this: ICustomWorld, text: string) {
+  basePage = new BasePage(this);
+  await basePage.clickByPartialText(text);
+});
+
 When(
   "I click by {string} with {string} value",
   config.stepTimeout,

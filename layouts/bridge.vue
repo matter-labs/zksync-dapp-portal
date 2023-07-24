@@ -1,6 +1,7 @@
 <template>
   <ModalNetworkChangedWarning v-if="!isConnectingWallet" />
   <ModalWalletWarning />
+  <ModalConnectingWalletError />
 
   <div class="bridge-layout dark">
     <Header />
@@ -50,12 +51,36 @@ import { storeToRefs } from "pinia";
 
 import useColorMode from "@/composables/useColorMode";
 
-import { useRoute } from "#app";
-import { eraNetworks, useNetworkStore } from "@/store/network";
+import { useHead, useRoute } from "#app";
+import { bridge as bridgeMeta } from "@/data/meta";
+import { eraNetworks } from "@/data/networks";
+import { useNetworkStore } from "@/store/network";
 import { useOnboardStore } from "@/store/onboard";
 import { checksumAddress } from "@/utils/formatters";
 import { findNetworkWithSameL1, getNetworkUrl } from "@/utils/helpers";
 import SelectAddress from "@/views/SelectAddress.vue";
+
+useHead({
+  title: bridgeMeta.title,
+  meta: [
+    {
+      property: "og:title",
+      content: bridgeMeta.title,
+    },
+    {
+      property: "og:site_name",
+      content: bridgeMeta.title,
+    },
+    {
+      name: "description",
+      content: bridgeMeta.description,
+    },
+    {
+      property: "og:description",
+      content: bridgeMeta.description,
+    },
+  ],
+});
 
 const route = useRoute();
 

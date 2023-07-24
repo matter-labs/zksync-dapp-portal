@@ -1,3 +1,5 @@
+import { portal as portalMeta } from "./data/meta";
+
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   app: {
@@ -14,11 +16,11 @@ export default defineNuxtConfig({
       meta: [
         {
           property: "og:image",
-          content: "https://portal.zksync.io/preview.jpg",
+          content: portalMeta.previewImg.src,
         },
         {
           property: "og:image:alt",
-          content: "zkSync Portal",
+          content: portalMeta.previewImg.alt,
         },
         {
           property: "og:image:type",
@@ -45,12 +47,11 @@ export default defineNuxtConfig({
   ssr: false,
   pwa: {
     meta: {
-      name: "zkSync Portal | Wallet, Bridge and Faucet",
-      description:
-        "zkSync Portal provides all the required tools for working with Era and Lite networks such as Wallet, Bridge & Faucet functionality.",
+      name: portalMeta.title,
+      description: portalMeta.description,
     },
     manifest: {
-      name: "zkSync Portal | Wallet, Bridge and Faucet",
+      name: portalMeta.title,
       short_name: "Portal",
     },
   },

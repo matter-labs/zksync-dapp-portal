@@ -2,18 +2,22 @@
   <div>
     <div class="flex items-center justify-between">
       <h1 class="h1 p-0">Bridge</h1>
-
       <CommonButton v-if="!account.address" class="-my-1" variant="primary" @click="onboardStore.openModal">
         Connect wallet
       </CommonButton>
       <BridgeAccountButton v-else />
     </div>
-    <CommonTabs :modelValue="activeTab" :options="tabs" class="my-4" @update:modelValue="tabClicked" />
+    <CommonTabs :modelValue="activeTab" :options="tabs" class="my-4">
+      <template #tab="{ item }: { item: NavigationTab }">
+        <NuxtLink class="block h-full w-full" :to="{ name: item.routeName }" replace>{{ item.label }}</NuxtLink>
+      </template>
+    </CommonTabs>
   </div>
 </template>
 
 <script lang="ts">
-export const tabs: (TabsOption & { routeName: string })[] = [
+type NavigationTab = TabsOption & { routeName: string };
+export const tabs: NavigationTab[] = [
   {
     label: "Deposit",
     key: "deposit",
@@ -34,20 +38,13 @@ import { storeToRefs } from "pinia";
 
 import type { TabsOption } from "@/components/common/Tabs.vue";
 
-import { useRoute, useRouter } from "#app";
+import { useRoute } from "#app";
 import { useOnboardStore } from "@/store/onboard";
 
 const route = useRoute();
-const router = useRouter();
 
 const onboardStore = useOnboardStore();
 const { account } = storeToRefs(onboardStore);
 
 const activeTab = computed(() => tabs.find((tab) => tab.routeName === route.name)?.key);
-const tabClicked = (tabKey: string) => {
-  const tabRouteName = tabs.find((tab) => tab.key === tabKey)?.routeName;
-  if (tabRouteName) {
-    router.replace({ name: tabRouteName, query: route.query });
-  }
-};
 </script>

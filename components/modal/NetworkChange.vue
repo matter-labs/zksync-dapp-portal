@@ -48,12 +48,13 @@ import { storeToRefs } from "pinia";
 import IconsEra from "@/components/icons/Era.vue";
 import IconsZkSyncLite from "@/components/icons/zkSyncLite.vue";
 
-import type { L2Network } from "@/store/network";
+import type { L2Network } from "@/data/networks";
 import type { Version } from "@/store/preferences";
 import type { PropType } from "vue";
 
 import { useRoute, useRouter } from "#app";
-import { eraNetworks, useNetworkStore, zkSyncLiteNetworks } from "@/store/network";
+import { eraNetworks, zkSyncLiteNetworks } from "@/data/networks";
+import { useNetworkStore } from "@/store/network";
 import { getNetworkUrl, replaceVersionInString } from "@/utils/helpers";
 import { getVersionByNetwork } from "@/utils/helpers";
 

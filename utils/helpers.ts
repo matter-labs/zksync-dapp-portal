@@ -1,11 +1,11 @@
 import { BigNumber } from "ethers";
 
-import type { L1Network, L2Network } from "@/store/network";
+import type { L1Network, L2Network } from "@/data/networks";
 import type { Version } from "@/store/preferences";
 import type { TokenAmount } from "@/types";
 import type { BigNumberish } from "ethers";
 
-import { eraNetworks, zkSyncLiteNetworks } from "@/store/network";
+import { eraNetworks, zkSyncLiteNetworks } from "@/data/networks";
 import { parseTokenAmount } from "@/utils/formatters";
 
 export function generateAvatarColors(address: string) {
