@@ -86,5 +86,5 @@ Feature: Artifacts - UI
     Then Element with "text" "USDC" should be "visible"
     Then I fill the "data-testid=search_tokens" input field by "0xd35CCeEAD182dcee0F148EbaC9447DAas2c4D449c4"
     Then Element with "partial text" "Make sure you are using correct zkSync network" should be "visible"
-    Then Element with "xpath" "//text()[contains(., 'No tokens was found for ')]" should be "visible"
-
+    Then Element with "xpath" "//*[@class='modal-card']//*[contains(., ' No tokens ')]" should be "visible"
+    Then Element with "xpath" "//*[@class='modal-card']//*[contains(., '0xd35CCeEAD182dcee0F148EbaC9447DAas2c4D449c4')]" should be "visible"
