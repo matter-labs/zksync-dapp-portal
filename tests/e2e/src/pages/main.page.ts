@@ -29,6 +29,10 @@ export class MainPage extends BasePage {
     return "//*[@class='modal-card']";
   }
 
+  get menuElement() {
+    return "//*[@class='menu-options']";
+  }
+
   get avatarModalCard() {
     return '//*[contains(@class, "address-card-avatar")]';
   }
@@ -169,6 +173,19 @@ export class MainPage extends BasePage {
       selector = selectorValue;
     }
     await this.click(this.modalCard + selector);
+  }
+
+  async clickMenuElement(selectorValue: string) {
+    let selector: string;
+    const regex = /\/\/\*/g;
+    const matchXpath = selectorValue.match(regex);
+
+    if (!matchXpath) {
+      selector = `//*[contains(text(),'${selectorValue}')]`;
+    } else {
+      selector = selectorValue;
+    }
+    await this.click(this.menuElement + selector);
   }
 
   async selectNetwork(networkName: string) {
