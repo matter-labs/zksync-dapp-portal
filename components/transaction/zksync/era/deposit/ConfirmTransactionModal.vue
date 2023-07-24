@@ -78,7 +78,8 @@
       <CommonCardWithLineButtons v-if="transaction">
         <TransactionLineItem
           :icon="transactionReceiptIcon"
-          :transaction-url="`${l1BlockExplorerUrl}/tx/${ethTransactionHash}`"
+          :explorer-url="l1BlockExplorerUrl"
+          :transaction-hash="ethTransactionHash"
         >
           <template #top-left>Deposit</template>
           <template #top-right>

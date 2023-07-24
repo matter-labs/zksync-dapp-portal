@@ -27,11 +27,13 @@
         <p>
           Your funds will be available at the
           <a
+            v-if="blockExplorerUrl"
             :href="`${blockExplorerUrl}/address/${mainTransaction?.to}`"
             target="_blank"
             class="font-medium underline underline-offset-2"
             >destination address</a
           >
+          <span v-else>destination address</span>
           after the transaction is committed on the <span class="font-medium">{{ destinations.zkSyncLite.label }}</span
           >. You are free to close this page.
         </p>
@@ -44,11 +46,13 @@
         <p>
           Your funds should now be available at the
           <a
+            v-if="blockExplorerUrl"
             :href="`${blockExplorerUrl}/address/${mainTransaction?.to}`"
             target="_blank"
             class="font-medium underline underline-offset-2"
             >destination address</a
-          >.
+          >
+          <span v-else>destination address</span>.
         </p>
       </CommonAlert>
 
