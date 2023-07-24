@@ -78,7 +78,7 @@ Feature: Artifacts - UI
       | ZZ        | 0x1ab721...184 | https://firebasestorage.googleapis.com/v0/b/token-library.appspot.com/o/zz.png?alt=media&token=dc866379-92a9-4d85-9173-dad0076046b1                                                                                                              |
 
   @id1436 @tokens @mainnet
-  Scenario:  Check search functionality for Choose Tokens
+  Scenario:  Check search functionality for Choose Tokens (with results)
     Given I go to page "/transaction/zksync/era/deposit/?network=era-mainnet"
     When I click by "testId" with "your-account" value
     Then I click by "testId" with "token-dropDown" value
@@ -87,7 +87,7 @@ Feature: Artifacts - UI
 
 
   @id1564 @tokens @mainnet
-  Scenario:  Check search functionality for Choose Tokens
+  Scenario:  Check search functionality for Choose Tokens (no results)
     Given I go to page "/transaction/zksync/era/deposit/?network=era-mainnet"
     When I click by "testId" with "your-account" value
     Then I click by "testId" with "token-dropDown" value
