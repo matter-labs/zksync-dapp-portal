@@ -9,7 +9,9 @@ import useColorMode from "@/composables/useColorMode";
 import useObservable from "@/composables/useObservable";
 
 import { useRuntimeConfig } from "#imports";
-import { l1Networks, useNetworkStore } from "@/store/network";
+import { l1Networks } from "@/data/networks";
+import { confirmedSupportedWallets, disabledWallets } from "@/data/wallets";
+import { useNetworkStore } from "@/store/network";
 
 const extendedChains = [...Object.values(l1Networks), zkSync, zkSyncTestnet];
 const { public: env } = useRuntimeConfig();
@@ -34,8 +36,16 @@ export const useOnboardStore = defineStore("onboard", () => {
 
   const account = ref(ethereumClient.getAccount());
   const network = ref(ethereumClient.getNetwork());
+  const connectingWalletError = ref<string | undefined>();
   const connectorName = ref(wagmiClient.connector?.name);
   const walletName = ref<string | undefined>();
+  const walletNotSupported = computed(() => {
+    if (!walletName.value || !wagmiClient.connector) return false;
+    const isWalletNotSupported = !confirmedSupportedWallets.find(
+      (wallet) => wallet.walletName === walletName.value && wallet.type === wagmiClient.connector?.id
+    );
+    return isWalletNotSupported;
+  });
   const identifyWalletName = async () => {
     const provider = await wagmiClient.connector?.getProvider();
     const name = provider?.session?.peer?.metadata?.name;
@@ -44,6 +54,13 @@ export const useOnboardStore = defineStore("onboard", () => {
       walletName.value = wagmiClient.connector?.name.replace(/ Wallet$/, "").trim();
     } else {
       walletName.value = name?.replace(/ Wallet$/, "").trim();
+    }
+
+    if (walletName.value && wagmiClient.connector) {
+      const isWalletDisabled = !!disabledWallets.find(
+        (wallet) => wallet.walletName === walletName.value && wallet.type === wagmiClient.connector?.id
+      );
+      if (isWalletDisabled) throw new Error(`Unfortunately ${walletName.value} wallet is not supported at the moment!`);
     }
   };
   identifyWalletName();
@@ -60,6 +77,7 @@ export const useOnboardStore = defineStore("onboard", () => {
         "1aa28414c95f5024133faf5766d376bb9c853c280d158cd3e22dc2b7b0a95a2d",
         "7674bb4e353bf52886768a3ddc2a4562ce2f4191c80831291218ebd90f5f5e26",
       ],
+      explorerExcludedWalletIds: ["bc949c5d968ae81310268bf9193f9c9fb7bb4e1283e1284af8f2bd4992535fd6"],
 
       termsOfServiceUrl: "https://zksync.io/terms",
       privacyPolicyUrl: "https://zksync.io/privacy",
@@ -73,17 +91,20 @@ export const useOnboardStore = defineStore("onboard", () => {
     if (updatedAccount.status === "connecting" && !updatedAccount.connector) {
       return;
     }
-    account.value = updatedAccount;
-    connectorName.value = wagmiClient.connector?.name;
-    identifyWalletName();
+    try {
+      await identifyWalletName();
+      account.value = updatedAccount;
+      connectorName.value = wagmiClient.connector?.name;
+    } catch (err) {
+      disconnect();
+      const error = formatError(err as Error);
+      if (error) {
+        connectingWalletError.value = error.message;
+      }
+    }
   });
   ethereumClient.watchNetwork((updatedNetwork) => {
     network.value = updatedNetwork;
-  });
-  web3modal.subscribeModal((state) => {
-    if (!state.open && !account.value.isConnected) {
-      disconnect();
-    }
   });
   watch(selectedColorMode, (colorMode) => {
     web3modal.setTheme({
@@ -143,8 +164,10 @@ export const useOnboardStore = defineStore("onboard", () => {
     account: computed(() => account.value),
     network: computed(() => network.value),
     isConnectingWallet: computed(() => account.value.isReconnecting || account.value.isConnecting),
+    connectingWalletError,
     connectorName,
     walletName,
+    walletNotSupported,
     openModal,
     disconnect,
 
