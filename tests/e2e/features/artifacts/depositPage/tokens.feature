@@ -77,14 +77,22 @@ Feature: Artifacts - UI
       | BEL       | 0xB83CFB...2D9 | https://firebasestorage.googleapis.com/v0/b/token-library.appspot.com/o/bel.png?alt=media&token=f8bbcfc2-6037-4626-870b-6a3b6630554b                                                                                                             |
       | ZZ        | 0x1ab721...184 | https://firebasestorage.googleapis.com/v0/b/token-library.appspot.com/o/zz.png?alt=media&token=dc866379-92a9-4d85-9173-dad0076046b1                                                                                                              |
 
-  @id1564 @id1436 @tokens @mainnet
+  @id1436 @tokens @mainnet
   Scenario:  Check search functionality for Choose Tokens
     Given I go to page "/transaction/zksync/era/deposit/?network=era-mainnet"
     When I click by "testId" with "your-account" value
     Then I click by "testId" with "token-dropDown" value
-    Then I fill the "data-testid=search_tokens" input field by "0x3355df6D4c9C3035724Fd0e3914dE96A5a83aaf4"
+    Then I fill the Tokens Search Field input by "0x3355df6D4c9C3035724Fd0e3914dE96A5a83aaf4"
     Then Element with "text" "USDC" should be "visible"
-    Then I fill the "data-testid=search_tokens" input field by "0xd35CCeEAD182dcee0F148EbaC9447DAas2c4D449c4"
+
+
+  @id1564 @tokens @mainnet
+  Scenario:  Check search functionality for Choose Tokens
+    Given I go to page "/transaction/zksync/era/deposit/?network=era-mainnet"
+    When I click by "testId" with "your-account" value
+    Then I click by "testId" with "token-dropDown" value
+    Then I fill the Tokens Search Field input by "0x3355df6D4c9C30357240e3914dE96A5a83aaf4"
     Then Element with "partial text" "Make sure you are using correct zkSync network" should be "visible"
-    Then Element with "xpath" "//*[@class='modal-card']//*[contains(., ' No tokens ')]" should be "visible"
-    Then Element with "xpath" "//*[@class='modal-card']//*[contains(., '0xd35CCeEAD182dcee0F148EbaC9447DAas2c4D449c4')]" should be "visible"
+    Then Tokens search window has next 'No tokens was found for' text visible
+    Then Tokens search window has next '0x3355df6D4c9C30357240e3914dE96A5a83aaf4' text visible
+    

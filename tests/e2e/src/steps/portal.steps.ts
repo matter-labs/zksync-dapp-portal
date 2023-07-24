@@ -169,6 +169,12 @@ Given(
   }
 );
 
+Given("I fill the Tokens Search Field input by {string}", async function (this: ICustomWorld, text: string) {
+  mainPage = new MainPage(this);
+  const inputField = "data-testid=search_tokens";
+  await mainPage.fillText(inputField, text);
+});
+
 Given("I click on the Copy button", async function (this: ICustomWorld) {
   await this.page?.locator("//button[@class='copy-button']").last().click();
 });
@@ -275,5 +281,15 @@ Then(
     element = await basePage.returnElementByType(elementType, value);
 
     await element.hover();
+  }
+);
+
+Then(
+  "Tokens search window has next {string} text visible",
+  config.stepTimeout,
+  async function (this: ICustomWorld, text: string) {
+    basePage = new BasePage(this);
+    const element = `//*[@class='modal-card']//*[contains(., '${text}')]`;
+    await basePage.verifyElement("xpath", element, "visible");
   }
 );
