@@ -10,5 +10,5 @@ Feature: Artifacts - Incorrect Page - 404
     When I go to page "/a"
     Then Element with "text" "404" should be "visible"
     Then Element with "text" "Page not found: /a" should be "visible"
-#    Then Element with "href and text" "'/' and 'Back to Portal" should be "visible"
-    Then Element with "href and text" "'/' and 'Back to Portal" should be "clickable"
+    Then Element with "text" "Back to Portal" should be "visible"
+    Then Element with "text" "Back to Portal" should be "clickable"

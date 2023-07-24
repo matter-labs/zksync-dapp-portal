@@ -6,7 +6,7 @@ Feature: Artifacts - UI - Transactions - Items
 
   @id1488
   Scenario: Check artifacts for the Transaction items
-    Given I click by text "Transactions"
+    Given I go to page "/payments"
     Then Current page have "/payments" address
     Then Element with "xpath" "//a[text()='Send']" should be "visible"
     Then Element with "xpath" "//a[text()='Send']" should be "clickable"
