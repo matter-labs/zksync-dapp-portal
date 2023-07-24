@@ -1,4 +1,4 @@
-@artifacts @regression @transactionsItems @various
+@artifacts @regression @transactionsItems
 Feature: Artifacts - UI - Transactions - Items
 
   Background:
