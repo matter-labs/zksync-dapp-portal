@@ -169,6 +169,12 @@ export class BasePage {
     return await element;
   }
 
+  async getElementByPartialSrc(src: string) {
+    element = await this.world.page?.locator(`//*[contains(@src, '${src}')]`).first();
+    await element.scrollIntoViewIfNeeded();
+    return await element;
+  }
+
   async getElementByAriaLabel(ariaLabel: string) {
     element = await this.world.page?.locator(`//*[@aria-label='${ariaLabel}']`).first();
     await element.scrollIntoViewIfNeeded();
@@ -234,6 +240,8 @@ export class BasePage {
       element = await this.getElementByXpath(value);
     } else if (elementType === "src") {
       element = await this.getElementBySrc(value);
+    } else if (elementType === "partial src") {
+      element = await this.getElementByPartialSrc(value);
     } else if (elementType === "aria-label") {
       element = await this.getElementByAriaLabel(value);
     }

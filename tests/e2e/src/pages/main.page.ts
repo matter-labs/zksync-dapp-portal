@@ -188,7 +188,7 @@ export class MainPage extends BasePage {
   }
 
   async getTypeOfTransactionsElement() {
-    const href = "https://goerli.explorer.zksync.io/tx";
+    const href = Routes.txBlockExplorer;
     const transactionTypes = ["Receive", "Withdraw", "Send"];
 
     for (let i = 0; i < transactionTypes.length; i++) {
@@ -201,5 +201,5 @@ export class MainPage extends BasePage {
       }
     }
     return result;
-}
+  }
 }
