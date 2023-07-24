@@ -69,6 +69,15 @@ export const eraNetworks: EraNetwork[] = [
     l1Network: l1Networks.sepolia,
     visible: false,
   },
+  {
+    id: 280,
+    key: "era-test",
+    name: "zkSync Era (Temp test)",
+    shortName: "Temp test",
+    rpcUrl: "https://testnet.era.zksync.dev",
+    blockExplorerApi: "https://block-explorer-api.testnets.zksync.dev",
+    visible: true,
+  },
 ];
 
 export type ZkSyncLiteNetwork = L2Network & { network: Network };
