@@ -15,7 +15,7 @@
         v-bind="destinations.era"
         as="RouterLink"
         :to="{ name: 'transaction-zksync-era-send', query: $route.query }"
-        description="Send inside zkSync Era∎ network"
+        :description="`Send inside ${destinations.era.label} network`"
       />
       <DestinationItem
         v-if="eraNetwork.l1Network"
@@ -25,6 +25,7 @@
         description="Withdraw to Ethereum"
       />
       <DestinationItem
+        v-if="eraNetwork.l1Network"
         v-bind="destinations.zkSyncLite"
         as="RouterLink"
         :to="{ name: 'transaction-zksync-era-send-lite', query: $route.query }"
@@ -32,41 +33,43 @@
       />
     </CommonCardWithLineButtons>
 
-    <TypographyCategoryLabel>Send to exchange</TypographyCategoryLabel>
-    <CommonCardWithLineButtons>
-      <DestinationItem
-        v-if="eraNetwork.l1Network"
-        label="Official bridge"
-        :icon-url="destinations.ethereum.iconUrl"
-        description="Send to exchange using official bridge"
-        @click="openedModal = 'withdraw-to-exchange'"
-      />
-      <DestinationItem
-        v-bind="destinations.layerswap"
-        :icon="ArrowUpRightIcon"
-        as="a"
-        target="_blank"
-        href="https://www.layerswap.io/?sourceExchangeName=ZKSYNCERA_MAINNET"
-      />
-    </CommonCardWithLineButtons>
+    <template v-if="eraNetwork.l1Network">
+      <TypographyCategoryLabel>Send to exchange</TypographyCategoryLabel>
+      <CommonCardWithLineButtons>
+        <DestinationItem
+          v-if="eraNetwork.l1Network"
+          label="Official bridge"
+          :icon-url="destinations.ethereum.iconUrl"
+          description="Send to exchange using official bridge"
+          @click="openedModal = 'withdraw-to-exchange'"
+        />
+        <DestinationItem
+          v-bind="destinations.layerswap"
+          :icon="ArrowUpRightIcon"
+          as="a"
+          target="_blank"
+          href="https://www.layerswap.io/?sourceExchangeName=ZKSYNCERA_MAINNET"
+        />
+      </CommonCardWithLineButtons>
 
-    <TypographyCategoryLabel>Send to another network</TypographyCategoryLabel>
-    <CommonCardWithLineButtons>
-      <DestinationItem
-        v-bind="destinations.layerswap"
-        :icon="ArrowUpRightIcon"
-        as="a"
-        target="_blank"
-        href="https://www.layerswap.io/?sourceExchangeName=ZKSYNCERA_MAINNET"
-      />
-      <DestinationItem
-        v-bind="destinations.orbiter"
-        :icon="ArrowUpRightIcon"
-        as="a"
-        target="_blank"
-        href="https://www.orbiter.finance/?source=zkSync%20Era"
-      />
-    </CommonCardWithLineButtons>
+      <TypographyCategoryLabel>Send to another network</TypographyCategoryLabel>
+      <CommonCardWithLineButtons>
+        <DestinationItem
+          v-bind="destinations.layerswap"
+          :icon="ArrowUpRightIcon"
+          as="a"
+          target="_blank"
+          href="https://www.layerswap.io/?sourceExchangeName=ZKSYNCERA_MAINNET"
+        />
+        <DestinationItem
+          v-bind="destinations.orbiter"
+          :icon="ArrowUpRightIcon"
+          as="a"
+          target="_blank"
+          href="https://www.orbiter.finance/?source=zkSync%20Era"
+        />
+      </CommonCardWithLineButtons>
+    </template>
   </div>
 </template>
 

@@ -8,7 +8,7 @@
           </template>
           <template #default>Send</template>
         </CommonButton>
-        <CommonButton as="RouterLink" :to="{ name: 'transaction-zksync-era-swap' }">
+        <CommonButton v-if="eraNetwork.l1Network" as="RouterLink" :to="{ name: 'transaction-zksync-era-swap' }">
           <template #icon>
             <ArrowsRightLeftIcon aria-hidden="true" />
           </template>
@@ -59,6 +59,7 @@ import EraTransferLineItem from "@/components/transaction/zksync/era/EraTransfer
 
 import { useDestinationsStore } from "@/store/destinations";
 import { useOnboardStore } from "@/store/onboard";
+import { useEraProviderStore } from "@/store/zksync/era/provider";
 import { useEraTransfersHistoryStore } from "@/store/zksync/era/transfersHistory";
 
 const onboardStore = useOnboardStore();
@@ -66,6 +67,7 @@ const eraTransfersHistoryStore = useEraTransfersHistoryStore();
 const { transfers, recentTransfersRequestInProgress, recentTransfersRequestError } =
   storeToRefs(eraTransfersHistoryStore);
 const { destinations } = storeToRefs(useDestinationsStore());
+const { eraNetwork } = storeToRefs(useEraProviderStore());
 
 const fetch = () => {
   eraTransfersHistoryStore.requestRecentTransfers();

@@ -3,7 +3,7 @@
     <BackButton :fallback="{ name: 'index' }" />
     <h1 class="h1">Swap tokens</h1>
 
-    <CommonCardWithLineButtons>
+    <CommonCardWithLineButtons v-if="eraNetwork.l1Network">
       <DestinationItem
         label="Mute.io"
         icon-url="/img/mute.svg"
@@ -74,6 +74,11 @@
 
 <script lang="ts" setup>
 import { ArrowUpRightIcon } from "@heroicons/vue/24/outline";
+import { storeToRefs } from "pinia";
+
+import { useEraProviderStore } from "@/store/zksync/era/provider";
+
+const { eraNetwork } = storeToRefs(useEraProviderStore());
 </script>
 
 <style lang="scss" scoped></style>

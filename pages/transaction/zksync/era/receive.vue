@@ -35,34 +35,36 @@
       </DestinationItem>
     </CommonCardWithLineButtons>
 
-    <TypographyCategoryLabel>Top-up with cash</TypographyCategoryLabel>
-    <CommonCardWithLineButtons>
-      <DestinationItem
-        v-bind="destinations.ramp"
-        :icon="ArrowUpRightIcon"
-        as="a"
-        target="_blank"
-        href="https://ramp.network/buy/"
-      />
-    </CommonCardWithLineButtons>
+    <template v-if="eraNetwork.l1Network">
+      <TypographyCategoryLabel>Top-up with cash</TypographyCategoryLabel>
+      <CommonCardWithLineButtons>
+        <DestinationItem
+          v-bind="destinations.ramp"
+          :icon="ArrowUpRightIcon"
+          as="a"
+          target="_blank"
+          href="https://ramp.network/buy/"
+        />
+      </CommonCardWithLineButtons>
 
-    <TypographyCategoryLabel>Top-up from another network</TypographyCategoryLabel>
-    <CommonCardWithLineButtons>
-      <DestinationItem
-        v-bind="destinations.layerswap"
-        :icon="ArrowUpRightIcon"
-        as="a"
-        target="_blank"
-        href="https://www.layerswap.io/?destNetwork=ZKSYNCERA_MAINNET"
-      />
-      <DestinationItem
-        v-bind="destinations.orbiter"
-        :icon="ArrowUpRightIcon"
-        as="a"
-        target="_blank"
-        href="https://www.orbiter.finance/?dest=zkSync%20Era"
-      />
-    </CommonCardWithLineButtons>
+      <TypographyCategoryLabel>Top-up from another network</TypographyCategoryLabel>
+      <CommonCardWithLineButtons>
+        <DestinationItem
+          v-bind="destinations.layerswap"
+          :icon="ArrowUpRightIcon"
+          as="a"
+          target="_blank"
+          href="https://www.layerswap.io/?destNetwork=ZKSYNCERA_MAINNET"
+        />
+        <DestinationItem
+          v-bind="destinations.orbiter"
+          :icon="ArrowUpRightIcon"
+          as="a"
+          target="_blank"
+          href="https://www.orbiter.finance/?dest=zkSync%20Era"
+        />
+      </CommonCardWithLineButtons>
+    </template>
   </div>
 </template>
 

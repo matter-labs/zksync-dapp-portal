@@ -1,4 +1,6 @@
 <template>
+  <ModalTransactionDepositUnavailable />
+
   <BackButton :fallback="{ name: 'transaction-zksync-era-receive' }" />
   <SelectAddress
     v-if="step === 'address'"

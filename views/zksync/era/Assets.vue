@@ -15,7 +15,7 @@
           </template>
           <template #default>Send</template>
         </CommonButton>
-        <CommonButton as="RouterLink" :to="{ name: 'transaction-zksync-era-swap' }">
+        <CommonButton v-if="eraNetwork.l1Network" as="RouterLink" :to="{ name: 'transaction-zksync-era-swap' }">
           <template #icon>
             <ArrowsRightLeftIcon aria-hidden="true" />
           </template>
