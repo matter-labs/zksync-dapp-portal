@@ -122,6 +122,29 @@ export class BasePage {
     return await element;
   }
 
+  async getElementByPartialHrefAndText(partialHrefAndText: string) {
+    const regex = /'([^']+)'/g; //extract href and text
+    const matches = partialHrefAndText.match(regex);
+    let href;
+    let text;
+
+    if (matches && matches.length >= 2) {
+      href = matches[0].replace(/'/g, "");
+      text = matches[matches.length - 1].replace(/'/g, "");
+    }
+
+    selector = `//*[contains(@href,'${href}')]//*[text()='${text}']`;
+    const elementVisibility = await this.world.page?.locator(selector).first().isVisible();
+
+    if (elementVisibility) {
+      element = await this.world.page?.locator(selector).first();
+      await element.scrollIntoViewIfNeeded(config.minimalTimeout);
+      return await element;
+    } else {
+      return undefined;
+    }
+  }
+
   async getElementById(id: string) {
     element = await this.world.page?.locator(`#${id}`);
     await element.scrollIntoViewIfNeeded();
@@ -142,6 +165,12 @@ export class BasePage {
 
   async getElementBySrc(src: string) {
     element = await this.world.page?.locator(`//*[@src='${src}']`).first();
+    await element.scrollIntoViewIfNeeded();
+    return await element;
+  }
+
+  async getElementByPartialSrc(src: string) {
+    element = await this.world.page?.locator(`//*[contains(@src, '${src}')]`).first();
     await element.scrollIntoViewIfNeeded();
     return await element;
   }
@@ -193,6 +222,8 @@ export class BasePage {
       element = await this.getElementByHref(value);
     } else if (elementType === "href and text") {
       element = await this.getElementByHrefAndText(value);
+    } else if (elementType === "partial href and text") {
+      element = await this.getElementByPartialHrefAndText(value);
     } else if (elementType === "id") {
       element = await this.getElementById(value);
     } else if (elementType === "testId") {
@@ -209,6 +240,8 @@ export class BasePage {
       element = await this.getElementByXpath(value);
     } else if (elementType === "src") {
       element = await this.getElementBySrc(value);
+    } else if (elementType === "partial src") {
+      element = await this.getElementByPartialSrc(value);
     } else if (elementType === "aria-label") {
       element = await this.getElementByAriaLabel(value);
     }

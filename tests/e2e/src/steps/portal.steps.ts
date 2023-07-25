@@ -285,6 +285,17 @@ Then(
 );
 
 Then(
+  "The list has the one of the expected type of transactions",
+  config.stepTimeout,
+  async function (this: ICustomWorld) {
+    const mainPage = new MainPage(this);
+    element = await mainPage.getTypeOfTransactionsElement();
+
+    await expect(element).toBeVisible();
+  }
+);
+
+Then(
   "Tokens search window has next {string} text visible",
   config.stepTimeout,
   async function (this: ICustomWorld, text: string) {
