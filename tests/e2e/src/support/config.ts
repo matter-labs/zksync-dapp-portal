@@ -38,6 +38,7 @@ export const config = {
   headless: false,
   slowMo: 10,
   defaultTimeout: { timeout: 6 * 1000 },
+  minimalTimeout: { timeout: 1 * 1000 },
   increasedTimeout: { timeout: 10 * 1000 },
   stepTimeout: { timeout: 60 * 1000 },
   feeLimitations: true,

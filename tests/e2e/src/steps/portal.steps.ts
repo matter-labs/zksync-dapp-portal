@@ -37,6 +37,11 @@ When("I click by text {string}", config.stepTimeout, async function (this: ICust
   await basePage.clickByText(text);
 });
 
+When("I click by partial text {string}", config.stepTimeout, async function (this: ICustomWorld, text: string) {
+  basePage = new BasePage(this);
+  await basePage.clickByPartialText(text);
+});
+
 When(
   "I click by {string} with {string} value",
   config.stepTimeout,
@@ -270,5 +275,16 @@ Then(
     element = await basePage.returnElementByType(elementType, value);
 
     await element.hover();
+  }
+);
+
+Then(
+  "The list has the one of the expected type of transactions",
+  config.stepTimeout,
+  async function (this: ICustomWorld) {
+    const mainPage = new MainPage(this);
+    element = await mainPage.getTypeOfTransactionsElement();
+
+    await expect(element).toBeVisible();
   }
 );
