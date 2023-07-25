@@ -27,13 +27,15 @@ Feature: Withdraw
     Then Element with "text" " Continue " should be "disabled"
 
 
-  @id1290
+  @id1290 @id1432
   Scenario: Withdraw - Send - [Transaction] 0 funds
     When I go to "Withdraw" transaction section
     When I click by "text" with "Your account" value
     Then Element with "class" "amount-input-max-button" should be "clickable"
     When I click by "text" with " Max " value
     Then Element with "title" "Max amount is set" should be "visible"
+    Then Fee should have "$" value
+    Then Fee should have "ETH" value
 
   @id1554
   Scenario: Withdraw - Bridge - [Transaction] insufficient funds
