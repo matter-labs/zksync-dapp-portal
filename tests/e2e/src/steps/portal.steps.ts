@@ -169,6 +169,12 @@ Given(
   }
 );
 
+Given("I fill the address input field with {string}", async function (this: ICustomWorld, inputText: string) {
+  basePage = new BasePage(this);
+  element = await basePage.returnElementByType("placeholder", "Address or ENS or contact name");
+  await element.fill(inputText);
+});
+
 Given("I click on the Copy button", async function (this: ICustomWorld) {
   await this.page?.locator("//button[@class='copy-button']").last().click();
 });

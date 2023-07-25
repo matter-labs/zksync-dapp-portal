@@ -49,3 +49,26 @@ Feature: Withdraw
     Then Modal card element with the "//*[text()=' Arriving in ~24 hours ']" xpath should be "clickable"
     Then Element with "text" "Send to Ethereum Goerli" should be "visible"
     Then Element with "text" "Send to Ethereum Goerli" should be "clickable"
+
+  @id1419
+  Scenario Outline: Check artifacts for the wrong address input values
+    When I go to "Withdraw" transaction section
+    Given I fill the address input field with "<wrong address>"
+    Then Element with "partial text" "<text>" should be "visible"
+    Then Element with "partial text" "<warning>" should be "visible"
+
+    Examples:
+      | wrong address                               | text                                  | warning                               |
+      | 0x8f0f44583aQ6908f7f933cd6f0aae382ac3fd8f6  | Please enter a valid Ethereum address | Please enter a valid Ethereum address |
+      | 0x8f0f44583a6908f7f933cd6f0aae382ac3fd8f6   | Please enter a valid Ethereum address | Please enter a valid Ethereum address |
+      | 0x8f0f44583a116908f7f933cd6f0aae382ac3fd8f6 | Please enter a valid Ethereum address | Please enter a valid Ethereum address |
+      | 0x8f0f44583a$6908f7f933cd6f0aae382ac3fd8f6  | Please enter a valid Ethereum address | Please enter a valid Ethereum address |
+      | TEST NOT EXISTING NAME                      | Please enter a valid Ethereum address | Please enter a valid Ethereum address |
+
+  @id1433
+  Scenario: Check link to Block Explorer for Submit modal of Withdraw
+    Given I go to "Withdraw" transaction section
+    Given I click by "text" with "Your account" value
+    When I choose "ETH" as token and insert "0.0000000001" as amount
+    When I "confirm" transaction after clicking "Send to Ethereum Goerli" button
+    Then Element with "partial href" "https://goerli.explorer.zksync.io/tx/" should be "clickable"
