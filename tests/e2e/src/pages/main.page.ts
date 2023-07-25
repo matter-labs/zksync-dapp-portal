@@ -186,4 +186,20 @@ export class MainPage extends BasePage {
     }
     await this.click(this.modalCard + result);
   }
+
+  async getTypeOfTransactionsElement() {
+    const href = Routes.txBlockExplorer;
+    const transactionTypes = ["Receive", "Withdraw", "Send"];
+
+    for (let i = 0; i < transactionTypes.length; i++) {
+      const selectorValue = `'${href}' and '${transactionTypes[i]}'`;
+
+      result = await this.getElementByPartialHrefAndText(selectorValue);
+
+      if (result !== undefined) {
+        break;
+      }
+    }
+    return result;
+  }
 }
