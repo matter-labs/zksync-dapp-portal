@@ -22,7 +22,7 @@
       </CommonCardWithLineButtons>
     </template>
 
-    <template v-if="networks.includes('lite')">
+    <template v-if="networks.includes('lite') && (selectedZkSyncVersion !== 'era' || selectedNetwork.l1Network)">
       <DestinationLabel v-if="networks.length > 1" label="zkSync Lite" :icon="IconsZkSyncLite" class="mb-2 mt-4" />
       <CommonCardWithLineButtons>
         <DestinationItem
