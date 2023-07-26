@@ -29,6 +29,10 @@ export class MainPage extends BasePage {
     return "//*[@class='modal-card']";
   }
 
+  get menuElement() {
+    return "//*[@class='menu-options']";
+  }
+
   get avatarModalCard() {
     return '//*[contains(@class, "address-card-avatar")]';
   }
@@ -169,6 +173,11 @@ export class MainPage extends BasePage {
       selector = selectorValue;
     }
     await this.click(this.modalCard + selector);
+  }
+
+  async clickMenuElement(text: string) {
+    const selector = `//*[contains(text(),'${text}')]`;
+    await this.click(this.menuElement + selector);
   }
 
   async selectNetwork(networkName: string) {
