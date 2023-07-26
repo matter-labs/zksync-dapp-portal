@@ -94,13 +94,13 @@ export class MainPage extends BasePage {
   async chooseToken(tokenName: string) {
     await this.click(this.tokenDropDown, true);
     await this.clickBy("placeholder", "Symbol or address");
-    await this.fill(".small-input-field", `${tokenName}`);
+    await this.fill("class", "small-input-field", `${tokenName}`);
     await this.click(this.getFirstToken);
   }
 
   async insertAmount(amount: string) {
     await this.world.page?.waitForTimeout(3 * 1000);
-    await this.fill(this.amountInputField, amount);
+    await this.fill("xpath", this.amountInputField, amount);
   }
 
   async makeTransaction(actionType: string, transactionType: string) {
@@ -142,14 +142,14 @@ export class MainPage extends BasePage {
     await this.world.page?.reload();
   }
 
-  async fillText(inputField: string, text: string) {
+  async fillText(elementType: string, value: string, inputValue: string) {
     const helper = new Helper(this.world);
 
-    if (text !== "clipboard") {
-      await this.fill(inputField, text);
+    if (inputValue !== "clipboard") {
+      await this.fill(elementType, value, inputValue);
     } else {
       result = await helper.getClipboardValue();
-      await this.fill(inputField, result);
+      await this.fill(elementType, value, result);
     }
   }
 

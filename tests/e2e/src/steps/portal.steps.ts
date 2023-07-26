@@ -154,26 +154,12 @@ Then("Clipboard is not empty", async function (this: ICustomWorld) {
 });
 
 Given(
-  "I fill the {string} input field by {string}",
-  async function (this: ICustomWorld, inputField: string, text: string) {
+  "I fill the element of {string} with {string} value by {string}",
+  async function (this: ICustomWorld, elementType: string, value: string, inputValue: string) {
     mainPage = new MainPage(this);
-    await mainPage.fillText(inputField, text);
+    await mainPage.fillText(elementType, value, inputValue);
   }
 );
-
-Given(
-  "I fill the {string} input field on the Contacts page with {string} text",
-  async function (this: ICustomWorld, inputField: string, text: string) {
-    contactsPage = new ContactsPage(this);
-    await contactsPage.fillContactFields(inputField, text);
-  }
-);
-
-Given("I fill the Tokens Search Field input by {string}", async function (this: ICustomWorld, text: string) {
-  mainPage = new MainPage(this);
-  const inputField = "data-testid=search_tokens";
-  await mainPage.fillText(inputField, text);
-});
 
 Given("I click on the Copy button", async function (this: ICustomWorld) {
   await this.page?.locator("//button[@class='copy-button']").last().click();

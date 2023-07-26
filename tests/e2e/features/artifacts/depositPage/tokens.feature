@@ -82,7 +82,7 @@ Feature: Artifacts - UI
     Given I go to page "/transaction/zksync/era/deposit/?network=era-mainnet"
     When I click by "testId" with "your-account" value
     Then I click by "testId" with "token-dropDown" value
-    Then I fill the Tokens Search Field input by "0x3355df6D4c9C3035724Fd0e3914dE96A5a83aaf4"
+    When I fill the element of "testId" with "search_tokens" value by "0x3355df6D4c9C3035724Fd0e3914dE96A5a83aaf4"
     Then Element with "text" "USDC" should be "visible"
 
 
@@ -91,8 +91,9 @@ Feature: Artifacts - UI
     Given I go to page "/transaction/zksync/era/deposit/?network=era-mainnet"
     When I click by "testId" with "your-account" value
     Then I click by "testId" with "token-dropDown" value
-    Then I fill the Tokens Search Field input by "0x3355df6D4c9C30357240e3914dE96A5a83aaf4"
+    When I fill the element of "testId" with "search_tokens" value by "0x3355df6D4c9C303574Fd0e3914dE96A5a83aaf4"
+    Then Element with "partial text" "Make sure you are using correct zkSync network" should be "visible"
     Then Element with "partial text" "Make sure you are using correct zkSync network" should be "visible"
     Then Tokens search window has next 'No tokens was found for' text visible
-    Then Tokens search window has next '0x3355df6D4c9C30357240e3914dE96A5a83aaf4' text visible
+    Then Tokens search window has next '0x3355df6D4c9C303574Fd0e3914dE96A5a83aaf4' text visible
     

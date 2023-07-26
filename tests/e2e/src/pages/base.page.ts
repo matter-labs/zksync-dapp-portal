@@ -37,14 +37,12 @@ export class BasePage {
     await this.world.page?.locator(element).first().dblclick({ force: true, timeout: config.increasedTimeout.timeout });
   }
 
-  async fill(element: any, text: string, testId?: boolean) {
-    selector = element;
-    if (testId == true) {
-      selector = this.byTestId + element;
-    }
+  async fill(elementType: string, value: string, inputValue: string) {
+    selector = await this.returnLocatorByType(elementType, value);
+
     await this.world.page?.waitForSelector(selector, config.increasedTimeout);
     await this.world.page?.locator(selector).isEnabled(config.increasedTimeout);
-    await this.world.page?.fill(selector, text, config.increasedTimeout);
+    await this.world.page?.fill(selector, inputValue, config.increasedTimeout);
   }
 
   async clickBy(elementType: string, value: string) {
@@ -244,6 +242,35 @@ export class BasePage {
       element = await this.getElementByPartialSrc(value);
     } else if (elementType === "aria-label") {
       element = await this.getElementByAriaLabel(value);
+    }
+    return element;
+  }
+
+  async returnLocatorByType(elementType: string, value: string) {
+    if (elementType === "alt") {
+      element = `//*[@alt='${value}'][1]`;
+    } else if (elementType === "class") {
+      element = `//*[@class="${value}"][1]`;
+    } else if (elementType === "partial class") {
+      element = `//*[contains(@class, "${value}")][1]`;
+    } else if (elementType === "text") {
+      element = `//*[text()="${value}"][1]`;
+    } else if (elementType === "partial text") {
+      element = `//*[contains(text(),'${value}')][1]`;
+    } else if (elementType === "id") {
+      element = `#${value}`;
+    } else if (elementType === "testId") {
+      element = `data-testid=${value}`;
+    } else if (elementType === "partial testId") {
+      element = `//*[contains(@data-testid, '${value}')]`;
+    } else if (elementType === "title") {
+      element = `//*[@title='${value}']`;
+    } else if (elementType === "type") {
+      element = `//*[@type='${value}']`;
+    } else if (elementType === "placeholder") {
+      element = `//*[@placeholder='${value}']`;
+    } else if (elementType === "xpath") {
+      element = `${value}`;
     }
     return element;
   }
