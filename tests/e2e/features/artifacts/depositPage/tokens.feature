@@ -92,8 +92,5 @@ Feature: Artifacts - UI
     When I click by "testId" with "your-account" value
     Then I click by "testId" with "token-dropDown" value
     When I fill the element of "testId" with "search_tokens" value by "0x3355df6D4c9C303574Fd0e3914dE96A5a83aaf4"
+    Then Element with "testId" value "warning_modal" should contain 'No tokens was found for "0x3355df6D4c9C303574Fd0e3914dE96A5a83aaf4"' text
     Then Element with "partial text" "Make sure you are using correct zkSync network" should be "visible"
-    Then Element with "partial text" "Make sure you are using correct zkSync network" should be "visible"
-    Then Tokens search window has next 'No tokens was found for' text visible
-    Then Tokens search window has next '0x3355df6D4c9C303574Fd0e3914dE96A5a83aaf4' text visible
-    

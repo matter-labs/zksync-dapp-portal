@@ -295,3 +295,12 @@ Then(
     await basePage.verifyElement("xpath", element, "visible");
   }
 );
+
+Then(
+  "Element with {string} value {string} should contain {string} text",
+  config.stepTimeout,
+  async function (this: ICustomWorld, elementType: string, value: string, checkText: string) {
+    basePage = new BasePage(this);
+    await basePage.checkElementToContainText(elementType, value, checkText);
+  }
+);

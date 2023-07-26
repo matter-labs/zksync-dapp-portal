@@ -38,7 +38,7 @@
             </CommonCardWithLineButtons>
           </div>
         </template>
-        <CommonEmptyBlock v-else class="search-empty-block">
+        <CommonEmptyBlock v-else class="search-empty-block" data-testId="warning_modal">
           No tokens was found for "{{ search }}"
           <br />
           <span class="mt-1.5 inline-block">Make sure you are using correct zkSync network</span>

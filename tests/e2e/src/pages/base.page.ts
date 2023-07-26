@@ -307,4 +307,16 @@ export class BasePage {
       await expect(result).toBe(false);
     }
   }
+
+  async checkElementToContainText(elementType: string, value: string, checkText: string) {
+    element = await this.returnElementByType(elementType, value);
+
+    if (elementType === "testId" && value === "warning_modal") {
+      const element = `//*[@class='modal-card']//*[contains(., '${checkText}')]`;
+      await this.verifyElement("xpath", element, "visible");
+    } else {
+      const element = await this.returnElementByType(elementType, value);
+      await expect(element).toContainText(checkText);
+    }
+  }
 }
