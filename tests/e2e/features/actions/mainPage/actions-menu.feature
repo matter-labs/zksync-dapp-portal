@@ -1,4 +1,4 @@
-@menuItems @smoke
+@action @smoke @regression
 Feature: Menu
 
   Background:

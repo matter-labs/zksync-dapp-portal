@@ -175,16 +175,8 @@ export class MainPage extends BasePage {
     await this.click(this.modalCard + selector);
   }
 
-  async clickMenuElement(selectorValue: string) {
-    let selector: string;
-    const regex = /\/\/\*/g;
-    const matchXpath = selectorValue.match(regex);
-
-    if (!matchXpath) {
-      selector = `//*[contains(text(),'${selectorValue}')]`;
-    } else {
-      selector = selectorValue;
-    }
+  async clickMenuElement(text: string) {
+    const selector = `//*[contains(text(),'${text}')]`;
     await this.click(this.menuElement + selector);
   }
 

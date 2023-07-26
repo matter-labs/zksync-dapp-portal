@@ -244,14 +244,10 @@ When(
   }
 );
 
-When(
-  "I click by the {string} text element on the Menu",
-  config.stepTimeout,
-  async function (this: ICustomWorld, textElement: string) {
-    mainPage = new MainPage(this);
-    await mainPage.clickMenuElement(textElement);
-  }
-);
+When("I click by the {string} text on the Menu", config.stepTimeout, async function (this: ICustomWorld, text: string) {
+  mainPage = new MainPage(this);
+  await mainPage.clickMenuElement(text);
+});
 
 Then("I close modal card", config.stepTimeout, async function (this: ICustomWorld) {
   const basePage = new BasePage(this);
