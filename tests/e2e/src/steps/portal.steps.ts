@@ -286,3 +286,14 @@ Then(
     await element.hover();
   }
 );
+
+Then(
+  "The list has the one of the expected type of transactions",
+  config.stepTimeout,
+  async function (this: ICustomWorld) {
+    const mainPage = new MainPage(this);
+    element = await mainPage.getTypeOfTransactionsElement();
+
+    await expect(element).toBeVisible();
+  }
+);
