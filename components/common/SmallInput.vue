@@ -1,21 +1,21 @@
 <template>
-  <component :is="as" :class="{ focused }" class="small-input-container">
+  <component :is="as" class="small-input-container" :class="{ focused }">
     <div v-if="$slots.icon" class="small-input-icon-container">
       <slot name="icon" />
     </div>
     <input
       ref="inputElement"
       v-model="inputted"
-      :maxlength="maxLength"
+      class="small-input-field"
       :placeholder="placeholder"
       :type="type"
-      class="small-input-field"
+      :maxlength="maxLength"
       data-testid="search_tokens"
       spellcheck="false"
     />
-    <transition mode="out-in" v-bind="TransitionOpacity()">
+    <transition v-bind="TransitionOpacity()" mode="out-in">
       <button v-if="inputted" class="small-input-clear-button" type="button" @click="inputted = ''">
-        <XMarkIcon aria-hidden="true" class="small-input-clear-button-icon" />
+        <XMarkIcon class="small-input-clear-button-icon" aria-hidden="true" />
       </button>
       <slot v-else name="right" />
     </transition>
