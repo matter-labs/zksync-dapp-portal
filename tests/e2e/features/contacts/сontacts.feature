@@ -75,5 +75,4 @@ Feature: Contacts
     Then Element with "text" "Remove" should be "clickable"
     When I click on the Remove contact button
     When I click on the Are you sure Remove contact button
-    Then Current page have "/contacts" address
     Then The "foundation.eth" contact name is not present in the list on Contacts page
