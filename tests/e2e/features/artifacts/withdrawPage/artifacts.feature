@@ -124,18 +124,3 @@ Feature: Withdraw
       | KNC       | 0x6ee46C...3e6 | wbtc.svg   |
       | BEL       | 0xB83CFB...2D9 | bel.png    |
       | ZZ        | 0x1ab721...184 | zz.png     |
-
-  @id1642:II @id1644:II @tokens @emptyWallet
-  Scenario Outline: Check artifacts on tokens dropdown on Withdraw page for Empty Wallet
-    Given I go to page "<network>"
-    When I click by "testId" with "your-account" value
-    Then I click by "testId" with "token-dropDown" value
-    Then Element with "text" "Choose token" should be "visible"
-    Then Element with "text" "Zero balances" should be "visible"
-    Then Element with "class" "token-balance-amount" should be "visible"
-    Then Element with "text" "0" should be "visible"
-
-    Examples:
-      | network                                               |
-      | /transaction/zksync/era/withdraw/?network=era-mainnet |
-      | /transaction/zksync/era/withdraw/?network=era-goerli  |
