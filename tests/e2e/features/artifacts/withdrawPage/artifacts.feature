@@ -55,15 +55,14 @@ Feature: Withdraw
     When I go to "Withdraw" transaction section
     Given I fill the address input field with "<wrong address>"
     Then Element with "partial text" "<text>" should be "visible"
-    Then Element with "partial text" "<warning>" should be "visible"
 
     Examples:
-      | wrong address                               | text                                  | warning                               |
-      | 0x8f0f44583aQ6908f7f933cd6f0aae382ac3fd8f6  | Please enter a valid Ethereum address | Please enter a valid Ethereum address |
-      | 0x8f0f44583a6908f7f933cd6f0aae382ac3fd8f6   | Please enter a valid Ethereum address | Please enter a valid Ethereum address |
-      | 0x8f0f44583a116908f7f933cd6f0aae382ac3fd8f6 | Please enter a valid Ethereum address | Please enter a valid Ethereum address |
-      | 0x8f0f44583a$6908f7f933cd6f0aae382ac3fd8f6  | Please enter a valid Ethereum address | Please enter a valid Ethereum address |
-      | TEST NOT EXISTING NAME                      | Please enter a valid Ethereum address | Please enter a valid Ethereum address |
+      | wrong address                               | text                                  |
+      | 0x8f0f44583aQ6908f7f933cd6f0aae382ac3fd8f6  | Please enter a valid Ethereum address |
+      | 0x8f0f44583a6908f7f933cd6f0aae382ac3fd8f6   | Please enter a valid Ethereum address |
+      | 0x8f0f44583a116908f7f933cd6f0aae382ac3fd8f6 | Please enter a valid Ethereum address |
+      | 0x8f0f44583a$6908f7f933cd6f0aae382ac3fd8f6  | Please enter a valid Ethereum address |
+      | TEST NOT EXISTING NAME                      | Please enter a valid Ethereum address |
 
   @id1433
   Scenario: Check link to Block Explorer for Submit modal of Withdraw
