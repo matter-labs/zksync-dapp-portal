@@ -51,7 +51,7 @@ Feature: Withdraw
     Then Element with "text" "Send to Ethereum Goerli" should be "clickable"
 
   @id1644:I @tokens @testnet
-  Scenario: Check artifacts on tokens dropdown on Deposit page (Testnet)
+  Scenario: Check artifacts on tokens dropdown on Withdraw page (Testnet)
     Given I go to page "/transaction/zksync/era/withdraw/?network=era-goerli"
     When I click by "testId" with "your-account" value
     Then Element with "testId" "token-dropDown" should be "clickable"
@@ -61,8 +61,8 @@ Feature: Withdraw
     Then Element with "class" "token-balance-amount" should be "visible"
     Then Element with "class" "token-balance-price" should be "visible"
 
-  @id1644:II @tokens @testnet
-  Scenario Outline: Check artifacts on tokens dropdown on Deposit page (Testnet)
+  @id1644:III @tokens @testnet
+  Scenario Outline: Check tokens artifacts dropdown on Withdraw page (Testnet)
     Given I go to page "/transaction/zksync/era/withdraw/?network=era-goerli"
     When I click by "testId" with "your-account" value
     Then I click by "testId" with "token-dropDown" value
@@ -79,16 +79,16 @@ Feature: Withdraw
       | wBTC      | 0x0BfcE1...e9c | wbtc.svg |
 
   @id1642:I @tokens @mainnet
-  Scenario: Check artifacts on tokens dropdown on Deposit page (Mainnet)
+  Scenario: Check artifacts on tokens dropdown on Withdraw page (Mainnet)
     Given I go to page "/transaction/zksync/era/withdraw/?network=era-mainnet"
-    When I click by "testId" with "your-account" value
     Then Element with "testId" "token-dropDown" should be "clickable"
     Then I click by "testId" with "token-dropDown" value
     Then Element with "text" "Choose token" should be "visible"
     Then Element with "placeholder" "Symbol or address" should be "visible"
+    Then Element with "class" "token-balance-amount" should be "visible"
 
-  @id1642:II @tokens @mainnet
-  Scenario Outline: Check artifacts on tokens dropdown on Deposit page (Mainnet)
+  @id1642:III @tokens @mainnet
+  Scenario Outline: Check tokens artifacts dropdown on Withdraw page (Mainnet)
     Given I go to page "/transaction/zksync/era/withdraw/?network=era-mainnet"
     When I click by "testId" with "your-account" value
     Then I click by "testId" with "token-dropDown" value
@@ -124,3 +124,18 @@ Feature: Withdraw
       | KNC       | 0x6ee46C...3e6 | wbtc.svg   |
       | BEL       | 0xB83CFB...2D9 | bel.png    |
       | ZZ        | 0x1ab721...184 | zz.png     |
+
+  @id1642:II @id1644:II @tokens @emptyWallet
+  Scenario Outline: Check artifacts on tokens dropdown on Withdraw page for Empty Wallet
+    Given I go to page "<network>"
+    When I click by "testId" with "your-account" value
+    Then I click by "testId" with "token-dropDown" value
+    Then Element with "text" "Choose token" should be "visible"
+    Then Element with "text" "Zero balances" should be "visible"
+    Then Element with "class" "token-balance-amount" should be "visible"
+    Then Element with "text" "0" should be "visible"
+
+    Examples:
+      | network                                               |
+      | /transaction/zksync/era/withdraw/?network=era-mainnet |
+      | /transaction/zksync/era/withdraw/?network=era-goerli  |
