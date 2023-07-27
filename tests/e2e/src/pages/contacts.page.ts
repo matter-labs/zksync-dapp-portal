@@ -12,8 +12,20 @@ export class ContactsPage extends BasePage {
     return "//*[@class='modal-card']//a[contains(@href, '/transaction/send?address=')]";
   }
 
+  get contactsPageContent() {
+    return "//*[@class='app-layout-main']";
+  }
+
   get editBtnModal() {
     return "//*[@class='buttons-line-group']//button[1]";
+  }
+
+  get removeBtnModal() {
+    return "//*[text()='Remove']";
+  }
+
+  get areYouSureRemoveBtnModal() {
+    return "//*[text()='Are you sure?']";
   }
 
   get savedContact() {
@@ -36,6 +48,10 @@ export class ContactsPage extends BasePage {
     return `${this.modalCard}//div[text()='${address}']`;
   }
 
+  async contactItem(contactName: string) {
+    return `${this.contactsPageContent}//div[text()='${contactName}']`;
+  }
+
   async fillContactFields(inputFieldName: string, text: string) {
     if (inputFieldName == "Name of the contact" || inputFieldName == "Ethereum address") {
       selector = `//*[@placeholder="${inputFieldName}"]`;
@@ -51,6 +67,14 @@ export class ContactsPage extends BasePage {
 
   async pressEditBtnModal() {
     await this.click(this.editBtnModal);
+  }
+
+  async pressRemoveBtnModal() {
+    await this.click(this.removeBtnModal);
+  }
+
+  async pressAreYouSureRemoveBtnModal() {
+    await this.click(this.areYouSureRemoveBtnModal);
   }
 
   async clickOnSavedContact() {

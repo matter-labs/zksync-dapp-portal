@@ -177,9 +177,23 @@ Given("I click on the Save contact button", async function (this: ICustomWorld) 
   await this.page?.locator("//button[@type='submit' and text()='Save contact']").first().click();
 });
 
+Given("I click on the Add contact button for found contact", async function (this: ICustomWorld) {
+  await this.page?.locator("//*[@class='line-button-with-img-body']").first().click();
+});
+
 Given("I click on the Edit contact button", async function (this: ICustomWorld) {
   contactsPage = new ContactsPage(this);
   await contactsPage.pressEditBtnModal();
+});
+
+Given("I click on the Remove contact button", async function (this: ICustomWorld) {
+  contactsPage = new ContactsPage(this);
+  await contactsPage.pressRemoveBtnModal();
+});
+
+Given("I click on the Are you sure Remove contact button", async function (this: ICustomWorld) {
+  contactsPage = new ContactsPage(this);
+  await contactsPage.pressAreYouSureRemoveBtnModal();
 });
 
 Given("I am on the Main page", async function (this: ICustomWorld) {
@@ -215,6 +229,28 @@ Given(
     element = await this.page?.locator(await contactsPage.contactNameModal(contactName));
 
     await expect(element).toBeVisible();
+  }
+);
+
+Given(
+  "The {string} contact name is visible in the list on Contacts page",
+  async function (this: ICustomWorld, contactName: string) {
+    contactsPage = new ContactsPage(this);
+    element = await this.page?.locator(await contactsPage.contactItem(contactName));
+
+    await expect(element).toBeVisible();
+  }
+);
+
+Given(
+  "The {string} contact name is not present in the list on Contacts page",
+  async function (this: ICustomWorld, contactName: string) {
+    helper = new Helper(this);
+    contactsPage = new ContactsPage(this);
+    element = await this.page?.locator(await contactsPage.contactItem(contactName));
+
+    result = await helper.checkElementVisible(element);
+    await expect(result).toBe(false);
   }
 );
 
@@ -270,6 +306,14 @@ Then("New page has {string} address", config.stepTimeout, async function (this: 
   await this.page?.waitForTimeout(5000);
   result = await helper.checkTabByUrl(url);
   await expect(result).toBe(url);
+});
+
+Then("New page has {string} partial address", config.stepTimeout, async function (this: ICustomWorld, url: string) {
+  mainPage = new MainPage(this);
+  helper = new Helper(this);
+  await this.page?.waitForTimeout(5000);
+  result = await helper.checkTabByUrl(url, true);
+  await expect(result).toContain(url);
 });
 
 Then(
