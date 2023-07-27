@@ -81,6 +81,7 @@ Feature: Withdraw
   @id1642:I @tokens @mainnet
   Scenario: Check artifacts on tokens dropdown on Withdraw page (Mainnet)
     Given I go to page "/transaction/zksync/era/withdraw/?network=era-mainnet"
+    When I click by "testId" with "your-account" value
     Then Element with "testId" "token-dropDown" should be "clickable"
     Then I click by "testId" with "token-dropDown" value
     Then Element with "text" "Choose token" should be "visible"
