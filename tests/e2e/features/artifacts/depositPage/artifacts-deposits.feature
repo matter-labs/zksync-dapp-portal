@@ -61,3 +61,32 @@ Feature: Artifacts - UI
     Then Fee should have "$" value
     Then Fee should have "ETH" value
     Then Element with "text" " Continue " should be "visible"
+
+  @id1647 @tokens
+  Scenario Outline:  Check search functionality for Choose Tokens (with results)
+    Given I go to page "<network>"
+    When I click by "testId" with "your-account" value
+    Then I click by "testId" with "token-dropDown" value
+    When I fill the "//*[@placeholder='Symbol or address']" input field by "USDC"
+    Then Element with "text" "<token name>" should be "visible"
+    Then Element with "text" "<token address>" should be "visible"
+
+    Examples:
+      | network                                              | token name | token address  |
+      | /transaction/zksync/era/deposit/?network=era-mainnet | USDC       | 0x3355df...af4 |
+      | /transaction/zksync/era/deposit/?network=era-goerli  | USDC       | 0x0faF6d...2A9 |
+
+
+  @id1548 @tokens
+  Scenario Outline:  Check search functionality for Choose Tokens (no results)
+    Given I go to page "<network>"
+    When I click by "testId" with "your-account" value
+    Then I click by "testId" with "token-dropDown" value
+    When I fill the "//*[@placeholder='Symbol or address']" input field by "AAA"
+    Then Element with "testId" value "warning_modal" should contain 'No tokens was found for "AAA"' text
+    Then Element with "partial text" "Make sure you are using correct zkSync network" should be "visible"
+
+    Examples:
+      | network                                              |
+      | /transaction/zksync/era/deposit/?network=era-mainnet |
+      | /transaction/zksync/era/deposit/?network=era-goerli  |

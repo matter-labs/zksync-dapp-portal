@@ -49,3 +49,33 @@ Feature: Withdraw
     Then Modal card element with the "//*[text()=' Arriving in ~24 hours ']" xpath should be "clickable"
     Then Element with "text" "Send to Ethereum Goerli" should be "visible"
     Then Element with "text" "Send to Ethereum Goerli" should be "clickable"
+
+  @id1436 @tokens
+  Scenario Outline:  Check search functionality for Choose Tokens (with results)
+    Given I go to page "<network>"
+    When I click by "testId" with "your-account" value
+    Then I click by "testId" with "token-dropDown" value
+    When I fill the "//*[@placeholder='Symbol or address']" input field by "USDC"
+    Then Element with "text" "<token name>" should be "visible"
+    Then Element with "text" "<token address>" should be "visible"
+
+    Examples:
+      | network                                              | token name | token address  |
+      | /transaction/zksync/era/withdraw/?network=era-mainnet | USDC       | 0x3355df...af4 |
+      | /transaction/zksync/era/withdraw/?network=era-goerli  | USDC       | 0x0faF6d...2A9 |
+
+
+  @id1564 @tokens
+  Scenario Outline:  Check search functionality for Choose Tokens (no results)
+    Given I go to page "<network>"
+    When I click by "testId" with "your-account" value
+    Then I click by "testId" with "token-dropDown" value
+    When I fill the "//*[@placeholder='Symbol or address']" input field by "AAA"
+    Then Element with "testId" value "warning_modal" should contain 'No tokens was found for "AAA"' text
+    Then Element with "partial text" "Make sure you are using correct zkSync network" should be "visible"
+
+    Examples:
+      | network                                              |
+      | /transaction/zksync/era/withdraw/?network=era-mainnet |
+      | /transaction/zksync/era/withdraw/?network=era-goerli  |
+    
