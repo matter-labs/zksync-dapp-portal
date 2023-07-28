@@ -257,6 +257,7 @@ Then("Fee should have {string} value", config.stepTimeout, async function (this:
   mainPage = new MainPage(this);
   basePage = new BasePage(this);
   element = mainPage.feeValue;
+  await this.page?.waitForTimeout(5000);
   result = await this.page?.locator(element);
   await expect(result).toContainText(fee);
 });
