@@ -18,7 +18,7 @@ Feature: Artifacts - UI
     Then Element with "href and text" "'/balances' and 'View all'" should be "visible"
     Then Element with "href and text" "'/balances' and 'View all'" should be "clickable"
 
-  @tokens @emptyWallet
+  @id1641 @id1642 @id1643 @id1644 @id1645 @id1646 @tokens @emptyWallet
   Scenario Outline: Check artifacts on tokens dropdown on Deposit/Withdraw/Transfer page for Empty Wallet
     Given I go to page "<network>"
     Then I click by "testId" with "token-dropDown" value
