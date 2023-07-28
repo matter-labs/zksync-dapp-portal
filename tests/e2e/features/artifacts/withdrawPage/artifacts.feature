@@ -58,6 +58,7 @@ Feature: Withdraw
     When I fill the "//*[@placeholder='Symbol or address']" input field by "USDC"
     Then Element with "text" "<token name>" should be "visible"
     Then Element with "text" "<token address>" should be "visible"
+    Then Element with "class" "token-balance-amount" should be "visible"
 
     Examples:
       | network                                              | token name | token address  |
