@@ -35,7 +35,13 @@ export class MetamaskPage extends BasePage {
   get feeChangerBtn() {
     return "//div[@class='edit-gas-display']//button";
   }
+  get feeChangerAlert() {
+    return "//*[@class='alert-body']//*[contains(text(), 'Fee has changed')]";
+  }
 
+  get confirmFeeChange() {
+    return "//*[@class='alert-body']//*[contains(., 'Confirm')]";
+  }
   get saveFeeBtn() {
     return "//*[@class='popover-container']//button";
   }
@@ -185,6 +191,8 @@ export class MetamaskPage extends BasePage {
       //   await this.click(confirmBtn);
       // }
       const popUpContext = await this.catchPopUpByClick(`//span[contains(text(),'${triggeredElement}')]`);
+      await setTimeout(2.5 * 1000);
+
       await popUpContext?.setViewportSize(config.popUpWindowSize);
       await popUpContext?.click(this.confirmTransaction);
     }
@@ -196,9 +204,24 @@ export class MetamaskPage extends BasePage {
     const [popUp] = await Promise.all([
       this.world.context?.waitForEvent("page"),
       await helper.checkElementVisible(element),
+      //await helper.checkElementClickable(element),
       await this.world.page?.locator(element).first().click(),
+      await setTimeout(10 * 1000),
+      await this.isFeeAlert(helper, element),
     ]);
+
     return popUp;
+  }
+
+  async isFeeAlert(helper: Helper, element: string) {
+    const feeAlert = await helper.checkElementVisible(this.feeChangerAlert);
+    if (feeAlert) {
+      await helper.checkElementVisible(this.confirmFeeChange);
+      await this.world.page?.locator(this.confirmFeeChange).first().click();
+      await this.catchPopUpByClick(element);
+      return true;
+    }
+    return false;
   }
 
   async catchPopUp() {
