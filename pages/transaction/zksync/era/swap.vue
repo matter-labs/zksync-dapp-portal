@@ -36,14 +36,14 @@
         target="_blank"
         href="https://app.velocore.xyz/swap"
       />
-      <DestinationItem
+      <!-- <DestinationItem
         label="Syncswap"
         icon-url="/img/syncswap.svg"
         :icon="ArrowUpRightIcon"
         as="a"
         target="_blank"
         href="https://syncswap.xyz/"
-      />
+      /> -->
       <DestinationItem
         label="SpaceFi"
         icon-url="/img/spacefi.svg"
