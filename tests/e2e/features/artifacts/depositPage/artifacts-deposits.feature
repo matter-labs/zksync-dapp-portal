@@ -90,50 +90,119 @@ Feature: Artifacts - UI
       | USDC      | 0x0faF6d...2A9 | usdc.svg |
       | wBTC      | 0x0BfcE1...e9c | wbtc.svg |
 
-  @id1643:I @tokens @mainnet
+  @id1643 @tokens @mainnet
   Scenario: Check artifacts on tokens dropdown on Deposit page (Mainnet)
     Given I go to page "/transaction/zksync/era/deposit/?network=era-mainnet"
     When I click by "testId" with "your-account" value
-    Then Element with "testId" "token-dropDown" should be "clickable"
     Then I click by "testId" with "token-dropDown" value
     Then Element with "text" "Choose token" should be "visible"
     Then Element with "placeholder" "Symbol or address" should be "visible"
     Then Element with "class" "token-balance-amount" should be "visible"
-
-  @id1643:II @tokens @mainnet
-  Scenario Outline: Check artifacts on tokens dropdown on Deposit page (Mainnet)
-    Given I go to page "/transaction/zksync/era/deposit/?network=era-mainnet"
-    When I click by "testId" with "your-account" value
-    Then I click by "testId" with "token-dropDown" value
-    Then Element with "text" "<TokenName>" should be "visible"
-    Then Element with "text" "<TokenAddress>" should be "visible"
-    Then Element with "partial src" "<img>" should be "visible"
-    Examples:
-      | TokenName | TokenAddress   | img        |
-      | ETH       | 0x000000...00A | eth.svg    |
-      | USDC      | 0x3355df...af4 | usdc.svg   |
-      | MUTE      | 0x0e97C7...d42 | mute.svg   |
-      | COMBO     | 0xc2B13B...8E3 | combo.svg  |
-      | PERP      | 0x42c1c5...601 | perp.svg   |
-      | LUSD      | 0x503234...115 | lusd.svg   |
-      | DVF       | 0xBbD1bA...716 | dvf.svg    |
-      | WOO       | 0x9E22D7...159 | woo.svg    |
-      | xcRMRK    | 0x6F1A89...545 | xcrmrk.svg |
-      | DERI      | 0x140D5b...803 | deri.svg   |
-      | DEXTF     | 0x9929bC...e41 | dextf.svg  |
-      | GOVI      | 0xD63eF5...044 | govi.svg   |
-      | 1INCH     | 0x3f0B8B...e59 | 1inch.svg  |
-      | SIS       | 0xdd9f72...827 | sis.svg    |
-      | LQTY      | 0xf755cF...401 | lqty.svg   |
-      | PEPE      | 0xFD282F...c71 | pepe.svg   |
-      | rETH      | 0x32Fd44...806 | reth.svg   |
-      | RPL       | 0x1CF855...5BC | rpl.svg    |
-      | UFI       | 0xa0C1BC...dAE | ufi.svg    |
-      | cbETH     | 0x75Af29...ED5 | cbeth.svg  |
-      | RAISE     | 0x3D79F1...46f | raise.svg  |
-      | LSD       | 0x458A2E...bD4 | lsd.svg    |
-      | ETHx      | 0x668cc2...39c | ethx.svg   |
-      | WBTC      | 0xBBeB51...011 | wbtc.svg   |
-      | KNC       | 0x6ee46C...3e6 | wbtc.svg   |
-      | BEL       | 0xB83CFB...2D9 | bel.png    |
-      | ZZ        | 0x1ab721...184 | zz.png     |
+    #ETH
+    Then Element with "text" "ETH" should be "visible"
+    Then Element with "text" "0x000000...00A" should be "visible"
+    Then Element with "partial src" "eth.svg" should be "visible"
+    #USDC
+    Then Element with "text" "USDC" should be "visible"
+    Then Element with "text" "0x3355df...af4" should be "visible"
+    Then Element with "partial src" "usdc.svg" should be "visible"
+    #MUTE
+    Then Element with "text" "MUTE" should be "visible"
+    Then Element with "text" "0x0e97C7...d42" should be "visible"
+    Then Element with "partial src" "mute.svg" should be "visible"
+    #COMBO
+    Then Element with "text" "COMBO" should be "visible"
+    Then Element with "text" "0xc2B13B...8E3" should be "visible"
+    Then Element with "partial src" "combo.svg" should be "visible"
+    #PERP
+    Then Element with "text" "PERP" should be "visible"
+    Then Element with "text" "0x42c1c5...601" should be "visible"
+    Then Element with "partial src" "perp.svg" should be "visible"
+    #LUSD
+    Then Element with "text" "LUSD" should be "visible"
+    Then Element with "text" "0x503234...115" should be "visible"
+    Then Element with "partial src" "lusd.svg" should be "visible"
+    #DVF
+    Then Element with "text" "DVF" should be "visible"
+    Then Element with "text" "0xBbD1bA...716" should be "visible"
+    Then Element with "partial src" "dvf.svg" should be "visible"
+    #WOO
+    Then Element with "text" "WOO" should be "visible"
+    Then Element with "text" "0x9E22D7...159" should be "visible"
+    Then Element with "partial src" "woo.svg" should be "visible"
+    #xcRMRK
+    Then Element with "text" "xcRMRK" should be "visible"
+    Then Element with "text" "0x6F1A89...545" should be "visible"
+    Then Element with "partial src" "xcrmrk.svg" should be "visible"
+    #DERI
+    Then Element with "text" "DERI" should be "visible"
+    Then Element with "text" "0x140D5b...803" should be "visible"
+    Then Element with "partial src" "deri.svg" should be "visible"
+    #DEXTF
+    Then Element with "text" "DEXTF" should be "visible"
+    Then Element with "text" "0x9929bC...e41" should be "visible"
+    Then Element with "partial src" "dextf.svg" should be "visible"
+    #GOVI
+    Then Element with "text" "GOVI" should be "visible"
+    Then Element with "text" "0xD63eF5...044" should be "visible"
+    Then Element with "partial src" "govi.svg" should be "visible"
+    #1INCH
+    Then Element with "text" "1INCH" should be "visible"
+    Then Element with "text" "0x3f0B8B...e59" should be "visible"
+    Then Element with "partial src" "1inch.svg" should be "visible"
+    #SIS
+    Then Element with "text" "SIS" should be "visible"
+    Then Element with "text" "0xdd9f72...827" should be "visible"
+    Then Element with "partial src" "sis.svg" should be "visible"
+    #LQTY
+    Then Element with "text" "LQTY" should be "visible"
+    Then Element with "text" "0xf755cF...401" should be "visible"
+    Then Element with "partial src" "lqty.svg" should be "visible"
+    #PEPE
+    Then Element with "text" "PEPE" should be "visible"
+    Then Element with "text" "0xFD282F...c71" should be "visible"
+    Then Element with "partial src" "pepe.svg" should be "visible"
+    #rETH
+    Then Element with "text" "rETH" should be "visible"
+    Then Element with "text" "0x32Fd44...806" should be "visible"
+    Then Element with "partial src" "reth.svg" should be "visible"
+    #RPL
+    Then Element with "text" "RPL" should be "visible"
+    Then Element with "text" "0x1CF855...5BC" should be "visible"
+    Then Element with "partial src" "rpl.svg" should be "visible"
+    #UFI
+    Then Element with "text" "UFI" should be "visible"
+    Then Element with "text" "0xa0C1BC...dAE" should be "visible"
+    Then Element with "partial src" "ufi.svg" should be "visible"
+    #cbETH
+    Then Element with "text" "cbETH" should be "visible"
+    Then Element with "text" "0x75Af29...ED5" should be "visible"
+    Then Element with "partial src" "cbeth.svg" should be "visible"
+    #RAISE
+    Then Element with "text" "RAISE" should be "visible"
+    Then Element with "text" "0x3D79F1...46f" should be "visible"
+    Then Element with "partial src" "raise.svg" should be "visible"
+    #LSD
+    Then Element with "text" "LSD" should be "visible"
+    Then Element with "text" "0x458A2E...bD4" should be "visible"
+    Then Element with "partial src" "lsd.svg" should be "visible"
+    #ETHx
+    Then Element with "text" "ETHx" should be "visible"
+    Then Element with "text" "0x668cc2...39c" should be "visible"
+    Then Element with "partial src" "ethx.svg" should be "visible"
+    #WBTC
+    Then Element with "text" "WBTC" should be "visible"
+    Then Element with "text" "0xBBeB51...011" should be "visible"
+    Then Element with "partial src" "wbtc.svg" should be "visible"
+    #KNC
+    Then Element with "text" "KNC" should be "visible"
+    Then Element with "text" "0x6ee46C...3e6" should be "visible"
+    Then Element with "partial src" "wbtc.svg" should be "visible"
+    #BEL
+    Then Element with "text" "BEL" should be "visible"
+    Then Element with "text" "0xB83CFB...2D9" should be "visible"
+    Then Element with "partial src" "bel.png" should be "visible"
+    #ZZ
+    Then Element with "text" "ZZ" should be "visible"
+    Then Element with "text" "0x1ab721...184" should be "visible"
+    Then Element with "partial src" "zz.png" should be "visible"
