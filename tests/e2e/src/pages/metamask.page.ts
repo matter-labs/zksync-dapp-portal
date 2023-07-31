@@ -209,7 +209,7 @@ export class MetamaskPage extends BasePage {
   async switchNetwork() {
     const switchNetworkBtnSelector = "//div[@class='transaction-footer-row']//button";
     const switchNetworkBtnElement: any = await this.world.page?.locator(switchNetworkBtnSelector);
-    //check that switchNetworkBtnSelector really switch network button
+    //check that switchNetworkBtnSelector is switch network button
     const buttonText = await switchNetworkBtnElement.innerText();
     const result = buttonText.includes("Change wallet network");
     if ((await switchNetworkBtnElement.isEnabled()) && result) {
