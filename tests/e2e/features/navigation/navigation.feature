@@ -62,6 +62,6 @@ Feature: Navigation
     Then New page has "<url>" partial address
 
     Examples:
-      | Selector type | Selector value                            | url                                     |
-      | xpath         | //*[@class='line-button-with-img-icon']   | https://goerli.explorer.zksync.io/tx    |
+      | Selector type | Selector value              | url                                     |
+      | class         | line-button-with-img-icon   | https://goerli.explorer.zksync.io/tx    |
       

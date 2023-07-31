@@ -54,7 +54,7 @@ Feature: Contacts
     Given I am on the Main page
     Given I click by "text" with "Contacts" value
     When I fill the "//*[@placeholder='Address or ENS or contact name']" input field by "foundation.eth"
-    Then Element with "xpath" "//*[text()='0x47BC...e87']" should be "visible"
+    Then Element with "text" "0x47BC...e87" should be "visible"
     When I click on the Add contact button for found contact
     Then Element with "text" "Edit contact" should be "visible"
     Then Element with "text" "Name of the contact" should be "visible"
@@ -73,6 +73,6 @@ Feature: Contacts
     When I click by text "foundation.eth"
     Then Element with "text" "Remove" should be "visible"
     Then Element with "text" "Remove" should be "clickable"
-    When I click on the Remove contact button
-    When I click on the Are you sure Remove contact button
+    When I click on the "Remove" contact button
+    When I click on the "Are you sure?" contact button
     Then The "foundation.eth" contact name is not present in the list on Contacts page

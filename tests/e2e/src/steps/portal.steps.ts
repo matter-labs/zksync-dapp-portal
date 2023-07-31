@@ -178,7 +178,8 @@ Given("I click on the Save contact button", async function (this: ICustomWorld) 
 });
 
 Given("I click on the Add contact button for found contact", async function (this: ICustomWorld) {
-  await this.page?.locator("//*[@class='line-button-with-img-body']").first().click();
+  contactsPage = new ContactsPage(this);
+  await contactsPage.clickAddButton();
 });
 
 Given("I click on the Edit contact button", async function (this: ICustomWorld) {
@@ -186,14 +187,9 @@ Given("I click on the Edit contact button", async function (this: ICustomWorld) 
   await contactsPage.pressEditBtnModal();
 });
 
-Given("I click on the Remove contact button", async function (this: ICustomWorld) {
+Given("I click on the {string} contact button", async function (this: ICustomWorld, removeButtonName: string) {
   contactsPage = new ContactsPage(this);
-  await contactsPage.pressRemoveBtnModal();
-});
-
-Given("I click on the Are you sure Remove contact button", async function (this: ICustomWorld) {
-  contactsPage = new ContactsPage(this);
-  await contactsPage.pressAreYouSureRemoveBtnModal();
+  await contactsPage.pressRemoveBtnModal(removeButtonName);
 });
 
 Given("I am on the Main page", async function (this: ICustomWorld) {
@@ -236,8 +232,7 @@ Given(
   "The {string} contact name is visible in the list on Contacts page",
   async function (this: ICustomWorld, contactName: string) {
     contactsPage = new ContactsPage(this);
-    element = await this.page?.locator(await contactsPage.contactItem(contactName));
-
+    element = await contactsPage.getContactItem(contactName);
     await expect(element).toBeVisible();
   }
 );
@@ -247,8 +242,7 @@ Given(
   async function (this: ICustomWorld, contactName: string) {
     helper = new Helper(this);
     contactsPage = new ContactsPage(this);
-    element = await this.page?.locator(await contactsPage.contactItem(contactName));
-
+    element = await contactsPage.getContactItem(contactName);
     result = await helper.checkElementVisible(element);
     await expect(result).toBe(false);
   }

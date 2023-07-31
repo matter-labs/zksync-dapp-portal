@@ -20,20 +20,16 @@ export class ContactsPage extends BasePage {
     return "//*[@class='buttons-line-group']//button[1]";
   }
 
-  get removeBtnModal() {
-    return "//*[text()='Remove']";
-  }
-
-  get areYouSureRemoveBtnModal() {
-    return "//*[text()='Are you sure?']";
-  }
-
   get savedContact() {
     return "your-account";
   }
 
   get modalCard() {
     return "//*[@class='modal-card']";
+  }
+
+  get addContactButton() {
+    return "//*[@class='line-button-with-img-body']";
   }
 
   get headerTextModal() {
@@ -69,12 +65,19 @@ export class ContactsPage extends BasePage {
     await this.click(this.editBtnModal);
   }
 
-  async pressRemoveBtnModal() {
-    await this.click(this.removeBtnModal);
+  async pressRemoveBtnModal(removeButtonText: string) {
+    const selector = `//*[text()='${removeButtonText}']`;
+    await this.click(selector);
   }
 
-  async pressAreYouSureRemoveBtnModal() {
-    await this.click(this.areYouSureRemoveBtnModal);
+  async getContactItem(contactName: string) {
+    const result = await this.contactItem(contactName);
+    const selector = await this.world.page?.locator(result);
+    return selector;
+  }
+
+  async clickAddButton() {
+    await this.click(this.addContactButton);
   }
 
   async clickOnSavedContact() {
