@@ -24,7 +24,7 @@ Feature: Artifacts - UI
     Then Modal card element with the "//*[text()='Approving allowance for deposit']" xpath should be "visible"
     Then Modal card element with the "//*[@src='/img/era.svg?v=1']" xpath should be "visible"
     Then Element with "partial text" " Allowance lets you safely authorize the deposit process to access a specific amount of your tokens. No funds will be deducted after signing, except for " should be "visible"
-    Then Element with "partial text" "Learn more" should be "visible"
+    Then Modal card element with the "//*[contains(text(),' Learn more ')]" xpath should be "visible"
     Then Element with "partial text" "Learn more" should be "clickable"
     Then Element with "partial text" "Approve allowance" should be "visible"
     Then Element with "partial text" "Approve allowance" should be "clickable"
