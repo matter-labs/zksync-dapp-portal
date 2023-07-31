@@ -34,8 +34,8 @@ Feature: Artifacts - UI
     Given I am on the Main page
     Given I go to page "/transaction/zksync/era/deposit/?network=era-goerli"
     When I click by "testId" with "your-account" value
-    When I choose "ETH" as token and insert "0.0001" as amount
     When I confirm the network switching
+    When I choose "ETH" as token and insert "0.0001" as amount
     Then Element with "text" " Continue " should be "clickable"
     When I click by text " Continue "
     Then Element with "text" "Confirm transaction" should be "visible"
