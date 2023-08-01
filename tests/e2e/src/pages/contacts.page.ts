@@ -66,8 +66,7 @@ export class ContactsPage extends BasePage {
   }
 
   async pressRemoveBtnModal(removeButtonText: string) {
-    const selector = `//*[text()='${removeButtonText}']`;
-    await this.click(selector);
+    await this.clickByText(removeButtonText);
   }
 
   async getContactItem(contactName: string) {
