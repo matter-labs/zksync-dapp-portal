@@ -12,6 +12,7 @@ Feature: Withdraw
     Then Element with "text" "Send to" should be "visible"
     # 0x5aA876bC32BC76EFf5124b19744B5B3C38b35537 - 2nd wallet address
     Then Element with "text" "0xa439ba06dA84AFc566Ee710Ba12541A73e3a1046" should be "visible"
+    Then Element with "text" " Balance: " should be "visible"
     Then Element with "class" "amount-input-field" should be "visible"
     Then Element with "class" "amount-input-field" should be "clickable"
     Then Element with "alt" "ETH token icon" should be "visible"
@@ -21,10 +22,15 @@ Feature: Withdraw
     Then Element with "data-testid" "token-dropDown" should be "clickable"
     Then Element with "class" "amount-input-max-button" should be "visible"
     Then Element with "class" "amount-input-max-button" should be "clickable"
+    Then Fee should have "$" value
+    Then Fee should have "ETH" value
+    Then Element with "partial src" "eth.svg" should be "visible"
+    Then Element with "text" " Arriving in ~24 hours " should be "visible"
     Then Element with "text" " Continue " should be "disabled"
     Then Element with "text" " Continue " should be "visible"
     When I choose "ETH" as token and insert "0.0000000001" as amount
     Then Element with "text" " Continue " should be "clickable"
+    Then Element with "class" "amount-input-note" should be "visible"
 
   @id1395
   Scenario: Withdraw - Confirm transaction modal - Artifacts
