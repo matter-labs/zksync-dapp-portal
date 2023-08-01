@@ -48,3 +48,31 @@ Feature: Contacts
     When I click on the Save contact button
     Then The "Test1" contact name is visible on the modal window within the Contacts page
     Then Element with "xpath" "//*[@class='info-content']//*[text()='0x26A4c5...C37']" should be "visible"
+
+  @id1527 @id1408
+  Scenario: Check the adding a contact with ENS contact name
+    Given I am on the Main page
+    Given I click by "text" with "Contacts" value
+    When I fill the "//*[@placeholder='Address or ENS or contact name']" input field by "foundation.eth"
+    Then Element with "text" "0x47BC...e87" should be "visible"
+    When I click on the Add contact button for found contact
+    Then Element with "text" "Edit contact" should be "visible"
+    Then Element with "text" "Name of the contact" should be "visible"
+    Then Element with "text" "Ethereum address" should be "visible"
+    When I click on the Save contact button
+    Then The "foundation.eth" contact name is visible in the list on Contacts page
+    Then Element with "text" "Send" should be "visible"
+    Then Element with "text" "Send" should be "clickable"
+    When I click the Send button modal on the Contacts page
+    Then Current page have "/transaction/send?address=0x47BCD42B8545c23031E9918c3D823Be4100D4e87" address
+    Given I go to page "/contacts"
+    Then Element with "text" "foundation.eth" should be "visible"
+    Then Element with "text" "foundation.eth" should be "clickable"
+#    @id1408
+    When I go to page "/contacts"
+    When I click by text "foundation.eth"
+    Then Element with "text" "Remove" should be "visible"
+    Then Element with "text" "Remove" should be "clickable"
+    When I click on the "Remove" contact button
+    When I click on the "Are you sure?" contact button
+    Then The "foundation.eth" contact name is not present in the list on Contacts page
