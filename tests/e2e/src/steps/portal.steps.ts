@@ -180,6 +180,10 @@ Given("I click on the Save contact button", async function (this: ICustomWorld) 
 Given("I click on the Add contact button for found contact", async function (this: ICustomWorld) {
   contactsPage = new ContactsPage(this);
   await contactsPage.clickAddButton();
+
+Given("I click on the Proceed button", async function (this: ICustomWorld) {
+  mainPage = new MainPage(this);
+  await mainPage.clickOnProceedButton();
 });
 
 Given("I click on the Edit contact button", async function (this: ICustomWorld) {
@@ -262,6 +266,15 @@ Then(
   async function (this: ICustomWorld, xpath: string, checkType: string) {
     mainPage = new MainPage(this);
     await mainPage.checkModalCardElement(xpath, checkType);
+  }
+);
+
+Then(
+  "Arrow element for {string} external link should be {string}",
+  config.stepTimeout,
+  async function (this: ICustomWorld, link: string, checkType: string) {
+    mainPage = new MainPage(this);
+    await mainPage.checkArrowElement(link, checkType);
   }
 );
 

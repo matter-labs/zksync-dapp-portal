@@ -41,6 +41,10 @@ export class MainPage extends BasePage {
     return ".total-int";
   }
 
+  get externalLinkArrow() {
+    return "//*[@class='line-button-with-img-icon']";
+  }
+
   get totalDecBalance() {
     return ".total-dec";
   }
@@ -75,6 +79,10 @@ export class MainPage extends BasePage {
 
   get networkSwitcher() {
     return `${this.byTestId}network-switcher`;
+  }
+
+  get proceedButton() {
+    return "//*[contains(., 'Proceed')]";
   }
 
   async selectTransaction(transactionType: string) {
@@ -162,6 +170,25 @@ export class MainPage extends BasePage {
     await this.verifyElement("xpath", selector, checkType);
   }
 
+  async getHrefSelector(externalLinkName: string) {
+    let link: any;
+    if (externalLinkName === "Layerswap") {
+      link = "https://www.layerswap.io/?sourceExchangeName=ZKSYNCERA_MAINNET";
+    } else if (externalLinkName === "Orbiter") {
+      link = "https://www.layerswap.io/?sourceExchangeName=ZKSYNCERA_MAINNET";
+    } else {
+      return console.error("An incorrect link name has been provided");
+    }
+    const selector = `//*[@href='${link}']`;
+    return selector;
+  }
+
+  async checkArrowElement(link: string, checkType: string) {
+    result = await this.getHrefSelector(link);
+    const selector = result + this.externalLinkArrow;
+    await this.verifyElement("xpath", selector, checkType);
+  }
+
   async clickModalCardElement(selectorValue: string) {
     let selector: string;
     const regex = /\/\/\*/g;
@@ -210,5 +237,10 @@ export class MainPage extends BasePage {
       }
     }
     return result;
+  }
+
+  async clickOnProceedButton() {
+    const selector = this.modalCard + this.proceedButton;
+    await this.click(selector);
   }
 }
