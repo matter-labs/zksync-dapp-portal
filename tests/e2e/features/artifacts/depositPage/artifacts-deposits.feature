@@ -24,8 +24,8 @@ Feature: Artifacts - UI
     Then Modal card element with the "//*[text()='Approving allowance for deposit']" xpath should be "visible"
     Then Modal card element with the "//*[@src='/img/era.svg?v=1']" xpath should be "visible"
     Then Element with "partial text" " Allowance lets you safely authorize the deposit process to access a specific amount of your tokens. No funds will be deducted after signing, except for " should be "visible"
-    Then Modal card element with the "//*[contains(text(),' Learn more ')]" xpath should be "visible"
-    Then Modal card element with the "//*[contains(text(),' Learn more ')]" xpath should be "clickable"
+    Then Modal card element with the "//*[contains(text(),'Learn more')]" xpath should be "visible"
+    Then Modal card element with the "//*[contains(text(),'Learn more')]" xpath should be "clickable"
     Then Element with "partial text" "Approve allowance" should be "visible"
     Then Element with "partial text" "Approve allowance" should be "clickable"
 
@@ -34,8 +34,8 @@ Feature: Artifacts - UI
     Given I am on the Main page
     Given I go to page "/transaction/zksync/era/deposit/?network=era-goerli"
     When I click by "testId" with "your-account" value
-    When I choose "ETH" as token and insert "0.0001" as amount
     When I confirm the network switching
+    When I choose "ETH" as token and insert "0.0001" as amount
     Then Element with "text" " Continue " should be "clickable"
     When I click by text " Continue "
     Then Element with "text" "Confirm transaction" should be "visible"

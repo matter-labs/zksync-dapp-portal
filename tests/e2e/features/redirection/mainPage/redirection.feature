@@ -41,3 +41,23 @@ Feature: External Redirection on the Main Page
       | zkSync Lite Goerli  | //*[text()='zkSync Lite Goerli']  | https://goerli.zkscan.io/explorer/accounts/0xa439ba06da84afc566ee710ba12541a73e3a1046 |
       | zkSync Lite Goerli  | //*[text()='Ethereum Goerli']     | https://goerli.etherscan.io/address/0xa439ba06dA84AFc566Ee710Ba12541A73e3a1046        |
 
+  @id1535:I
+  Scenario Outline: Check redirection for the Header links
+    Given I am on the Main page
+    When I click by "<Selector type>" with "<Selector value>" value
+    Then New page has "<url>" address
+
+    Examples:
+      | Selector type | Selector value     | url                                                               |
+      | aria-label    | Medium Blog        | https://blog.matter-labs.io/                                      |
+      | aria-label    | Discord Community  | https://join.zksync.dev/                                          |
+      | aria-label    | Telegram Support   | https://t.me/zksync                                               |
+      | aria-label    | Twitter Community  | https://twitter.com/i/flow/login?redirect_after_login=%2Fzksync   |
+      | aria-label    | Email              | https://zksync.io/contact                                         |
+      
+  @id1535:II
+  Scenario Outline: Check redirection for the Header links
+    Given I am on the Main page
+    When I click by "id" with "zk-sync-white-total" value
+    Then Current page have "/" address
+    

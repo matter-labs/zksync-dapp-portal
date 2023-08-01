@@ -43,4 +43,25 @@ Feature: Navigation
       | USDC              | /transaction/zksync/era?token=0x0faF6df7054946141266420b43783387A78d82A9     |
       | wBTC              | /transaction/zksync/era?token=0x0BfcE1D53451B4a8175DD94e6e029F7d8a701e9c     |
       | View all          | /balances                                                                    |
+
+  @id1492:I
+  Scenario: Check navigation for the Transactions page
+    Given I go to page "/payments/?network=era-goerli"
+    When I click by "<Selector type>" with "<Selector value>" value
+    Then Current page have "<url>" address
+
+    Examples:
+      | Selector type | Selector value               | url                        |
+      | xpath         | //a[text()='View all']       | /payments/all              |
+      | xpath         | //a[text()='Send']           | /transaction/zksync/era    |
+
+  @id1492:II
+  Scenario: Check navigation for the Transactions page
+    Given I go to page "/payments/?network=era-goerli"
+    When I click by "<Selector type>" with "<Selector value>" value
+    Then New page has "<url>" partial address
+
+    Examples:
+      | Selector type | Selector value              | url                                     |
+      | class         | line-button-with-img-icon   | https://goerli.explorer.zksync.io/tx    |
       
