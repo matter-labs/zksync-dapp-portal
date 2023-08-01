@@ -17,3 +17,21 @@ Feature: Artifacts - UI
     Then Element with "href and text" "'/transaction/zksync/era/receive' and 'Add funds'" should be "clickable"
     Then Element with "href and text" "'/balances' and 'View all'" should be "visible"
     Then Element with "href and text" "'/balances' and 'View all'" should be "clickable"
+
+  @id1641 @id1642 @id1643 @id1644 @id1645 @id1646 @tokens @emptyWallet
+  Scenario Outline: Check artifacts on tokens dropdown on Deposit/Withdraw/Transfer page for Empty Wallet
+    Given I go to page "/transaction/zksync/era/<transaction>/?network=era-<network>&address=0x47BCD42B8545c23031E9918c3D823Be4100D4e87"
+    Then I click by "testId" with "token-dropDown" value
+    Then Element with "text" "Choose token" should be "visible"
+    Then Element with "text" "Zero balances" should be "visible"
+    Then Element with "class" "token-balance-amount" should be "visible"
+    Then Element with "text" "0" should be "visible"
+
+    Examples:
+      | network | transaction |
+      | mainnet | deposit     |
+      | goerli  | deposit     |
+      | mainnet | send        |
+      | goerli  | send        |
+      | mainnet | withdraw    |
+      | goerli  | withdraw    |
