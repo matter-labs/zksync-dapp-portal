@@ -8,12 +8,30 @@ import { defineStore, storeToRefs } from "pinia";
 import useColorMode from "@/composables/useColorMode";
 import useObservable from "@/composables/useObservable";
 
+import type { EraNetwork } from "@/data/networks";
+
 import { useRuntimeConfig } from "#imports";
-import { l1Networks } from "@/data/networks";
+import { eraNetworks, l1Networks } from "@/data/networks";
 import { confirmedSupportedWallets, disabledWallets } from "@/data/wallets";
 import { useNetworkStore } from "@/store/network";
 
-const extendedChains = [...Object.values(l1Networks), zkSync, zkSyncTestnet];
+const useExistingEraNetwork = (network: EraNetwork) => {
+  const existingNetworks = [zkSync, zkSyncTestnet];
+  const existingNetwork = existingNetworks.find((existingNetwork) => existingNetwork.id === network.id);
+  if (existingNetwork) return existingNetwork;
+
+  return {
+    id: network.id,
+    name: network.name,
+    network: network.key,
+    nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 },
+    rpcUrls: {
+      default: { http: [network.rpcUrl] },
+      public: { http: [network.rpcUrl] },
+    },
+  };
+};
+const extendedChains = [...Object.values(l1Networks), ...eraNetworks.map(useExistingEraNetwork)];
 const { public: env } = useRuntimeConfig();
 
 export const useOnboardStore = defineStore("onboard", () => {

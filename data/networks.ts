@@ -45,9 +45,10 @@ export const eraNetworks: EraNetwork[] = [
     name: "zkSync Era Local",
     shortName: "Era Local",
     rpcUrl: "http://localhost:8011",
-    getTokens: () => getTokensByNetworkId(280),
+    getTokens: () => getTokensByNetworkId(270),
     visible: true,
   },
+
   {
     id: 324,
     key: "era-mainnet",

@@ -63,6 +63,8 @@ export function removeSmallAmount(
   }
   if (acc.endsWith(".0")) {
     return acc.slice(0, -2);
+  } else if (acc.endsWith(".")) {
+    return acc.slice(0, -1);
   }
   return acc;
 }

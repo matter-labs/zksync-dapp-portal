@@ -27,8 +27,11 @@ export const useEraTokensStore = defineStore("eraTokens", () => {
     try {
       const provider = eraProviderStore.requestProvider();
 
-      const price = await provider.getTokenPrice(tokenAddress === ETH_L2_ADDRESS ? ETH_L1_ADDRESS : tokenAddress);
-      tokenPrices.value[tokenAddress] = typeof price === "number" || typeof price === "string" ? parseFloat(price) : 0;
+      const price = await provider
+        .getTokenPrice(tokenAddress === ETH_L2_ADDRESS ? ETH_L1_ADDRESS : tokenAddress)
+        .catch(() => 0);
+      tokenPrices.value[tokenAddress] =
+        typeof price === "number" || typeof price === "string" ? parseFloat(price.toString()) : 0;
     } catch (error) {
       console.warn(`Failed to get price for Era token ${tokenAddress}`, error);
       tokenPrices.value[tokenAddress] = undefined;
