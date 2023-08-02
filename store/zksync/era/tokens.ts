@@ -1,11 +1,9 @@
-import { getTokenCollection } from "@matterlabs/token-library";
 import { defineStore, storeToRefs } from "pinia";
 
 import type { Token, TokenPrice } from "@/types";
 
 import { useEraProviderStore } from "@/store/zksync/era/provider";
 import { ETH_L1_ADDRESS, ETH_L2_ADDRESS } from "@/utils/constants";
-import { checksumAddress } from "@/utils/formatters";
 
 export const useEraTokensStore = defineStore("eraTokens", () => {
   const eraProviderStore = useEraProviderStore();
@@ -18,19 +16,7 @@ export const useEraTokensStore = defineStore("eraTokens", () => {
     execute: requestTokens,
     reset: resetTokens,
   } = usePromise<Token[]>(async () => {
-    const tokens = await getTokenCollection(eraNetwork.value.id);
-    return tokens.map((token) => {
-      const l2Address = token.l2Address === ETH_L1_ADDRESS ? ETH_L2_ADDRESS : checksumAddress(token.l2Address);
-      return {
-        l1Address: checksumAddress(token.l1Address),
-        address: l2Address,
-        symbol: token.symbol,
-        decimals: token.decimals,
-        iconUrl: token.imageUrl,
-        enabledForFees: l2Address === ETH_L2_ADDRESS,
-        price: undefined,
-      };
-    });
+    return await eraNetwork.value.getTokens();
   });
 
   const tokenPrices = ref<{ [tokenAddress: string]: TokenPrice }>({});

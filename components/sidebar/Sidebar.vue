@@ -9,9 +9,21 @@
           <WalletIcon class="navbar-link-icon" aria-hidden="true" />
           <span class="navbar-link-label">Assets</span>
         </NuxtLink>
-        <NuxtLink :to="{ name: 'payments' }" class="navbar-link">
+        <NuxtLink
+          v-if="version === 'era' && eraNetwork.blockExplorerApi"
+          :to="{ name: 'payments' }"
+          class="navbar-link"
+        >
           <ArrowsRightLeftIcon class="navbar-link-icon" aria-hidden="true" />
           <span class="navbar-link-label">Transactions</span>
+        </NuxtLink>
+        <NuxtLink
+          v-else-if="version === 'era' && !eraNetwork.blockExplorerApi"
+          :to="{ name: 'transaction-zksync-era-send' }"
+          class="navbar-link desktop-hidden"
+        >
+          <PaperAirplaneIcon class="navbar-link-icon" aria-hidden="true" />
+          <span class="navbar-link-label">Send</span>
         </NuxtLink>
         <NuxtLink :to="{ name: 'contacts' }" class="navbar-link">
           <UserGroupIcon class="navbar-link-icon" aria-hidden="true" />
@@ -38,12 +50,20 @@
 <script lang="ts" setup>
 import { ref } from "vue";
 
-import { ArrowsRightLeftIcon, ChevronDownIcon, UserGroupIcon, WalletIcon } from "@heroicons/vue/24/outline";
+import {
+  ArrowsRightLeftIcon,
+  ChevronDownIcon,
+  PaperAirplaneIcon,
+  UserGroupIcon,
+  WalletIcon,
+} from "@heroicons/vue/24/outline";
 import { storeToRefs } from "pinia";
 
 import { useNetworkStore } from "@/store/network";
+import { useEraProviderStore } from "@/store/zksync/era/provider";
 
 const { selectedNetwork, version } = storeToRefs(useNetworkStore());
+const { eraNetwork } = storeToRefs(useEraProviderStore());
 
 const networkChangeModalOpened = ref(false);
 </script>
@@ -71,6 +91,9 @@ const networkChangeModalOpened = ref(false);
       @apply dark:text-white;
       &.router-link-exact-active {
         @apply bg-white text-primary-400 dark:bg-neutral-900 dark:text-white;
+      }
+      &.desktop-hidden {
+        @apply md:hidden;
       }
 
       .navbar-link-icon {
