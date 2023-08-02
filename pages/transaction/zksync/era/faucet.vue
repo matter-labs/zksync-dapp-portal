@@ -11,61 +11,84 @@
   <h1 class="h1">Faucet</h1>
   <CommonContentBlock class="faucet-page">
     <AnimationsIdleFaucet class="mx-auto w-80" />
-    <p class="mt-3 text-center leading-tight wrap-balance">
-      Ready to explore <span class="font-medium">zkSync Era</span>? Get started with our faucet tool, offering free test
-      tokens, once per day, to enrich your crypto journey.
-    </p>
-    <div class="mt-5 flex flex-wrap justify-center gap-1.5 lg:px-4">
-      <TokenBadge v-for="item in faucetTokens" v-bind="item" :key="item.token.symbol" />
+    <div v-if="noFunds">
+      <p class="text-center text-2xl font-bold">Out of funds</p>
+      <p class="mt-3 text-center leading-tight wrap-balance">
+        The faucet is <span class="font-medium">out of funds currently</span>. If you want to test your app, consider
+        testing it locally with access to rich wallets
+        <a class="link" href="https://era.zksync.io/docs/tools/testing/" target="_blank"
+          >following the instructions from our docs</a
+        >.
+      </p>
+      <div class="mt-3 text-center leading-tight wrap-balance">
+        You can also request Goerli ETH from one of the following third party faucets:
+        <ul class="mt-4 space-y-3">
+          <li>
+            <a class="link hover:underline" href="https://faucet.chainstack.com/goerli-faucet" target="_blank"
+              >Chainstack faucet</a
+            >
+          </li>
+          <li>
+            <a class="link hover:underline" href="https://faucet.quicknode.com/ethereum/goerli" target="_blank"
+              >QuickNode faucet</a
+            >
+          </li>
+          <li><a class="link hover:underline" href="https://goerli-faucet.pk910.de/" target="_blank">PoW faucet</a></li>
+        </ul>
+      </div>
     </div>
 
-    <div
-      ref="turnstileElement"
-      class="relative isolate mx-auto mt-5 flex h-[65px] w-[300px] justify-center"
-      :class="{ hidden: turnstileError || !isFaucetAvailable || !faucetAvailableOnCurrentNetwork }"
-    >
-      <CommonContentLoader class="absolute inset-0 z-[-1] block h-full w-full" />
-    </div>
-    <CommonErrorBlock v-if="isFaucetAvailable && turnstileError" class="mt-5" @try-again="initializeTurnstile">
-      Captcha error: {{ turnstileError }}
-    </CommonErrorBlock>
-    <CommonErrorBlock v-else-if="isFaucetAvailable && faucetError" class="mt-2" @try-again="requestTokens">
-      Requesting test tokens error: {{ faucetError.message }}
-    </CommonErrorBlock>
+    <div v-else>
+      <p class="mt-3 text-center leading-tight wrap-balance">
+        Ready to explore <span class="font-medium">zkSync Era</span>? Get started with our faucet tool, offering free
+        test tokens, once per day, to enrich your crypto journey.
+      </p>
 
-    <div class="mt-5">
-      <template v-if="isFaucetAvailable">
-        <template v-if="!faucetAvailableOnCurrentNetwork">
-          <template v-if="faucetNetwork">
+      <div class="mt-5 flex flex-wrap justify-center gap-1.5 lg:px-4">
+        <TokenBadge v-for="item in faucetTokens" v-bind="item" :key="item.token.symbol" />
+      </div>
+
+      <div
+        ref="turnstileElement"
+        class="relative isolate mx-auto mt-5 flex h-[65px] w-[300px] justify-center"
+        :class="{ hidden: turnstileError || !isFaucetAvailable || !faucetAvailableOnCurrentNetwork }"
+      >
+        <CommonContentLoader class="absolute inset-0 z-[-1] block h-full w-full" />
+      </div>
+      <CommonErrorBlock v-if="isFaucetAvailable && turnstileError" class="mt-5" @try-again="initializeTurnstile">
+        Captcha error: {{ turnstileError }}
+      </CommonErrorBlock>
+      <CommonErrorBlock v-else-if="isFaucetAvailable && faucetError" class="mt-2" @try-again="requestTokens">
+        Requesting test tokens error: {{ faucetError.message }}
+      </CommonErrorBlock>
+
+      <div class="mt-5">
+        <template v-if="isFaucetAvailable">
+          <template v-if="!faucetAvailableOnCurrentNetwork">
             <CommonButtonTopInfo>Switch to {{ faucetNetwork.name }} network to request test tokens</CommonButtonTopInfo>
             <CommonButton as="button" variant="primary-solid" class="mx-auto" @click="changeNetwork">
               Change network to {{ faucetNetwork.name }}
             </CommonButton>
           </template>
           <template v-else>
-            <CommonButton as="button" variant="primary-solid" disabled class="mx-auto">
-              Faucet is not available on {{ eraNetwork.name }} network
+            <CommonButton
+              as="button"
+              variant="primary-solid"
+              :disabled="buttonDisabled"
+              class="mx-auto"
+              @click="requestTokens"
+            >
+              Request free test tokens
             </CommonButton>
           </template>
         </template>
         <template v-else>
-          <CommonButton
-            as="button"
-            variant="primary-solid"
-            :disabled="buttonDisabled"
-            class="mx-auto"
-            @click="requestTokens"
-          >
-            Request free test tokens
+          <CommonButtonTopInfo>You already requested test tokens in the last 24 hours</CommonButtonTopInfo>
+          <CommonButton as="button" variant="primary-solid" disabled class="mx-auto">
+            You can use faucet in&nbsp;<CommonTimer :future-date="faucetAvailableTime!" />
           </CommonButton>
         </template>
-      </template>
-      <template v-else>
-        <CommonButtonTopInfo>You already requested test tokens in the last 24 hours</CommonButtonTopInfo>
-        <CommonButton as="button" variant="primary-solid" disabled class="mx-auto">
-          You can use faucet in&nbsp;<CommonTimer :future-date="faucetAvailableTime!" />
-        </CommonButton>
-      </template>
+      </div>
     </div>
   </CommonContentBlock>
 </template>
@@ -81,8 +104,6 @@ import FaucetModal, { type FaucetStep } from "@/components/transaction/zksync/er
 import useIsBeforeDate from "@/composables/useIsBeforeDate";
 import useTurnstile from "@/composables/useTurnstile";
 import useFaucet from "@/composables/zksync/era/useFaucet";
-
-import type { EraNetwork } from "@/data/networks";
 
 import { eraNetworks } from "@/data/networks";
 import { useNetworkStore } from "@/store/network";
@@ -101,9 +122,12 @@ const { eraNetwork } = storeToRefs(useEraProviderStore());
 
 const route = useRoute();
 
-const faucetNetwork = computed<EraNetwork | undefined>(() => {
-  if (eraNetwork.value.faucetUrl) {
-    return eraNetwork.value;
+// displays the out of funds message replacing the form to request tokens
+const noFunds = true;
+
+const faucetNetwork = computed(() => {
+  if (!eraNetwork.value.faucetUrl) {
+    return eraNetworks.filter((network) => network.faucetUrl)[0];
   }
   return eraNetworks.filter((network) => network.faucetUrl)[0];
 });

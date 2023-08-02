@@ -1,58 +1,70 @@
-@withdraw @regression @artifacts @bridgePage
-Feature: Withdraw
+@artifacts @regression @depositPage
+Feature: Artifacts - UI
 
   Background:
     Given Connect Metamask extension with login action
 
-  @id1382
-  Scenario: Withdraw - Send - Artifacts
-    When I go to "Withdraw" transaction section
-    When I click by "text" with "Your account" value
-    When I confirm the network switching
-    Then Element with "text" "Send to" should be "visible"
-    # 0x5aA876bC32BC76EFf5124b19744B5B3C38b35537 - 2nd wallet address
-    Then Element with "text" "0xa439ba06dA84AFc566Ee710Ba12541A73e3a1046" should be "visible"
-    Then Element with "class" "amount-input-field" should be "visible"
-    Then Element with "class" "amount-input-field" should be "clickable"
-    Then Element with "alt" "ETH token icon" should be "visible"
-    Then Element with "placeholder" "0" should be "visible"
-    Then Element with "class" "break-all" should be "visible"
-    Then Element with "data-testid" "token-dropDown" should be "visible"
-    Then Element with "data-testid" "token-dropDown" should be "clickable"
-    Then Element with "class" "amount-input-max-button" should be "visible"
-    Then Element with "class" "amount-input-max-button" should be "clickable"
-    Then Element with "text" " Continue " should be "disabled"
-    Then Element with "text" " Continue " should be "visible"
-    When I choose "ETH" as token and insert "0.0000000001" as amount
-    Then Element with "text" " Continue " should be "clickable"
 
-  @id1395
-  Scenario: Withdraw - Confirm transaction modal - Artifacts
+  @id1438 @deposit
+  Scenario: Check artifacts on the Approve allowance modal - Deposits
     Given I am on the Main page
-    Given I go to "Withdraw" transaction section
-    Given I click by "text" with "Your account" value
+    Given I go to page "/transaction/zksync/era/deposit/?network=era-goerli"
+    When I click by "testId" with "your-account" value
+    When I confirm the network switching
+    When I choose "DAI" as token and insert "6" as amount
+    Then Element with "text" " Continue " should be "clickable"
+    When I click by text " Continue "
+    Then Element with "text" "Allowance" should be "visible"
+    Then Element with "text" "Your Ethereum Goerli account" should be "visible"
+    Then Element with "partial class" "address-card-avatar" should be "visible"
+    Then Modal card element with the "//*[text()='0xa439...046']" xpath should be "visible"
+    Then Modal card element with the "//*[@alt='DAI token icon']" xpath should be "visible"
+    Then Modal card element with the "//*[text()='0x3e7676...D4b']" xpath should be "visible"
+    Then Modal card element with the "//*[@class='token-balance-price']" xpath should be "visible"
+    Then Modal card element with the "//*[text()='Approving allowance for deposit']" xpath should be "visible"
+    Then Modal card element with the "//*[@src='/img/era.svg?v=1']" xpath should be "visible"
+    Then Element with "partial text" " Allowance lets you safely authorize the deposit process to access a specific amount of your tokens. No funds will be deducted after signing, except for " should be "visible"
+    Then Modal card element with the "//*[contains(text(),'Learn more')]" xpath should be "visible"
+    Then Modal card element with the "//*[contains(text(),'Learn more')]" xpath should be "clickable"
+    Then Element with "partial text" "Approve allowance" should be "visible"
+    Then Element with "partial text" "Approve allowance" should be "clickable"
+
+  @id1398 @deposit
+  Scenario: Check artifacts on the Confirm transaction modal - Deposits
+    Given I am on the Main page
+    Given I go to page "/transaction/zksync/era/deposit/?network=era-goerli"
+    When I click by "testId" with "your-account" value
     When I confirm the network switching
     When I choose "ETH" as token and insert "0.0001" as amount
+    Then Element with "text" " Continue " should be "clickable"
     When I click by text " Continue "
     Then Element with "text" "Confirm transaction" should be "visible"
     Then Element with "text" "Your Ethereum Goerli account" should be "visible"
-    Then Element with "text" "Your zkSync Era Testnet account" should be "visible"
-    Then Element with "partial class" "address-card-avatar" should be "visible"
-    Then Modal card element with the "//*[text()='0xa439...046']" xpath should be "visible"
-    Then Modal card element with the "//*[@alt='ETH token icon']" xpath should be "visible"
-    Then Modal card element with the "//*[text()='0x000000...00A']" xpath should be "visible"
-    Then Modal card element with the "//*[@class='token-balance-price']" xpath should be "visible"
-    Then Modal card element with the "//*[@src='https://firebasestorage.googleapis.com/v0/b/token-library.appspot.com/o/eth.svg?alt=media&token=1985e3d8-3aa7-4d04-8839-565d4c341615']" xpath should be "visible"
-    Then Modal card element with the "//*[contains(@class,'fee-details-container') and //span[contains(text(),'Fee')]]" xpath should be "visible"
-    Then Modal card element with the "//*[contains(@class,'fee-details-container') and //span[contains(text(),'Total to pay')]]" xpath should be "visible"
-    Then Modal card element with the "//*[text()=' Arriving in ~24 hours ']" xpath should be "visible"
-    Then Modal card element with the "//*[text()=' Arriving in ~24 hours ']" xpath should be "clickable"
-    Then Element with "text" "Send to Ethereum Goerli" should be "visible"
-    Then Element with "text" "Send to Ethereum Goerli" should be "clickable"
 
-  @id1644:I @tokens @testnet
-  Scenario: Check artifacts on tokens dropdown on Withdraw page (Testnet)
-    Given I go to page "/transaction/zksync/era/withdraw/?network=era-goerli"
+
+  @id1336 @deposit
+  Scenario: Check artifacts on the Add fund to page - Deposits
+    Given I am on the Main page
+    Given I go to page "/transaction/zksync/era/deposit/?network=era-goerli"
+    When I click by "testId" with "your-account" value
+    When I confirm the network switching
+    Then Element with "text" "Add funds to" should be "visible"
+    Then Element with "id" "amount-input" should be "visible"
+    Then Element with "text" " Balance: " should be "visible"
+    Then Element with "class" "break-all" should be "visible"
+    Then Element with "text" " Max " should be "visible"
+    Then Element with "text" " Max " should be "clickable"
+    Then Element with "placeholder" "0" should be "visible"
+    Then Element with "testId" "token-dropDown" should be "visible"
+    Then Element with "testId" "token-dropDown" should be "clickable"
+    Then Element with "testId" "fee-amount" should be "visible"
+    Then Fee should have "$" value
+    Then Fee should have "ETH" value
+    Then Element with "text" " Continue " should be "visible"
+
+  @id1641:I @tokens @testnet
+  Scenario: Check artifacts on tokens dropdown on Deposit page (Testnet)
+    Given I go to page "/transaction/zksync/era/deposit/?network=era-goerli"
     When I click by "testId" with "your-account" value
     Then Element with "testId" "token-dropDown" should be "clickable"
     Then I click by "testId" with "token-dropDown" value
@@ -61,9 +73,9 @@ Feature: Withdraw
     Then Element with "class" "token-balance-amount" should be "visible"
     Then Element with "class" "token-balance-price" should be "visible"
 
-  @id1644:II @tokens @testnet
-  Scenario Outline: Check tokens artifacts dropdown on Withdraw page (Testnet)
-    Given I go to page "/transaction/zksync/era/withdraw/?network=era-goerli"
+  @id1641:II @tokens @testnet
+  Scenario Outline: Check artifacts on tokens dropdown on Deposit page (Testnet)
+    Given I go to page "/transaction/zksync/era/deposit/?network=era-goerli"
     When I click by "testId" with "your-account" value
     Then I click by "testId" with "token-dropDown" value
     Then Element with "text" "<TokenName>" should be "visible"
@@ -78,9 +90,9 @@ Feature: Withdraw
       | USDC      | 0x0faF6d...2A9 | usdc.svg |
       | wBTC      | 0x0BfcE1...e9c | wbtc.svg |
 
-  @id1642 @tokens @mainnet
-  Scenario: Check tokens artifacts dropdown on Withdraw page (Mainnet)
-    Given I go to page "/transaction/zksync/era/withdraw/?network=era-mainnet"
+  @id1643 @tokens @mainnet
+  Scenario: Check artifacts on tokens dropdown on Deposit page (Mainnet)
+    Given I go to page "/transaction/zksync/era/deposit/?network=era-mainnet"
     When I click by "testId" with "your-account" value
     Then I click by "testId" with "token-dropDown" value
     Then Element with "text" "Choose token" should be "visible"

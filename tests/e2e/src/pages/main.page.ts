@@ -29,6 +29,10 @@ export class MainPage extends BasePage {
     return "//*[@class='modal-card']";
   }
 
+  get menuElement() {
+    return "//*[@class='menu-options']";
+  }
+
   get avatarModalCard() {
     return '//*[contains(@class, "address-card-avatar")]';
   }
@@ -171,6 +175,11 @@ export class MainPage extends BasePage {
     await this.click(this.modalCard + selector);
   }
 
+  async clickMenuElement(text: string) {
+    const selector = `//*[contains(text(),'${text}')]`;
+    await this.click(this.menuElement + selector);
+  }
+
   async selectNetwork(networkName: string) {
     await this.click(this.networkSwitcher);
 
@@ -185,5 +194,21 @@ export class MainPage extends BasePage {
       console.log("An incorrect value of the Network name");
     }
     await this.click(this.modalCard + result);
+  }
+
+  async getTypeOfTransactionsElement() {
+    const href = Routes.txBlockExplorer;
+    const transactionTypes = ["Receive", "Withdraw", "Send"];
+
+    for (let i = 0; i < transactionTypes.length; i++) {
+      const selectorValue = `'${href}' and '${transactionTypes[i]}'`;
+
+      result = await this.getElementByPartialHrefAndText(selectorValue);
+
+      if (result !== undefined) {
+        break;
+      }
+    }
+    return result;
   }
 }

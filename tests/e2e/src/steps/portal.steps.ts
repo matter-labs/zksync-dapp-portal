@@ -37,6 +37,11 @@ When("I click by text {string}", config.stepTimeout, async function (this: ICust
   await basePage.clickByText(text);
 });
 
+When("I click by partial text {string}", config.stepTimeout, async function (this: ICustomWorld, text: string) {
+  basePage = new BasePage(this);
+  await basePage.clickByPartialText(text);
+});
+
 When(
   "I click by {string} with {string} value",
   config.stepTimeout,
@@ -172,9 +177,19 @@ Given("I click on the Save contact button", async function (this: ICustomWorld) 
   await this.page?.locator("//button[@type='submit' and text()='Save contact']").first().click();
 });
 
+Given("I click on the Add contact button for found contact", async function (this: ICustomWorld) {
+  contactsPage = new ContactsPage(this);
+  await contactsPage.clickAddButton();
+});
+
 Given("I click on the Edit contact button", async function (this: ICustomWorld) {
   contactsPage = new ContactsPage(this);
   await contactsPage.pressEditBtnModal();
+});
+
+Given("I click on the {string} contact button", async function (this: ICustomWorld, removeButtonName: string) {
+  contactsPage = new ContactsPage(this);
+  await contactsPage.pressRemoveBtnModal(removeButtonName);
 });
 
 Given("I am on the Main page", async function (this: ICustomWorld) {
@@ -213,6 +228,26 @@ Given(
   }
 );
 
+Given(
+  "The {string} contact name is visible in the list on Contacts page",
+  async function (this: ICustomWorld, contactName: string) {
+    contactsPage = new ContactsPage(this);
+    element = await contactsPage.getContactItem(contactName);
+    await expect(element).toBeVisible();
+  }
+);
+
+Given(
+  "The {string} contact name is not present in the list on Contacts page",
+  async function (this: ICustomWorld, contactName: string) {
+    helper = new Helper(this);
+    contactsPage = new ContactsPage(this);
+    element = await contactsPage.getContactItem(contactName);
+    result = await helper.checkElementVisible(element);
+    await expect(result).toBe(false);
+  }
+);
+
 Then("Fee should have {string} value", config.stepTimeout, async function (this: ICustomWorld, fee: string) {
   mainPage = new MainPage(this);
   basePage = new BasePage(this);
@@ -239,6 +274,11 @@ When(
   }
 );
 
+When("I click by the {string} text on the Menu", config.stepTimeout, async function (this: ICustomWorld, text: string) {
+  mainPage = new MainPage(this);
+  await mainPage.clickMenuElement(text);
+});
+
 Then("I close modal card", config.stepTimeout, async function (this: ICustomWorld) {
   const basePage = new BasePage(this);
   const mainPage = new MainPage(this);
@@ -262,6 +302,14 @@ Then("New page has {string} address", config.stepTimeout, async function (this: 
   await expect(result).toBe(url);
 });
 
+Then("New page has {string} partial address", config.stepTimeout, async function (this: ICustomWorld, url: string) {
+  mainPage = new MainPage(this);
+  helper = new Helper(this);
+  await this.page?.waitForTimeout(5000);
+  result = await helper.checkTabByUrl(url, true);
+  await expect(result).toContain(url);
+});
+
 Then(
   "I hover the {string} element with {string} value",
   config.stepTimeout,
@@ -270,5 +318,16 @@ Then(
     element = await basePage.returnElementByType(elementType, value);
 
     await element.hover();
+  }
+);
+
+Then(
+  "The list has the one of the expected type of transactions",
+  config.stepTimeout,
+  async function (this: ICustomWorld) {
+    const mainPage = new MainPage(this);
+    element = await mainPage.getTypeOfTransactionsElement();
+
+    await expect(element).toBeVisible();
   }
 );
