@@ -2,6 +2,7 @@
 import { setTimeout } from "timers/promises";
 
 import { BasePage } from "./base.page";
+import { MainPage } from "./main.page";
 import { Extension } from "../data/data";
 import { depositTag, Helper } from "../helpers/helper";
 import { config, wallet } from "../support/config";
@@ -39,9 +40,6 @@ export class MetamaskPage extends BasePage {
     return "//*[@class='alert-body']//*[contains(text(), 'Fee has changed')]";
   }
 
-  get confirmFeeChange() {
-    return "//*[@class='alert-body']//*[contains(., 'Confirm')]";
-  }
   get saveFeeBtn() {
     return "//*[@class='popover-container']//button";
   }
@@ -214,10 +212,11 @@ export class MetamaskPage extends BasePage {
   }
 
   async isFeeAlert(helper: Helper, element: string) {
+    const mainPage = new MainPage(this.world);
     const feeAlert = await helper.checkElementVisible(this.feeChangerAlert);
     if (feeAlert) {
-      await helper.checkElementVisible(this.confirmFeeChange);
-      await this.world.page?.locator(this.confirmFeeChange).first().click();
+      await helper.checkElementVisible(mainPage.confirmFeeChange);
+      await this.world.page?.locator(mainPage.confirmFeeChange).first().click();
       await this.catchPopUpByClick(element);
       return true;
     }
