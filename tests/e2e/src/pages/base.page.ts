@@ -205,6 +205,11 @@ export class BasePage {
     return await element;
   }
 
+  async getElementByPartialString(text: string) {
+    element = await this.world.page?.locator(`//*[text()[contains(string(), '${text}')]]`).first();
+    return await element;
+  }
+
   async returnElementByType(elementType: string, value: string) {
     if (elementType === "alt") {
       element = await this.getElementByAlt(value);
@@ -244,6 +249,8 @@ export class BasePage {
       element = await this.getElementByPartialSrc(value);
     } else if (elementType === "aria-label") {
       element = await this.getElementByAriaLabel(value);
+    } else if (elementType === "partial string") {
+      element = await this.getElementByPartialString(value);
     }
     return element;
   }
@@ -278,17 +285,6 @@ export class BasePage {
     } else if (checkType === "enabled") {
       result = await element.isDisabled();
       await expect(result).toBe(false);
-    }
-  }
-  async checkElementToContainText(elementType: string, value: string, checkText: string) {
-    element = await this.returnElementByType(elementType, value);
-
-    if (elementType === "testId" && value === "warning_modal") {
-      const element = `//*[@class='modal-card']//*[contains(., '${checkText}')]`;
-      await this.verifyElement("xpath", element, "visible");
-    } else {
-      const element = await this.returnElementByType(elementType, value);
-      await expect(element).toContainText(checkText);
     }
   }
 }

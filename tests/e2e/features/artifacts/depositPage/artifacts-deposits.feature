@@ -63,7 +63,7 @@ Feature: Artifacts - UI
     Then Element with "text" " Continue " should be "visible"
 
   @id1647 @tokens
-  Scenario Outline:  Check search functionality for Choose Tokens (with results)
+  Scenario Outline:  Deposit - Check search functionality for Choose Tokens (with results)
     Given I go to page "<network>"
     When I click by "testId" with "your-account" value
     Then I click by "testId" with "token-dropDown" value
@@ -79,12 +79,12 @@ Feature: Artifacts - UI
 
 
   @id1548 @tokens
-  Scenario Outline:  Check search functionality for Choose Tokens (no results)
+  Scenario Outline:  Deposit - Check search functionality for Choose Tokens (no results)
     Given I go to page "<network>"
     When I click by "testId" with "your-account" value
     Then I click by "testId" with "token-dropDown" value
     When I fill the "Symbol or address" input field on the Contacts page with "AAA" text
-    Then Element with "testId" value "warning_modal" should contain 'No tokens was found for "AAA"' text
+    Then Element with "partial string" 'No tokens was found for "AAA"' should be "visible"
     Then Element with "partial text" "Make sure you are using correct zkSync network" should be "visible"
 
     Examples:

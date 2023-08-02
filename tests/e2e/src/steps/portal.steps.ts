@@ -32,15 +32,6 @@ Given("I go to page {string}", config.stepTimeout, async function (this: ICustom
   await this.page?.goto(config.BASE_URL + route);
 });
 
-Then(
-  "Element with {string} value {string} should contain {string} text",
-  config.stepTimeout,
-  async function (this: ICustomWorld, elementType: string, value: string, checkText: string) {
-    basePage = new BasePage(this);
-    await basePage.checkElementToContainText(elementType, value, checkText);
-  }
-);
-
 When("I click by text {string}", config.stepTimeout, async function (this: ICustomWorld, text: string) {
   basePage = new BasePage(this);
   await basePage.clickByText(text);
