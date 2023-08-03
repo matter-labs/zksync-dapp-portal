@@ -105,7 +105,12 @@
           processed on <span class="font-medium">{{ destinations.zkSyncLite.label }}</span
           >. You are free to close this page.
         </p>
-        <a :href="`${l1BlockExplorerUrl}/tx/${ethTransactionHash}`" target="_blank" class="alert-link">
+        <a
+          v-if="l1BlockExplorerUrl"
+          :href="`${l1BlockExplorerUrl}/tx/${ethTransactionHash}`"
+          target="_blank"
+          class="alert-link"
+        >
           Track status
           <ArrowUpRightIcon class="ml-1 h-3 w-3" />
         </a>
