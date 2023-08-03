@@ -20,15 +20,16 @@ You can use Portal to connect to your [local zkSync Era node](https://era.zksync
   cd dapp-portal
   npm install
   ```
-- Go to the `data/networks.ts` and uncomment needed network config inside the `eraNetworks` array.
-  - **in-memory node**: uncomment config with key `era-local-memory`
-  - **dockerized local setup**: uncomment config with key `era-local-dockerized`
-
-  <small>Make any other changes to the network config if needed.</small>
+- In case network id, rpc url or any other information differs from the default values, you can change them in `data/networks.ts` file.
 - Run the development server
-  ```bash
-  npm run dev
-  ```
+  - in-memory node:
+    ```bash
+    dev:local:memory
+    ```
+  - dockerized local setup:
+    ```bash
+    dev:local:docker
+    ```
   Check the console output to find started Portal URL and open it in your browser (usually http://localhost:3000)
 
 ---

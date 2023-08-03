@@ -50,10 +50,10 @@ import { isAddress } from "ethers/lib/utils";
 import { storeToRefs } from "pinia";
 
 import useColorMode from "@/composables/useColorMode";
+import useNetworks from "@/composables/useNetworks";
 
 import { useHead, useRoute } from "#app";
 import { bridge as bridgeMeta } from "@/data/meta";
-import { eraNetworks } from "@/data/networks";
 import { useNetworkStore } from "@/store/network";
 import { useOnboardStore } from "@/store/onboard";
 import { checksumAddress } from "@/utils/formatters";
@@ -86,6 +86,7 @@ const route = useRoute();
 
 useColorMode().switchColorMode("dark");
 
+const { eraNetworks } = useNetworks();
 const networkStore = useNetworkStore();
 const { account, isConnectingWallet } = storeToRefs(useOnboardStore());
 const { l1Network, version } = storeToRefs(networkStore);

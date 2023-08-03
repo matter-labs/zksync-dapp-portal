@@ -6,16 +6,17 @@ import { Web3Modal } from "@web3modal/html";
 import { defineStore, storeToRefs } from "pinia";
 
 import useColorMode from "@/composables/useColorMode";
+import useNetworks from "@/composables/useNetworks";
 import useObservable from "@/composables/useObservable";
 
 import type { EraNetwork } from "@/data/networks";
 import type { Chain } from "@wagmi/core";
 
 import { useRuntimeConfig } from "#imports";
-import { eraNetworks, zkSyncLiteNetworks } from "@/data/networks";
 import { confirmedSupportedWallets, disabledWallets } from "@/data/wallets";
 import { useNetworkStore } from "@/store/network";
 
+const { eraNetworks, zkSyncLiteNetworks } = useNetworks();
 const useExistingEraChain = (network: EraNetwork) => {
   const existingNetworks = [zkSync, zkSyncTestnet];
   return existingNetworks.find((existingNetwork) => existingNetwork.id === network.id);
@@ -32,7 +33,6 @@ const createEraChain = (network: EraNetwork) => {
     },
   };
 };
-
 const getAllChains = () => {
   const chains: Chain[] = [];
   const addUniqueChain = (chain: Chain) => {

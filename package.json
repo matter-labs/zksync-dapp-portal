@@ -5,6 +5,8 @@
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev",
+    "dev:local:memory": "cross-env LOCAL_NODE=memory npm run dev",
+    "dev:local:docker": "cross-env LOCAL_NODE=dockerized npm run dev",
     "test:unit": "vitest --environment jsdom",
     "test:unit:ci": "TZ=UTC-3 vitest --environment jsdom --run",
     "generate": "nuxt generate && npm run generate-meta",
@@ -31,6 +33,7 @@
     "adm-zip": "^0.5.9",
     "allure-cucumberjs8": "^2.0.0-beta.15",
     "autoprefixer": "^10.4.13",
+    "cross-env": "^7.0.3",
     "cucumber-console-formatter": "^1.0.0",
     "cucumber-html-reporter": "^5.5.0",
     "date-fns": "^2.29.3",

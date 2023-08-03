@@ -39,59 +39,60 @@ export type EraNetwork = L2Network & {
   faucetUrl?: string;
   getTokens: () => Token[] | Promise<Token[]>;
 };
-export const eraNetworks: EraNetwork[] = [
-  // See the official documentation on running a local zkSync node: https://era.zksync.io/docs/tools/testing/
-  // Also see the guide in the README.md file in the root of the repository.
 
-  // in-memory node default config. Docs: https://era.zksync.io/docs/tools/testing/era-test-node.html
-  /* {
-    id: 260,
-    key: "era-local-memory",
-    name: "Hyperchain Local",
-    shortName: "Hyperchain Local",
-    rpcUrl: "http://localhost:8011",
-    getTokens: () => [
-      {
-        address: "0x000000000000000000000000000000000000800A",
-        symbol: "ETH",
-        decimals: 18,
-        iconUrl: "/img/eth.svg",
-        enabledForFees: true,
-      },
-    ],
-    visible: true,
-  }, */
+// See the official documentation on running a local zkSync node: https://era.zksync.io/docs/tools/testing/
+// Also see the guide in the README.md file in the root of the repository.
 
-  // Dockerized local setup default config. Docs: https://era.zksync.io/docs/tools/testing/dockerized-testing.html
-  /* {
-    id: 270,
-    key: "era-local-dockerized",
-    name: "Hyperchain Local",
-    shortName: "Hyperchain Local",
-    rpcUrl: "http://localhost:3050",
-    getTokens: () => [
-      {
-        address: "0x000000000000000000000000000000000000800A",
-        l1Address: "0x0000000000000000000000000000000000000000",
-        symbol: "ETH",
-        decimals: 18,
-        iconUrl: "/img/eth.svg",
-        enabledForFees: true,
-      },
-    ],
-    l1Network: {
-      id: 9,
-      name: "L1 Local",
-      network: "l1-local",
-      nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 },
-      rpcUrls: {
-        default: { http: ["http://localhost:8545"] },
-        public: { http: ["http://localhost:8545"] },
-      },
+// In-memory node default config. Docs: https://era.zksync.io/docs/tools/testing/era-test-node.html
+export const eraInMemoryNode: EraNetwork = {
+  id: 260,
+  key: "era-local-memory",
+  name: "Hyperchain Local",
+  shortName: "Hyperchain Local",
+  rpcUrl: "http://localhost:8011",
+  getTokens: () => [
+    {
+      address: "0x000000000000000000000000000000000000800A",
+      symbol: "ETH",
+      decimals: 18,
+      iconUrl: "/img/eth.svg",
+      enabledForFees: true,
     },
-    visible: true,
-  }, */
+  ],
+  visible: true,
+};
 
+// Dockerized local setup default config. Docs: https://era.zksync.io/docs/tools/testing/dockerized-testing.html
+export const eraDockerizedNode: EraNetwork = {
+  id: 270,
+  key: "era-local-dockerized",
+  name: "Hyperchain Local",
+  shortName: "Hyperchain Local",
+  rpcUrl: "http://localhost:3050",
+  getTokens: () => [
+    {
+      address: "0x000000000000000000000000000000000000800A",
+      l1Address: "0x0000000000000000000000000000000000000000",
+      symbol: "ETH",
+      decimals: 18,
+      iconUrl: "/img/eth.svg",
+      enabledForFees: true,
+    },
+  ],
+  l1Network: {
+    id: 9,
+    name: "L1 Local",
+    network: "l1-local",
+    nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 },
+    rpcUrls: {
+      default: { http: ["http://localhost:8545"] },
+      public: { http: ["http://localhost:8545"] },
+    },
+  },
+  visible: true,
+};
+
+export const eraNetworks: EraNetwork[] = [
   {
     id: 324,
     key: "era-mainnet",
