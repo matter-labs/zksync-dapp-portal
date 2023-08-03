@@ -22,7 +22,7 @@
       </CommonCardWithLineButtons>
     </template>
 
-    <template v-if="networks.includes('lite') && (selectedZkSyncVersion !== 'era' || selectedNetwork.l1Network)">
+    <template v-if="networks.includes('lite') && (selectedZkSyncVersion !== 'era' || isKnownL1Network)">
       <DestinationLabel v-if="networks.length > 1" label="zkSync Lite" :icon="IconsZkSyncLite" class="mb-2 mt-4" />
       <CommonCardWithLineButtons>
         <DestinationItem
@@ -75,6 +75,7 @@ const router = useRouter();
 const {
   selectedNetwork,
   l1Network,
+  isKnownL1Network,
   selectedNetworkKey,
   version: selectedZkSyncVersion,
 } = storeToRefs(useNetworkStore());

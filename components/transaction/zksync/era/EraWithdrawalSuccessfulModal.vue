@@ -10,13 +10,23 @@
         <EraTransferLineItem :transfer="transfer" />
       </CommonCardWithLineButtons>
 
-      <CommonAlert class="mt-3" variant="neutral" :icon="InformationCircleIcon">
+      <CommonAlert v-if="isKnownL1Network" class="mt-3" variant="neutral" :icon="InformationCircleIcon">
         <p>
           Your funds will be available on the <span class="font-medium">{{ destinations.ethereum.label }}</span> after a
           <a :href="ERA_WITHDRAWAL_DELAY" target="_blank" class="link">~24-hour delay</a>. During this time, the
           transaction will be processed and finalized. You are free to close this page.
         </p>
         <a :href="ERA_WITHDRAWAL_DELAY" target="_blank" class="alert-link">
+          Learn more
+          <ArrowUpRightIcon class="ml-1 h-3 w-3" />
+        </a>
+      </CommonAlert>
+      <CommonAlert v-else class="mt-3" variant="warning" :icon="InformationCircleIcon">
+        <p>
+          You might need to finalize this withdrawal manually to receive funds on
+          <span class="font-medium">{{ destinations.ethereum.label }}</span>
+        </p>
+        <a :href="ERA_FINALIZE_WITHDRAWAL" target="_blank" class="alert-link">
           Learn more
           <ArrowUpRightIcon class="ml-1 h-3 w-3" />
         </a>
@@ -64,6 +74,7 @@ import type { EraTransfer } from "@/utils/zksync/era/mappers";
 import type { PropType } from "vue";
 
 import { useDestinationsStore } from "@/store/destinations";
+import { useNetworkStore } from "@/store/network";
 import { ERA_WITHDRAWAL_DELAY } from "@/utils/doc-links";
 
 defineProps({
@@ -81,6 +92,7 @@ const emit = defineEmits<{
   (eventName: "newTransaction"): void;
 }>();
 
+const { isKnownL1Network } = storeToRefs(useNetworkStore());
 const { destinations } = storeToRefs(useDestinationsStore());
 
 const refererName = useRouteQuery("refererName");

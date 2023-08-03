@@ -63,7 +63,7 @@ export const eraNetworks: EraNetwork[] = [
   }, */
 
   // Dockerized local setup default config. Docs: https://era.zksync.io/docs/tools/testing/dockerized-testing.html
-  /* {
+  {
     id: 270,
     key: "era-local-dockerized",
     name: "Hyperchain Local",
@@ -90,7 +90,7 @@ export const eraNetworks: EraNetwork[] = [
       },
     },
     visible: true,
-  }, */
+  },
 
   {
     id: 324,

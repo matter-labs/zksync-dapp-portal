@@ -48,7 +48,7 @@
               {{ error.message }}
             </CommonErrorBlock>
           </div>
-          <CommonButtonTopInfo class="mt-2">Arriving in ~15 minutes</CommonButtonTopInfo>
+          <CommonButtonTopInfo v-if="isKnownL1Network" class="mt-2">Arriving in ~15 minutes</CommonButtonTopInfo>
           <CommonButton
             :disabled="buttonDisabled || newFeeAlert || status !== 'not-started'"
             class="mx-auto"
@@ -229,7 +229,7 @@ const walletEraStore = useEraWalletStore();
 const eraEthereumBalanceStore = useEraEthereumBalanceStore();
 const { account } = storeToRefs(useOnboardStore());
 const { destinations } = storeToRefs(useDestinationsStore());
-const { l1BlockExplorerUrl } = storeToRefs(useNetworkStore());
+const { isKnownL1Network, l1BlockExplorerUrl } = storeToRefs(useNetworkStore());
 const { previousTransactionAddress } = storeToRefs(usePreferencesStore());
 const { status, error, ethTransactionHash, commitTransaction } = useTransaction(walletEraStore.getL1Signer);
 

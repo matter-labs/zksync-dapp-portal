@@ -128,7 +128,7 @@
 
       <EthereumTransactionFooter>
         <template #after-checks>
-          <CommonButtonTopInfo>Arriving in ~15 minutes</CommonButtonTopInfo>
+          <CommonButtonTopInfo v-if="isKnownL1Network">Arriving in ~15 minutes</CommonButtonTopInfo>
           <CommonButton
             type="submit"
             :disabled="continueButtonDisabled"
@@ -164,6 +164,7 @@ import type { PropType } from "vue";
 
 import { useRoute } from "#app";
 import { useDestinationsStore } from "@/store/destinations";
+import { useNetworkStore } from "@/store/network";
 import { useOnboardStore } from "@/store/onboard";
 import { useEraEthereumBalanceStore } from "@/store/zksync/era/ethereumBalance";
 import { useEraProviderStore } from "@/store/zksync/era/provider";
@@ -189,6 +190,7 @@ const eraTokensStore = useEraTokensStore();
 const eraProviderStore = useEraProviderStore();
 const eraEthereumBalance = useEraEthereumBalanceStore();
 const { account } = storeToRefs(onboardStore);
+const { isKnownL1Network } = storeToRefs(useNetworkStore());
 const { eraNetwork } = storeToRefs(eraProviderStore);
 const { destinations } = storeToRefs(useDestinationsStore());
 const { tokens, tokensRequestInProgress, tokensRequestError } = storeToRefs(eraTokensStore);

@@ -83,7 +83,12 @@
 
       <EraTransactionFooter :authorization="false" :account-activation="false">
         <template #after-checks>
-          <CommonButtonTopLink v-if="type === 'withdrawal'" as="a" :href="ERA_WITHDRAWAL_DELAY" target="_blank">
+          <CommonButtonTopLink
+            v-if="type === 'withdrawal' && isKnownL1Network"
+            as="a"
+            :href="ERA_WITHDRAWAL_DELAY"
+            target="_blank"
+          >
             Arriving in ~24 hours
             <ArrowUpRightIcon class="ml-1 mt-0.5 h-3.5 w-3.5" />
           </CommonButtonTopLink>
@@ -122,6 +127,7 @@ import type { PropType } from "vue";
 
 import { useRoute } from "#app";
 import { useDestinationsStore } from "@/store/destinations";
+import { useNetworkStore } from "@/store/network";
 import { useOnboardStore } from "@/store/onboard";
 import { useEraProviderStore } from "@/store/zksync/era/provider";
 import { useEraTokensStore } from "@/store/zksync/era/tokens";
@@ -152,6 +158,7 @@ const walletEraStore = useEraWalletStore();
 const eraTokensStore = useEraTokensStore();
 const eraProviderStore = useEraProviderStore();
 const { account } = storeToRefs(onboardStore);
+const { isKnownL1Network } = storeToRefs(useNetworkStore());
 const { destinations } = storeToRefs(useDestinationsStore());
 const { tokens, tokensRequestInProgress, tokensRequestError } = storeToRefs(eraTokensStore);
 const { balance, balanceInProgress, allBalancePricesLoaded, balanceError } = storeToRefs(walletEraStore);
