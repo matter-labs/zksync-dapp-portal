@@ -56,18 +56,25 @@
 
     <div v-if="buttonStep === 'network'" class="transaction-footer-row">
       <CommonButtonTopInfo>Incorrect network selected in your wallet</CommonButtonTopInfo>
-      <CommonButton
-        v-if="connectorName !== 'WalletConnect'"
-        type="submit"
-        :disabled="switchingNetworkInProgress"
-        variant="primary-solid"
-        @click="onboardStore.setCorrectNetwork"
-      >
-        Change wallet network to {{ selectedEthereumNetwork.name }}
-      </CommonButton>
-      <CommonButton v-else disabled variant="primary-solid">
-        Change network manually to {{ selectedEthereumNetwork.name }} in your {{ walletName }} wallet
-      </CommonButton>
+      <template v-if="zkSyncLiteNetwork.l1Network">
+        <CommonButton
+          v-if="connectorName !== 'WalletConnect'"
+          type="submit"
+          :disabled="switchingNetworkInProgress"
+          variant="primary-solid"
+          @click="onboardStore.setCorrectNetwork"
+        >
+          Change wallet network to {{ zkSyncLiteNetwork.l1Network.name }}
+        </CommonButton>
+        <CommonButton v-else disabled variant="primary-solid">
+          Change network manually to {{ zkSyncLiteNetwork.l1Network.name }} in your {{ walletName }} wallet
+        </CommonButton>
+      </template>
+      <template v-else>
+        <CommonButton disabled variant="primary-solid">
+          L1 network is not available on {{ zkSyncLiteNetwork.name }}
+        </CommonButton>
+      </template>
     </div>
     <div v-else-if="buttonStep === 'authorize'" class="transaction-footer-row">
       <CommonButtonTopLink @click="modalWalletAuthorizationOpened = true">What is authorization?</CommonButtonTopLink>
@@ -108,9 +115,9 @@ import { ExclamationTriangleIcon } from "@heroicons/vue/24/outline";
 import { storeToRefs } from "pinia";
 
 import { useDestinationsStore } from "@/store/destinations";
-import { useNetworkStore } from "@/store/network";
 import { useOnboardStore } from "@/store/onboard";
 import { useLiteAccountActivationStore } from "@/store/zksync/lite/accountActivation";
+import { useLiteProviderStore } from "@/store/zksync/lite/provider";
 import { useLiteWalletStore } from "@/store/zksync/lite/wallet";
 import { TransitionAlertScaleInOutTransition } from "@/utils/transitions";
 
@@ -131,8 +138,8 @@ const liteAccountActivationStore = useLiteAccountActivationStore();
 
 const { isCorrectNetworkSet, switchingNetworkInProgress, switchingNetworkError, connectorName, walletName } =
   storeToRefs(onboardStore);
-const { selectedEthereumNetwork } = storeToRefs(useNetworkStore());
 const { destinations } = storeToRefs(useDestinationsStore());
+const { zkSyncLiteNetwork } = storeToRefs(useLiteProviderStore());
 const { isAuthorized, authorizationInProgress, authorizationError } = storeToRefs(walletLiteStore);
 const {
   isAccountActivated,

@@ -1,10 +1,11 @@
 <template>
   <CommonButtonLineWithImg
     class="transaction-line-item"
-    as="a"
+    :as="transactionUrl ? 'a' : 'button'"
     :href="transactionUrl"
-    :icon="ArrowUpRightIcon"
+    :icon="transactionUrl ? ArrowUpRightIcon : DocumentDuplicateIcon"
     target="_blank"
+    @click="!transactionUrl && copy()"
   >
     <template #image>
       <div class="transaction-line-item-icon-container">
@@ -24,7 +25,7 @@
       </CommonButtonLineBodyInfo>
     </template>
     <template #right>
-      <CommonButtonLineBodyInfo class="text-right">
+      <CommonButtonLineBodyInfo ref="el" class="text-right">
         <template #secondary v-if="$slots['top-right']">
           <slot name="top-right" />
         </template>
@@ -37,22 +38,59 @@
 </template>
 
 <script lang="ts" setup>
-import { ArrowUpRightIcon, XMarkIcon } from "@heroicons/vue/24/outline";
+import { computed, ref, watch } from "vue";
+import { useTippy } from "vue-tippy";
+
+import { ArrowUpRightIcon, DocumentDuplicateIcon, XMarkIcon } from "@heroicons/vue/24/outline";
+
+import useCopy from "@/composables/useCopy";
 
 import type { Component, PropType } from "vue";
 
-defineProps({
+const props = defineProps({
   icon: {
     type: [String, Object, Function] as PropType<string | Component>,
   },
-  transactionUrl: {
+  transactionHash: {
     type: String,
     required: true,
+  },
+  explorerUrl: {
+    type: String,
   },
   failed: {
     type: Boolean,
     default: false,
   },
+});
+
+const el = ref<{ $el?: HTMLButtonElement } | undefined>();
+const { copy, copied } = useCopy(computed(() => props.transactionHash));
+const a = useTippy(
+  computed(() => el.value?.$el?.parentElement?.parentElement || undefined),
+  {
+    content: "Transaction hash copied!",
+    trigger: "manual",
+    hideOnClick: false,
+  }
+);
+watch(
+  copied,
+  (copied) => {
+    if (copied) {
+      a.show();
+    } else {
+      a.hide();
+    }
+  },
+  { immediate: true }
+);
+
+const transactionUrl = computed(() => {
+  if (!props.explorerUrl) {
+    return undefined;
+  }
+  return `${props.explorerUrl}/tx/${props.transactionHash}`;
 });
 </script>
 

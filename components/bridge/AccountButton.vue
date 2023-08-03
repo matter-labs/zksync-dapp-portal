@@ -20,7 +20,7 @@
           </template>
           <template #default>
             <CommonButtonLineBodyInfo class="text-left">
-              <template #label>{{ selectedNetwork.name }} </template>
+              <template #label>{{ eraNetwork.name }} </template>
               <template #underline>Bridge network</template>
             </CommonButtonLineBodyInfo>
           </template>
@@ -52,7 +52,7 @@
       <img v-else :src="avatar" class="account-icon aspect-square rounded-full" />
       <div class="account-name-container">
         <span class="account-name">{{ name ? name : shortenAddress(account.address!) }}</span>
-        <span class="network-name">{{ selectedNetwork.shortName }}</span>
+        <span class="network-name">{{ eraNetwork.shortName }}</span>
       </div>
       <ChevronDownIcon class="account-dropdown-icon" aria-hidden="true" />
     </button>
@@ -69,14 +69,14 @@ import { storeToRefs } from "pinia";
 import useCopy from "@/composables/useCopy";
 
 import { useEnsStore } from "@/store/ens";
-import { useNetworkStore } from "@/store/network";
 import { useOnboardStore } from "@/store/onboard";
+import { useEraProviderStore } from "@/store/zksync/era/provider";
 import { shortenAddress } from "@/utils/formatters";
 
 const onboardStore = useOnboardStore();
 const { account } = storeToRefs(useOnboardStore());
 const { name, avatar } = storeToRefs(useEnsStore());
-const { selectedNetwork } = storeToRefs(useNetworkStore());
+const { eraNetwork } = storeToRefs(useEraProviderStore());
 
 const accountModalOpened = ref(false);
 const networkChangeModalOpened = ref(false);

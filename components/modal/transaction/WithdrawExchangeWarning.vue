@@ -6,7 +6,7 @@
     </p>
     <p class="leading-normal">
       If you are unsure, the safest way would be to firstly
-      <NuxtLink :to="withdrawToSelfLinkLocation" class="link">withdraw to {{ selectedEthereumNetwork.name }}</NuxtLink>
+      <NuxtLink :to="withdrawToSelfLinkLocation" class="link">withdraw to {{ l1Network?.name ?? "L1" }}</NuxtLink>
       and then send funds to the exchange.
     </p>
 
@@ -47,7 +47,7 @@ defineProps({
   },
 });
 
-const { selectedEthereumNetwork } = storeToRefs(useNetworkStore());
+const { l1Network } = storeToRefs(useNetworkStore());
 
 const checked = ref(false);
 </script>

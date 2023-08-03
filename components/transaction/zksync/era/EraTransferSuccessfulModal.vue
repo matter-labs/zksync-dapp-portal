@@ -17,15 +17,22 @@
         <p>
           Your funds will be available at the
           <a
+            v-if="blockExplorerUrl"
             :href="`${blockExplorerUrl}/address/${transfer.to}`"
             target="_blank"
             class="font-medium underline underline-offset-2"
             >destination address</a
           >
+          <span v-else>destination address</span>
           after the transaction is committed on the <span class="font-medium">{{ destinations.era.label }}</span
           >. You are free to close this page.
         </p>
-        <a :href="`${blockExplorerUrl}/tx/${transfer.transactionHash}`" target="_blank" class="alert-link">
+        <a
+          v-if="blockExplorerUrl"
+          :href="`${blockExplorerUrl}/tx/${transfer.transactionHash}`"
+          target="_blank"
+          class="alert-link"
+        >
           Track status
           <ArrowUpRightIcon class="ml-1 h-3 w-3" />
         </a>
@@ -34,11 +41,13 @@
         <p>
           Your funds should now be available at the
           <a
+            v-if="blockExplorerUrl"
             :href="`${blockExplorerUrl}/address/${transfer.to}`"
             target="_blank"
             class="font-medium underline underline-offset-2"
             >destination address</a
-          >.
+          >
+          <span v-else>destination address</span>.
         </p>
       </CommonAlert>
 

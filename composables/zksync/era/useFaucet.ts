@@ -3,7 +3,7 @@ import { computed, ref } from "vue";
 import { useStorage } from "@vueuse/core";
 import { $fetch, FetchError } from "ohmyfetch";
 
-import type { EraNetwork } from "@/store/network";
+import type { EraNetwork } from "@/data/networks";
 import type { ComputedRef } from "vue";
 
 export default (receiverAddress: ComputedRef<string | undefined>, eraNetwork: ComputedRef<EraNetwork>) => {

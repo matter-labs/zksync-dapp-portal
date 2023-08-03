@@ -88,9 +88,9 @@ useColorMode().switchColorMode("dark");
 
 const networkStore = useNetworkStore();
 const { account, isConnectingWallet } = storeToRefs(useOnboardStore());
-const { selectedNetwork, version } = storeToRefs(networkStore);
+const { l1Network, version } = storeToRefs(networkStore);
 if (version.value !== "era") {
-  const newNetwork = findNetworkWithSameL1(selectedNetwork.value.l1Network, eraNetworks) || eraNetworks[0];
+  const newNetwork = (l1Network.value && findNetworkWithSameL1(l1Network.value, eraNetworks)) || eraNetworks[0];
   window.location.href = getNetworkUrl(newNetwork, route.fullPath);
 }
 

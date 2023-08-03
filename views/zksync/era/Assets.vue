@@ -15,7 +15,7 @@
           </template>
           <template #default>Send</template>
         </CommonButton>
-        <CommonButton as="RouterLink" :to="{ name: 'transaction-zksync-era-swap' }">
+        <CommonButton v-if="eraNetwork.l1Network" as="RouterLink" :to="{ name: 'transaction-zksync-era-swap' }">
           <template #icon>
             <ArrowsRightLeftIcon aria-hidden="true" />
           </template>
@@ -53,7 +53,7 @@
                 You don't have any balances on
                 <span class="font-medium" data-testid="no-balances-warning">{{ destinations.era.label }}</span>
               </div>
-              <span class="mt-1.5 inline-block">
+              <span v-if="eraNetwork.l1Network" class="mt-1.5 inline-block">
                 Proceed to
                 <NuxtLink class="link" :to="{ name: 'transaction-zksync-era-receive' }">Add funds</NuxtLink> page to add
                 balance to your account

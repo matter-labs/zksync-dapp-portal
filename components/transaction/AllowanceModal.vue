@@ -74,7 +74,11 @@
         {{ transactionCommitted ? "Allowance approved" : "Approving allowance" }}
       </div>
       <CommonCardWithLineButtons v-if="transaction">
-        <TransactionLineItem :icon="LockOpenIcon" :transaction-url="`${l1BlockExplorerUrl}/tx/${transactionHash}`">
+        <TransactionLineItem
+          :icon="LockOpenIcon"
+          :explorer-url="l1BlockExplorerUrl"
+          :transaction-hash="transactionHash"
+        >
           <template #top-left>Allowance</template>
           <template #top-right>
             <TokenAmount :token="transaction.token" :amount="transaction.amount" />

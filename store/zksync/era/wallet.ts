@@ -8,7 +8,6 @@ import { L1Signer, Web3Provider } from "zksync-web3";
 
 import type { Api, TokenAmount } from "@/types";
 
-import { useNetworkStore } from "@/store/network";
 import { useOnboardStore } from "@/store/onboard";
 import { useEraProviderStore } from "@/store/zksync/era/provider";
 import { useEraTokensStore } from "@/store/zksync/era/tokens";
@@ -17,7 +16,6 @@ export const useEraWalletStore = defineStore("eraWallet", () => {
   const onboardStore = useOnboardStore();
   const eraProviderStore = useEraProviderStore();
   const eraTokensStore = useEraTokensStore();
-  const { selectedEthereumNetwork } = storeToRefs(useNetworkStore());
   const { eraNetwork } = storeToRefs(eraProviderStore);
   const { tokens } = storeToRefs(eraTokensStore);
   const { account, network } = storeToRefs(onboardStore);
@@ -36,10 +34,12 @@ export const useEraWalletStore = defineStore("eraWallet", () => {
     return eraL2Signer;
   });
   const { execute: getL1Signer, reset: resetL1Signer } = usePromise(async () => {
+    if (!eraNetwork.value.l1Network) throw new Error(`L1 network is not available on ${eraNetwork.value.name}`);
+
     const walletNetworkId = network.value.chain?.id;
-    if (walletNetworkId !== selectedEthereumNetwork.value.id) {
+    if (walletNetworkId !== eraNetwork.value.l1Network.id) {
       throw new Error(
-        `Incorrect wallet network selected: #${walletNetworkId} (expected: ${selectedEthereumNetwork.value.name} #${selectedEthereumNetwork.value.id})`
+        `Incorrect wallet network selected: #${walletNetworkId} (expected: ${eraNetwork.value.l1Network.name} #${eraNetwork.value.l1Network.id})`
       );
     }
 
