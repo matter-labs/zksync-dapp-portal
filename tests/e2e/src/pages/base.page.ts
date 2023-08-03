@@ -205,6 +205,12 @@ export class BasePage {
     return await element;
   }
 
+  async getElementByPartialString(text: string) {
+    element = await this.world.page?.locator(`//*[text()[contains(string(), '${text}')]]`).first();
+    await element.scrollIntoViewIfNeeded();
+    return await element;
+  }
+
   async returnElementByType(elementType: string, value: string) {
     if (elementType === "alt") {
       element = await this.getElementByAlt(value);
@@ -244,6 +250,8 @@ export class BasePage {
       element = await this.getElementByPartialSrc(value);
     } else if (elementType === "aria-label") {
       element = await this.getElementByAriaLabel(value);
+    } else if (elementType === "partial string") {
+      element = await this.getElementByPartialString(value);
     }
     return element;
   }

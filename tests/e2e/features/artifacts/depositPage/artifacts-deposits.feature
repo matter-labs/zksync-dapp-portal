@@ -62,6 +62,36 @@ Feature: Artifacts - UI
     Then Fee should have "ETH" value
     Then Element with "text" " Continue " should be "visible"
 
+  @id1647 @tokens
+  Scenario Outline:  Deposit - Check search functionality for Choose Tokens (with results)
+    Given I go to page "/transaction/zksync/era/deposit/?network=era-<network>"
+    When I click by "testId" with "your-account" value
+    Then I click by "testId" with "token-dropDown" value
+    When I fill the "Symbol or address" input field on the Contacts page with "USDC" text
+    Then Element with "text" "<token name>" should be "visible"
+    Then Element with "text" "<token address>" should be "visible"
+    Then Element with "class" "token-balance-amount" should be "visible"
+
+    Examples:
+      | network | token name | token address  |
+      | mainnet | USDC       | 0x3355df...af4 |
+      | goerli  | USDC       | 0x0faF6d...2A9 |
+
+
+  @id1648 @tokens
+  Scenario Outline:  Deposit - Check search functionality for Choose Tokens (no results)
+    Given I go to page "/transaction/zksync/era/deposit/?network=era-<network>"
+    When I click by "testId" with "your-account" value
+    Then I click by "testId" with "token-dropDown" value
+    When I fill the "Symbol or address" input field on the Contacts page with "AAA" text
+    Then Element with "partial string" 'No tokens was found for "AAA"' should be "visible"
+    Then Element with "partial text" "Make sure you are using correct zkSync network" should be "visible"
+
+    Examples:
+      | network |
+      | mainnet |
+      | goerli  |
+
   @id1641:I @tokens @testnet
   Scenario: Check artifacts on tokens dropdown on Deposit page (Testnet)
     Given I go to page "/transaction/zksync/era/deposit/?network=era-goerli"
@@ -206,3 +236,4 @@ Feature: Artifacts - UI
     Then Element with "text" "ZZ" should be "visible"
     Then Element with "text" "0x1ab721...184" should be "visible"
     Then Element with "partial src" "zz.png" should be "visible"
+

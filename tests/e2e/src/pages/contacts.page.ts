@@ -1,4 +1,5 @@
 import { BasePage } from "./base.page";
+import { Helper } from "../helpers/helper";
 
 import type { ICustomWorld } from "../support/custom-world";
 let selector: string;
@@ -49,12 +50,22 @@ export class ContactsPage extends BasePage {
   }
 
   async fillContactFields(inputFieldName: string, text: string) {
-    if (inputFieldName == "Name of the contact" || inputFieldName == "Ethereum address") {
+    const helper = new Helper(this.world);
+    if (
+      inputFieldName == "Name of the contact" ||
+      inputFieldName == "Ethereum address" ||
+      inputFieldName == "Address or ENS or contact name" ||
+      inputFieldName == "Symbol or address"
+    ) {
       selector = `//*[@placeholder="${inputFieldName}"]`;
+      if (text === "clipboard") {
+        const result = await helper.getClipboardValue();
+        await this.fill(selector, result);
+      }
+      await this.world.page?.fill(selector, text);
     } else {
       return console.error("An incorrect value of the input field has been provided");
     }
-    await this.world.page?.fill(selector, text);
   }
 
   async pressSendBtnModal() {
