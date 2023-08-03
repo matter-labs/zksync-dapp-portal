@@ -10,15 +10,21 @@ Visit [portal.zksync.io](https://portal.zksync.io/) to use the latest version of
 You can also find zkSync Era Bridge on [bridge.zksync.io](https://bridge.zksync.io)
 
 ---
-## Local setup
-You can use Portal to connect to your local [zkSync in-memory node](https://era.zksync.io/docs/tools/testing/era-test-node.html).
+## Connecting to local node
+You can use Portal to connect to your [local zkSync Era node](https://era.zksync.io/docs/tools/testing/).
 
-- Follow the [zkSync in-memory node](https://era.zksync.io/docs/tools/testing/era-test-node.html) guide to set up the node.
+- Follow the [documentation](https://era.zksync.io/docs/tools/testing/) to set up either **in-memory node** or **dockerized local setup**.
 - Clone Portal repository and install the dependencies
   ```bash
+  git clone https://github.com/matter-labs/dapp-portal.git
+  cd dapp-portal
   npm install
   ```
-- Go to the `data/networks.ts` and uncomment the `era-local` network config inside the `eraNetworks` array. Make any other changes to the network config if needed.
+- Go to the `data/networks.ts` and uncomment needed network config inside the `eraNetworks` array.
+  - **in-memory node**: uncomment config with key `era-local-memory`
+  - **dockerized local setup**: uncomment config with key `era-local-dockerized`
+
+  <small>Make any other changes to the network config if needed.</small>
 - Run the development server
   ```bash
   npm run dev
