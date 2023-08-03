@@ -110,7 +110,7 @@ const networkChangeModalOpened = ref(false);
         @apply border bg-gray-100 hover:border-gray-300 dark:border-neutral-900 dark:bg-neutral-900;
 
         .navbar-link-label {
-          @apply text-sm;
+          @apply text-sm leading-tight;
         }
       }
       .network-switch {

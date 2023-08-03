@@ -10,7 +10,7 @@
         :icon-url="destinations.ethereum.iconUrl"
         as="RouterLink"
         :to="{ name: 'transaction-zksync-lite-deposit', query: $route.query }"
-        description="Add funds using official bridge"
+        :description="`Add funds from ${destinations.ethereum.label}`"
       />
       <DestinationItem
         label="View address"

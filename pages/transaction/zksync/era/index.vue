@@ -22,10 +22,10 @@
         v-bind="destinations.ethereum"
         as="RouterLink"
         :to="{ name: 'transaction-zksync-era-withdraw', query: $route.query }"
-        description="Withdraw to Ethereum"
+        :description="`Withdraw to ${destinations.ethereum.label}`"
       />
       <DestinationItem
-        v-if="eraNetwork.l1Network"
+        v-if="isKnownL1Network"
         v-bind="destinations.zkSyncLite"
         as="RouterLink"
         :to="{ name: 'transaction-zksync-era-send-lite', query: $route.query }"
@@ -33,11 +33,10 @@
       />
     </CommonCardWithLineButtons>
 
-    <template v-if="eraNetwork.l1Network">
+    <template v-if="isKnownL1Network">
       <TypographyCategoryLabel>Send to exchange</TypographyCategoryLabel>
       <CommonCardWithLineButtons>
         <DestinationItem
-          v-if="eraNetwork.l1Network"
           label="Official bridge"
           :icon-url="destinations.ethereum.iconUrl"
           description="Send to exchange using official bridge"
@@ -80,11 +79,13 @@ import { ArrowUpRightIcon } from "@heroicons/vue/24/outline";
 import { storeToRefs } from "pinia";
 
 import { useDestinationsStore } from "@/store/destinations";
+import { useNetworkStore } from "@/store/network";
 import { useOnboardStore } from "@/store/onboard";
 import { useEraProviderStore } from "@/store/zksync/era/provider";
 
 const { destinations } = storeToRefs(useDestinationsStore());
 const { account } = storeToRefs(useOnboardStore());
+const { isKnownL1Network } = storeToRefs(useNetworkStore());
 const { eraNetwork } = storeToRefs(useEraProviderStore());
 
 const openedModal = ref<"withdraw-to-exchange" | undefined>();

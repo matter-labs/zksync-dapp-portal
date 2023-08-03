@@ -10,7 +10,7 @@
         :icon-url="destinations.ethereum.iconUrl"
         as="RouterLink"
         :to="{ name: 'transaction-zksync-era-deposit', query: $route.query }"
-        description="Add funds using official bridge"
+        :description="`Add funds from ${destinations.ethereum.label}`"
       />
       <DestinationItem
         label="View address"
@@ -35,7 +35,7 @@
       </DestinationItem>
     </CommonCardWithLineButtons>
 
-    <template v-if="eraNetwork.l1Network">
+    <template v-if="isKnownL1Network">
       <TypographyCategoryLabel>Top-up with cash</TypographyCategoryLabel>
       <CommonCardWithLineButtons>
         <DestinationItem
@@ -73,9 +73,11 @@ import { ArrowUpRightIcon, QrCodeIcon } from "@heroicons/vue/24/outline";
 import { storeToRefs } from "pinia";
 
 import { useDestinationsStore } from "@/store/destinations";
+import { useNetworkStore } from "@/store/network";
 import { useEraProviderStore } from "@/store/zksync/era/provider";
 
 const { destinations } = storeToRefs(useDestinationsStore());
+const { isKnownL1Network } = storeToRefs(useNetworkStore());
 const { eraNetwork } = storeToRefs(useEraProviderStore());
 </script>
 

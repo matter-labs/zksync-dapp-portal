@@ -22,7 +22,7 @@
         v-bind="destinations.ethereum"
         as="RouterLink"
         :to="{ name: 'transaction-zksync-lite-withdraw', query: $route.query }"
-        description="Withdraw to Ethereum"
+        :description="`Withdraw to ${destinations.ethereum.label}`"
       />
       <DestinationItem
         v-bind="destinations.era"
