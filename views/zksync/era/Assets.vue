@@ -3,13 +3,21 @@
     <CommonContentBlock>
       <CommonTotalBalance :balance="balance" :loading="loading" :error="balanceError" />
       <CommonButtonGroup class="my-4">
-        <CommonButton as="RouterLink" :to="{ name: 'transaction-zksync-era-receive' }">
+        <CommonButton
+          as="RouterLink"
+          :to="{
+            name: eraNetwork.l1Network ? 'transaction-zksync-era-receive' : 'transaction-zksync-era-receive-address',
+          }"
+        >
           <template #icon>
             <ArrowDownIcon aria-hidden="true" />
           </template>
           <template #default>Receive</template>
         </CommonButton>
-        <CommonButton as="RouterLink" :to="{ name: 'transaction-zksync-era' }">
+        <CommonButton
+          as="RouterLink"
+          :to="{ name: eraNetwork.l1Network ? 'transaction-zksync-era' : 'transaction-zksync-era-send' }"
+        >
           <template #icon>
             <PaperAirplaneIcon aria-hidden="true" />
           </template>
@@ -43,7 +51,7 @@
               v-for="item in displayedBalances"
               as="div"
               :key="item.address"
-              send-route-name="transaction-zksync-era"
+              :send-route-name="eraNetwork.l1Network ? 'transaction-zksync-era' : 'transaction-zksync-era-send'"
               v-bind="item"
             />
           </template>

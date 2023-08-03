@@ -45,7 +45,15 @@ export const eraNetworks: EraNetwork[] = [
     name: "zkSync Era Local",
     shortName: "Era Local",
     rpcUrl: "http://localhost:8011",
-    getTokens: () => getTokensByNetworkId(270),
+    getTokens: () => [
+      {
+        address: "0x000000000000000000000000000000000000800A",
+        symbol: "ETH",
+        decimals: 18,
+        iconUrl: "/img/eth.svg",
+        enabledForFees: true,
+      },
+    ],
     visible: true,
   },
 
