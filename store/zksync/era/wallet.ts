@@ -65,7 +65,6 @@ export const useEraWalletStore = defineStore("eraWallet", () => {
     await Promise.all([requestAccountState({ force: true }), eraTokensStore.requestTokens()]);
     if (!accountState.value) throw new Error("Account state is not available");
     if (!tokens.value) throw new Error("Tokens are not available");
-    /* return { [tokenAddress: string]: string } */
     return Object.fromEntries(
       Object.entries(accountState.value.balances).map(([tokenAddress, { balance }]) => {
         return [tokenAddress, balance];

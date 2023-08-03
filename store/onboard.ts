@@ -9,17 +9,18 @@ import useColorMode from "@/composables/useColorMode";
 import useObservable from "@/composables/useObservable";
 
 import type { EraNetwork } from "@/data/networks";
+import type { Chain } from "@wagmi/core";
 
 import { useRuntimeConfig } from "#imports";
-import { eraNetworks, l1Networks } from "@/data/networks";
+import { eraNetworks, zkSyncLiteNetworks } from "@/data/networks";
 import { confirmedSupportedWallets, disabledWallets } from "@/data/wallets";
 import { useNetworkStore } from "@/store/network";
 
-const useExistingEraNetwork = (network: EraNetwork) => {
+const useExistingEraChain = (network: EraNetwork) => {
   const existingNetworks = [zkSync, zkSyncTestnet];
-  const existingNetwork = existingNetworks.find((existingNetwork) => existingNetwork.id === network.id);
-  if (existingNetwork) return existingNetwork;
-
+  return existingNetworks.find((existingNetwork) => existingNetwork.id === network.id);
+};
+const createEraChain = (network: EraNetwork) => {
   return {
     id: network.id,
     name: network.name,
@@ -31,7 +32,30 @@ const useExistingEraNetwork = (network: EraNetwork) => {
     },
   };
 };
-const extendedChains = [...Object.values(l1Networks), ...eraNetworks.map(useExistingEraNetwork)];
+
+const getAllChains = () => {
+  const chains: Chain[] = [];
+  const addUniqueChain = (chain: Chain) => {
+    if (!chains.find((existingChain) => existingChain.id === chain.id)) {
+      chains.push(chain);
+    }
+  };
+  for (const network of zkSyncLiteNetworks) {
+    if (network.l1Network) {
+      addUniqueChain(network.l1Network);
+    }
+  }
+  for (const network of eraNetworks) {
+    if (network.l1Network) {
+      addUniqueChain(network.l1Network);
+    }
+    addUniqueChain(useExistingEraChain(network) ?? createEraChain(network));
+  }
+
+  return chains;
+};
+
+const extendedChains = [...getAllChains()];
 const { public: env } = useRuntimeConfig();
 
 export const useOnboardStore = defineStore("onboard", () => {

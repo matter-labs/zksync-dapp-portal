@@ -44,7 +44,7 @@ export const eraNetworks: EraNetwork[] = [
   // Also see the guide in the README.md file in the root of the repository.
 
   // in-memory node default config. Docs: https://era.zksync.io/docs/tools/testing/era-test-node.html
-  {
+  /* {
     id: 260,
     key: "era-local-memory",
     name: "Hyperchain Local",
@@ -60,7 +60,7 @@ export const eraNetworks: EraNetwork[] = [
       },
     ],
     visible: true,
-  },
+  }, */
 
   // Dockerized local setup default config. Docs: https://era.zksync.io/docs/tools/testing/dockerized-testing.html
   /* {
@@ -81,8 +81,8 @@ export const eraNetworks: EraNetwork[] = [
     ],
     l1Network: {
       id: 9,
-      name: "zkSync L1 Local",
-      network: "zksync-l1-local",
+      name: "L1 Local",
+      network: "l1-local",
       nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 },
       rpcUrls: {
         default: { http: ["http://localhost:8545"] },
