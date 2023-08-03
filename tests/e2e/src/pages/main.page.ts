@@ -81,8 +81,8 @@ export class MainPage extends BasePage {
     return `${this.byTestId}network-switcher`;
   }
 
-  get proceedButton() {
-    return "//*[contains(., 'Proceed')]";
+  async getButton(buttonName: string) {
+    return `//*[@type='button' and contains(., '${buttonName}')] | //button[text()[contains(string(), '${buttonName}')]]`;
   }
 
   async selectTransaction(transactionType: string) {
@@ -170,7 +170,7 @@ export class MainPage extends BasePage {
     await this.verifyElement("xpath", selector, checkType);
   }
 
-  async getHrefSelector(externalLinkName: string) {
+  async checkArrowElement(externalLinkName: string, checkType: string) {
     let link: any;
     if (externalLinkName === "Layerswap") {
       link = "https://www.layerswap.io/?sourceExchangeName=ZKSYNCERA_MAINNET";
@@ -179,13 +179,8 @@ export class MainPage extends BasePage {
     } else {
       return console.error("An incorrect link name has been provided");
     }
-    const selector = `//*[@href='${link}']`;
-    return selector;
-  }
 
-  async checkArrowElement(link: string, checkType: string) {
-    result = await this.getHrefSelector(link);
-    const selector = result + this.externalLinkArrow;
+    const selector = `//*[@href='${link}']` + this.externalLinkArrow;
     await this.verifyElement("xpath", selector, checkType);
   }
 
@@ -239,8 +234,8 @@ export class MainPage extends BasePage {
     return result;
   }
 
-  async clickOnProceedButton() {
-    const selector = this.modalCard + this.proceedButton;
+  async clickOnButton(buttonName: string) {
+    const selector = await this.getButton(buttonName);
     await this.click(selector);
   }
 }

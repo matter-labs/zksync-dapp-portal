@@ -84,6 +84,6 @@ Feature: Navigation
     When I click by text "Send"
     When I click by text "Official bridge"
     When I click by text "I understand the risks of losing funds"
-    When I click on the Proceed button
+    When I click on the "Proceed" button
     Then Current page have "/transaction/zksync/era/withdraw" address
-    
+

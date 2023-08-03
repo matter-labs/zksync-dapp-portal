@@ -177,14 +177,14 @@ Given("I click on the Save contact button", async function (this: ICustomWorld) 
   await this.page?.locator("//button[@type='submit' and text()='Save contact']").first().click();
 });
 
+Given("I click on the {string} button", async function (this: ICustomWorld, buttonName: string) {
+  mainPage = new MainPage(this);
+  await mainPage.clickOnButton(buttonName);
+});
+
 Given("I click on the Add contact button for found contact", async function (this: ICustomWorld) {
   contactsPage = new ContactsPage(this);
   await contactsPage.clickAddButton();
-
-Given("I click on the Proceed button", async function (this: ICustomWorld) {
-  mainPage = new MainPage(this);
-  await mainPage.clickOnProceedButton();
-});
 
 Given("I click on the Edit contact button", async function (this: ICustomWorld) {
   contactsPage = new ContactsPage(this);
