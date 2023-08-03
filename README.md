@@ -24,11 +24,11 @@ You can use Portal to connect to your [local zkSync Era node](https://era.zksync
 - Run the development server
   - in-memory node:
     ```bash
-    dev:local:memory
+    npm run dev:local:memory
     ```
   - dockerized local setup:
     ```bash
-    dev:local:docker
+    npm run dev:local:docker
     ```
   Check the console output to find started Portal URL and open it in your browser (usually http://localhost:3000)
 
