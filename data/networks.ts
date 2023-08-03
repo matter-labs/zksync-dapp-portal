@@ -11,6 +11,7 @@ export type L2Network = {
   shortName: string;
   l1Network?: L1Network;
   blockExplorerUrl?: string;
+  // If set to true, the network will be shown in the network selector
   visible: boolean;
 };
 export const l1Networks = {
@@ -38,7 +39,8 @@ export type EraNetwork = L2Network & {
   getTokens: () => Token[] | Promise<Token[]>;
 };
 export const eraNetworks: EraNetwork[] = [
-  // See official documentation for local setup details: https://era.zksync.io/docs/tools/testing/
+  // See official documentation for in-memory node setup details: https://era.zksync.io/docs/tools/testing/
+  // Also see the guide in the README.md file in the root of the repository.
   {
     id: 260,
     key: "era-local",
