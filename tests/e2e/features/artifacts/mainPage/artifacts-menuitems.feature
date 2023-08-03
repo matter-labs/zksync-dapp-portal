@@ -66,7 +66,7 @@ Feature: Artifacts - UI
     Given I click by "partial class" with "main-account-button" value
     Given I click by "text" with " View on explorer " value
     Then Element with "text" "zkSync Era Testnet" should be "visible"
-    Then Element with "text" "Ethereum Goerli" should be "visible"
+    Then Element with "text" "Ethereum Goerli Testnet" should be "visible"
     Then Element with "text" "View on explorer" should be "visible"
     Then Element with "testId" "close-button" should be "visible"
     Then Element with "testId" "close-button" should be "clickable"
@@ -100,7 +100,7 @@ Feature: Artifacts - UI
     Given I click by "partial class" with "main-account-button" value
     Given I click by "text" with " View on explorer " value
     Then Element with "text" "zkSync Lite Goerli" should be "visible"
-    Then Element with "text" "Ethereum Goerli" should be "visible"
+    Then Element with "text" "Ethereum Goerli Testnet" should be "visible"
     Then Element with "text" "View on explorer" should be "visible"
     Then Element with "testId" "close-button" should be "visible"
     Then Element with "testId" "close-button" should be "clickable"

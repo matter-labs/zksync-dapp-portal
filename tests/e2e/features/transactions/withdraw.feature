@@ -10,7 +10,7 @@ Feature: Withdraw
     Given I go to "Withdraw" transaction section
     Given I click by "text" with "Your account" value
     When I choose "ETH" as token and insert "0.0000000001" as amount
-    When I "confirm" transaction after clicking "Send to Ethereum Goerli" button
+    When I "confirm" transaction after clicking "Send to Ethereum Goerli Testnet" button
     Then Message "Transaction submitted" should be visible
     #second part - id1434
 #    Then Element with "xpath" "//*[@class='modal-card']//a[@href='/']" should be "clickable"

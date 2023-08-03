@@ -35,7 +35,7 @@ Feature: Withdraw
     When I choose "ETH" as token and insert "0.0001" as amount
     When I click by text " Continue "
     Then Element with "text" "Confirm transaction" should be "visible"
-    Then Element with "text" "Your Ethereum Goerli account" should be "visible"
+    Then Element with "text" "Your Ethereum Goerli Testnet account" should be "visible"
     Then Element with "text" "Your zkSync Era Testnet account" should be "visible"
     Then Element with "partial class" "address-card-avatar" should be "visible"
     Then Modal card element with the "//*[text()='0xa439...046']" xpath should be "visible"
@@ -47,8 +47,8 @@ Feature: Withdraw
     Then Modal card element with the "//*[contains(@class,'fee-details-container') and //span[contains(text(),'Total to pay')]]" xpath should be "visible"
     Then Modal card element with the "//*[text()=' Arriving in ~24 hours ']" xpath should be "visible"
     Then Modal card element with the "//*[text()=' Arriving in ~24 hours ']" xpath should be "clickable"
-    Then Element with "text" "Send to Ethereum Goerli" should be "visible"
-    Then Element with "text" "Send to Ethereum Goerli" should be "clickable"
+    Then Element with "text" "Send to Ethereum Goerli Testnet" should be "visible"
+    Then Element with "text" "Send to Ethereum Goerli Testnet" should be "clickable"
 
   @id1644:I @tokens @testnet
   Scenario: Check artifacts on tokens dropdown on Withdraw page (Testnet)

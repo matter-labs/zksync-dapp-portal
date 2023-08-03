@@ -46,7 +46,7 @@ Feature: Withdraw
     Then Element with "text" "Other networks" should be "visible"
     Then Modal card element with the "//*[text()='zkSync Era Testnet']" xpath should be "visible"
     Then Modal card element with the "//*[@src='/img/era.svg?v=1']" xpath should be "visible"
-    Then Modal card element with the "//*[text()='Ethereum Goerli']" xpath should be "visible"
+    Then Modal card element with the "//*[text()='Ethereum Goerli Testnet']" xpath should be "visible"
     Then Modal card element with the "//*[@src='/img/ethereum.svg?v=1']" xpath should be "visible"
 
   @id1604:II
