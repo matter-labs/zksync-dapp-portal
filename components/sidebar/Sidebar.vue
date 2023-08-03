@@ -10,7 +10,7 @@
           <span class="navbar-link-label">Assets</span>
         </NuxtLink>
         <NuxtLink
-          v-if="version === 'era' && eraNetwork.blockExplorerApi"
+          v-if="version !== 'era' || (version === 'era' && eraNetwork.blockExplorerApi)"
           :to="{ name: 'payments' }"
           class="navbar-link"
         >
