@@ -55,7 +55,7 @@ export class BasePage {
         const result = await helper.getClipboardValue();
         await this.fill(selector, result);
       } else {
-        await this.world.page?.fill(selector, text);
+        await this.fill(selector, text);
       }
     } else {
       return console.error("An incorrect value of the input field has been provided");
