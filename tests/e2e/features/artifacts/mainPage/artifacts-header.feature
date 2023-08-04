@@ -26,7 +26,7 @@ Feature: Artifacts - UI
     When I go to page "/transaction/zksync/era/receive"
     Then Element with "text" "Receive" should be "visible"
     Then Element with "text" "Official bridge" should be "visible"
-    Then Element with "text" "Add funds from Ethereum Goerli" should be "visible"
+    Then Element with "text" "Add funds from Ethereum Goerli Testnet" should be "visible"
     Then Element with "href" "/transaction/zksync/era/deposit" should be "visible"
     Then Element with "href" "/transaction/zksync/era/deposit" should be "clickable"
     Then Element with "text" "View address" should be "visible"
