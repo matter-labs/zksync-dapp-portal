@@ -55,8 +55,8 @@ export const eraInMemoryNode: EraNetwork = {
       address: "0x000000000000000000000000000000000000800A",
       symbol: "ETH",
       decimals: 18,
-      iconUrl: "/img/eth.svg",
-      enabledForFees: true,
+      iconUrl: "/img/eth.svg", // optional
+      enabledForFees: true, // optional
     },
   ],
   visible: true,
@@ -72,11 +72,11 @@ export const eraDockerizedNode: EraNetwork = {
   getTokens: () => [
     {
       address: "0x000000000000000000000000000000000000800A",
-      l1Address: "0x0000000000000000000000000000000000000000",
+      l1Address: "0x0000000000000000000000000000000000000000", // optional
       symbol: "ETH",
       decimals: 18,
-      iconUrl: "/img/eth.svg",
-      enabledForFees: true,
+      iconUrl: "/img/eth.svg", // optional
+      enabledForFees: true, // optional
     },
   ],
   l1Network: {
