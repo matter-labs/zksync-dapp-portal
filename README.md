@@ -20,7 +20,7 @@ You can use Portal to connect to your [local zkSync Era node](https://era.zksync
   cd dapp-portal
   npm install
   ```
-- In case network id, rpc url or any other information differs from the default values, you can change them in `data/networks.ts` file.
+- In case network id, rpc url or any other information differs from the default values, you can change them in `data/networks.ts` file. You can also edit the list of displayed tokens there.
 - Run the development server
   - in-memory node:
     ```bash
