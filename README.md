@@ -32,11 +32,11 @@ Prerequisites: Node.js version 16+, npm version 7+
 - Run the development server:
   - For in-memory node:
     ```bash
-    npm run dev:local:memory
+    npm run dev:node:memory
     ```
   - For dockerized local setup:
     ```bash
-    npm run dev:local:docker
+    npm run dev:node:docker
     ```
   Check the console output to find started Portal URL and open it in your browser (usually http://localhost:3000)
 

@@ -1,5 +1,8 @@
+import Hyperchains from "@/hyperchains/hyperchains.json";
+
 import type { EraNetwork, L2Network } from "@/data/networks";
 import type { Version } from "@/store/network";
+import type { Token } from "@/types";
 
 import {
   eraNetworks as defaultEraNetworks,
@@ -12,10 +15,17 @@ export default () => {
   const runtimeConfig = useRuntimeConfig();
 
   const eraNetworks: EraNetwork[] = [];
-  if (runtimeConfig.public.localNode === "memory") {
+  if (runtimeConfig.public.nodeType === "memory") {
     eraNetworks.push(eraInMemoryNode);
-  } else if (runtimeConfig.public.localNode === "dockerized") {
+  } else if (runtimeConfig.public.nodeType === "dockerized") {
     eraNetworks.push(eraDockerizedNode);
+  } else if (runtimeConfig.public.nodeType === "hyperchain") {
+    eraNetworks.push(
+      ...(Hyperchains as unknown as Array<{ network: EraNetwork; tokens: Token[] }>).map((e) => ({
+        ...e.network,
+        getTokens: () => e.tokens,
+      }))
+    );
   } else {
     eraNetworks.push(...defaultEraNetworks);
   }

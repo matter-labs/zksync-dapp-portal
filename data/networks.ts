@@ -4,6 +4,7 @@ import type { Token } from "@/types";
 import type { Chain } from "@wagmi/core/chains";
 import type { Network } from "zksync/build/types";
 
+import { ETH_L1_ADDRESS, ETH_L2_ADDRESS } from "@/utils/constants";
 import { getTokensByNetworkId } from "@/utils/zksync/era/token-library";
 
 export type L2Network = {
@@ -52,7 +53,7 @@ export const eraInMemoryNode: EraNetwork = {
   rpcUrl: "http://localhost:8011",
   getTokens: () => [
     {
-      address: "0x000000000000000000000000000000000000800A",
+      address: ETH_L2_ADDRESS,
       symbol: "ETH",
       decimals: 18,
       iconUrl: "/img/eth.svg", // optional
@@ -71,8 +72,8 @@ export const eraDockerizedNode: EraNetwork = {
   rpcUrl: "http://localhost:3050",
   getTokens: () => [
     {
-      address: "0x000000000000000000000000000000000000800A",
-      l1Address: "0x0000000000000000000000000000000000000000", // optional
+      address: ETH_L2_ADDRESS,
+      l1Address: ETH_L1_ADDRESS, // optional
       symbol: "ETH",
       decimals: 18,
       iconUrl: "/img/eth.svg", // optional
