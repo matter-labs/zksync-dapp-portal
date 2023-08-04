@@ -3,6 +3,12 @@
 # zkSync Portal
 zkSync Portal is a unique wallet dapp that brings the best of zkSync Era∎ and zkSync Lite under one friendly user interface. Crafted with an emphasis on a seamless user experience, zkSync Portal allows you to easily manage your tokens. It's your go-to interface to interact with both versions of zkSync, ensuring a smooth and efficient process every step of the way.
 
+## Features
+
+* Clear user interface for viewing, sending, bridging zkSync Era and zkSync Lite tokens.
+* Possibility to add contacts for easy access.
+* Easy setup and connection to local zkSync nodes or Hyperchains.
+
 ## Try it out!
 
 Visit [portal.zksync.io](https://portal.zksync.io/) to use the latest version of zkSync Portal.
@@ -13,6 +19,8 @@ You can also find zkSync Era Bridge on [bridge.zksync.io](https://bridge.zksync.
 ## Connecting to local node
 You can use Portal to connect to your [local zkSync Era node](https://era.zksync.io/docs/tools/testing/).
 
+Prerequisites: Node.js version 16+, npm version 7+
+
 - Follow the [documentation](https://era.zksync.io/docs/tools/testing/) to set up either **in-memory node** or **dockerized local setup**.
 - Clone Portal repository and install the dependencies
   ```bash
@@ -20,13 +28,13 @@ You can use Portal to connect to your [local zkSync Era node](https://era.zksync
   cd dapp-portal
   npm install
   ```
-- In case network id, rpc url or any other information differs from the default values, you can change them in `data/networks.ts` file. You can also edit the list of displayed tokens there.
-- Run the development server
-  - in-memory node:
+- In case network ID, RPC URL or other information differs from the default values, edit them in `data/networks.ts` file. You can also customize the list of displayed tokens there.
+- Run the development server:
+  - For in-memory node:
     ```bash
     npm run dev:local:memory
     ```
-  - dockerized local setup:
+  - For dockerized local setup:
     ```bash
     npm run dev:local:docker
     ```
