@@ -50,9 +50,7 @@ export class BasePage {
   async fillSpecificField(inputIDType: string, inputIDName: string, text: string) {
     const helper = new Helper(this.world);
     selector = `//*[@${inputIDType}="${inputIDName}"]`;
-    console.log(await this.world.page?.locator(selector).first().isVisible());
-    if (await this.world.page?.locator(selector).first()) {
-      //if (await this.world.page?.locator(selector).first().isVisible()) {
+    if (await helper.checkElementVisible(selector)) {
       if (text === "clipboard") {
         const result = await helper.getClipboardValue();
         await this.fill(selector, result);
