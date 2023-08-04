@@ -1,11 +1,13 @@
 import { goerli, mainnet, sepolia } from "@wagmi/core/chains";
 
+import type { Network } from "zksync/build/types";
+
 export type L2Network = {
   key: string;
   name: string;
   shortName: string;
-  l1Network: L1Network;
-  blockExplorerUrl: string;
+  l1Network?: L1Network;
+  blockExplorerUrl?: string;
   visible: boolean;
 };
 export const l1Networks = {
@@ -68,10 +70,13 @@ export const eraNetworks: EraNetwork[] = [
     visible: false,
   },
 ];
-export const zkSyncLiteNetworks: L2Network[] = [
+
+export type ZkSyncLiteNetwork = L2Network & { network: Network };
+export const zkSyncLiteNetworks: ZkSyncLiteNetwork[] = [
   {
     key: "lite-mainnet",
     name: "zkSync Lite Mainnet",
+    network: "mainnet",
     shortName: "Lite Mainnet",
     blockExplorerUrl: "https://zkscan.io",
     l1Network: l1Networks.mainnet,
@@ -80,6 +85,7 @@ export const zkSyncLiteNetworks: L2Network[] = [
   {
     key: "lite-goerli",
     name: "zkSync Lite Goerli",
+    network: "goerli",
     shortName: "Lite Goerli",
     blockExplorerUrl: "https://goerli.zkscan.io",
     l1Network: l1Networks.goerli,

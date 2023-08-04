@@ -52,7 +52,7 @@ Feature: Withdraw
 
   @id1436 @tokens
   Scenario Outline:  Withdraw - Check search functionality for Choose Tokens (with results)
-    Given I go to page "<network>"
+    Given I go to page "/transaction/zksync/era/withdraw/?network=era-<network>"
     When I click by "testId" with "your-account" value
     Then I click by "testId" with "token-dropDown" value
     When I fill the "Symbol or address" input field on the Contacts page with "USDC" text
@@ -61,14 +61,13 @@ Feature: Withdraw
     Then Element with "class" "token-balance-amount" should be "visible"
 
     Examples:
-      | network                                              | token name | token address  |
-      | /transaction/zksync/era/withdraw/?network=era-mainnet | USDC       | 0x3355df...af4 |
-      | /transaction/zksync/era/withdraw/?network=era-goerli  | USDC       | 0x0faF6d...2A9 |
-
+      | network | token name | token address  |
+      | mainnet | USDC       | 0x3355df...af4 |
+      | goerli  | USDC       | 0x0faF6d...2A9 |
 
   @id1564 @tokens
   Scenario Outline:  Withdraw - Check search functionality for Choose Tokens (no results)
-    Given I go to page "<network>"
+    Given I go to page "/transaction/zksync/era/withdraw/?network=era-<network>"
     When I click by "testId" with "your-account" value
     Then I click by "testId" with "token-dropDown" value
     When I fill the "Symbol or address" input field on the Contacts page with "AAA" text
@@ -76,10 +75,10 @@ Feature: Withdraw
     Then Element with "partial text" "Make sure you are using correct zkSync network" should be "visible"
 
     Examples:
-      | network                                              |
-      | /transaction/zksync/era/withdraw/?network=era-mainnet |
-      | /transaction/zksync/era/withdraw/?network=era-goerli  |
-    
+      | network |
+      | mainnet |
+      | goerli  |
+
   @id1644:I @tokens @testnet
   Scenario: Check artifacts on tokens dropdown on Withdraw page (Testnet)
     Given I go to page "/transaction/zksync/era/withdraw/?network=era-goerli"

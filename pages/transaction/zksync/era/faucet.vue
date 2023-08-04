@@ -1,5 +1,5 @@
 <template>
-  <FaucetModal :faucet-network="faucetNetwork" :status="status" @close="resetFaucet">
+  <FaucetModal v-if="faucetNetwork" :faucet-network="faucetNetwork" :status="status" @close="resetFaucet">
     <template #tokens>
       <div class="flex flex-wrap justify-center gap-1.5">
         <TokenBadge v-for="item in faucetTokens" v-bind="item" :key="item.token.symbol" />
@@ -129,7 +129,7 @@ const faucetNetwork = computed(() => {
   if (!eraNetwork.value.faucetUrl) {
     return eraNetworks.filter((network) => network.faucetUrl)[0];
   }
-  return eraNetwork.value;
+  return eraNetworks.filter((network) => network.faucetUrl)[0];
 });
 const faucetAvailableOnCurrentNetwork = computed(() => {
   if (!faucetNetwork.value) return false;
@@ -170,7 +170,7 @@ const {
   reset: resetFaucet,
 } = useFaucet(
   computed(() => account.value.address),
-  faucetNetwork
+  computed(() => faucetNetwork.value ?? eraNetwork.value)
 );
 const { isBefore } = useIsBeforeDate(faucetAvailableTime);
 const isFaucetAvailable = computed(() => true || !faucetAvailableTime.value || !isBefore.value);

@@ -8,7 +8,6 @@ import { RemoteWallet, Wallet } from "zksync";
 import type { ZkSyncLiteTokenAmount } from "@/types";
 import type { AccountState } from "zksync/build/types";
 
-import { useNetworkStore } from "@/store/network";
 import { useOnboardStore } from "@/store/onboard";
 import { useLiteProviderStore } from "@/store/zksync/lite/provider";
 import { useLiteTokensStore } from "@/store/zksync/lite/tokens";
@@ -17,9 +16,9 @@ export const useLiteWalletStore = defineStore("liteWallet", () => {
   const onboardStore = useOnboardStore();
   const liteProviderStore = useLiteProviderStore();
   const liteTokensStore = useLiteTokensStore();
+  const { zkSyncLiteNetwork } = storeToRefs(liteProviderStore);
   const { tokens } = storeToRefs(liteTokensStore);
   const { account, network, walletName } = storeToRefs(onboardStore);
-  const { selectedEthereumNetwork } = storeToRefs(useNetworkStore());
 
   let wallet: Wallet | undefined = undefined;
   const isAuthorized = ref(false);
@@ -39,8 +38,12 @@ export const useLiteWalletStore = defineStore("liteWallet", () => {
     async () => {
       const provider = await liteProviderStore.requestProvider();
       if (!provider) throw new Error("Provider is not available");
+
+      if (!zkSyncLiteNetwork.value.l1Network)
+        throw new Error(`L1 network is not available on ${zkSyncLiteNetwork.value.name}`);
+
       const walletNetworkId = network.value.chain?.id;
-      if (walletNetworkId !== selectedEthereumNetwork.value.id) {
+      if (walletNetworkId !== zkSyncLiteNetwork.value.l1Network.id) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const web3Provider = new ethers.providers.Web3Provider(onboardStore.getPublicClient() as any, "any");
         const voidSigner = new VoidSigner(account.value.address!, web3Provider);
@@ -63,10 +66,13 @@ export const useLiteWalletStore = defineStore("liteWallet", () => {
     inProgress: authorizationInProgress,
     error: authorizationError,
   } = usePromise<Wallet>(async () => {
+    if (!zkSyncLiteNetwork.value.l1Network)
+      throw new Error(`L1 network is not available on ${zkSyncLiteNetwork.value.name}`);
+
     const walletNetworkId = network.value.chain?.id;
-    if (walletNetworkId !== selectedEthereumNetwork.value.id) {
+    if (walletNetworkId !== zkSyncLiteNetwork.value.l1Network.id) {
       throw new Error(
-        `Incorrect wallet network selected: #${walletNetworkId} (expected: ${selectedEthereumNetwork.value.name} #${selectedEthereumNetwork.value.id})`
+        `Incorrect wallet network selected: #${walletNetworkId} (expected: ${zkSyncLiteNetwork.value.l1Network.name} #${zkSyncLiteNetwork.value.l1Network.id})`
       );
     }
 

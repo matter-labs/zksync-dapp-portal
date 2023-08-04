@@ -2,7 +2,8 @@
   <TransactionLineItem
     :failed="isTransactionFailed"
     :icon="icon"
-    :transaction-url="`${blockExplorerUrl}/tx/${transaction.txHash}`"
+    :explorer-url="blockExplorerUrl"
+    :transaction-hash="transaction.txHash"
   >
     <template #top-left>{{ label }}</template>
     <template #bottom-left>{{ time }}</template>

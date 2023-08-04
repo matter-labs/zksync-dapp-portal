@@ -1,5 +1,5 @@
 <template>
-  <TransactionLineItem :icon="icon" :transaction-url="`${blockExplorerUrl}/tx/${transfer.transactionHash}`">
+  <TransactionLineItem :icon="icon" :explorer-url="blockExplorerUrl" :transaction-hash="transfer.transactionHash!">
     <template #top-left>{{ label }}</template>
     <template #bottom-left>{{ time }}</template>
     <template #top-right>

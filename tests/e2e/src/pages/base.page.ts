@@ -224,6 +224,7 @@ export class BasePage {
 
   async getElementByPartialString(text: string) {
     element = await this.world.page?.locator(`//*[text()[contains(string(), '${text}')]]`).first();
+    await element.scrollIntoViewIfNeeded();
     return await element;
   }
 

@@ -3,25 +3,36 @@ import { getDefaultRestProvider } from "zksync";
 
 import type { RestProvider } from "zksync";
 
+import { type ZkSyncLiteNetwork, zkSyncLiteNetworks } from "@/data/networks";
 import { useNetworkStore } from "@/store/network";
 
 export const useLiteProviderStore = defineStore("liteProvider", () => {
-  const { selectedNetwork, version } = storeToRefs(useNetworkStore());
+  const { selectedNetwork, l1Network, version } = storeToRefs(useNetworkStore());
+  const zkSyncLiteNetwork = computed<ZkSyncLiteNetwork>(() => {
+    if (version.value === "lite") {
+      return selectedNetwork.value as ZkSyncLiteNetwork;
+    } else {
+      return (
+        (l1Network.value && (findNetworkWithSameL1(l1Network.value, zkSyncLiteNetworks) as ZkSyncLiteNetwork)) ||
+        zkSyncLiteNetworks[0]
+      );
+    }
+  });
 
   const {
     inProgress: providerRequestInProgress,
     error: providerRequestError,
     execute: requestProvider,
   } = usePromise<RestProvider>(async () => {
-    if (version.value !== "lite") throw new Error("Invalid network");
-    return await getDefaultRestProvider(selectedNetwork.value.l1Network.network);
+    return await getDefaultRestProvider(zkSyncLiteNetwork.value.network);
   });
 
   return {
+    zkSyncLiteNetwork,
     providerRequestInProgress: computed(() => providerRequestInProgress.value),
     providerRequestError: computed(() => providerRequestError.value),
     requestProvider,
 
-    blockExplorerUrl: computed(() => selectedNetwork.value.blockExplorerUrl),
+    blockExplorerUrl: computed(() => zkSyncLiteNetwork.value.blockExplorerUrl),
   };
 });

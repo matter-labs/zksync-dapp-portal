@@ -17,7 +17,7 @@
         <CommonButton
           as="a"
           target="_blank"
-          :href="`https://zkexport.netlify.app/export/account/transactions?address=${account.address}&network=${selectedEthereumNetwork.network}`"
+          :href="`https://zkexport.netlify.app/export/account/transactions?address=${account.address}&network=${zkSyncLiteNetwork.network}`"
         >
           <template #icon>
             <DocumentArrowDownIcon aria-hidden="true" />
@@ -68,14 +68,14 @@ import { storeToRefs } from "pinia";
 import ZkSyncLiteTransactionLineItem from "@/components/transaction/zksync/lite/ZkSyncLiteTransactionLineItem.vue";
 
 import { useDestinationsStore } from "@/store/destinations";
-import { useNetworkStore } from "@/store/network";
 import { useOnboardStore } from "@/store/onboard";
+import { useLiteProviderStore } from "@/store/zksync/lite/provider";
 import { useLiteTransactionsHistoryStore } from "@/store/zksync/lite/transactionsHistory";
 
 const onboardStore = useOnboardStore();
 const liteTransactionsHistoryStore = useLiteTransactionsHistoryStore();
 const { account } = storeToRefs(onboardStore);
-const { selectedEthereumNetwork } = storeToRefs(useNetworkStore());
+const { zkSyncLiteNetwork } = storeToRefs(useLiteProviderStore());
 const { transactions, recentTransactionsRequestInProgress, recentTransactionsRequestError } =
   storeToRefs(liteTransactionsHistoryStore);
 const { destinations } = storeToRefs(useDestinationsStore());

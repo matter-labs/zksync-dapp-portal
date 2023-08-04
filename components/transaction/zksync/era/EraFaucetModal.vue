@@ -51,7 +51,7 @@
 import { ArrowUpRightIcon, InformationCircleIcon } from "@heroicons/vue/24/outline";
 import { storeToRefs } from "pinia";
 
-import type { EraNetwork } from "@/store/network";
+import type { EraNetwork } from "@/data/networks";
 import type { PropType } from "vue";
 
 import { useNetworkStore } from "@/store/network";

@@ -22,7 +22,7 @@
       </CommonCardWithLineButtons>
     </template>
 
-    <template v-if="networks.includes('lite')">
+    <template v-if="networks.includes('lite') && (selectedZkSyncVersion !== 'era' || selectedNetwork.l1Network)">
       <DestinationLabel v-if="networks.length > 1" label="zkSync Lite" :icon="IconsZkSyncLite" class="mb-2 mt-4" />
       <CommonCardWithLineButtons>
         <DestinationItem
@@ -72,7 +72,12 @@ const emit = defineEmits<{
 const route = useRoute();
 const router = useRouter();
 
-const { selectedNetwork, selectedNetworkKey, version: selectedZkSyncVersion } = storeToRefs(useNetworkStore());
+const {
+  selectedNetwork,
+  l1Network,
+  selectedNetworkKey,
+  version: selectedZkSyncVersion,
+} = storeToRefs(useNetworkStore());
 const isNetworkSelected = (network: L2Network) => selectedNetwork.value.key === network.key;
 
 const getRouteByVersion = (version: Version) => {
@@ -97,12 +102,14 @@ const buttonClicked = (network: L2Network) => {
   const version = getVersionByNetwork(network);
   if (
     version === selectedZkSyncVersion.value &&
-    selectedNetwork.value.l1Network.network !== network.l1Network.network
+    network.l1Network &&
+    l1Network.value?.network !== network.l1Network.network
   ) {
     window.location.href = getNetworkUrl(network, route.fullPath);
   } else if (
     version !== selectedZkSyncVersion.value &&
-    selectedNetwork.value.l1Network.network === network.l1Network.network
+    network.l1Network &&
+    l1Network.value?.network === network.l1Network.network
   ) {
     selectedNetworkKey.value = network.key;
     router.push(getRouteByVersion(version));

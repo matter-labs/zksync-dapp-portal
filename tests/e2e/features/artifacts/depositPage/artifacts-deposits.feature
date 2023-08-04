@@ -63,25 +63,23 @@ Feature: Artifacts - UI
     Then Element with "text" " Continue " should be "visible"
 
   @id1647 @tokens
-  Scenario Outline:  Deposit - Check search functionality for Choose Tokens (with results)
-    Given I go to page "<network>"
+    Scenario Outline:  Deposit - Check search functionality for Choose Tokens (with results)
+    Given I go to page "/transaction/zksync/era/deposit/?network=era-<network>"
     When I click by "testId" with "your-account" value
     Then I click by "testId" with "token-dropDown" value
     When I fill the input field contains "placeholder" type "Symbol or address" value with "USDC" text
-
     Then Element with "text" "<token name>" should be "visible"
     Then Element with "text" "<token address>" should be "visible"
     Then Element with "class" "token-balance-amount" should be "visible"
 
     Examples:
-      | network                                              | token name | token address  |
-      | /transaction/zksync/era/deposit/?network=era-mainnet | USDC       | 0x3355df...af4 |
-      | /transaction/zksync/era/deposit/?network=era-goerli  | USDC       | 0x0faF6d...2A9 |
-
-
-  @id1548 @tokens
-  Scenario Outline:  Deposit - Check search functionality for Choose Tokens (no results)
-    Given I go to page "<network>"
+      | network | token name | token address  |
+      | mainnet | USDC       | 0x3355df...af4 |
+      | goerli  | USDC       | 0x0faF6d...2A9 |
+      
+  @id1648 @tokens
+    Scenario Outline:  Deposit - Check search functionality for Choose Tokens (no results)
+    Given I go to page "/transaction/zksync/era/deposit/?network=era-<network>"
     When I click by "testId" with "your-account" value
     Then I click by "testId" with "token-dropDown" value
     When I fill the input field contains "placeholder" type "Symbol or address" value with "AAA" text
@@ -89,9 +87,9 @@ Feature: Artifacts - UI
     Then Element with "partial text" "Make sure you are using correct zkSync network" should be "visible"
 
     Examples:
-      | network                                              |
-      | /transaction/zksync/era/deposit/?network=era-mainnet |
-      | /transaction/zksync/era/deposit/?network=era-goerli  |
+      | network |
+      | mainnet |
+      | goerli  |
 
   @id1641:I @tokens @testnet
   Scenario: Check artifacts on tokens dropdown on Deposit page (Testnet)
