@@ -22,7 +22,7 @@ There are few different ways to configure the application:
     ```bash
     npm run generate-hyperchains-config
     ```
-    `/hyperchains/config.json` file will be regenerated. You can edit this file manually if needed.
+    This will regenerate `/hyperchains/config.json` file. You can edit this file manually if needed.
 4. Now you can start or build the application. See [Development](#development-server) or [Production](#production) section below for more details.
 
 <small>Note: if you put multiple .env files in the `/hyperchains` folder - all of them will be available in the Portal after building the hyperchain config. Last edited .env file will be the default network</small>
