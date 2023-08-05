@@ -1,6 +1,6 @@
 # Hyperchain Portal Setup
 
-Portal supports custom zkSync Era Hyperchain nodes.
+Portal supports custom ZK Stack Hyperchain nodes.
 
 ---
 
@@ -8,22 +8,21 @@ Portal supports custom zkSync Era Hyperchain nodes.
 
 There are few different ways to configure the application:
 
-### Configure using zkStack configuration files
+### Configure using ZK Stack configuration files
 <details>
-<summary>If you're using zkStack you can use your network .env file to configure the application.</summary>
+<summary>If you're using ZK Stack you can use your network .env file (and optional tokens .json file) to configure the application.</summary>
 
-1. Copy your network .env config file (eg. `my-network.env`) file to `/hyperchains` folder.
-<br />[Optional] You can also put your tokens .json file (eg. `my-network.json`) in the same folder. These tokens will be available in the Portal.
-2. Make sure to install the dependencies:
+
+1. Make sure to install the dependencies:
     ```bash
     npm install
     ```
-3. Build the hyperchain config from the .env file:
+2. Pull your hyperchain config files by running
     ```bash
-    npm run generate-hyperchains-config
+    npm run migrate:hyperchain <path_to_your_zksync-era_repo>
     ```
-    This will regenerate `/hyperchains/config.json` file. You can edit this file manually if needed.
-4. Now you can start or build the application. See [Development](#development-server) or [Production](#production) section below for more details.
+    This will cpoy the .evn file and .json (if available) and regenerate `/hyperchains/config.json` file. You can edit this file manually if needed.
+3. Now you can start or build the application. See [Development](#development-server) or [Production](#production) section below for more details.
 
 <small>Note: if you put multiple .env files in the `/hyperchains` folder - all of them will be available in the Portal after building the hyperchain config. Last edited .env file will be the default network</small>
 </details>
@@ -85,6 +84,7 @@ Make sure to install the dependencies:
 ```bash
 npm install
 ```
+
 
 ### Development Server
 

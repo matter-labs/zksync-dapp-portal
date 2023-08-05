@@ -7,7 +7,7 @@ zkSync Portal is a unique wallet dapp that brings the best of zkSync Era∎ and 
 
 * Clear user interface for viewing, sending, bridging zkSync Era and zkSync Lite tokens.
 * Possibility to add contacts for easy access.
-* Easy setup and connection to local zkSync nodes or Hyperchains.
+* Easy setup and connection to local zkSync nodes or ZK Stack Hyperchains.
 
 ## Try it out!
 
@@ -39,6 +39,11 @@ Prerequisites: Node.js version 16+, npm version 7+
     npm run dev:node:docker
     ```
   Check the console output to find started Portal URL and open it in your browser (usually http://localhost:3000)
+
+---
+## Connecting to Hyperchain
+
+To use Portal with your ZK Stack Hyperchain, follow the instructions in this [README](./hyperchains/README.md).
 
 ---
 ## Development
