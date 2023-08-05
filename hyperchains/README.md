@@ -8,10 +8,9 @@ Portal supports custom zkSync Era Hyperchain nodes.
 
 There are few different ways to configure the application:
 
+### Configure using zkStack configuration files
 <details>
-<summary><h3>Configure using zkStack configuration files</h3></summary>
-
-If you're using zkStack you can use your network .env file to configure the application.
+<summary>If you're using zkStack you can use your network .env file to configure the application.</summary>
 
 1. Copy your network .env config file (eg. `my-network.env`) file to `/hyperchains` folder.
 <br />[Optional] You can also put your tokens .json file (eg. `my-network.json`) in the same folder. These tokens will be available in the Portal.
@@ -29,10 +28,9 @@ If you're using zkStack you can use your network .env file to configure the appl
 <small>Note: if you put multiple .env files in the `/hyperchains` folder - all of them will be available in the Portal after building the hyperchain config. Last edited .env file will be the default network</small>
 </details>
 
+### Configure manually
 <details>
-<summary><h3>Configure manually</h3></summary>
-
-You can manually configure the application by editing the config file.
+<summary>You can manually configure the application by editing the config file.</summary>
 
 1. Edit `/hyperchains/config.json` config file (eg. rpc url, network id, etc.).
 2. Make sure to install the dependencies:
@@ -44,6 +42,7 @@ You can manually configure the application by editing the config file.
 
 <details>
 
+<br />
 <summary><b>Hyperchain config.json structure</b></summary>
 
 ```ts
