@@ -33,11 +33,7 @@ There are few different ways to configure the application:
 <summary>You can manually configure the application by editing the config file.</summary>
 
 1. Edit `/hyperchains/config.json` config file (eg. rpc url, network id, etc.).
-2. Make sure to install the dependencies:
-    ```bash
-    npm install
-    ```
-4. Now you can start or build the application. See [Development](#development-server) or [Production](#production) section below for more details.
+2. Now you can start or build the application. See [Development](#development) or [Production](#production) section below for more details.
 </details>
 
 <details>
