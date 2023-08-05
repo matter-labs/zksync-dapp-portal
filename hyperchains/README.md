@@ -42,7 +42,6 @@ There are few different ways to configure the application:
 
 <details>
 
-<br />
 <summary><b>Hyperchain config.json structure</b></summary>
 
 ```ts
