@@ -53,7 +53,6 @@ readdir(hyperchainsPath, (err, files) => {
             public: { http: [env.ETH_CLIENT_WEB3_URL] },
           },
         },
-        visible: true,
       },
       tokens,
     };
@@ -77,5 +76,5 @@ readdir(hyperchainsPath, (err, files) => {
     .map((e) => ({ network: e.network, tokens: e.tokens }));
 
   if (!chains.length) throw new Error("No hyperchains found. Read /hyperchains/README.md for more info.");
-  writeFileSync(pathJoin(hyperchainsPath, "hyperchains.json"), JSON.stringify(chains, null, 2));
+  writeFileSync(pathJoin(hyperchainsPath, "config.json"), JSON.stringify(chains, null, 2));
 });

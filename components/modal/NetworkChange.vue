@@ -9,7 +9,7 @@
       </div>
       <CommonCardWithLineButtons>
         <DestinationItem
-          v-for="item in eraNetworks.filter((e) => e.visible || isNetworkSelected(e))"
+          v-for="item in eraNetworks.filter((e) => !e.hidden || isNetworkSelected(e))"
           :key="item.key"
           :label="item.name"
           :icon="isNetworkSelected(item) ? CheckIcon : undefined"
@@ -26,7 +26,7 @@
       <DestinationLabel v-if="networks.length > 1" label="zkSync Lite" :icon="IconsZkSyncLite" class="mb-2 mt-4" />
       <CommonCardWithLineButtons>
         <DestinationItem
-          v-for="item in zkSyncLiteNetworks.filter((e) => e.visible || isNetworkSelected(e))"
+          v-for="item in zkSyncLiteNetworks.filter((e) => !e.hidden || isNetworkSelected(e))"
           :key="item.key"
           :label="item.name"
           :icon="isNetworkSelected(item) ? CheckIcon : undefined"

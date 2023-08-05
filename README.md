@@ -21,15 +21,15 @@ You can use Portal to connect to your [local zkSync Era node](https://era.zksync
 
 Prerequisites: Node.js version 16+, npm version 7+
 
-- Follow the [documentation](https://era.zksync.io/docs/tools/testing/) to set up either **in-memory node** or **dockerized local setup**.
-- Clone Portal repository and install the dependencies
-  ```bash
-  git clone https://github.com/matter-labs/dapp-portal.git
-  cd dapp-portal
-  npm install
-  ```
-- In case network ID, RPC URL or other information differs from the default values, edit them in `data/networks.ts` file. You can also customize the list of displayed tokens there.
-- Run the development server:
+1. Follow the [documentation](https://era.zksync.io/docs/tools/testing/) to set up either **in-memory node** or **dockerized local setup**.
+2. Clone Portal repository and install the dependencies
+    ```bash
+    git clone https://github.com/matter-labs/dapp-portal.git
+    cd dapp-portal
+    npm install
+    ```
+3. In case network ID, RPC URL or other information differs from the default values, edit them in `data/networks.ts` file. You can also customize the list of displayed tokens there.
+4. Run the development server:
   - For in-memory node:
     ```bash
     npm run dev:node:memory

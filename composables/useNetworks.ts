@@ -1,4 +1,4 @@
-import Hyperchains from "@/hyperchains/hyperchains.json";
+import Hyperchains from "@/hyperchains/config.json";
 
 import type { EraNetwork, L2Network } from "@/data/networks";
 import type { Version } from "@/store/network";

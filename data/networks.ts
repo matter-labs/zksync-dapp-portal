@@ -13,8 +13,8 @@ export type L2Network = {
   shortName: string;
   l1Network?: L1Network;
   blockExplorerUrl?: string;
-  // If set to true, the network will be shown in the network selector
-  visible: boolean;
+  // If set to true, the network will not be shown in the network selector
+  hidden?: boolean;
 };
 export const l1Networks = {
   mainnet: {
@@ -60,7 +60,6 @@ export const eraInMemoryNode: EraNetwork = {
       enabledForFees: true, // optional
     },
   ],
-  visible: true,
 };
 
 // Dockerized local setup default config. Docs: https://era.zksync.io/docs/tools/testing/dockerized-testing.html
@@ -90,7 +89,6 @@ export const eraDockerizedNode: EraNetwork = {
       public: { http: ["http://localhost:8545"] },
     },
   },
-  visible: true,
 };
 
 export const eraNetworks: EraNetwork[] = [
@@ -104,7 +102,6 @@ export const eraNetworks: EraNetwork[] = [
     blockExplorerApi: "https://block-explorer-api.mainnet.zksync.io",
     getTokens: () => getTokensByNetworkId(324),
     l1Network: l1Networks.mainnet,
-    visible: true,
   },
   {
     id: 280,
@@ -117,7 +114,6 @@ export const eraNetworks: EraNetwork[] = [
     faucetUrl: "https://testnet2-faucet.zksync.dev/ask_money",
     getTokens: () => getTokensByNetworkId(280),
     l1Network: l1Networks.goerli,
-    visible: true,
   },
   {
     id: 270,
@@ -130,7 +126,7 @@ export const eraNetworks: EraNetwork[] = [
     faucetUrl: "https://stage2-faucet.zksync.dev/ask_money",
     getTokens: () => getTokensByNetworkId(270),
     l1Network: l1Networks.sepolia,
-    visible: false,
+    hidden: true,
   },
 ];
 
@@ -143,7 +139,6 @@ export const zkSyncLiteNetworks: ZkSyncLiteNetwork[] = [
     shortName: "Lite Mainnet",
     blockExplorerUrl: "https://zkscan.io",
     l1Network: l1Networks.mainnet,
-    visible: true,
   },
   {
     key: "lite-goerli",
@@ -152,6 +147,5 @@ export const zkSyncLiteNetworks: ZkSyncLiteNetwork[] = [
     shortName: "Lite Goerli",
     blockExplorerUrl: "https://goerli.zkscan.io",
     l1Network: l1Networks.goerli,
-    visible: true,
   },
 ];
