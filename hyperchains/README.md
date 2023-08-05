@@ -70,7 +70,7 @@ Array<{
     symbol: string;
     decimals: number;
     iconUrl?: string;
-    price?: TokenPrice;
+    price?: number;
   }>
 }>
 ```
