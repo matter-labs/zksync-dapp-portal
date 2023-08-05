@@ -1,4 +1,4 @@
 *.env
 *.json
-config.json
-!README.md
+!config.json
+!example.config.json

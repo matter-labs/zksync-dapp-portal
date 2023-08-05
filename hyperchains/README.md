@@ -21,7 +21,7 @@ There are few different ways to configure the application:
     ```bash
     npm run migrate:hyperchain <path_to_your_zksync-era_repo>
     ```
-    This will cpoy the .evn file and .json (if available) and regenerate `/hyperchains/config.json` file. You can edit this file manually if needed.
+    This will regenerate `/hyperchains/config.json` file. You can edit this file manually if needed.
 3. Now you can start or build the application. See [Development](#development-server) or [Production](#production) section below for more details.
 
 <small>Note: if you put multiple .env files in the `/hyperchains` folder - all of them will be available in the Portal after building the hyperchain config. Last edited .env file will be the default network</small>
@@ -31,7 +31,7 @@ There are few different ways to configure the application:
 <details>
 <summary>You can manually configure the application by editing the config file.</summary>
 
-1. Edit `/hyperchains/config.json` config file (eg. rpc url, network id, etc.).
+1. Add your network information to `/hyperchains/config.json` config file. See example config file in `/hyperchains/example.config.json`
 2. Now you can start or build the application. See [Development](#development) or [Production](#production) section below for more details.
 </details>
 
@@ -61,7 +61,7 @@ Array<{
       }
     };
   },
-  tokens: Array<{ // Should at least contain the `ETH` token (see `/hyperchains/config.json` for example)
+  tokens: Array<{ // Should at least contain the `ETH` token (see `/hyperchains/example.config.json` for example)
     address: string;
     l1Address?: string;
     name?: string;
