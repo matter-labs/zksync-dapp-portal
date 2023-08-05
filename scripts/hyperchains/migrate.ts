@@ -7,31 +7,30 @@ import { prompt } from "enquirer";
 import { existsSync, readdirSync, readFileSync, writeFileSync } from "fs";
 import { join as pathJoin, parse as pathParse } from "path";
 
-import { ETH_L1_ADDRESS, ETH_L2_ADDRESS } from "../utils/constants";
+import { ETH_L1_ADDRESS, ETH_L2_ADDRESS } from "../../utils/constants";
 
-import type { EraNetwork } from "../data/networks";
-import type { Token } from "../types";
+import type { EraNetwork } from "../../data/networks";
+import type { Token } from "../../types";
 
 type Network = Omit<EraNetwork, "getTokens">;
 type Config = { network: Network; tokens: Token[] }[];
 
 const args = process.argv;
-const rootPath = args[2] ?? "";
+const rootPath = args[2];
+if (!rootPath) {
+  console.error(
+    `Please provide the path to your zksync-era repo:
+    npm run migrate:hyperchain <path_to_your_zksync-era_repo>`
+  );
+  process.exit(1);
+}
 
-const configPath = pathJoin(__dirname, "../hyperchains/config.json");
+const configPath = pathJoin(__dirname, "../../hyperchains/config.json");
 const envsDirectory = pathJoin(rootPath, "/etc/env");
 const tokensDirectory = pathJoin(rootPath, "/etc/tokens");
 
 const migrateHyperchainInfo = async () => {
   console.log("Starting Hyperchain configuration setup...\n");
-
-  if (!rootPath) {
-    console.error(
-      `Please provide the path to your zksync-era repo:
-      npm run migrate:hyperchain <path_to_your_zksync-era_repo>`
-    );
-    return;
-  }
 
   const network = await promptNetworkEnv();
   const envName = network.key;
