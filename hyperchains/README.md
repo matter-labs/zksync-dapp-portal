@@ -19,7 +19,7 @@ There are few different ways to configure the application:
     ```
 2. Pull your hyperchain config files by running
     ```bash
-    npm run migrate:hyperchain <path_to_your_zksync-era_repo>
+    npm run hyperchain:migrate <path_to_your_zksync-era_repo>
     ```
     This will regenerate `/hyperchains/config.json` file. You can edit this file manually if needed.
 3. Now you can start or build the application. See [Development](#development-server) or [Production](#production) section below for more details.
@@ -27,9 +27,25 @@ There are few different ways to configure the application:
 <small>Note: if you put multiple .env files in the `/hyperchains` folder - all of them will be available in the Portal after building the hyperchain config. Last edited .env file will be the default network</small>
 </details>
 
+### Configure automatically with form
+<details>
+<summary>You can configure the application by filling a simple form</summary>
+
+1. Make sure to install the dependencies:
+    ```bash
+    npm install
+    ```
+2. Pull your hyperchain config files by running
+    ```bash
+    npm run hyperchain:create
+    ```
+    This will regenerate `/hyperchains/config.json` file. You can edit this file manually if needed.
+3. Now you can start or build the application. See [Development](#development-server) or [Production](#production) section below for more details.
+</details>
+
 ### Configure manually
 <details>
-<summary>You can manually configure the application by editing the config file.</summary>
+<summary>You can manually configure the application by editing the config file</summary>
 
 1. Add your network information to `/hyperchains/config.json` config file. See example config file in `/hyperchains/example.config.json`
 2. Now you can start or build the application. See [Development](#development) or [Production](#production) section below for more details.

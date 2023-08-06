@@ -4,28 +4,24 @@
 */
 import { parse as envParse } from "dotenv";
 import { prompt } from "enquirer";
-import { existsSync, readdirSync, readFileSync, writeFileSync } from "fs";
+import { existsSync, readdirSync, readFileSync } from "fs";
 import { join as pathJoin, parse as pathParse } from "path";
 
-import { ETH_L1_ADDRESS, ETH_L2_ADDRESS } from "../../utils/constants";
+import { generateNetworkConfig, logUserInfo, promptNetworkReplacement } from "./utils";
 
-import type { EraNetwork } from "../../data/networks";
+import type { Network } from "./utils";
 import type { Token } from "../../types";
-
-type Network = Omit<EraNetwork, "getTokens">;
-type Config = { network: Network; tokens: Token[] }[];
 
 const args = process.argv;
 const rootPath = args[2];
 if (!rootPath) {
   console.error(
     `Please provide the path to your zksync-era repo:
-    npm run migrate:hyperchain <path_to_your_zksync-era_repo>`
+    npm run hyperchain:migrate <path_to_your_zksync-era_repo>`
   );
   process.exit(1);
 }
 
-const configPath = pathJoin(__dirname, "../../hyperchains/config.json");
 const envsDirectory = pathJoin(rootPath, "/etc/env");
 const tokensDirectory = pathJoin(rootPath, "/etc/tokens");
 
@@ -37,13 +33,9 @@ const migrateHyperchainInfo = async () => {
   await promptNetworkInfo(network);
   await promptNetworkReplacement(network);
 
-  await generateConfig(network, getTokensFromDirectory(pathJoin(tokensDirectory, `${envName}.json`)));
+  await generateNetworkConfig(network, getTokensFromDirectory(pathJoin(tokensDirectory, `${envName}.json`)));
 
-  console.log("\nConfig has been generated successfully!");
-  console.log("You can find more info in /hyperchains/README.md\n");
-
-  console.log("You can start Portal with your new config by running");
-  console.log("npm run dev:node:hyperchain");
+  logUserInfo();
 };
 
 /* Utils */
@@ -76,12 +68,6 @@ const getTokensFromDirectory = (directoryPath: string): Token[] => {
   } catch {
     return [];
   }
-};
-const getConfig = (): Config => {
-  return JSON.parse(readFileSync(configPath).toString());
-};
-const saveConfig = (config: Config) => {
-  return writeFileSync(configPath, JSON.stringify(config, null, 2));
 };
 
 /* Prompts */
@@ -120,70 +106,27 @@ const promptNetworkInfo = async (network: Network) => {
       name: "name",
       type: "input",
       initial: network.name,
+      required: true,
     },
     {
-      message: "Displayed network short name?",
+      message: "Displayed network short name",
       name: "shortName",
       type: "input",
       initial: network.shortName,
+      required: true,
     },
     {
-      message: "Displayed L1 network name?",
+      message: "Displayed L1 network name",
       name: "l1NetworkName",
       type: "input",
       initial: network.l1Network.name,
+      required: true,
     },
   ]);
 
   network.name = name;
   network.shortName = shortName;
   network.l1Network.name = l1NetworkName;
-};
-const promptNetworkReplacement = async (network: Network) => {
-  const config = getConfig();
-
-  if (config.find((e) => e.network.key === network.key)) {
-    const { sameNetworkAction }: { sameNetworkAction: "replace" | "add-as-copy" } = await prompt([
-      {
-        message: "Network with the same key found in the config, how do you want to proceed?",
-        name: "sameNetworkAction",
-        type: "select",
-        choices: [
-          { message: "Replace", name: "replace" },
-          { message: `Add as "${network.key}-copy"`, name: "add-as-copy" },
-        ],
-      },
-    ]);
-
-    if (sameNetworkAction === "add-as-copy") {
-      network.key = `${network.key}-copy`;
-    } else if (sameNetworkAction === "replace") {
-      config.splice(
-        config.findIndex((e) => e.network.key === network.key),
-        1
-      );
-      saveConfig(config);
-    }
-  }
-};
-
-const generateConfig = async (network: Network, tokens: Token[]) => {
-  const config = getConfig();
-
-  // Add ETH token if it's not in the list
-  if (!tokens.find((token: Token) => token.address === ETH_L2_ADDRESS)) {
-    tokens.unshift({
-      address: ETH_L2_ADDRESS,
-      l1Address: ETH_L1_ADDRESS,
-      symbol: "ETH",
-      decimals: 18,
-      iconUrl: "/img/eth.svg",
-      enabledForFees: true,
-    });
-  }
-
-  config.unshift({ network, tokens });
-  saveConfig(config);
 };
 
 migrateHyperchainInfo();
