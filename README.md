@@ -29,16 +29,16 @@ Prerequisites: Node.js version 16+, npm version 7+
     npm install
     ```
 3. In case network ID, RPC URL or other information differs from the default values, edit them in `data/networks.ts` file. You can also customize the list of displayed tokens there.
-  - You can also use the [configuration form](./hyperchains/README.md#configure-automatically-with-form) to generate the config file with simple prompts.
+    - You can also use the [configuration form](./hyperchains/README.md#configure-automatically-with-form) to generate the config file with simple prompts.
 4. Run the development server:
-  - For in-memory node:
-    ```bash
-    npm run dev:node:memory
-    ```
-  - For dockerized local setup:
-    ```bash
-    npm run dev:node:docker
-    ```
+    - For in-memory node:
+      ```bash
+      npm run dev:node:memory
+      ```
+    - For dockerized local setup:
+      ```bash
+      npm run dev:node:docker
+      ```
   Check the console output to find started Portal URL and open it in your browser (usually http://localhost:3000)
 
 ---
