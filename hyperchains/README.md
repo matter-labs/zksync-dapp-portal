@@ -17,7 +17,7 @@ There are few different ways to configure the application:
     ```bash
     npm install
     ```
-2. Pull your hyperchain config files by running
+2. Pull your hyperchain config files by running:
     ```bash
     npm run hyperchain:migrate <path_to_your_zksync-era_repo>
     ```
@@ -35,7 +35,7 @@ There are few different ways to configure the application:
     ```bash
     npm install
     ```
-2. Pull your hyperchain config files by running
+2. Follow the instructions in the terminal:
     ```bash
     npm run hyperchain:create
     ```
