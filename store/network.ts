@@ -29,10 +29,6 @@ export const useNetworkStore = defineStore("network", () => {
   const version = computed<Version>(() => getVersionByNetwork(selectedNetwork.value));
   const l1Network = computed<L1Network | undefined>(() => selectedNetwork.value.l1Network);
   const l1BlockExplorerUrl = computed<string | undefined>(() => l1Network.value?.blockExplorers?.default.url);
-  const isKnownL1Network = computed<boolean>(() => {
-    if (!l1Network.value) return false;
-    return ["mainnet", "goerli", "sepolia"].includes(l1Network.value.network);
-  });
 
   const networkChangedWarningDisabled = useStorage<boolean>("networkChangedWarningDisabled", false);
   const lastSelectedNetworkKey = useStorage<string | undefined>("lastSelectedNetworkKey", undefined);
@@ -109,7 +105,6 @@ export const useNetworkStore = defineStore("network", () => {
     version,
     l1Network,
     l1BlockExplorerUrl,
-    isKnownL1Network,
 
     networkChangedWarningDisabled,
     networkChangedWarning,

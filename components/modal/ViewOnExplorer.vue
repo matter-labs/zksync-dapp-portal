@@ -58,10 +58,10 @@ import { useOnboardStore } from "@/store/onboard";
 import { useEraProviderStore } from "@/store/zksync/era/provider";
 import { useLiteProviderStore } from "@/store/zksync/lite/provider";
 
-const { selectedNetwork, l1BlockExplorerUrl, isKnownL1Network, version } = storeToRefs(useNetworkStore());
+const { selectedNetwork, l1BlockExplorerUrl, version } = storeToRefs(useNetworkStore());
 const { account } = storeToRefs(useOnboardStore());
 const { destinations } = storeToRefs(useDestinationsStore());
-const { blockExplorerUrl: eraBlockExplorerUrl } = storeToRefs(useEraProviderStore());
+const { eraNetwork, blockExplorerUrl: eraBlockExplorerUrl } = storeToRefs(useEraProviderStore());
 const { blockExplorerUrl: liteBlockExplorerUrl } = storeToRefs(useLiteProviderStore());
 
 const eraNetworkLink = computed(() => ({
@@ -90,7 +90,7 @@ const otherNetworks = computed(() => {
   }
   if (version.value === "lite") {
     list.push(eraNetworkLink.value);
-  } else if (isKnownL1Network.value) {
+  } else if (eraNetwork.value.displaySettings?.showZkSyncLiteNetworks) {
     list.push(zkSyncLiteNetworkLink.value);
   }
   return list;

@@ -48,7 +48,9 @@
               {{ error.message }}
             </CommonErrorBlock>
           </div>
-          <CommonButtonTopInfo v-if="isKnownL1Network" class="mt-2">Arriving in ~15 minutes</CommonButtonTopInfo>
+          <div class="mt-2">
+            <CommonButtonTopInfo v-if="!isCustomNode">Arriving in ~15 minutes</CommonButtonTopInfo>
+          </div>
           <CommonButton
             :disabled="buttonDisabled || newFeeAlert || status !== 'not-started'"
             class="mx-auto"
@@ -125,12 +127,14 @@
           </CommonButton>
         </template>
         <template v-else-if="layout === 'bridge'">
-          <CommonButtonTopLink @click="emit('newTransaction')">Make another transaction</CommonButtonTopLink>
+          <CommonButtonTopLink v-if="!isCustomNode" @click="emit('newTransaction')">
+            Make another transaction
+          </CommonButtonTopLink>
           <CommonButton v-if="refererName" class="mx-auto" variant="primary-solid" @click="closeWindow">
             Go back to {{ refererName }}
           </CommonButton>
           <CommonButton
-            v-else
+            v-else-if="!isCustomNode"
             as="a"
             href="https://ecosystem.zksync.io"
             target="_blank"
@@ -139,6 +143,9 @@
           >
             Explore ecosystem
             <ArrowUpRightIcon class="ml-1 mt-0.5 h-3.5 w-3.5" aria-hidden="true" />
+          </CommonButton>
+          <CommonButton v-else class="mx-auto" variant="primary-solid" @click="emit('newTransaction')">
+            Make another transaction
           </CommonButton>
         </template>
       </TransactionConfirmModalFooter>
@@ -165,6 +172,7 @@ import { storeToRefs } from "pinia";
 import TokenAmount from "@/components/transaction/transactionLineItem/TokenAmount.vue";
 import TotalPrice from "@/components/transaction/transactionLineItem/TotalPrice.vue";
 
+import useNetworks from "@/composables/useNetworks";
 import useTransaction from "@/composables/zksync/era/deposit/useTransaction";
 
 import type { DepositFeeValues } from "@/composables/zksync/era/deposit/useFee";
@@ -229,8 +237,9 @@ const walletEraStore = useEraWalletStore();
 const eraEthereumBalanceStore = useEraEthereumBalanceStore();
 const { account } = storeToRefs(useOnboardStore());
 const { destinations } = storeToRefs(useDestinationsStore());
-const { isKnownL1Network, l1BlockExplorerUrl } = storeToRefs(useNetworkStore());
+const { l1BlockExplorerUrl } = storeToRefs(useNetworkStore());
 const { previousTransactionAddress } = storeToRefs(usePreferencesStore());
+const { isCustomNode } = useNetworks();
 const { status, error, ethTransactionHash, commitTransaction } = useTransaction(walletEraStore.getL1Signer);
 
 const lastFee = ref(props.fee);

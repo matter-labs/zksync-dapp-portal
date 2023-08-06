@@ -23,7 +23,11 @@
           </template>
           <template #default>Send</template>
         </CommonButton>
-        <CommonButton v-if="isKnownL1Network" as="RouterLink" :to="{ name: 'transaction-zksync-era-swap' }">
+        <CommonButton
+          v-if="eraNetwork.displaySettings?.showPartnerLinks"
+          as="RouterLink"
+          :to="{ name: 'transaction-zksync-era-swap' }"
+        >
           <template #icon>
             <ArrowsRightLeftIcon aria-hidden="true" />
           </template>
@@ -110,7 +114,6 @@ import useInterval from "@/composables/useInterval";
 import useSingleLoading from "@/composables/useSingleLoading";
 
 import { useDestinationsStore } from "@/store/destinations";
-import { useNetworkStore } from "@/store/network";
 import { useOnboardStore } from "@/store/onboard";
 import { useEraProviderStore } from "@/store/zksync/era/provider";
 import { useEraWalletStore } from "@/store/zksync/era/wallet";
@@ -122,7 +125,6 @@ const onboardStore = useOnboardStore();
 const walletEraStore = useEraWalletStore();
 const { balance, balanceInProgress, balanceError, allBalancePricesLoaded } = storeToRefs(walletEraStore);
 const { destinations } = storeToRefs(useDestinationsStore());
-const { isKnownL1Network } = storeToRefs(useNetworkStore());
 const { eraNetwork } = storeToRefs(useEraProviderStore());
 
 const displayedBalances = computed(() => {

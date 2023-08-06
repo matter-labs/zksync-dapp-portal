@@ -35,7 +35,7 @@
       </DestinationItem>
     </CommonCardWithLineButtons>
 
-    <template v-if="isKnownL1Network">
+    <template v-if="eraNetwork.displaySettings?.showPartnerLinks">
       <TypographyCategoryLabel>Top-up with cash</TypographyCategoryLabel>
       <CommonCardWithLineButtons>
         <DestinationItem
@@ -73,11 +73,9 @@ import { ArrowUpRightIcon, QrCodeIcon } from "@heroicons/vue/24/outline";
 import { storeToRefs } from "pinia";
 
 import { useDestinationsStore } from "@/store/destinations";
-import { useNetworkStore } from "@/store/network";
 import { useEraProviderStore } from "@/store/zksync/era/provider";
 
 const { destinations } = storeToRefs(useDestinationsStore());
-const { isKnownL1Network } = storeToRefs(useNetworkStore());
 const { eraNetwork } = storeToRefs(useEraProviderStore());
 </script>
 

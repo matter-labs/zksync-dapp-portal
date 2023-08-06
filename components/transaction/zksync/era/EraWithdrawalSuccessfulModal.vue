@@ -10,7 +10,7 @@
         <EraTransferLineItem :transfer="transfer" />
       </CommonCardWithLineButtons>
 
-      <CommonAlert v-if="isKnownL1Network" class="mt-3" variant="neutral" :icon="InformationCircleIcon">
+      <CommonAlert v-if="!isCustomNode" class="mt-3" variant="neutral" :icon="InformationCircleIcon">
         <p>
           Your funds will be available on the <span class="font-medium">{{ destinations.ethereum.label }}</span> after a
           <a :href="ERA_WITHDRAWAL_DELAY" target="_blank" class="link">~24-hour delay</a>. During this time, the
@@ -42,12 +42,14 @@
           </CommonButton>
         </template>
         <template v-else-if="layout === 'bridge'">
-          <CommonButtonTopLink @click="emit('newTransaction')">Make another transaction</CommonButtonTopLink>
+          <CommonButtonTopLink v-if="!isCustomNode" @click="emit('newTransaction')">
+            Make another transaction
+          </CommonButtonTopLink>
           <CommonButton v-if="refererName" class="mx-auto" variant="primary-solid" @click="closeWindow">
             Go back to {{ refererName }}
           </CommonButton>
           <CommonButton
-            v-else
+            v-else-if="!isCustomNode"
             as="a"
             href="https://ecosystem.zksync.io"
             target="_blank"
@@ -56,6 +58,9 @@
           >
             Explore ecosystem
             <ArrowUpRightIcon class="ml-1 mt-0.5 h-3.5 w-3.5" aria-hidden="true" />
+          </CommonButton>
+          <CommonButton v-else class="mx-auto" variant="primary-solid" @click="emit('newTransaction')">
+            Make another transaction
           </CommonButton>
         </template>
       </TransactionConfirmModalFooter>
@@ -70,11 +75,12 @@ import { storeToRefs } from "pinia";
 
 import EraTransferLineItem from "@/components/transaction/zksync/era/EraTransferLineItem.vue";
 
+import useNetworks from "@/composables/useNetworks";
+
 import type { EraTransfer } from "@/utils/zksync/era/mappers";
 import type { PropType } from "vue";
 
 import { useDestinationsStore } from "@/store/destinations";
-import { useNetworkStore } from "@/store/network";
 import { ERA_WITHDRAWAL_DELAY } from "@/utils/doc-links";
 
 defineProps({
@@ -92,7 +98,7 @@ const emit = defineEmits<{
   (eventName: "newTransaction"): void;
 }>();
 
-const { isKnownL1Network } = storeToRefs(useNetworkStore());
+const { isCustomNode } = useNetworks();
 const { destinations } = storeToRefs(useDestinationsStore());
 
 const refererName = useRouteQuery("refererName");

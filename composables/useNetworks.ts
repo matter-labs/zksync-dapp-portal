@@ -14,6 +14,7 @@ import {
 export default () => {
   const runtimeConfig = useRuntimeConfig();
 
+  const isCustomNode = !!runtimeConfig.public.nodeType;
   const eraNetworks: EraNetwork[] = [];
   if (runtimeConfig.public.nodeType === "memory") {
     eraNetworks.push(eraInMemoryNode);
@@ -40,6 +41,8 @@ export default () => {
   };
 
   return {
+    isCustomNode,
+
     eraNetworks,
     zkSyncLiteNetworks,
 

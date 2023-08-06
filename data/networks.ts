@@ -38,6 +38,10 @@ export type EraNetwork = L2Network & {
   rpcUrl: string;
   blockExplorerApi?: string;
   faucetUrl?: string;
+  displaySettings?: {
+    showPartnerLinks?: boolean;
+    showZkSyncLiteNetworks?: boolean;
+  };
   getTokens: () => Token[] | Promise<Token[]>;
 };
 
@@ -100,6 +104,10 @@ export const eraNetworks: EraNetwork[] = [
     rpcUrl: "https://mainnet.era.zksync.io",
     blockExplorerUrl: "https://explorer.zksync.io",
     blockExplorerApi: "https://block-explorer-api.mainnet.zksync.io",
+    displaySettings: {
+      showPartnerLinks: true,
+      showZkSyncLiteNetworks: true,
+    },
     getTokens: () => getTokensByNetworkId(324),
     l1Network: l1Networks.mainnet,
   },
@@ -112,6 +120,10 @@ export const eraNetworks: EraNetwork[] = [
     blockExplorerUrl: "https://goerli.explorer.zksync.io",
     blockExplorerApi: "https://block-explorer-api.testnets.zksync.dev",
     faucetUrl: "https://testnet2-faucet.zksync.dev/ask_money",
+    displaySettings: {
+      showPartnerLinks: true,
+      showZkSyncLiteNetworks: true,
+    },
     getTokens: () => getTokensByNetworkId(280),
     l1Network: l1Networks.goerli,
   },

@@ -22,7 +22,12 @@
       </CommonCardWithLineButtons>
     </template>
 
-    <template v-if="networks.includes('lite') && (selectedZkSyncVersion !== 'era' || isKnownL1Network)">
+    <template
+      v-if="
+        networks.includes('lite') &&
+        (selectedZkSyncVersion !== 'era' || eraNetwork.displaySettings?.showZkSyncLiteNetworks)
+      "
+    >
       <DestinationLabel v-if="networks.length > 1" label="zkSync Lite" :icon="IconsZkSyncLite" class="mb-2 mt-4" />
       <CommonCardWithLineButtons>
         <DestinationItem
@@ -56,6 +61,7 @@ import type { PropType } from "vue";
 
 import { useRoute, useRouter } from "#app";
 import { useNetworkStore } from "@/store/network";
+import { useEraProviderStore } from "@/store/zksync/era/provider";
 import { getNetworkUrl, replaceVersionInString } from "@/utils/helpers";
 
 defineProps({
@@ -73,10 +79,10 @@ const route = useRoute();
 const router = useRouter();
 
 const { eraNetworks, zkSyncLiteNetworks, getVersionByNetwork } = useNetworks();
+const { eraNetwork } = storeToRefs(useEraProviderStore());
 const {
   selectedNetwork,
   l1Network,
-  isKnownL1Network,
   selectedNetworkKey,
   version: selectedZkSyncVersion,
 } = storeToRefs(useNetworkStore());

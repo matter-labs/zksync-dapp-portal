@@ -49,7 +49,7 @@
             </CommonErrorBlock>
           </div>
           <CommonButtonTopLink
-            v-if="destination.key === 'ethereum' && isKnownL1Network"
+            v-if="destination.key === 'ethereum' && !isCustomNode"
             as="a"
             :href="ERA_WITHDRAWAL_DELAY"
             target="_blank"
@@ -101,6 +101,7 @@ import { storeToRefs } from "pinia";
 import EraTransferSuccessfulModal from "@/components/transaction/zksync/era/EraTransferSuccessfulModal.vue";
 import EraWithdrawalSuccessfulModal from "@/components/transaction/zksync/era/EraWithdrawalSuccessfulModal.vue";
 
+import useNetworks from "@/composables/useNetworks";
 import useTransaction from "@/composables/zksync/era/useTransaction";
 
 import type { FeeEstimationParams } from "@/composables/zksync/era/useFee";
@@ -111,7 +112,6 @@ import type { BigNumberish } from "ethers";
 import type { PropType } from "vue";
 
 import { useDestinationsStore } from "@/store/destinations";
-import { useNetworkStore } from "@/store/network";
 import { useOnboardStore } from "@/store/onboard";
 import { usePreferencesStore } from "@/store/preferences";
 import { useEraProviderStore } from "@/store/zksync/era/provider";
@@ -174,7 +174,7 @@ const eraProviderStore = useEraProviderStore();
 const { account } = storeToRefs(useOnboardStore());
 const { destinations } = storeToRefs(useDestinationsStore());
 const { previousTransactionAddress } = storeToRefs(usePreferencesStore());
-const { isKnownL1Network } = storeToRefs(useNetworkStore());
+const { isCustomNode } = useNetworks();
 
 const { status, error, transactionHash, commitTransaction } = useTransaction(
   walletEraStore.getSigner,
