@@ -37,7 +37,7 @@ export class MetamaskPage extends BasePage {
     return "//div[@class='edit-gas-display']//button";
   }
   get feeChangerAlert() {
-    return "//*[@class='alert-body']//*[contains(text(), 'Fee has changed')]";
+    return "//p[contains(text(), 'Fee has changed')]";
   }
 
   get saveFeeBtn() {
@@ -180,17 +180,10 @@ export class MetamaskPage extends BasePage {
     try {
       await this.switchNetwork();
     } finally {
-      await setTimeout(2.5 * 1000);
+      await setTimeout(config.minimalTimeout.timeout);
       await this.click(this.continueBtn);
-      // const confirmBtnSelector = "//*[@class='alert-body']//button";
-      // const confirmBtn: any = await this.world.page?.locator(confirmBtnSelector);
-      // if (await confirmBtn.isEnabled()) {
-      //   console.log("spotted");
-      //   await this.click(confirmBtn);
-      // }
       const popUpContext = await this.catchPopUpByClick(`//span[contains(text(),'${triggeredElement}')]`);
-      await setTimeout(2.5 * 1000);
-
+      await setTimeout(config.minimalTimeout.timeout);
       await popUpContext?.setViewportSize(config.popUpWindowSize);
       await popUpContext?.click(this.confirmTransaction);
     }
@@ -202,25 +195,23 @@ export class MetamaskPage extends BasePage {
     const [popUp] = await Promise.all([
       this.world.context?.waitForEvent("page"),
       await helper.checkElementVisible(element),
-      //await helper.checkElementClickable(element),
-      await this.world.page?.locator(element).first().click(),
-      await setTimeout(10 * 1000),
-      await this.isFeeAlert(helper, element),
+      await await this.world.page?.locator(element).first().click(),
+      await setTimeout(config.defaultTimeout.timeout),
+      await this.isFeeAlert(element),
     ]);
 
     return popUp;
   }
 
-  async isFeeAlert(helper: Helper, element: string) {
+  async isFeeAlert(element: string) {
+    const helper = new Helper(this.world);
     const mainPage = new MainPage(this.world);
     const feeAlert = await helper.checkElementVisible(this.feeChangerAlert);
     if (feeAlert) {
-      await helper.checkElementVisible(mainPage.confirmFeeChange);
-      await this.world.page?.locator(mainPage.confirmFeeChange).first().click();
+      await helper.checkElementVisible(mainPage.confirmFeeChangeButton);
+      await this.click(mainPage.confirmFeeChangeButton);
       await this.catchPopUpByClick(element);
-      return true;
     }
-    return false;
   }
 
   async catchPopUp() {
