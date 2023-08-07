@@ -80,8 +80,8 @@ Feature: Withdraw
     Then Element with "text" " Max " should be "visible"
     Then Element with "text" " Max " should be "clickable"
     #Block To:
-    Then Element with "text" "Your Ethereum Goerli account" should be "visible"
-    Then Element with "text" "Your Ethereum Goerli account" should be "clickable"
+    Then Element with "text" "Your Ethereum Goerli Testnet account" should be "visible"
+    Then Element with "text" "Your Ethereum Goerli Testnet account" should be "clickable"
     Then Element with "text" "0xa439...046" should be "visible"
     Then Element with "text" "0xa439...046" should be "clickable"
     Then Element with "class" "address-avatar address-card-avatar" should be "visible"
@@ -99,7 +99,7 @@ Feature: Withdraw
   Scenario: Check the Bridge To artifacts on Withdraw (Testnet)
     Given I go to page "/bridge?network=era-goerli"
     When I click by text "Withdraw"
-    When I click by "alt" with "Ethereum Goerli" value
+    When I click by "text" with "Your Ethereum Goerli Testnet account" value
     Then Element with "text" "Bridge to" should be "visible"
     #Back button
     Then Element with "class" "arrow-icon" should be "visible"
