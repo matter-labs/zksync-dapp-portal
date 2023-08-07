@@ -175,7 +175,7 @@ export class MainPage extends BasePage {
     if (externalLinkName === "Layerswap") {
       link = "https://www.layerswap.io/?sourceExchangeName=ZKSYNCERA_MAINNET";
     } else if (externalLinkName === "Orbiter") {
-      link = "https://www.layerswap.io/?sourceExchangeName=ZKSYNCERA_MAINNET";
+      link = "https://www.orbiter.finance/?source=zkSync%20Era";
     } else {
       return console.error("An incorrect link name has been provided");
     }

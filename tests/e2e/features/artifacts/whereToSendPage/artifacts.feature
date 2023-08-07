@@ -5,41 +5,43 @@ Feature: Artifacts - UI
     Given Connect Metamask extension with login action
 
   @id1560:I @testnet
-  Scenario Outline: Check artifacts for an "Where to send" page (Testnet)
+  Scenario: Check artifacts for an "Where to send" page (Testnet)
     Given I go to page "/transaction/zksync/era/?network=era-goerli"
-    Then Element with "<Selector type>" "<Selector value>" should be "<Selector state>"
-
-    Examples:
-      | Selector type | Selector value                          | Selector state     |
-      | text          | Where to send                           | visible            |
-      | text          | zkSync Era Testnet                      | visible            |
-      | text          | Send inside zkSync Era Testnet network  | visible            |
-      | text          | zkSync Era Testnet                      | clickable          |
-      | text          | Ethereum Goerli                         | visible            |
-      | text          | Withdraw to Ethereum                    | visible            |
-      | text          | Ethereum Goerli                         | clickable          |
-      | text          | zkSync Lite Goerli                      | visible            |
-      | text          | Send to zkSync Lite network             | visible            |
-      | text          | zkSync Lite Goerli                      | clickable          |
-      | text          | Send to exchange                        | visible            |
-      | text          | Send to exchange using official bridge  | visible            |
-      | text          | Official bridge                         | visible            |
-      | text          | Official bridge                         | clickable          |
-      | text          | Layerswap                               | visible            |
-      | text          | Layerswap                               | clickable          |
-      | text          | Orbiter                                 | visible            |
-      | text          | Orbiter                                 | clickable          |
-      | text          | Send to another network                 | visible            |
-      | partial src   | /img/era.svg?v=1                        | visible            |
-      | partial src   | /img/era.svg?v=1                        | clickable          |
-      | partial src   | /img/ethereum.svg?v=1                   | visible            |
-      | partial src   | /img/ethereum.svg?v=1                   | clickable          |
-      | partial src   | /img/zksync-lite.svg?v=1                | visible            |
-      | partial src   | /img/zksync-lite.svg?v=1                | clickable          |   
-      | partial src   | /img/layerswap.svg?v=1                  | visible            |
-      | partial src   | /img/layerswap.svg?v=1                  | clickable          |
-      | partial src   | /img/orbiter.svg?v=1                    | visible            |
-      | partial src   | /img/orbiter.svg?v=1                    | clickable          |             
+    Then Element with "text" "Where to send" should be "visible"
+    #zkSync Era item
+    Then Element with "text" "zkSync Era Testnet" should be "visible"
+    Then Element with "text" "Send inside zkSync Era Testnet network" should be "visible"
+    Then Element with "text" "zkSync Era Testnet" should be "clickable"
+    Then Element with "partial src" "/img/era.svg?v=1" should be "visible"
+    Then Element with "partial src" "/img/era.svg?v=1" should be "clickable"
+    #Ethereum item
+    Then Element with "text" "Ethereum Goerli" should be "visible"
+    Then Element with "text" "Withdraw to Ethereum" should be "visible"
+    Then Element with "text" "Ethereum Goerli" should be "clickable"
+    Then Element with "partial src" "/img/ethereum.svg?v=1" should be "visible"
+    Then Element with "partial src" "/img/ethereum.svg?v=1" should be "clickable"
+    #zkSync Lite item
+    Then Element with "text" "zkSync Lite Goerli" should be "visible"
+    Then Element with "text" "Send to zkSync Lite network" should be "visible"
+    Then Element with "text" "zkSync Lite Goerli" should be "clickable"
+    Then Element with "partial src" "/img/zksync-lite.svg?v=1" should be "visible"
+    Then Element with "partial src" "/img/zksync-lite.svg?v=1" should be "clickable"
+    Then Element with "text" "Send to exchange" should be "visible"
+    #Official bridge item
+    Then Element with "text" "Official bridge" should be "visible"
+    Then Element with "text" "Send to exchange using official bridge" should be "visible"
+    Then Element with "text" "Official bridge" should be "clickable"
+    Then Element with "text" "Send to another network" should be "visible"
+    #Layerswap item
+    Then Element with "text" "Layerswap" should be "visible"
+    Then Element with "text" "Layerswap" should be "clickable"
+    Then Element with "partial src" "/img/layerswap.svg?v=1" should be "visible"
+    Then Element with "partial src" "/img/layerswap.svg?v=1" should be "clickable"
+    #Orbiter item
+    Then Element with "text" "Orbiter" should be "visible"
+    Then Element with "text" "Orbiter" should be "clickable"
+    Then Element with "partial src" "/img/orbiter.svg?v=1" should be "visible"
+    Then Element with "partial src" "/img/orbiter.svg?v=1" should be "clickable"
 
   @id1560:II @testnet
   Scenario Outline: Check artifacts for an "Where to send" page (Testnet)
@@ -53,41 +55,43 @@ Feature: Artifacts - UI
       | Orbiter     |
 
  @id1411:I @mainnet
- Scenario Outline: Check artifacts for an "Where to send" page (Mainnet)
+ Scenario: Check artifacts for an "Where to send" page (Mainnet)
     Given I go to page "/transaction/zksync/era/?network=era-mainnet"
-    Then Element with "<Selector type>" "<Selector value>" should be "<Selector state>"
-
-       Examples:
-      | Selector type | Selector value                          | Selector state     |
-      | text          | Where to send                           | visible            |
-      | text          | zkSync Era Mainnet                      | visible            |
-      | text          | Send inside zkSync Era Mainnet network  | visible            |
-      | text          | zkSync Era Mainnet                      | clickable          |
-      | text          | Ethereum Mainnet                        | visible            |
-      | text          | Withdraw to Ethereum                    | visible            |
-      | text          | Ethereum Mainnet                        | clickable          |
-      | text          | zkSync Lite Mainnet                     | visible            |
-      | text          | Send to zkSync Lite network             | visible            |
-      | text          | zkSync Lite Mainnet                     | clickable          |
-      | text          | Send to exchange                        | visible            |
-      | text          | Send to exchange using official bridge  | visible            |
-      | text          | Official bridge                         | visible            |
-      | text          | Official bridge                         | clickable          |
-      | text          | Layerswap                               | visible            |
-      | text          | Layerswap                               | clickable          |
-      | text          | Orbiter                                 | visible            |
-      | text          | Orbiter                                 | clickable          |
-      | text          | Send to another network                 | visible            |
-      | partial src   | /img/era.svg?v=1                        | visible            |
-      | partial src   | /img/era.svg?v=1                        | clickable          |
-      | partial src   | /img/ethereum.svg?v=1                   | visible            |
-      | partial src   | /img/ethereum.svg?v=1                   | clickable          |
-      | partial src   | /img/zksync-lite.svg?v=1                | visible            |
-      | partial src   | /img/zksync-lite.svg?v=1                | clickable          |   
-      | partial src   | /img/layerswap.svg?v=1                  | visible            |
-      | partial src   | /img/layerswap.svg?v=1                  | clickable          |
-      | partial src   | /img/orbiter.svg?v=1                    | visible            |
-      | partial src   | /img/orbiter.svg?v=1                    | clickable          |             
+    Then Element with "text" "Where to send" should be "visible"
+    #zkSync Era item
+    Then Element with "text" "zkSync Era Mainnet" should be "visible"
+    Then Element with "text" "Send inside zkSync Era Mainnet network" should be "visible"
+    Then Element with "text" "zkSync Era Mainnet" should be "clickable"
+    Then Element with "partial src" "/img/era.svg?v=1" should be "visible"
+    Then Element with "partial src" "/img/era.svg?v=1" should be "clickable"
+    #Ethereum item
+    Then Element with "text" "Ethereum Mainnet" should be "visible"
+    Then Element with "text" "Withdraw to Ethereum" should be "visible"
+    Then Element with "text" "Ethereum Mainnet" should be "clickable"
+    Then Element with "partial src" "/img/ethereum.svg?v=1" should be "visible"
+    Then Element with "partial src" "/img/ethereum.svg?v=1" should be "clickable"
+    #zkSync Lite item
+    Then Element with "text" "zkSync Lite Mainnet" should be "visible"
+    Then Element with "text" "Send to zkSync Lite network" should be "visible"
+    Then Element with "text" "zkSync Lite Mainnet" should be "clickable"
+    Then Element with "partial src" "/img/zksync-lite.svg?v=1" should be "visible"
+    Then Element with "partial src" "/img/zksync-lite.svg?v=1" should be "clickable"
+    Then Element with "text" "Send to exchange" should be "visible"
+    #Official bridge item
+    Then Element with "text" "Official bridge" should be "visible"
+    Then Element with "text" "Send to exchange using official bridge" should be "visible"
+    Then Element with "text" "Official bridge" should be "clickable"
+    Then Element with "text" "Send to another network" should be "visible"
+    #Layerswap item
+    Then Element with "text" "Layerswap" should be "visible"
+    Then Element with "text" "Layerswap" should be "clickable"
+    Then Element with "partial src" "/img/layerswap.svg?v=1" should be "visible"
+    Then Element with "partial src" "/img/layerswap.svg?v=1" should be "clickable"
+    #Orbiter item
+    Then Element with "text" "Orbiter" should be "visible"
+    Then Element with "text" "Orbiter" should be "clickable"
+    Then Element with "partial src" "/img/orbiter.svg?v=1" should be "visible"
+    Then Element with "partial src" "/img/orbiter.svg?v=1" should be "clickable"         
 
  @id1411:II @mainnet
  Scenario Outline: Check artifacts for an "Where to send" page (Mainnet)
