@@ -15,9 +15,9 @@ Feature: Artifacts - UI
     Then Element with "partial src" "/img/era.svg?v=1" should be "visible"
     Then Element with "partial src" "/img/era.svg?v=1" should be "clickable"
     #Ethereum item
-    Then Element with "text" "Ethereum Goerli" should be "visible"
-    Then Element with "text" "Withdraw to Ethereum" should be "visible"
-    Then Element with "text" "Ethereum Goerli" should be "clickable"
+    Then Element with "text" "Ethereum Goerli Testnet" should be "visible"
+    Then Element with "text" "Withdraw to Ethereum Goerli Testnet" should be "visible"
+    Then Element with "text" "Ethereum Goerli Testnet" should be "clickable"
     Then Element with "partial src" "/img/ethereum.svg?v=1" should be "visible"
     Then Element with "partial src" "/img/ethereum.svg?v=1" should be "clickable"
     #zkSync Lite item
@@ -66,7 +66,7 @@ Feature: Artifacts - UI
     Then Element with "partial src" "/img/era.svg?v=1" should be "clickable"
     #Ethereum item
     Then Element with "text" "Ethereum Mainnet" should be "visible"
-    Then Element with "text" "Withdraw to Ethereum" should be "visible"
+    Then Element with "text" "Withdraw to Ethereum Mainnet" should be "visible"
     Then Element with "text" "Ethereum Mainnet" should be "clickable"
     Then Element with "partial src" "/img/ethereum.svg?v=1" should be "visible"
     Then Element with "partial src" "/img/ethereum.svg?v=1" should be "clickable"
