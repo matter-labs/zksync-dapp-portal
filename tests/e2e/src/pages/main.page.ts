@@ -89,6 +89,10 @@ export class MainPage extends BasePage {
     return "//*[@class='alert-body']//*[contains(string(), 'Confirm')]";
   }
 
+  get confirmFeeChangeButton() {
+    return "//button[text()='Confirm']";
+  }
+
   async selectTransaction(transactionType: string) {
     try {
       let route: string;

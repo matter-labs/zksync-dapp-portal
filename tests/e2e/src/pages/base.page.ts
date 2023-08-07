@@ -286,6 +286,8 @@ export class BasePage {
     } else if (checkType === "enabled") {
       result = await element.isDisabled();
       await expect(result).toBe(false);
+    } else {
+      await expect(element).toHaveValue(checkType);
     }
   }
 }
