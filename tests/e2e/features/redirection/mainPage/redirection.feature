@@ -286,3 +286,14 @@ Feature: External Redirection on the Main Page
     When I click by text " Brand assets "
     Then New page has "https://matterlabs.notion.site/zkSync-Brand-Resources-750bb7b1f3d14ebe9f539a86901c4a1c" address
 
+  @id1649
+  Scenario Outline: Check redirection for the "Send" page links
+    Given I go to page "/transaction/zksync/era/?network=era-goerli"
+    When I click by text "<Service name>"
+    Then New page has "<url>" address
+
+    Examples:
+      | Service name    | url                                                                   |
+      | Layerswap       | https://www.layerswap.io/app?sourceExchangeName=ZKSYNCERA_MAINNET     |
+      | Orbiter         | https://www.orbiter.finance/?source=zkSync%20Era&dest=Ethereum        |
+   
