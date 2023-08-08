@@ -61,11 +61,11 @@ export const useEraWalletStore = defineStore("eraWallet", () => {
     return await $fetch(`${eraNetwork.value.blockExplorerApi}/address/${account.value.address}`);
   });
 
-  const getBalancesFromBlockExplorerApi = async (): Promise<TokenAmount> => {
+  const getBalancesFromBlockExplorerApi = async (): Promise<TokenAmount[]> => {
     await Promise.all([requestAccountState({ force: true }), eraTokensStore.requestTokens()]);
     if (!accountState.value) throw new Error("Account state is not available");
     if (!tokens.value) throw new Error("Tokens are not available");
-    const asd = Object.entries(accountState.value.balances)
+    return Object.entries(accountState.value.balances)
       .filter(([, { token }]) => token)
       .map(([, { balance, token }]) => {
         return {
@@ -77,9 +77,8 @@ export const useEraWalletStore = defineStore("eraWallet", () => {
           amount: balance,
         };
       });
-    return [];
   };
-  const getBalancesFromRPC = async (): Promise<TokenAmount> => {
+  const getBalancesFromRPC = async (): Promise<TokenAmount[]> => {
     await eraTokensStore.requestTokens();
     if (!tokens.value) throw new Error("Tokens are not available");
     if (!account.value.address) throw new Error("Account is not available");
@@ -119,11 +118,23 @@ export const useEraWalletStore = defineStore("eraWallet", () => {
 
   const balance = computed<TokenAmount[]>(() => {
     if (!balancesResult.value) return [];
-    return Object.entries(tokens.value ?? {}).map(([, token]) => {
-      const amount = balancesResult.value![token.address] ?? "0";
+
+    const knownTokens: TokenAmount[] = Object.entries(tokens.value ?? {}).map(([, token]) => {
+      const amount = balancesResult.value!.find((e) => e.address === token.address)?.amount ?? "0";
       return { ...token, amount };
     });
+
+    // Collect the addresses of the known tokens for filtering
+    const knownAddresses = new Set(knownTokens.map((token) => token.address));
+
+    // Filter out the tokens in `balancesResult` that are not in `tokens`
+    const otherTokens = balancesResult.value
+      .filter((token) => !knownAddresses.has(token.address))
+      .sort((a, b) => a.symbol.localeCompare(b.symbol));
+
+    return [...knownTokens, ...otherTokens];
   });
+
   watch(
     balance,
     (balances) => {
