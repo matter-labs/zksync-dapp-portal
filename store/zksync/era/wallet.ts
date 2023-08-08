@@ -77,7 +77,7 @@ export const useEraWalletStore = defineStore("eraWallet", () => {
           amount: balance,
         };
       });
-    return asd;
+    return [];
   };
   const getBalancesFromRPC = async (): Promise<TokenAmount> => {
     await eraTokensStore.requestTokens();
