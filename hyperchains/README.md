@@ -1,57 +1,56 @@
-# Hyperchain Portal Setup
+# 🚀 Hyperchain Portal Setup
 
 Portal supports custom ZK Stack Hyperchain nodes.
 
 ---
 
-## Configuration
+## ⚙️ Configuration
 
-There are few different ways to configure the application:
+There are a few different ways to configure the application:
 
-### Configure using ZK Stack configuration files
+### 📁 Configure using ZK Stack configuration files
 <details>
-<summary>If you're using ZK Stack you can use your network .env file (and optional tokens .json file) to configure the application.</summary>
+<summary>If you're using ZK Stack, just link your zksync-era repo directory to configure Portal.</summary>
 
-
-1. Make sure to install the dependencies:
+1. 📦 Make sure to install the dependencies:
     ```bash
     npm install
     ```
-2. Pull your hyperchain config files by running:
+2. 🔄 Pull your hyperchain config files by running:
     ```bash
     npm run hyperchain:migrate <path_to_your_zksync-era_repo>
     ```
     This will regenerate `/hyperchains/config.json` file. You can edit this file manually if needed.
-3. Now you can start or build the application. See [Development](#development-server) or [Production](#production) section below for more details.
+3. 🚀 Now you can start or build the application. See [Development](#development-server) or [Production](#production) section below for more details.
 </details>
 
-### Configure automatically with form
+### 🖊️ Configure automatically with form
 <details>
-<summary>You can configure the application by filling a simple form</summary>
+<summary>📝 Fill out a simple form to configure the application.</summary>
 
-1. Make sure to install the dependencies:
+1. 📦 Make sure to install the dependencies:
     ```bash
     npm install
     ```
-2. Follow the instructions in the terminal:
+2. 🌟 Follow the instructions in the terminal:
     ```bash
     npm run hyperchain:create
     ```
     This will regenerate `/hyperchains/config.json` file. You can edit this file manually if needed.
-3. Now you can start or build the application. See [Development](#development-server) or [Production](#production) section below for more details.
+3. 🚀 Now you can start or build the application. See [Development](#development-server) or [Production](#production) section below for more details.
 </details>
 
-### Configure manually
+### ✏️ Configure manually
 <details>
-<summary>You can manually configure the application by editing the config file</summary>
+<summary>🖱️ Manually configure the application by editing the config file.</summary>
 
-1. Add your network information to `/hyperchains/config.json` config file. See example config file in `/hyperchains/example.config.json`
-2. Now you can start or build the application. See [Development](#development) or [Production](#production) section below for more details.
+1. 🔗 Add your network information to `/hyperchains/config.json` config file. See example config file in `/hyperchains/example.config.json`
+2. 🚀 Now you can start or build the application. See [Development](#development) or [Production](#production) section below for more details.
 </details>
 
 <details>
 
-<summary><b>Hyperchain config.json structure</b></summary>
+<summary><b>🧱 Hyperchain config.json structure</b></summary>
 
 ```ts
 Array<{
@@ -90,17 +89,16 @@ Array<{
 
 ---
 
-## Development
-### Setup
+## 🛠 Development
+### 🔧 Setup
 
-Make sure to install the dependencies:
+Make sure to 📦 install the dependencies:
 
 ```bash
 npm install
 ```
 
-
-### Development Server
+### 🌐 Development Server
 
 Start the development server on http://localhost:3000
 
@@ -108,7 +106,7 @@ Start the development server on http://localhost:3000
 npm run dev:node:hyperchain
 ```
 
-### Production
+### 🏭 Production
 
 Build the application for production:
 
@@ -116,6 +114,6 @@ Build the application for production:
 npm run generate:node:hyperchain
 ```
 
-#### Bridge
+#### 🌉 Bridge
 
-If your Hyperchain is connected to L1 you can also access Bridge on `/bridge` page
+If your Hyperchain is connected to L1, you can also access Bridge on `/bridge` page.
