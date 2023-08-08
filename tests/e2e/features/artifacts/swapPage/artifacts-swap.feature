@@ -6,7 +6,7 @@ Feature: Artifacts - UI - Swap
 
   @id1413
   Scenario: Check artifacts for the Swap page
-    Given I go to page "/payments"
+    Given I go to page "/payments/?network=era-goerli"
     When I click by text "Swap"
     Then Element with "text" "Swap tokens" should be "visible "
     Then Element with "xpath" "//*[@class='arrow-icon']" should be "visible "

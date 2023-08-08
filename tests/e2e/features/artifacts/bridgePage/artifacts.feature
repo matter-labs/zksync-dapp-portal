@@ -12,7 +12,7 @@ Feature: Withdraw
     Then Modal card element with the "//*[contains(@class, 'address-avatar')]" xpath should be "visible"
     Then Element with "testId" "close-button" should be "visible"
     Then Element with "testId" "close-button" should be "clickable"
-    Then Modal card element with the "//*[contains(text(),'0xa439...046')]" xpath should be "visible"
+    Then Modal card element with the "//*[contains(text(),'0x2CF4...75d')]" xpath should be "visible"
     Then Modal card element with the "//div[text()='zkSync Era Testnet']" xpath should be "visible"
     Then Modal card element with the "//div[text()='Bridge network']" xpath should be "visible"
     Then Element with "text" "View on Explorer" should be "visible"
@@ -35,7 +35,7 @@ Feature: Withdraw
 
   @id1604:I
   Scenario: Check the View on Explorer Artifacts on the Bridge Page (Testnet)
-    Given I go to page "/bridge"
+    Given I go to page "/bridge?network=era-goerli"
     #click on the account dropdown
     When I click by partial text "..."
     Then Element with "text" "View on Explorer" should be "visible"

@@ -17,7 +17,7 @@ Feature: Artifacts - UI
     Then Element with "text" "Allowance" should be "visible"
     Then Element with "text" "Your Ethereum Goerli Testnet account" should be "visible"
     Then Element with "partial class" "address-card-avatar" should be "visible"
-    Then Modal card element with the "//*[text()='0xa439...046']" xpath should be "visible"
+    Then Modal card element with the "//*[text()='0x2CF4...75d']" xpath should be "visible"
     Then Modal card element with the "//*[@alt='DAI token icon']" xpath should be "visible"
     Then Modal card element with the "//*[text()='0x3e7676...D4b']" xpath should be "visible"
     Then Modal card element with the "//*[@class='token-balance-price']" xpath should be "visible"
