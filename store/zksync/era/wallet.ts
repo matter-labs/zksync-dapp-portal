@@ -61,17 +61,25 @@ export const useEraWalletStore = defineStore("eraWallet", () => {
     return await $fetch(`${eraNetwork.value.blockExplorerApi}/address/${account.value.address}`);
   });
 
-  const getBalancesFromBlockExplorerApi = async () => {
+  const getBalancesFromBlockExplorerApi = async (): Promise<TokenAmount> => {
     await Promise.all([requestAccountState({ force: true }), eraTokensStore.requestTokens()]);
     if (!accountState.value) throw new Error("Account state is not available");
     if (!tokens.value) throw new Error("Tokens are not available");
-    return Object.fromEntries(
-      Object.entries(accountState.value.balances).map(([tokenAddress, { balance }]) => {
-        return [tokenAddress, balance];
-      })
-    );
+    const asd = Object.entries(accountState.value.balances)
+      .filter(([, { token }]) => token)
+      .map(([, { balance, token }]) => {
+        return {
+          address: token!.l2Address,
+          l1Address: token!.l1Address || undefined,
+          name: token!.name || undefined,
+          symbol: token!.symbol!,
+          decimals: token!.decimals,
+          amount: balance,
+        };
+      });
+    return asd;
   };
-  const getBalancesFromRPC = async () => {
+  const getBalancesFromRPC = async (): Promise<TokenAmount> => {
     await eraTokensStore.requestTokens();
     if (!tokens.value) throw new Error("Tokens are not available");
     if (!account.value.address) throw new Error("Account is not available");
@@ -84,16 +92,13 @@ export const useEraWalletStore = defineStore("eraWallet", () => {
           eraTokensStore.requestTokenPrice(token.address);
         }
         return {
-          address: token.address,
+          ...token,
           amount: amount.toString(),
         };
       })
     );
 
-    return balances.reduce((accumulator: { [tokenAddress: string]: string }, { address, amount }) => {
-      accumulator[address] = amount;
-      return accumulator;
-    }, {});
+    return balances;
   };
   const {
     result: balancesResult,
@@ -101,7 +106,7 @@ export const useEraWalletStore = defineStore("eraWallet", () => {
     error: balanceError,
     execute: requestBalance,
     reset: resetBalance,
-  } = usePromise<{ [tokenAddress: string]: string }>(
+  } = usePromise<TokenAmount[]>(
     async () => {
       if (eraNetwork.value.blockExplorerApi) {
         return await getBalancesFromBlockExplorerApi();
