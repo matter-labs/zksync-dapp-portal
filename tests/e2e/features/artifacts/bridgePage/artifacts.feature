@@ -82,8 +82,8 @@ Feature: Withdraw
     #Block To:
     Then Element with "text" "Your Ethereum Goerli Testnet account" should be "visible"
     Then Element with "text" "Your Ethereum Goerli Testnet account" should be "clickable"
-    Then Element with "text" "0xa439...046" should be "visible"
-    Then Element with "text" "0xa439...046" should be "clickable"
+    Then Element with "text" "0x2CF4...75d" should be "visible"
+    Then Element with "text" "0x2CF4...75d" should be "clickable"
     Then Element with "class" "address-avatar address-card-avatar" should be "visible"
     Then Element with "partial src" "ethereum.svg" should be "visible"
     #Edit button
@@ -108,8 +108,8 @@ Feature: Withdraw
     Then Element with "class" "small-input-field" should be "visible"
     Then Element with "placeholder" "Address or ENS or contact name" should be "visible"
     Then Element with "partial class" "small-input-icon" should be "visible"
-    Then Element with "text" "0xa439...046" should be "visible"
-    Then Element with "text" "0xa439...046" should be "clickable"
+    Then Element with "text" "0x2CF4...75d" should be "visible"
+    Then Element with "text" "0x2CF4...75d" should be "clickable"
     #Warning text
     Then Element with "partial text" "When withdrawing to an exchange account, please make sure that your exchange supports transfers from smart contracts. Otherwise, this can result in" should be "visible"
     Then Element with "text" "loss of funds" should be "visible"
