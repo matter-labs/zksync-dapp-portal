@@ -186,161 +186,166 @@ Given("I click on the Add contact button for found contact", async function (thi
   contactsPage = new ContactsPage(this);
   await contactsPage.clickAddButton();
 
-Given("I click on the Edit contact button", async function (this: ICustomWorld) {
-  contactsPage = new ContactsPage(this);
-  await contactsPage.pressEditBtnModal();
-});
-
-Given("I click on the {string} contact button", async function (this: ICustomWorld, removeButtonName: string) {
-  contactsPage = new ContactsPage(this);
-  await contactsPage.pressRemoveBtnModal(removeButtonName);
-});
-
-Given("I am on the Main page", async function (this: ICustomWorld) {
-  const basePage = new BasePage(this);
-  element = await basePage.returnElementByType("text", "Assets");
-  await expect(element).toBeVisible(config.increasedTimeout);
-  await expect(this.page?.url()).toBe(config.BASE_URL + NetworkSwitcher.zkSyncEraGoerli);
-});
-
-Then("Current page have {string} address", config.stepTimeout, async function (this: ICustomWorld, route: string) {
-  mainPage = new MainPage(this);
-  helper = new Helper(this);
-  await this.page?.waitForURL("**" + route);
-  result = await this.page?.url();
-
-  await expect(result).toContain(route);
-});
-
-Given("I click the Send button (modal) on the Contacts page", async function (this: ICustomWorld) {
-  contactsPage = new ContactsPage(this);
-  await contactsPage.pressSendBtnModal();
-});
-
-Given("I click on the First saved contact within the Contacts page", async function (this: ICustomWorld) {
-  contactsPage = new ContactsPage(this);
-  await contactsPage.clickOnSavedContact();
-});
-
-Given(
-  "The {string} contact name is visible on the modal window within the Contacts page",
-  async function (this: ICustomWorld, contactName: string) {
+  Given("I click on the Edit contact button", async function (this: ICustomWorld) {
     contactsPage = new ContactsPage(this);
-    element = await this.page?.locator(await contactsPage.contactNameModal(contactName));
+    await contactsPage.pressEditBtnModal();
+  });
 
-    await expect(element).toBeVisible();
-  }
-);
-
-Given(
-  "The {string} contact name is visible in the list on Contacts page",
-  async function (this: ICustomWorld, contactName: string) {
+  Given("I click on the {string} contact button", async function (this: ICustomWorld, removeButtonName: string) {
     contactsPage = new ContactsPage(this);
-    element = await contactsPage.getContactItem(contactName);
-    await expect(element).toBeVisible();
-  }
-);
+    await contactsPage.pressRemoveBtnModal(removeButtonName);
+  });
 
-Given(
-  "The {string} contact name is not present in the list on Contacts page",
-  async function (this: ICustomWorld, contactName: string) {
-    helper = new Helper(this);
-    contactsPage = new ContactsPage(this);
-    element = await contactsPage.getContactItem(contactName);
-    result = await helper.checkElementVisible(element);
-    await expect(result).toBe(false);
-  }
-);
-
-Then("Fee should have {string} value", config.stepTimeout, async function (this: ICustomWorld, fee: string) {
-  mainPage = new MainPage(this);
-  basePage = new BasePage(this);
-  element = mainPage.feeValue;
-  result = await this.page?.locator(element);
-  await expect(result).toContainText(fee);
-});
-
-Then(
-  "Modal card element with the {string} xpath should be {string}",
-  config.stepTimeout,
-  async function (this: ICustomWorld, xpath: string, checkType: string) {
-    mainPage = new MainPage(this);
-    await mainPage.checkModalCardElement(xpath, checkType);
-  }
-);
-
-Then(
-  "Arrow element for {string} external link should be {string}",
-  config.stepTimeout,
-  async function (this: ICustomWorld, link: string, checkType: string) {
-    mainPage = new MainPage(this);
-    await mainPage.checkArrowElement(link, checkType);
-  }
-);
-
-When(
-  "I click by the {string} text element on the Modal card",
-  config.stepTimeout,
-  async function (this: ICustomWorld, textElement: string) {
-    mainPage = new MainPage(this);
-    await mainPage.clickModalCardElement(textElement);
-  }
-);
-
-When("I click by the {string} text on the Menu", config.stepTimeout, async function (this: ICustomWorld, text: string) {
-  mainPage = new MainPage(this);
-  await mainPage.clickMenuElement(text);
-});
-
-Then("I close modal card", config.stepTimeout, async function (this: ICustomWorld) {
-  const basePage = new BasePage(this);
-  const mainPage = new MainPage(this);
-  const modalCardElement = mainPage.modalCard;
-  element = modalCardElement + mainPage.closeBtnModalCard;
-
-  await basePage.click(element);
-});
-
-Then("I select the {string} network", config.stepTimeout, async function (this: ICustomWorld, networkName: string) {
-  const mainPage = new MainPage(this);
-
-  await mainPage.selectNetwork(networkName);
-});
-
-Then("New page has {string} address", config.stepTimeout, async function (this: ICustomWorld, url: string) {
-  mainPage = new MainPage(this);
-  helper = new Helper(this);
-  await this.page?.waitForTimeout(5000);
-  result = await helper.checkTabByUrl(url);
-  await expect(result).toBe(url);
-});
-
-Then("New page has {string} partial address", config.stepTimeout, async function (this: ICustomWorld, url: string) {
-  mainPage = new MainPage(this);
-  helper = new Helper(this);
-  await this.page?.waitForTimeout(5000);
-  result = await helper.checkTabByUrl(url, true);
-  await expect(result).toContain(url);
-});
-
-Then(
-  "I hover the {string} element with {string} value",
-  config.stepTimeout,
-  async function (this: ICustomWorld, elementType: string, value: string) {
+  Given("I am on the Main page", async function (this: ICustomWorld) {
     const basePage = new BasePage(this);
-    element = await basePage.returnElementByType(elementType, value);
+    element = await basePage.returnElementByType("text", "Assets");
+    await expect(element).toBeVisible(config.increasedTimeout);
+    await expect(this.page?.url()).toBe(config.BASE_URL + NetworkSwitcher.zkSyncEraGoerli);
+  });
 
-    await element.hover();
-  }
-);
+  Then("Current page have {string} address", config.stepTimeout, async function (this: ICustomWorld, route: string) {
+    mainPage = new MainPage(this);
+    helper = new Helper(this);
+    await this.page?.waitForURL("**" + route);
+    result = await this.page?.url();
 
-Then(
-  "The list has the one of the expected type of transactions",
-  config.stepTimeout,
-  async function (this: ICustomWorld) {
+    await expect(result).toContain(route);
+  });
+
+  Given("I click the Send button (modal) on the Contacts page", async function (this: ICustomWorld) {
+    contactsPage = new ContactsPage(this);
+    await contactsPage.pressSendBtnModal();
+  });
+
+  Given("I click on the First saved contact within the Contacts page", async function (this: ICustomWorld) {
+    contactsPage = new ContactsPage(this);
+    await contactsPage.clickOnSavedContact();
+  });
+
+  Given(
+    "The {string} contact name is visible on the modal window within the Contacts page",
+    async function (this: ICustomWorld, contactName: string) {
+      contactsPage = new ContactsPage(this);
+      element = await this.page?.locator(await contactsPage.contactNameModal(contactName));
+
+      await expect(element).toBeVisible();
+    }
+  );
+
+  Given(
+    "The {string} contact name is visible in the list on Contacts page",
+    async function (this: ICustomWorld, contactName: string) {
+      contactsPage = new ContactsPage(this);
+      element = await contactsPage.getContactItem(contactName);
+      await expect(element).toBeVisible();
+    }
+  );
+
+  Given(
+    "The {string} contact name is not present in the list on Contacts page",
+    async function (this: ICustomWorld, contactName: string) {
+      helper = new Helper(this);
+      contactsPage = new ContactsPage(this);
+      element = await contactsPage.getContactItem(contactName);
+      result = await helper.checkElementVisible(element);
+      await expect(result).toBe(false);
+    }
+  );
+
+  Then("Fee should have {string} value", config.stepTimeout, async function (this: ICustomWorld, fee: string) {
+    mainPage = new MainPage(this);
+    basePage = new BasePage(this);
+    element = mainPage.feeValue;
+    result = await this.page?.locator(element);
+    await expect(result).toContainText(fee);
+  });
+
+  Then(
+    "Modal card element with the {string} xpath should be {string}",
+    config.stepTimeout,
+    async function (this: ICustomWorld, xpath: string, checkType: string) {
+      mainPage = new MainPage(this);
+      await mainPage.checkModalCardElement(xpath, checkType);
+    }
+  );
+
+  Then(
+    "Arrow element for {string} external link should be {string}",
+    config.stepTimeout,
+    async function (this: ICustomWorld, link: string, checkType: string) {
+      mainPage = new MainPage(this);
+      await mainPage.checkArrowElement(link, checkType);
+    }
+  );
+
+  When(
+    "I click by the {string} text element on the Modal card",
+    config.stepTimeout,
+    async function (this: ICustomWorld, textElement: string) {
+      mainPage = new MainPage(this);
+      await mainPage.clickModalCardElement(textElement);
+    }
+  );
+
+  When(
+    "I click by the {string} text on the Menu",
+    config.stepTimeout,
+    async function (this: ICustomWorld, text: string) {
+      mainPage = new MainPage(this);
+      await mainPage.clickMenuElement(text);
+    }
+  );
+
+  Then("I close modal card", config.stepTimeout, async function (this: ICustomWorld) {
+    const basePage = new BasePage(this);
     const mainPage = new MainPage(this);
-    element = await mainPage.getTypeOfTransactionsElement();
+    const modalCardElement = mainPage.modalCard;
+    element = modalCardElement + mainPage.closeBtnModalCard;
 
-    await expect(element).toBeVisible();
-  }
-);
+    await basePage.click(element);
+  });
+
+  Then("I select the {string} network", config.stepTimeout, async function (this: ICustomWorld, networkName: string) {
+    const mainPage = new MainPage(this);
+
+    await mainPage.selectNetwork(networkName);
+  });
+
+  Then("New page has {string} address", config.stepTimeout, async function (this: ICustomWorld, url: string) {
+    mainPage = new MainPage(this);
+    helper = new Helper(this);
+    await this.page?.waitForTimeout(5000);
+    result = await helper.checkTabByUrl(url);
+    await expect(result).toBe(url);
+  });
+
+  Then("New page has {string} partial address", config.stepTimeout, async function (this: ICustomWorld, url: string) {
+    mainPage = new MainPage(this);
+    helper = new Helper(this);
+    await this.page?.waitForTimeout(5000);
+    result = await helper.checkTabByUrl(url, true);
+    await expect(result).toContain(url);
+  });
+
+  Then(
+    "I hover the {string} element with {string} value",
+    config.stepTimeout,
+    async function (this: ICustomWorld, elementType: string, value: string) {
+      const basePage = new BasePage(this);
+      element = await basePage.returnElementByType(elementType, value);
+
+      await element.hover();
+    }
+  );
+
+  Then(
+    "The list has the one of the expected type of transactions",
+    config.stepTimeout,
+    async function (this: ICustomWorld) {
+      const mainPage = new MainPage(this);
+      element = await mainPage.getTypeOfTransactionsElement();
+
+      await expect(element).toBeVisible();
+    }
+  );
+});
