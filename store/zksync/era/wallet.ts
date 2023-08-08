@@ -123,13 +123,11 @@ export const useEraWalletStore = defineStore("eraWallet", () => {
       const amount = balancesResult.value!.find((e) => e.address === token.address)?.amount ?? "0";
       return { ...token, amount };
     });
-
-    // Collect the addresses of the known tokens for filtering
-    const knownAddresses = new Set(knownTokens.map((token) => token.address));
+    const knownTokenAddresses = new Set(knownTokens.map((token) => token.address));
 
     // Filter out the tokens in `balancesResult` that are not in `tokens`
     const otherTokens = balancesResult.value
-      .filter((token) => !knownAddresses.has(token.address))
+      .filter((token) => !knownTokenAddresses.has(token.address))
       .sort((a, b) => a.symbol.localeCompare(b.symbol));
 
     return [...knownTokens, ...otherTokens];
