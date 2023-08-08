@@ -12,7 +12,7 @@ There are a few different ways to configure the application:
 <details>
 <summary>If you're using ZK Stack, just link your zksync-era repo directory to configure Portal.</summary>
 
-1. 📦 Make sure to install the dependencies:
+1. Make sure to install the dependencies:
     ```bash
     npm install
     ```
@@ -26,9 +26,9 @@ There are a few different ways to configure the application:
 
 ### 🖊️ Configure automatically with form
 <details>
-<summary>📝 Fill out a simple form to configure the application.</summary>
+<summary>Fill out a simple form to configure the application.</summary>
 
-1. 📦 Make sure to install the dependencies:
+1. Make sure to install the dependencies:
     ```bash
     npm install
     ```
@@ -42,7 +42,7 @@ There are a few different ways to configure the application:
 
 ### ✏️ Configure manually
 <details>
-<summary>🖱️ Manually configure the application by editing the config file.</summary>
+<summary>Manually configure the application by editing the config file.</summary>
 
 1. 🔗 Add your network information to `/hyperchains/config.json` config file. See example config file in `/hyperchains/example.config.json`
 2. 🚀 Now you can start or build the application. See [Development](#development) or [Production](#production) section below for more details.
@@ -50,7 +50,7 @@ There are a few different ways to configure the application:
 
 <details>
 
-<summary><b>🧱 Hyperchain config.json structure</b></summary>
+<summary><b>Hyperchain config.json structure</b></summary>
 
 ```ts
 Array<{
@@ -92,7 +92,7 @@ Array<{
 ## 🛠 Development
 ### 🔧 Setup
 
-Make sure to 📦 install the dependencies:
+Make sure to install the dependencies:
 
 ```bash
 npm install
