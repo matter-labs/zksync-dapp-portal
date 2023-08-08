@@ -10,8 +10,8 @@ Feature: Withdraw
     When I click by "text" with "Your account" value
     When I confirm the network switching
     Then Element with "text" "Send to" should be "visible"
-    # 0x5aA876bC32BC76EFf5124b19744B5B3C38b35537 - 2nd wallet address
-    Then Element with "text" "0xa439ba06dA84AFc566Ee710Ba12541A73e3a1046" should be "visible"
+    # 0x9CC8DC9c4d73fC5647A4eE78A2e8EC49D447AeB8 - 2nd wallet address
+    Then Element with "text" "0x2CF4F78917A16C9584AeB5d4c5bD2713d724C75d" should be "visible"
     Then Element with "class" "amount-input-field" should be "visible"
     Then Element with "class" "amount-input-field" should be "clickable"
     Then Element with "alt" "ETH token icon" should be "visible"
@@ -38,7 +38,7 @@ Feature: Withdraw
     Then Element with "text" "Your Ethereum Goerli Testnet account" should be "visible"
     Then Element with "text" "Your zkSync Era Testnet account" should be "visible"
     Then Element with "partial class" "address-card-avatar" should be "visible"
-    Then Modal card element with the "//*[text()='0xa439...046']" xpath should be "visible"
+    Then Modal card element with the "//*[text()='0x2CF4...75d']" xpath should be "visible"
     Then Modal card element with the "//*[@alt='ETH token icon']" xpath should be "visible"
     Then Modal card element with the "//*[text()='0x000000...00A']" xpath should be "visible"
     Then Modal card element with the "//*[@class='token-balance-price']" xpath should be "visible"
