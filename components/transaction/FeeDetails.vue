@@ -31,7 +31,7 @@
               <template v-else>{{ totalPrice }}</template>
               of
             </span>
-            <span v-else>{{ parseTokenAmount(feeAmount, feeToken.decimals) }}</span>
+            <span v-else class="break-all">{{ parseTokenAmount(feeAmount, feeToken.decimals) }}</span>
           </transition>
           <TokenImage class="ml-1 mr-0.5 h-5 w-5" v-bind="feeToken" />
           <span class="font-medium">{{ feeToken.symbol }}</span>
