@@ -171,12 +171,6 @@ const { isCustomNode } = useNetworks();
 
 const destination = computed(() => (props.type === "transfer" ? destinations.value.era : destinations.value.ethereum));
 
-const routeTokenAddress = computed(() => {
-  if (!route.query.token || Array.isArray(route.query.token) || !isAddress(route.query.token)) {
-    return;
-  }
-  return checksumAddress(route.query.token);
-});
 const availableTokens = computed(() => {
   if (!tokens.value) return [];
   if (props.type === "withdrawal") {
@@ -186,10 +180,17 @@ const availableTokens = computed(() => {
 });
 const availableBalances = computed(() => {
   if (props.type === "withdrawal") {
+    if (!tokens.value) return [];
     // return balance.value.filter((e) => e.l1Address); <-- Uncomment once Era Withdrawal Finalizer is live on mainnet
-    return balance.value.filter((e) => e.l1Address && (tokens.value ?? {})[e.address]);
+    return balance.value.filter((e) => e.l1Address && tokens.value![e.address]);
   }
   return balance.value;
+});
+const routeTokenAddress = computed(() => {
+  if (!route.query.token || Array.isArray(route.query.token) || !isAddress(route.query.token)) {
+    return;
+  }
+  return checksumAddress(route.query.token);
 });
 const tokenWithHighestBalancePrice = computed(() => {
   const tokenWithHighestBalancePrice = [...availableBalances.value].sort((a, b) => {

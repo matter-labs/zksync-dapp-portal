@@ -58,8 +58,8 @@
         v-model.trim="amount"
         v-model:error="amountError"
         v-model:token-address="amountInputTokenAddress"
-        :tokens="Object.values(tokens ?? [])"
-        :balances="balance"
+        :tokens="availableTokens"
+        :balances="availableBalances"
         :maxAmount="maxAmount"
         :loading="tokensRequestInProgress || balancesLoading"
         autofocus
@@ -198,6 +198,15 @@ const { isCustomNode } = useNetworks();
 
 const destination = computed(() => destinations.value.era);
 
+const availableTokens = computed(() => {
+  if (!tokens.value) return [];
+  return Object.values(tokens.value).filter((e) => e.l1Address);
+});
+const availableBalances = computed(() => {
+  if (!tokens.value) return [];
+  // return balance.value.filter((e) => e.l1Address); <-- Uncomment once Era Withdrawal Finalizer is live on mainnet
+  return balance.value.filter((e) => e.l1Address && tokens.value![e.address]);
+});
 const routeTokenAddress = computed(() => {
   if (!route.query.token || Array.isArray(route.query.token) || !isAddress(route.query.token)) {
     return;
@@ -205,22 +214,26 @@ const routeTokenAddress = computed(() => {
   return checksumAddress(route.query.token);
 });
 const tokenWithHighestBalancePrice = computed(() => {
-  const tokenWithHighestBalancePrice = [...balance.value].sort((a, b) => {
+  const tokenWithHighestBalancePrice = [...availableBalances.value].sort((a, b) => {
     const aPrice = typeof a.price === "number" ? formatRawTokenPrice(a.amount, a.decimals, a.price) : 0;
     const bPrice = typeof b.price === "number" ? formatRawTokenPrice(b.amount, b.decimals, b.price) : 0;
     return bPrice - aPrice;
   });
   return tokenWithHighestBalancePrice[0] ? tokenWithHighestBalancePrice[0] : undefined;
 });
-const defaultToken = computed(() => (tokens.value ? Object.values(tokens.value)[0] : undefined));
-const selectedTokenAddress = ref(
+const defaultToken = computed(() => availableTokens.value?.[0] ?? undefined);
+const selectedTokenAddress = ref<string | undefined>(
   routeTokenAddress.value ?? tokenWithHighestBalancePrice.value?.address ?? defaultToken.value?.address
 );
 const selectedToken = computed<Token | undefined>(() => {
   if (!tokens.value) {
     return undefined;
   }
-  return selectedTokenAddress.value ? tokens.value[selectedTokenAddress.value] : defaultToken.value;
+  return selectedTokenAddress.value
+    ? availableTokens.value.find((e) => e.address === selectedTokenAddress.value) ||
+        availableBalances.value.find((e) => e.address === selectedTokenAddress.value) ||
+        defaultToken.value
+    : defaultToken.value;
 });
 const amountInputTokenAddress = computed({
   get: () => selectedToken.value?.address,
