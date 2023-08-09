@@ -41,6 +41,10 @@ export class MainPage extends BasePage {
     return ".total-int";
   }
 
+  get externalLinkArrow() {
+    return "//*[@class='line-button-with-img-icon']";
+  }
+
   get totalDecBalance() {
     return ".total-dec";
   }
@@ -75,6 +79,10 @@ export class MainPage extends BasePage {
 
   get networkSwitcher() {
     return `${this.byTestId}network-switcher`;
+  }
+
+  async getButton(buttonName: string) {
+    return `//*[@type='button' and contains(., '${buttonName}')] | //button[text()[contains(string(), '${buttonName}')]]`;
   }
 
   async selectTransaction(transactionType: string) {
@@ -162,6 +170,20 @@ export class MainPage extends BasePage {
     await this.verifyElement("xpath", selector, checkType);
   }
 
+  async checkArrowElement(externalLinkName: string, checkType: string) {
+    let link: any;
+    if (externalLinkName === "Layerswap") {
+      link = "https://www.layerswap.io/?sourceExchangeName=ZKSYNCERA_MAINNET";
+    } else if (externalLinkName === "Orbiter") {
+      link = "https://www.orbiter.finance/?source=zkSync%20Era";
+    } else {
+      return console.error("An incorrect link name has been provided");
+    }
+
+    const selector = `//*[@href='${link}']` + this.externalLinkArrow;
+    await this.verifyElement("xpath", selector, checkType);
+  }
+
   async clickModalCardElement(selectorValue: string) {
     let selector: string;
     const regex = /\/\/\*/g;
@@ -210,5 +232,10 @@ export class MainPage extends BasePage {
       }
     }
     return result;
+  }
+
+  async clickOnButton(buttonName: string) {
+    const selector = await this.getButton(buttonName);
+    await this.click(selector);
   }
 }
