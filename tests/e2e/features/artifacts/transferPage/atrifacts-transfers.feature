@@ -147,3 +147,40 @@ Feature: Artifacts - UI
     Then Element with "text" "ZZ" should be "visible"
     Then Element with "text" "0x1ab721...184" should be "visible"
     Then Element with "partial src" "zz.png" should be "visible"
+
+  @id1364 @Transfer
+  Scenario: Check artifacts on the Send to page - Transfer
+    Given I am on the Main page
+    When I go to page "/transaction/zksync/era/send/?network=era-goerli"
+    When I fill the "//*[@placeholder='Address or ENS or contact name']" input field by "foundation.eth"
+    Then Element with "text" "0x47BC...e87" should be "visible"
+    When I click on the Add contact button for found contact
+    When I confirm the network switching
+    Then Element with "text" "Send to" should be "visible"
+    Then Element with "id" "amount-input" should be "visible"
+    Then Element with "text" " Balance: " should be "visible"
+    Then Element with "class" "break-all" should be "visible"
+    Then Element with "partial text" "Max" should be "visible"
+    Then Element with "partial text" "Max" should be "clickable"
+    Then Element with "placeholder" "0" should be "visible"
+    Then Element with "testId" "token-dropDown" should be "visible"
+    Then Element with "testId" "token-dropDown" should be "clickable"
+    Then Element with "testId" "fee-amount" should be "visible"
+    Then Fee should have "$" value
+    Then Fee should have "ETH" value
+    Then Circle timer for fee updating should be visible
+    Then Element with "text" " Continue " should be "visible"
+
+  @id1566 @Transfer
+  Scenario: Check artifacts on the Confirm transaction modal - Transfer
+    Given I am on the Main page
+    When I go to page "/transaction/zksync/era/send/?network=era-goerli"
+    When I fill the "//*[@placeholder='Address or ENS or contact name']" input field by "foundation.eth"
+    Then Element with "text" "0x47BC...e87" should be "visible"
+    When I click on the Add contact button for found contact
+    When I confirm the network switching
+    When I choose "ETH" as token and insert "0.0001" as amount
+    Then Element with "text" " Continue " should be "clickable"
+    When I click by text " Continue "
+    Then Element with "text" "Confirm transaction" should be "visible"
+    Then Element with "text" "Your zkSync Era Testnet account" should be "visible"

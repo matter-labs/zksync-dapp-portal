@@ -29,6 +29,10 @@ export class MainPage extends BasePage {
     return "//*[@class='modal-card']";
   }
 
+  get circleTimerElement() {
+    return "//*[@class='radial-progress ml-1.5 cursor-help']";
+  }
+
   get menuElement() {
     return "//*[@class='menu-options']";
   }
