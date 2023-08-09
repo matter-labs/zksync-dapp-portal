@@ -53,7 +53,7 @@ Feature: Artifacts - UI
     When I go to page "/transaction/zksync/era/receive-address"
     Then Element with "text" "Receive" should be "visible"
     Then Element with "class" "qr-code-container" should be "visible"
-    Then Element with "text" "0xa439ba...046" should be "visible"
+    Then Element with "text" "0x2CF4F7...75d" should be "visible"
     Then Element with "text" "Scan to copy address" should be "visible"
     Then Element with "text" "Copy" should be "visible"
     Then Element with "text" "Copy" should be "clickable"
