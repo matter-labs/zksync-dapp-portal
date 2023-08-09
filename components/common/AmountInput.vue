@@ -6,7 +6,11 @@
       :loading="loading"
       :tokens="tokens"
       :balances="balances"
-    />
+    >
+      <template #body-bottom v-if="$slots['token-dropdown-bottom']">
+        <slot name="token-dropdown-bottom" />
+      </template>
+    </TokenSelectDropdown>
     <label for="amount-input" class="amount-input-container" :class="{ focused, loading, 'has-error': !!amountError }">
       <div class="amount-input-token">
         <CommonContentLoader v-if="loading" :length="14" />

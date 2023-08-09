@@ -48,12 +48,18 @@
         v-model.trim="amount"
         v-model:error="amountError"
         v-model:token-address="amountInputTokenAddress"
-        :tokens="Object.values(tokens ?? [])"
-        :balances="balance"
+        :tokens="availableTokens"
+        :balances="availableBalances"
         :maxAmount="maxAmount"
         :loading="tokensRequestInProgress || balancesLoading"
         autofocus
-      />
+      >
+        <template #token-dropdown-bottom v-if="type === 'withdrawal' && account.address">
+          <CommonAlert class="sticky bottom-0 mt-3" variant="neutral" :icon="InformationCircleIcon">
+            <p>Only tokens available for withdrawal are displayed</p>
+          </CommonAlert>
+        </template>
+      </CommonAmountInput>
 
       <slot name="form" />
 
@@ -109,7 +115,7 @@
 <script lang="ts" setup>
 import { computed, onBeforeUnmount, ref, watch } from "vue";
 
-import { ArrowUpRightIcon, ExclamationTriangleIcon } from "@heroicons/vue/24/outline";
+import { ArrowUpRightIcon, ExclamationTriangleIcon, InformationCircleIcon } from "@heroicons/vue/24/outline";
 import { BigNumber } from "ethers";
 import { isAddress } from "ethers/lib/utils";
 import { storeToRefs } from "pinia";
@@ -165,6 +171,21 @@ const { isCustomNode } = useNetworks();
 
 const destination = computed(() => (props.type === "transfer" ? destinations.value.era : destinations.value.ethereum));
 
+const availableTokens = computed(() => {
+  if (!tokens.value) return [];
+  if (props.type === "withdrawal") {
+    return Object.values(tokens.value).filter((e) => e.l1Address);
+  }
+  return Object.values(tokens.value);
+});
+const availableBalances = computed(() => {
+  if (props.type === "withdrawal") {
+    if (!tokens.value) return [];
+    // return balance.value.filter((e) => e.l1Address); <-- Uncomment once Era Withdrawal Finalizer is live on mainnet
+    return balance.value.filter((e) => e.l1Address && tokens.value![e.address]);
+  }
+  return balance.value;
+});
 const routeTokenAddress = computed(() => {
   if (!route.query.token || Array.isArray(route.query.token) || !isAddress(route.query.token)) {
     return;
@@ -172,22 +193,26 @@ const routeTokenAddress = computed(() => {
   return checksumAddress(route.query.token);
 });
 const tokenWithHighestBalancePrice = computed(() => {
-  const tokenWithHighestBalancePrice = [...balance.value].sort((a, b) => {
+  const tokenWithHighestBalancePrice = [...availableBalances.value].sort((a, b) => {
     const aPrice = typeof a.price === "number" ? formatRawTokenPrice(a.amount, a.decimals, a.price) : 0;
     const bPrice = typeof b.price === "number" ? formatRawTokenPrice(b.amount, b.decimals, b.price) : 0;
     return bPrice - aPrice;
   });
-  return tokenWithHighestBalancePrice[0] ? tokenWithHighestBalancePrice[0] : undefined;
+  return tokenWithHighestBalancePrice[0] ?? undefined;
 });
-const defaultToken = computed(() => (tokens.value ? Object.values(tokens.value)[0] : undefined));
-const selectedTokenAddress = ref(
+const defaultToken = computed(() => availableTokens.value?.[0] ?? undefined);
+const selectedTokenAddress = ref<string | undefined>(
   routeTokenAddress.value ?? tokenWithHighestBalancePrice.value?.address ?? defaultToken.value?.address
 );
 const selectedToken = computed<Token | undefined>(() => {
   if (!tokens.value) {
     return undefined;
   }
-  return selectedTokenAddress.value ? tokens.value[selectedTokenAddress.value] : defaultToken.value;
+  return selectedTokenAddress.value
+    ? availableTokens.value.find((e) => e.address === selectedTokenAddress.value) ||
+        availableBalances.value.find((e) => e.address === selectedTokenAddress.value) ||
+        defaultToken.value
+    : defaultToken.value;
 });
 const amountInputTokenAddress = computed({
   get: () => selectedToken.value?.address,

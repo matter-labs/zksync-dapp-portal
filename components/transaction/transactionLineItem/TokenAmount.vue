@@ -2,7 +2,7 @@
   <div :title="fullAmount">
     <div class="flex items-center justify-end">
       <span v-if="direction" class="relative -top-px mr-[2px] text-xs">{{ direction === "in" ? "+" : "-" }}</span>
-      <span class="text-sm">{{ fullAmount }}</span>
+      <span class="max-w-[100px] truncate text-sm xs:max-w-[150px]">{{ fullAmount }}</span>
       <TokenImage
         class="ml-1 mr-0.5 h-3.5 w-3.5"
         :symbol="token.symbol"
