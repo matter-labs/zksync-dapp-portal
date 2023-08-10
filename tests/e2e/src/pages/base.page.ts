@@ -270,6 +270,7 @@ export class BasePage {
     const helper = new Helper(this.world);
     element = await this.returnElementByType(elementType, value);
     let result;
+    const reDigits = new RegExp(`\d*([\,\.]?\d*)`); //eslint-disable-line
 
     if (checkType === "visible") {
       await expect(element).toBeVisible({ timeout: config.increasedTimeout.timeout });
@@ -286,7 +287,9 @@ export class BasePage {
     } else if (checkType === "enabled") {
       result = await element.isDisabled();
       await expect(result).toBe(false);
-    } else if (elementType === "id") {
+    } else if (checkType === "empty") {
+      await expect(element).toHaveValue("");
+    } else if (checkType.length !== 0 && reDigits.test(checkType)) {
       await expect(element).toHaveValue(checkType);
     }
   }
