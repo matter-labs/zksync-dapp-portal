@@ -9,7 +9,7 @@ Feature: Deposit
     Given I am on the Main page
     Given I go to "Deposit" transaction section
     When I click by "text" with "Your account" value
-    Then Element with "id" "amount-input" should have "empty" "value"
+    Then Element with "id" "amount-input" should have "" "value"
     Then Element with "testId" "fee-amount" should be "visible"
     Then Fee should have "$" value
     Then Fee should have "ETH" value
