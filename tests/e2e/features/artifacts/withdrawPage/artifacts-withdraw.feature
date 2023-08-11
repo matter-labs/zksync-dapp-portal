@@ -4,7 +4,7 @@ Feature: Withdraw
   Background:
     Given Connect Metamask extension with login action
 
-  @id1382
+  @id1382 @id1432
   Scenario: Withdraw - Send - Artifacts
     When I go to "Withdraw" transaction section
     When I click by "text" with "Your account" value
@@ -21,8 +21,17 @@ Feature: Withdraw
     Then Element with "data-testid" "token-dropDown" should be "clickable"
     Then Element with "class" "amount-input-max-button" should be "visible"
     Then Element with "class" "amount-input-max-button" should be "clickable"
+    # Fee block tc1432
+    Then Element with "text" "Fee:" should be "visible"
+    Then Element with "testId" "fee-amount" should be "visible"
+    Then Element with "partial string" "$" should be "visible"
+    Then Element with "class" "circle" should be "enabled"
+    Then Element with "text" "ETH" should be "visible"
     Then Element with "text" " Continue " should be "disabled"
     Then Element with "text" " Continue " should be "visible"
+    # Arriving in ~24 hours link
+    Then Element with "text" " Arriving in ~24 hours " should be "visible"
+    Then Element with "text" " Arriving in ~24 hours " should be "clickable"
     When I choose "ETH" as token and insert "0.0000000001" as amount
     Then Element with "text" " Continue " should be "clickable"
 
