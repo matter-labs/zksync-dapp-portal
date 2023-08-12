@@ -25,7 +25,7 @@ defineProps({
     @apply absolute inset-0 -z-[1] my-auto mx-auto h-4 w-12 bg-white dark:bg-neutral-900;
   }
   .transaction-item-icon {
-    @apply mx-auto h-9 w-9 rounded-lg bg-gray p-2 dark:bg-neutral-800 dark:shadow-[0_0_8px_1px_rgba(0,0,0,0.2)];
+    @apply mx-auto h-9 w-9 rounded-lg bg-gray-50 p-2 shadow-[0_0_2px_1px_rgba(0,0,0,0.05)] dark:bg-neutral-800 dark:shadow-[0_0_8px_1px_rgba(0,0,0,0.2)];
   }
 }
 </style>

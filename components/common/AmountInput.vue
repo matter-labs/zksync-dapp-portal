@@ -102,7 +102,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, nextTick, ref, watch } from "vue";
+import { computed, nextTick, ref, watch, watchEffect } from "vue";
 
 import { ChevronDownIcon } from "@heroicons/vue/24/outline";
 import { useFocus } from "@vueuse/core";
@@ -250,6 +250,9 @@ watch(
   },
   { immediate: true }
 );
+watchEffect(() => {
+  console.log(selectedToken.value?.price, "lmao");
+});
 
 const recalculateInputWidth = () => {
   inputWidth.value = 0;
@@ -262,13 +265,13 @@ const recalculateInputWidth = () => {
 
 <style lang="scss" scoped>
 .amount-input-container {
-  @apply grid w-full gap-x-4 rounded-3xl bg-gray-input p-4 transition-colors dark:bg-neutral-900;
+  @apply grid w-full gap-x-4 rounded-3xl bg-white p-4 transition-colors dark:bg-neutral-900;
   grid-template-areas:
     "a b b b"
     "c c d d";
   &:not(.loading) {
     &.focused {
-      @apply bg-gray-input-focus dark:bg-neutral-800;
+      @apply bg-gray-50 shadow-[0_0_8px_1px_rgba(0,0,0,0.05)] dark:bg-neutral-800;
     }
   }
   &.has-error {

@@ -3,7 +3,7 @@
   <ModalWalletWarning />
   <ModalConnectingWalletError />
 
-  <div class="bridge-layout dark">
+  <div class="bridge-layout">
     <Header />
     <main class="bridge-layout-main">
       <template v-if="step === 'select-address'">
@@ -50,7 +50,6 @@ import { useRouteQuery } from "@vueuse/router";
 import { isAddress } from "ethers/lib/utils";
 import { storeToRefs } from "pinia";
 
-import useColorMode from "@/composables/useColorMode";
 import useNetworks from "@/composables/useNetworks";
 
 import { useHead, useRoute } from "#app";
@@ -85,8 +84,6 @@ useHead({
 });
 
 const route = useRoute();
-
-useColorMode().switchColorMode("dark");
 
 const { eraNetworks } = useNetworks();
 const networkStore = useNetworkStore();

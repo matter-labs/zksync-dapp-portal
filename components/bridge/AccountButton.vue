@@ -30,6 +30,15 @@
         </CommonButtonLineWithImg>
       </CommonCardWithLineButtons>
       <CommonButtonGroup class="mt-4">
+        <CommonButton @click.prevent="() => switchColorMode()">
+          <template #icon>
+            <transition v-bind="TransitionPrimaryButtonText" mode="out-in">
+              <MoonIcon v-if="selectedColorMode === 'dark'" class="aspect-square h-full w-full" aria-hidden="true" />
+              <SunIcon v-else class="aspect-square h-full w-full" aria-hidden="true" />
+            </transition>
+          </template>
+          <template #default>Theme</template>
+        </CommonButton>
         <CommonButton @click="viewOnExplorerModalOpened = true">
           <template #icon>
             <Squares2X2Icon aria-hidden="true" />
@@ -62,16 +71,26 @@
 <script lang="ts" setup>
 import { computed, ref } from "vue";
 
-import { CheckIcon, ChevronDownIcon, DocumentDuplicateIcon, Squares2X2Icon } from "@heroicons/vue/24/outline";
+import {
+  CheckIcon,
+  ChevronDownIcon,
+  DocumentDuplicateIcon,
+  MoonIcon,
+  Squares2X2Icon,
+  SunIcon,
+} from "@heroicons/vue/24/outline";
 import { PowerIcon } from "@heroicons/vue/24/solid";
 import { storeToRefs } from "pinia";
 
+import useColorMode from "@/composables/useColorMode";
 import useCopy from "@/composables/useCopy";
 
 import { useEnsStore } from "@/store/ens";
 import { useOnboardStore } from "@/store/onboard";
 import { useEraProviderStore } from "@/store/zksync/era/provider";
 import { shortenAddress } from "@/utils/formatters";
+
+const { selectedColorMode, switchColorMode } = useColorMode();
 
 const onboardStore = useOnboardStore();
 const { account } = storeToRefs(useOnboardStore());
