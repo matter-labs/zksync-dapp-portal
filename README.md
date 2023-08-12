@@ -1,3 +1,5 @@
+## zkSync Plus is now fully maintained by Matter Labs as [zkSync Portal](https://github.com/matter-labs/dapp-portal). This repository is deprecated and will no longer be maintained.
+
 ![zkSync Plus](https://zkplus.io/preview.jpg)
 
 # zkSync Plus
