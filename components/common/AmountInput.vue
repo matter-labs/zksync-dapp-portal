@@ -102,7 +102,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, nextTick, ref, watch, watchEffect } from "vue";
+import { computed, nextTick, ref, watch } from "vue";
 
 import { ChevronDownIcon } from "@heroicons/vue/24/outline";
 import { useFocus } from "@vueuse/core";
@@ -250,9 +250,6 @@ watch(
   },
   { immediate: true }
 );
-watchEffect(() => {
-  console.log(selectedToken.value?.price, "lmao");
-});
 
 const recalculateInputWidth = () => {
   inputWidth.value = 0;
