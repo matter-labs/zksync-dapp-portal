@@ -1,5 +1,7 @@
 import type { Api, Token } from "@/types";
 
+import { ETH_L2_ADDRESS } from "@/utils/constants";
+
 const mapApiToken = (token: Api.Response.Token): Token => {
   return {
     l1Address: token.l1Address || undefined,
@@ -7,7 +9,7 @@ const mapApiToken = (token: Api.Response.Token): Token => {
     symbol: token.symbol || "unknown",
     decimals: token.decimals,
     iconUrl: undefined,
-    enabledForFees: true,
+    enabledForFees: token.l2Address === ETH_L2_ADDRESS,
     price: undefined,
   };
 };

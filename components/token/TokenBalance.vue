@@ -103,13 +103,12 @@ const displayedAmount = computed(() => {
 <style lang="scss" scoped>
 .token-balance {
   &.is-zero-amount {
-    .token-balance-amount,
-    .send-button {
-      @apply opacity-50;
-    }
     .token-balance-amount {
-      @apply text-gray-secondary dark:text-neutral-400;
+      @apply opacity-30;
     }
+  }
+  .token-balance-amount {
+    @apply max-w-[100px] truncate xs:max-w-[175px];
   }
 }
 </style>

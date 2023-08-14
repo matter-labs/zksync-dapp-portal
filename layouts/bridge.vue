@@ -12,8 +12,9 @@
           <template #after-address>
             <CommonAlert v-if="route.name === 'bridge'" variant="warning" :icon="ExclamationCircleIcon" class="mt-2">
               <p>
-                Please make sure the destination address is supported on zkSync Era network. Transfers to unsupported
-                addresses may result in the permanent
+                Please make sure the destination address is supported on
+                <span class="font-medium">{{ eraNetwork.name }}</span> network. Transfers to unsupported addresses may
+                result in the permanent
                 <span class="text-red-500">loss of funds</span>
               </p>
             </CommonAlert>
@@ -50,12 +51,13 @@ import { isAddress } from "ethers/lib/utils";
 import { storeToRefs } from "pinia";
 
 import useColorMode from "@/composables/useColorMode";
+import useNetworks from "@/composables/useNetworks";
 
 import { useHead, useRoute } from "#app";
 import { bridge as bridgeMeta } from "@/data/meta";
-import { eraNetworks } from "@/data/networks";
 import { useNetworkStore } from "@/store/network";
 import { useOnboardStore } from "@/store/onboard";
+import { useEraProviderStore } from "@/store/zksync/era/provider";
 import { checksumAddress } from "@/utils/formatters";
 import { findNetworkWithSameL1, getNetworkUrl } from "@/utils/helpers";
 import SelectAddress from "@/views/SelectAddress.vue";
@@ -86,7 +88,9 @@ const route = useRoute();
 
 useColorMode().switchColorMode("dark");
 
+const { eraNetworks } = useNetworks();
 const networkStore = useNetworkStore();
+const { eraNetwork } = storeToRefs(useEraProviderStore());
 const { account, isConnectingWallet } = storeToRefs(useOnboardStore());
 const { l1Network, version } = storeToRefs(networkStore);
 if (version.value !== "era") {

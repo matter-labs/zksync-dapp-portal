@@ -102,10 +102,10 @@ import { storeToRefs } from "pinia";
 import FaucetModal, { type FaucetStep } from "@/components/transaction/zksync/era/EraFaucetModal.vue";
 
 import useIsBeforeDate from "@/composables/useIsBeforeDate";
+import useNetworks from "@/composables/useNetworks";
 import useTurnstile from "@/composables/useTurnstile";
 import useFaucet from "@/composables/zksync/era/useFaucet";
 
-import { eraNetworks } from "@/data/networks";
 import { useNetworkStore } from "@/store/network";
 import { useOnboardStore } from "@/store/onboard";
 import { useEraProviderStore } from "@/store/zksync/era/provider";
@@ -125,6 +125,7 @@ const route = useRoute();
 // displays the out of funds message replacing the form to request tokens
 const noFunds = true;
 
+const { eraNetworks } = useNetworks();
 const faucetNetwork = computed(() => {
   if (!eraNetwork.value.faucetUrl) {
     return eraNetworks.filter((network) => network.faucetUrl)[0];

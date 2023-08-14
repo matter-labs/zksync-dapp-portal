@@ -1,6 +1,6 @@
 <template>
   <CommonModal v-bind="$attrs" title="View on explorer">
-    <TypographyCategoryLabel>Selected network</TypographyCategoryLabel>
+    <TypographyCategoryLabel v-if="otherNetworks.length">Selected network</TypographyCategoryLabel>
     <CommonCardWithLineButtons>
       <DestinationItem
         v-if="selectedNetworkLink.link"
@@ -20,27 +20,29 @@
       />
     </CommonCardWithLineButtons>
 
-    <TypographyCategoryLabel>Other networks</TypographyCategoryLabel>
-    <CommonCardWithLineButtons>
-      <template v-for="item in otherNetworks" :key="item.destination.key">
-        <DestinationItem
-          v-if="item.link"
-          v-bind="item.destination"
-          as="a"
-          :icon="ArrowUpRightIcon"
-          :href="item.link"
-          target="_blank"
-        />
-        <DestinationItem
-          v-else
-          disabled
-          as="button"
-          v-bind="item.destination"
-          description="No explorer available"
-          target="_blank"
-        />
-      </template>
-    </CommonCardWithLineButtons>
+    <template v-if="otherNetworks.length">
+      <TypographyCategoryLabel>Other networks</TypographyCategoryLabel>
+      <CommonCardWithLineButtons>
+        <template v-for="item in otherNetworks" :key="item.destination.key">
+          <DestinationItem
+            v-if="item.link"
+            v-bind="item.destination"
+            as="a"
+            :icon="ArrowUpRightIcon"
+            :href="item.link"
+            target="_blank"
+          />
+          <DestinationItem
+            v-else
+            disabled
+            as="button"
+            v-bind="item.destination"
+            description="No explorer available"
+            target="_blank"
+          />
+        </template>
+      </CommonCardWithLineButtons>
+    </template>
   </CommonModal>
 </template>
 
@@ -56,10 +58,10 @@ import { useOnboardStore } from "@/store/onboard";
 import { useEraProviderStore } from "@/store/zksync/era/provider";
 import { useLiteProviderStore } from "@/store/zksync/lite/provider";
 
-const { l1BlockExplorerUrl, version } = storeToRefs(useNetworkStore());
+const { selectedNetwork, l1BlockExplorerUrl, version } = storeToRefs(useNetworkStore());
 const { account } = storeToRefs(useOnboardStore());
 const { destinations } = storeToRefs(useDestinationsStore());
-const { blockExplorerUrl: eraBlockExplorerUrl } = storeToRefs(useEraProviderStore());
+const { eraNetwork, blockExplorerUrl: eraBlockExplorerUrl } = storeToRefs(useEraProviderStore());
 const { blockExplorerUrl: liteBlockExplorerUrl } = storeToRefs(useLiteProviderStore());
 
 const eraNetworkLink = computed(() => ({
@@ -82,10 +84,13 @@ const selectedNetworkLink = computed(() => {
   return eraNetworkLink.value;
 });
 const otherNetworks = computed(() => {
-  const list = [l1NetworkLink.value];
+  const list = [];
+  if (selectedNetwork.value.l1Network) {
+    list.push(l1NetworkLink.value);
+  }
   if (version.value === "lite") {
     list.push(eraNetworkLink.value);
-  } else {
+  } else if (eraNetwork.value.displaySettings?.showZkSyncLiteNetworks) {
     list.push(zkSyncLiteNetworkLink.value);
   }
   return list;

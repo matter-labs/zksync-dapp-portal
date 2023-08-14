@@ -6,14 +6,56 @@ import { Web3Modal } from "@web3modal/html";
 import { defineStore, storeToRefs } from "pinia";
 
 import useColorMode from "@/composables/useColorMode";
+import useNetworks from "@/composables/useNetworks";
 import useObservable from "@/composables/useObservable";
 
+import type { EraNetwork } from "@/data/networks";
+import type { Chain } from "@wagmi/core";
+
 import { useRuntimeConfig } from "#imports";
-import { l1Networks } from "@/data/networks";
 import { confirmedSupportedWallets, disabledWallets } from "@/data/wallets";
 import { useNetworkStore } from "@/store/network";
 
-const extendedChains = [...Object.values(l1Networks), zkSync, zkSyncTestnet];
+const { eraNetworks, zkSyncLiteNetworks } = useNetworks();
+const useExistingEraChain = (network: EraNetwork) => {
+  const existingNetworks = [zkSync, zkSyncTestnet];
+  return existingNetworks.find((existingNetwork) => existingNetwork.id === network.id);
+};
+const createEraChain = (network: EraNetwork) => {
+  return {
+    id: network.id,
+    name: network.name,
+    network: network.key,
+    nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 },
+    rpcUrls: {
+      default: { http: [network.rpcUrl] },
+      public: { http: [network.rpcUrl] },
+    },
+  };
+};
+const getAllChains = () => {
+  const chains: Chain[] = [];
+  const addUniqueChain = (chain: Chain) => {
+    if (!chains.find((existingChain) => existingChain.id === chain.id)) {
+      chains.push(chain);
+    }
+  };
+  for (const network of zkSyncLiteNetworks) {
+    if (network.l1Network) {
+      addUniqueChain(network.l1Network);
+    }
+  }
+  for (const network of eraNetworks) {
+    if (network.l1Network) {
+      addUniqueChain(network.l1Network);
+    }
+    addUniqueChain(useExistingEraChain(network) ?? createEraChain(network));
+  }
+
+  return chains;
+};
+
+const extendedChains = [...getAllChains()];
 const { public: env } = useRuntimeConfig();
 
 export const useOnboardStore = defineStore("onboard", () => {

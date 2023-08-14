@@ -1,12 +1,14 @@
 import { defineStore, storeToRefs } from "pinia";
 import { Provider } from "zksync-web3";
 
+import useNetworks from "@/composables/useNetworks";
+
 import type { EraNetwork } from "@/data/networks";
 
-import { eraNetworks } from "@/data/networks";
 import { useNetworkStore } from "@/store/network";
 
 export const useEraProviderStore = defineStore("eraProvider", () => {
+  const { eraNetworks } = useNetworks();
   const { selectedNetwork, l1Network, version } = storeToRefs(useNetworkStore());
   const eraNetwork = computed(() => {
     if (version.value === "era") {

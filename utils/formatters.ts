@@ -63,16 +63,14 @@ export function removeSmallAmount(
   }
   if (acc.endsWith(".0")) {
     return acc.slice(0, -2);
+  } else if (acc.endsWith(".")) {
+    return acc.slice(0, -1);
   }
   return acc;
 }
 
 export function checksumAddress(address: string) {
   return getAddress(address);
-}
-
-export function capitalize(str: string) {
-  return str[0].toUpperCase() + str.slice(1);
 }
 
 export function formatError(error?: Error) {

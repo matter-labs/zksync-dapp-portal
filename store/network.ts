@@ -1,17 +1,20 @@
 import { useStorage } from "@vueuse/core";
 import { defineStore } from "pinia";
 
+import useNetworks from "@/composables/useNetworks";
+
 import type { L1Network, L2Network } from "@/data/networks";
 
 import { useRoute } from "#app";
-import { eraNetworks, zkSyncLiteNetworks } from "@/data/networks";
 
 export type Version = "era" | "lite";
-const l2Networks = [...eraNetworks, ...zkSyncLiteNetworks];
-const defaultNetwork = l2Networks[0];
 
 export const useNetworkStore = defineStore("network", () => {
   const route = useRoute();
+
+  const { eraNetworks, zkSyncLiteNetworks, getVersionByNetwork } = useNetworks();
+  const l2Networks = [...eraNetworks, ...zkSyncLiteNetworks];
+  const defaultNetwork = l2Networks[0];
 
   const networkUsesLocalStorage = useStorage<boolean>("networkUsesLocalStorage", false);
   const selectedNetworkKey = useStorage<string>(

@@ -22,10 +22,10 @@
         v-bind="destinations.ethereum"
         as="RouterLink"
         :to="{ name: 'transaction-zksync-era-withdraw', query: $route.query }"
-        description="Withdraw to Ethereum"
+        :description="`Withdraw to ${destinations.ethereum.label}`"
       />
       <DestinationItem
-        v-if="eraNetwork.l1Network"
+        v-if="eraNetwork.displaySettings?.showZkSyncLiteNetworks && eraNetwork.displaySettings?.showPartnerLinks"
         v-bind="destinations.zkSyncLite"
         as="RouterLink"
         :to="{ name: 'transaction-zksync-era-send-lite', query: $route.query }"
@@ -33,11 +33,10 @@
       />
     </CommonCardWithLineButtons>
 
-    <template v-if="eraNetwork.l1Network">
+    <template v-if="eraNetwork.displaySettings?.showPartnerLinks">
       <TypographyCategoryLabel>Send to exchange</TypographyCategoryLabel>
       <CommonCardWithLineButtons>
         <DestinationItem
-          v-if="eraNetwork.l1Network"
           label="Official bridge"
           :icon-url="destinations.ethereum.iconUrl"
           description="Send to exchange using official bridge"

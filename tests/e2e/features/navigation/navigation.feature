@@ -65,3 +65,25 @@ Feature: Navigation
       | Selector type | Selector value              | url                                     |
       | class         | line-button-with-img-icon   | https://goerli.explorer.zksync.io/tx    |
       
+  @id1430:I
+  Scenario Outline: Check Navigation for the "Send" page links
+    Given I am on the Main page
+    When I click by text "Send"
+    When I click by text "<Button name>"
+    Then Current page have "<url>" address
+
+    Examples:
+      | Button name         | url                                     |
+      | zkSync Era Testnet  | /transaction/zksync/era/send            |
+      | Ethereum Goerli     | /transaction/zksync/era/withdraw        |
+      | zkSync Lite Goerli  | /transaction/zksync/era/send-lite       |
+
+  @id1430:II
+  Scenario Outline: Check Navigation for the "Where to Send" page links
+    Given I am on the Main page
+    When I click by text "Send"
+    When I click by text "Official bridge"
+    When I click by text "I understand the risks of losing funds"
+    When I click on the "Proceed" button
+    Then Current page have "/transaction/zksync/era/withdraw" address
+

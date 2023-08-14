@@ -37,7 +37,12 @@
           after the transaction is committed on the <span class="font-medium">{{ destinations.zkSyncLite.label }}</span
           >. You are free to close this page.
         </p>
-        <a :href="`${blockExplorerUrl}/tx/${mainTransaction?.txHash}`" target="_blank" class="alert-link">
+        <a
+          v-if="blockExplorerUrl"
+          :href="`${blockExplorerUrl}/tx/${mainTransaction?.txHash}`"
+          target="_blank"
+          class="alert-link"
+        >
           Track status
           <ArrowUpRightIcon class="ml-1 h-3 w-3" />
         </a>

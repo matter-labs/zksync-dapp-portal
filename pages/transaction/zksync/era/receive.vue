@@ -10,7 +10,7 @@
         :icon-url="destinations.ethereum.iconUrl"
         as="RouterLink"
         :to="{ name: 'transaction-zksync-era-deposit', query: $route.query }"
-        description="Add funds using official bridge"
+        :description="`Add funds from ${destinations.ethereum.label}`"
       />
       <DestinationItem
         label="View address"
@@ -35,7 +35,7 @@
       </DestinationItem>
     </CommonCardWithLineButtons>
 
-    <template v-if="eraNetwork.l1Network">
+    <template v-if="eraNetwork.displaySettings?.showPartnerLinks">
       <TypographyCategoryLabel>Top-up with cash</TypographyCategoryLabel>
       <CommonCardWithLineButtons>
         <DestinationItem

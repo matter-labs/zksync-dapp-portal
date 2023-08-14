@@ -6,8 +6,6 @@ import { defineStore, storeToRefs } from "pinia";
 
 import { useOnboardStore } from "@/store/onboard";
 
-export type Version = "lite" | "era";
-
 export const usePreferencesStore = defineStore("preferences", () => {
   const { account } = storeToRefs(useOnboardStore());
 

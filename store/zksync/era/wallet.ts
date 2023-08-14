@@ -55,30 +55,84 @@ export const useEraWalletStore = defineStore("eraWallet", () => {
     reset: resetAccountState,
   } = usePromise<Api.Response.Account | Api.Response.Contract>(async () => {
     if (!account.value.address) throw new Error("Account is not available");
+    if (!eraNetwork.value.blockExplorerApi)
+      throw new Error(`Block Explorer API is not available on ${eraNetwork.value.name}`);
 
     return await $fetch(`${eraNetwork.value.blockExplorerApi}/address/${account.value.address}`);
   });
+
+  const getBalancesFromBlockExplorerApi = async (): Promise<TokenAmount[]> => {
+    await Promise.all([requestAccountState({ force: true }), eraTokensStore.requestTokens()]);
+    if (!accountState.value) throw new Error("Account state is not available");
+    if (!tokens.value) throw new Error("Tokens are not available");
+    return Object.entries(accountState.value.balances)
+      .filter(([, { token }]) => token)
+      .map(([, { balance, token }]) => {
+        return {
+          address: token!.l2Address,
+          l1Address: token!.l1Address || undefined,
+          name: token!.name || undefined,
+          symbol: token!.symbol!,
+          decimals: token!.decimals,
+          amount: balance,
+        };
+      });
+  };
+  const getBalancesFromRPC = async (): Promise<TokenAmount[]> => {
+    await eraTokensStore.requestTokens();
+    if (!tokens.value) throw new Error("Tokens are not available");
+    if (!account.value.address) throw new Error("Account is not available");
+
+    const provider = eraProviderStore.requestProvider();
+    const balances = await Promise.all(
+      Object.entries(tokens.value).map(async ([, token]) => {
+        const amount = await provider.getBalance(onboardStore.account.address!, undefined, token.address);
+        if (!amount.isZero()) {
+          eraTokensStore.requestTokenPrice(token.address);
+        }
+        return {
+          ...token,
+          amount: amount.toString(),
+        };
+      })
+    );
+
+    return balances;
+  };
   const {
+    result: balancesResult,
     inProgress: balanceInProgress,
     error: balanceError,
     execute: requestBalance,
     reset: resetBalance,
-  } = usePromise<void>(
+  } = usePromise<TokenAmount[]>(
     async () => {
-      await Promise.all([requestAccountState({ force: true }), eraTokensStore.requestTokens()]);
-      if (!accountState.value) throw new Error("Account state is not available");
-      if (!tokens.value) throw new Error("Tokens are not available");
+      if (eraNetwork.value.blockExplorerApi) {
+        return await getBalancesFromBlockExplorerApi();
+      } else {
+        return await getBalancesFromRPC();
+      }
     },
     { cache: 30000 }
   );
 
   const balance = computed<TokenAmount[]>(() => {
-    if (!accountState.value) return [];
-    return Object.entries(tokens.value ?? {}).map(([, token]) => {
-      const amount = accountState.value?.balances[token.address]?.balance ?? "0";
+    if (!balancesResult.value) return [];
+
+    const knownTokens: TokenAmount[] = Object.entries(tokens.value ?? {}).map(([, token]) => {
+      const amount = balancesResult.value!.find((e) => e.address === token.address)?.amount ?? "0";
       return { ...token, amount };
     });
+    const knownTokenAddresses = new Set(knownTokens.map((token) => token.address));
+
+    // Filter out the tokens in `balancesResult` that are not in `tokens`
+    const otherTokens = balancesResult.value
+      .filter((token) => !knownTokenAddresses.has(token.address))
+      .sort((a, b) => a.symbol.localeCompare(b.symbol));
+
+    return [...knownTokens, ...otherTokens];
   });
+
   watch(
     balance,
     (balances) => {

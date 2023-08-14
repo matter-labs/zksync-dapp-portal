@@ -9,7 +9,7 @@
       </div>
       <CommonCardWithLineButtons>
         <DestinationItem
-          v-for="item in eraNetworks.filter((e) => e.visible || isNetworkSelected(e))"
+          v-for="item in eraNetworks.filter((e) => !e.hidden || isNetworkSelected(e))"
           :key="item.key"
           :label="item.name"
           :icon="isNetworkSelected(item) ? CheckIcon : undefined"
@@ -22,11 +22,16 @@
       </CommonCardWithLineButtons>
     </template>
 
-    <template v-if="networks.includes('lite') && (selectedZkSyncVersion !== 'era' || selectedNetwork.l1Network)">
+    <template
+      v-if="
+        networks.includes('lite') &&
+        (selectedZkSyncVersion !== 'era' || eraNetwork.displaySettings?.showZkSyncLiteNetworks)
+      "
+    >
       <DestinationLabel v-if="networks.length > 1" label="zkSync Lite" :icon="IconsZkSyncLite" class="mb-2 mt-4" />
       <CommonCardWithLineButtons>
         <DestinationItem
-          v-for="item in zkSyncLiteNetworks.filter((e) => e.visible || isNetworkSelected(e))"
+          v-for="item in zkSyncLiteNetworks.filter((e) => !e.hidden || isNetworkSelected(e))"
           :key="item.key"
           :label="item.name"
           :icon="isNetworkSelected(item) ? CheckIcon : undefined"
@@ -48,15 +53,16 @@ import { storeToRefs } from "pinia";
 import IconsEra from "@/components/icons/Era.vue";
 import IconsZkSyncLite from "@/components/icons/zkSyncLite.vue";
 
+import useNetworks from "@/composables/useNetworks";
+
 import type { L2Network } from "@/data/networks";
-import type { Version } from "@/store/preferences";
+import type { Version } from "@/store/network";
 import type { PropType } from "vue";
 
 import { useRoute, useRouter } from "#app";
-import { eraNetworks, zkSyncLiteNetworks } from "@/data/networks";
 import { useNetworkStore } from "@/store/network";
+import { useEraProviderStore } from "@/store/zksync/era/provider";
 import { getNetworkUrl, replaceVersionInString } from "@/utils/helpers";
-import { getVersionByNetwork } from "@/utils/helpers";
 
 defineProps({
   networks: {
@@ -72,6 +78,8 @@ const emit = defineEmits<{
 const route = useRoute();
 const router = useRouter();
 
+const { eraNetworks, zkSyncLiteNetworks, getVersionByNetwork } = useNetworks();
+const { eraNetwork } = storeToRefs(useEraProviderStore());
 const {
   selectedNetwork,
   l1Network,

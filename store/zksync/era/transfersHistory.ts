@@ -61,6 +61,9 @@ export const useEraTransfersHistoryStore = defineStore("eraTransfersHistory", ()
     loadNext,
     reset: resetPaginatedRequest,
   } = usePaginatedRequest<Api.Response.Transfer>(() => {
+    if (!eraNetwork.value.blockExplorerApi)
+      throw new Error(`Block Explorer API is not available on ${eraNetwork.value.name}`);
+
     const url = new URL(`/address/${account.value.address}/transfers`, eraNetwork.value.blockExplorerApi);
     url.searchParams.set("limit", TRANSACTIONS_FETCH_LIMIT.toString());
     return url;

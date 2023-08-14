@@ -5,7 +5,6 @@ import { defineStore, storeToRefs } from "pinia";
 import { useNetworkStore } from "@/store/network";
 import { useEraProviderStore } from "@/store/zksync/era/provider";
 import { useLiteProviderStore } from "@/store/zksync/lite/provider";
-import { capitalize } from "@/utils/formatters";
 
 export type TransactionDestination = {
   key?: string;
@@ -31,7 +30,7 @@ export const useDestinationsStore = defineStore("destinations", () => {
     },
     ethereum: {
       key: "ethereum",
-      label: `Ethereum ${l1Network.value ? capitalize(l1Network.value.network) : ""}`,
+      label: `Ethereum ${l1Network.value ? l1Network.value.name : ""}`,
       iconUrl: "/img/ethereum.svg?v=1",
     },
     layerswap: {

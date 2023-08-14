@@ -1,11 +1,10 @@
 import { BigNumber } from "ethers";
 
 import type { L1Network, L2Network } from "@/data/networks";
-import type { Version } from "@/store/preferences";
+import type { Version } from "@/store/network";
 import type { TokenAmount } from "@/types";
 import type { BigNumberish } from "ethers";
 
-import { eraNetworks, zkSyncLiteNetworks } from "@/data/networks";
 import { parseTokenAmount } from "@/utils/formatters";
 
 export function generateAvatarColors(address: string) {
@@ -36,16 +35,6 @@ export function isOnlyZeroes(value: string) {
 export function calculateFee(gasLimit: BigNumberish, gasPrice: BigNumberish) {
   return BigNumber.from(gasLimit).mul(gasPrice);
 }
-
-export const getVersionByNetwork = (network: L2Network): Version => {
-  if (eraNetworks.some((e) => e.key === network.key)) {
-    return "era";
-  } else if (zkSyncLiteNetworks.some((e) => e.key === network.key)) {
-    return "lite";
-  } else {
-    throw new Error(`Unknown network: ${network.key}`);
-  }
-};
 
 export const getNetworkUrl = (network: L2Network, routePath: string) => {
   const url = new URL(routePath, window.location.origin);

@@ -49,7 +49,7 @@
             </CommonErrorBlock>
           </div>
           <CommonButtonTopLink
-            v-if="destination.key === 'ethereum'"
+            v-if="destination.key === 'ethereum' && !isCustomNode"
             as="a"
             :href="ERA_WITHDRAWAL_DELAY"
             target="_blank"
@@ -101,6 +101,7 @@ import { storeToRefs } from "pinia";
 import EraTransferSuccessfulModal from "@/components/transaction/zksync/era/EraTransferSuccessfulModal.vue";
 import EraWithdrawalSuccessfulModal from "@/components/transaction/zksync/era/EraWithdrawalSuccessfulModal.vue";
 
+import useNetworks from "@/composables/useNetworks";
 import useTransaction from "@/composables/zksync/era/useTransaction";
 
 import type { FeeEstimationParams } from "@/composables/zksync/era/useFee";
@@ -173,6 +174,7 @@ const eraProviderStore = useEraProviderStore();
 const { account } = storeToRefs(useOnboardStore());
 const { destinations } = storeToRefs(useDestinationsStore());
 const { previousTransactionAddress } = storeToRefs(usePreferencesStore());
+const { isCustomNode } = useNetworks();
 
 const { status, error, transactionHash, commitTransaction } = useTransaction(
   walletEraStore.getSigner,
