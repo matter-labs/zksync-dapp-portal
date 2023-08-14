@@ -16,7 +16,7 @@ import { computed } from "vue";
 
 import IconDiscord from "@/components/icons/Discord.vue";
 import IconEmail from "@/components/icons/Email.vue";
-import IconMedium from "@/components/icons/Medium.vue";
+import IconMirror from "@/components/icons/Mirror.vue";
 import IconTelegram from "@/components/icons/Telegram.vue";
 import IconTwitter from "@/components/icons/Twitter.vue";
 
@@ -39,9 +39,9 @@ const socialInfo = computed(() => {
   switch (props.variant) {
     case "medium":
       return {
-        label: "Medium Blog",
-        url: "https://medium.com/matter-labs",
-        icon: IconMedium,
+        label: "Blog",
+        url: "https://zksync.mirror.xyz/",
+        icon: IconMirror,
       };
     case "discord":
       return {
