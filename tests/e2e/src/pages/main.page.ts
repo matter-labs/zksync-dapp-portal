@@ -30,7 +30,7 @@ export class MainPage extends BasePage {
   }
 
   get circleTimerElement() {
-    return "//*[@class='radial-progress ml-1.5 cursor-help']";
+    return '//*[contains(@class, "radial-progress")]';
   }
 
   get menuElement() {

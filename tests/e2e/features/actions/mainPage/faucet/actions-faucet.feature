@@ -4,8 +4,8 @@ Feature: Faucet
   Background:
     Given Connect Metamask extension with login action
 
-  @id1550
-  Scenario: Check Faucet available only on Testnet
+  @id1550 @mainnet
+  Scenario: Check Faucet NOT available on Mainnet
     Given A wallet should be "empty"
     When I go to page "/?network=era-mainnet"
     Then Element with "text" "Not enough tokens?" should be "invisible"
