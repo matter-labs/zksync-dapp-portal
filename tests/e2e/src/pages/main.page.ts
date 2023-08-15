@@ -182,7 +182,6 @@ export class MainPage extends BasePage {
       return console.error("An incorrect link name has been provided");
     }
 
-    //const selector = `//*[@href='${link}']` + this.externalLinkArrow;
     const selector = `//*[contains(@href,'${link}')]` + this.externalLinkArrow;
     await this.verifyElement("xpath", selector, checkType);
   }
