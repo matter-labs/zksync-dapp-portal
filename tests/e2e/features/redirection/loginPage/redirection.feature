@@ -19,8 +19,8 @@ Feature: External Redirection on the Login Page
 
     Examples:
       | Selector type | Selector value      | url                                                               |
-      | id            | zk-sync-white-total | https://zksync.io/                         |
-      | aria-label    | Medium Blog         | https://blog.matter-labs.io/                                      |
+      | id            | zk-sync-white-total | https://zksync.io/                                                |
+      | aria-label    | Blog                | https://zksync.mirror.xyz/                                        |
       | aria-label    | Discord Community   | https://join.zksync.dev/                                          |
       | aria-label    | Telegram Support    | https://t.me/zksync                                               |
       | aria-label    | Twitter Community   | https://twitter.com/i/flow/login?redirect_after_login=%2Fzksync   |
