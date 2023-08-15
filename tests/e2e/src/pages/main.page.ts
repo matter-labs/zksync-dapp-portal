@@ -85,6 +85,10 @@ export class MainPage extends BasePage {
     return `//*[@type='button' and contains(., '${buttonName}')] | //button[text()[contains(string(), '${buttonName}')]]`;
   }
 
+  get confirmFeeChangeButton() {
+    return "//button[text()='Confirm']";
+  }
+
   async selectTransaction(transactionType: string) {
     try {
       let route: string;

@@ -194,7 +194,8 @@ watch(
   (symbol) => {
     if (!symbol) return;
     liteTokensStore.requestTokenPrice(symbol);
-  }
+  },
+  { immediate: true }
 );
 watch(allBalancePricesLoaded, (loaded) => {
   if (loaded && !selectedToken.value) {
@@ -268,7 +269,8 @@ watch(
   (symbol) => {
     if (!symbol) return;
     liteTokensStore.requestTokenPrice(symbol);
-  }
+  },
+  { immediate: true }
 );
 const gasLimitAndPrice = computed(() => {
   if (!gasLimit.value || !gasPrice.value) {

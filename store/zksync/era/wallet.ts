@@ -87,9 +87,6 @@ export const useEraWalletStore = defineStore("eraWallet", () => {
     const balances = await Promise.all(
       Object.entries(tokens.value).map(async ([, token]) => {
         const amount = await provider.getBalance(onboardStore.account.address!, undefined, token.address);
-        if (!amount.isZero()) {
-          eraTokensStore.requestTokenPrice(token.address);
-        }
         return {
           ...token,
           amount: amount.toString(),
