@@ -47,18 +47,14 @@ export class BasePage {
     await this.world.page?.fill(selector, text, config.increasedTimeout);
   }
 
-  async fillSpecificField(inputIDType: string, inputIDName: string, text: string) {
+  async fillSpecificField(selectorType: string, selectorValue: string, text: string) {
     const helper = new Helper(this.world);
-    selector = `//*[@${inputIDType}="${inputIDName}"]`;
-    if (await helper.checkElementVisible(selector)) {
-      if (text === "clipboard") {
-        const result = await helper.getClipboardValue();
-        await this.fill(selector, result);
-      } else {
-        await this.fill(selector, text);
-      }
+    selector = `//*[@${selectorType}="${selectorValue}"]`;
+    if (text === "clipboard") {
+      const result = await helper.getClipboardValue();
+      await this.fill(selector, result);
     } else {
-      return console.error("An incorrect value of the input field has been provided");
+      await this.fill(selector, text);
     }
   }
 
