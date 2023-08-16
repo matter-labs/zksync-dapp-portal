@@ -29,9 +29,14 @@ jobs:
         run: |
           npm run lint
 
+      - name: Setup .env.deployment
+        run: |
+          echo "WALLET_CONNECT_PROJECT_ID=${{ secrets.WALLET_CONNECT_PROJECT_ID }}" >> .env.deployment
+          echo "ANKR_TOKEN=${{ secrets.ANKR_TOKEN }}" >> .env.deployment
+
       - name: Build
         run: |
-          npm run generate
+          npm run generate --dotenv .env.deployment
 
       - name: Deploy
         uses: matter-labs/action-hosting-deploy@main

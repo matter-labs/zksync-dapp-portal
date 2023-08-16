@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "build": "nuxt build",
-    "dev": "nuxt dev",
+    "dev": "nuxt dev --dotenv .tokens.env",
     "dev:node:memory": "cross-env NODE_TYPE=memory npm run dev",
     "dev:node:docker": "cross-env NODE_TYPE=dockerized npm run dev",
     "dev:node:hyperchain": "ts-node --transpile-only scripts/hyperchains/empty-check.ts && cross-env NODE_TYPE=hyperchain npm run dev",
@@ -61,6 +61,7 @@
     "*.{vue,js,ts,html,json}": "npm run lint"
   },
   "dependencies": {
+    "@ankr.com/ankr.js": "^0.4.0",
     "@chenfengyuan/vue-qrcode": "^2.0.0",
     "@headlessui/vue": "^1.7.7",
     "@heroicons/vue": "^2.0.14",
@@ -80,7 +81,6 @@
     "@wagmi/core": "^1.3.3",
     "@web3modal/ethereum": "^2.6.2",
     "@web3modal/html": "^2.6.2",
-    "alchemy-sdk": "^2.8.1",
     "cheerio": "^1.0.0-rc.12",
     "crypto-js": "^4.1.1",
     "date-fns": "^2.29.3",
