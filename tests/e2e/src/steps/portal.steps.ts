@@ -89,7 +89,7 @@ When(
 
 When(
   "I {string} transaction after clicking {string} button",
-  config.stepTimeout,
+  config.stepExtraTimeout,
   async function (this: ICustomWorld, actionType: string, transactionBtn: string) {
     mainPage = new MainPage(this);
     await mainPage.makeTransaction(actionType, transactionBtn);
@@ -384,9 +384,4 @@ Given("I reset allowance", config.stepExtraTimeout, async function (this: ICusto
   // logout
   await externalPage.clickByMenuWalletButton();
   await basePage.clickByText("Disconnect");
-});
-
-When("I call the transaction interface", config.stepTimeout, async function (this: ICustomWorld) {
-  metamaskPage = new MetamaskPage(this);
-  await metamaskPage.callTransactionInterface();
 });

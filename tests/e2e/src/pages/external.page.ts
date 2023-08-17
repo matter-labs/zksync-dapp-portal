@@ -45,7 +45,7 @@ export class ExternalPage extends BasePage {
 
   async revokeAllowance() {
     metamaskPage = await new MetamaskPage(this.world);
-    const currentWalletAddress = (await metamaskPage.getCurrentWalletAddress()).toString;
+    const currentWalletAddress = await metamaskPage.getCurrentWalletAddress();
     const networkChainId = "?chainId=5"; // Goerli
     const revokeGoerliUrl = "https://revoke.cash/address/" + currentWalletAddress + networkChainId;
     const networkForRevokeIsSelected = await this.checkNetworkForRevoke("Goerli");
