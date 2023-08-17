@@ -14,7 +14,6 @@ let page: any;
 let element: any;
 let metamaskHomeUrl: string;
 let metamaskWelcomeUrl: string;
-export let currentWalletAddress: string;
 let selector: string;
 let testId: any;
 let logoutTrigger: any = undefined;
@@ -170,14 +169,16 @@ export class MetamaskPage extends BasePage {
   }
 
   async getCurrentWalletAddress() {
+    const newPage = await this.world.context?.newPage();
     await this.getMetamaskExtensionUrl();
-    await page.goto(metamaskWelcomeUrl);
-    await page.reload();
-    //await page.bringToFront();
-    await page.locator("//button[@data-testid='popover-close']").click();
-    await page.locator(this.copyWalletAddress).click();
-    const address = await page.evaluate("navigator.clipboard.readText()");
-    return address.toString();
+    await newPage?.goto(metamaskWelcomeUrl);
+    await newPage?.reload();
+    await newPage?.locator("//button[@data-testid='popover-close']").click();
+    await newPage?.locator(this.copyWalletAddress).click();
+    const address = await newPage?.evaluate("navigator.clipboard.readText()");
+    await newPage?.close();
+    await page.bringToFront();
+    return address;
   }
 
   async authorizeInMetamaskExtension(secretPhrase: Array<string>, password: string) {
@@ -200,8 +201,6 @@ export class MetamaskPage extends BasePage {
       }
     }
     logoutTrigger = false;
-    currentWalletAddress = await this.getCurrentWalletAddress();
-    console.log(currentWalletAddress);
   }
 
   async callTransactionInterface() {
