@@ -26,10 +26,6 @@ export class ExternalPage extends BasePage {
     return `//button[contains(text(), '${value}')]`;
   }
 
-  async commonButtonByItsName(value: string) {
-    return `//button[contains(., '${value}')]`;
-  }
-
   async checkNetworkForRevoke(network: string) {
     const selector = `${this.networkSelectorsListForRevoke}/..//img[@alt='${network}']`;
     result = await this.world.page?.locator(selector).first().isVisible();
