@@ -2,7 +2,7 @@
 import { setTimeout } from "timers/promises";
 
 import { BasePage } from "./base.page";
-import { currentWalletAddress, MetamaskPage } from "./metamask.page";
+import { MetamaskPage } from "./metamask.page";
 import { MainPage } from "../pages/main.page";
 import { config } from "../support/config";
 
@@ -49,12 +49,12 @@ export class ExternalPage extends BasePage {
 
   async revokeAllowance() {
     metamaskPage = await new MetamaskPage(this.world);
+    const currentWalletAddress = (await metamaskPage.getCurrentWalletAddress()).toString;
     const networkChainId = "?chainId=5"; // Goerli
     const revokeGoerliUrl = "https://revoke.cash/address/" + currentWalletAddress + networkChainId;
     const networkForRevokeIsSelected = await this.checkNetworkForRevoke("Goerli");
     if (!networkForRevokeIsSelected) {
       await this.goTo(revokeGoerliUrl);
-      console.log(revokeGoerliUrl);
     }
 
     await setTimeout(config.defaultTimeout.timeout);
