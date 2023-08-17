@@ -4,7 +4,7 @@ Feature: Transfer
   Background:
     Given Connect Metamask extension with login action
 
-  @id1231
+  @id1321
   Scenario: Make a transfer in ETH
     Given I am on the Main page
     When I go to page "/transaction/zksync/era/send?network=era-goerli&address=0x9CC8DC9c4d73fC5647A4eE78A2e8EC49D447AeB8"
