@@ -90,6 +90,10 @@ Array<{
 ---
 
 ## 🛠 Development
+
+### Advanced configuration
+Read more in the main README: [Advanced configuration](../README.md#advanced-configuration)
+
 ### 🔧 Setup
 
 Make sure to install the dependencies:
