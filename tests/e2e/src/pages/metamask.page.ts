@@ -2,6 +2,7 @@
 import { setTimeout } from "timers/promises";
 
 import { BasePage } from "./base.page";
+import { MainPage } from "./main.page";
 import { Extension } from "../data/data";
 import { depositTag, Helper } from "../helpers/helper";
 import { config, wallet } from "../support/config";
@@ -34,6 +35,10 @@ export class MetamaskPage extends BasePage {
 
   get feeChangerBtn() {
     return "//div[@class='edit-gas-display']//button";
+  }
+
+  get feeChangerAlert() {
+    return "//p[contains(text(), 'Fee has changed')]";
   }
 
   get saveFeeBtn() {
@@ -176,15 +181,11 @@ export class MetamaskPage extends BasePage {
     try {
       await this.switchNetwork();
     } finally {
-      await setTimeout(2.5 * 1000);
+      await setTimeout(config.minimalTimeout.timeout);
       await this.click(this.continueBtn);
-      // const confirmBtnSelector = "//*[@class='alert-body']//button";
-      // const confirmBtn: any = await this.world.page?.locator(confirmBtnSelector);
-      // if (await confirmBtn.isEnabled()) {
-      //   console.log("spotted");
-      //   await this.click(confirmBtn);
-      // }
+
       const popUpContext = await this.catchPopUpByClick(`//span[contains(text(),'${triggeredElement}')]`);
+      await setTimeout(config.minimalTimeout.timeout);
       await popUpContext?.setViewportSize(config.popUpWindowSize);
       await popUpContext?.click(this.confirmTransaction);
     }
@@ -197,8 +198,21 @@ export class MetamaskPage extends BasePage {
       this.world.context?.waitForEvent("page"),
       await helper.checkElementVisible(element),
       await this.world.page?.locator(element).first().click(),
+      await setTimeout(config.defaultTimeout.timeout),
+      await this.isFeeAlert(element),
     ]);
     return popUp;
+  }
+
+  async isFeeAlert(element: string) {
+    const helper = new Helper(this.world);
+    const mainPage = new MainPage(this.world);
+    const feeAlert = await helper.checkElementVisible(this.feeChangerAlert);
+    if (feeAlert) {
+      await helper.checkElementVisible(mainPage.confirmFeeChangeButton);
+      await this.click(mainPage.confirmFeeChangeButton);
+      await this.catchPopUpByClick(element);
+    }
   }
 
   async catchPopUp() {

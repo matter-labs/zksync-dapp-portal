@@ -266,6 +266,15 @@ export class BasePage {
     }
   }
 
+  async verifyContent(elementType: string, elementValue: string, content: string, contentType: string) {
+    element = await this.returnElementByType(elementType, elementValue);
+    if (contentType === "value") {
+      await expect(element).toHaveValue(content);
+    } else if (contentType === "text") {
+      await expect(element).toHaveText(content);
+    }
+  }
+
   async verifyElement(elementType: string, value: string, checkType: string) {
     const helper = new Helper(this.world);
     element = await this.returnElementByType(elementType, value);

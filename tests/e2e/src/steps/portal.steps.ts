@@ -104,6 +104,22 @@ Then(
   }
 );
 
+Then(
+  "Element with {string} {string} should have {string} {string}",
+  config.stepTimeout,
+  async function (
+    this: ICustomWorld,
+    elementType: string, // f.e. id or class
+    elementValue: string,
+    content: string,
+    contentType: string // f.e. value or text
+  ) {
+    basePage = new BasePage(this);
+
+    await basePage.verifyContent(elementType, elementValue, content, contentType);
+  }
+);
+
 When("I insert {string} as amount", config.stepTimeout, async function (this: ICustomWorld, amount: string) {
   mainPage = new MainPage(this);
   await mainPage.insertAmount(amount);
@@ -257,6 +273,8 @@ Then("Fee should have {string} value", config.stepTimeout, async function (this:
   mainPage = new MainPage(this);
   basePage = new BasePage(this);
   element = mainPage.feeValue;
+  await this.page?.waitForTimeout(5000); // required
+  await this.page?.waitForSelector(element);
   result = await this.page?.locator(element);
   await expect(result).toContainText(fee);
 });

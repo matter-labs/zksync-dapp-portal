@@ -65,6 +65,7 @@ jobs:
                 "@navigation and not @emptyWallet",
                 "@artifacts and @various",
                 "@artifacts and @transactionsItems",
+                "@transactions and @deposit and @blockchain",
                 "@transactions and @withdraw",
                 "@various and @emptyWallet",
                 "@actions and @contacts"

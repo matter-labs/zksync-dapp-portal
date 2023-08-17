@@ -67,6 +67,7 @@ export default defineNuxtConfig({
       walletConnectProjectID: process.env.WALLET_CONNECT_PROJECT_ID,
       turnstileKey: process.env.TURNSTILE_KEY,
       nodeType: process.env.NODE_TYPE as undefined | "memory" | "dockerized" | "hyperchain",
+      ankrToken: process.env.ANKR_TOKEN,
     },
   },
   vite: {

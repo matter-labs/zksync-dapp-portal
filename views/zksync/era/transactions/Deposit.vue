@@ -60,7 +60,7 @@
         v-model:token-address="amountInputTokenAddress"
         :tokens="availableTokens"
         :balances="availableBalances"
-        :maxAmount="maxAmount"
+        :max-amount="maxAmount"
         :loading="tokensRequestInProgress || balancesLoading"
         autofocus
       />
@@ -249,7 +249,8 @@ watch(
   (address) => {
     if (!address) return;
     eraTokensStore.requestTokenPrice(address);
-  }
+  },
+  { immediate: true }
 );
 watch(allBalancePricesLoaded, (loaded) => {
   if (loaded && !selectedTokenAddress.value) {
@@ -329,13 +330,6 @@ const {
   eraProviderStore.requestProvider,
   onboardStore.getPublicClient
 );
-watch(
-  () => feeToken?.value?.address,
-  (address) => {
-    if (!address) return;
-    eraTokensStore.requestTokenPrice(address);
-  }
-);
 watch(enoughBalanceToCoverFee, (isEnough) => {
   if (!isEnough && transactionConfirmModalOpened.value) {
     transactionConfirmModalOpened.value = false;
@@ -349,6 +343,9 @@ const maxAmount = computed(() => {
     return undefined;
   }
   if (feeToken.value?.address === selectedToken.value.address) {
+    if (BigNumber.from(tokenBalance.value).isZero()) {
+      return "0";
+    }
     if (!fee.value) {
       return undefined;
     }
