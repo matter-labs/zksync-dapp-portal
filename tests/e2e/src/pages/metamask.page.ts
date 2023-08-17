@@ -176,7 +176,7 @@ export class MetamaskPage extends BasePage {
     await newPage?.locator("//button[@data-testid='popover-close']").click();
     await newPage?.locator(this.copyWalletAddress).click();
     const address = await newPage?.evaluate("navigator.clipboard.readText()");
-    await newPage?.close();
+    //await newPage?.close();
     await page.bringToFront();
     return address;
   }
