@@ -89,6 +89,10 @@ export class MainPage extends BasePage {
     return "//button[text()='Confirm']";
   }
 
+  async commonButtonByItsName(value: string) {
+    return `//button[contains(., '${value}')]`;
+  }
+
   async selectTransaction(transactionType: string) {
     try {
       let route: string;
@@ -122,7 +126,7 @@ export class MainPage extends BasePage {
   async makeTransaction(actionType: string, transactionType: string) {
     metamaskPage = await new MetamaskPage(this.world);
     result = await this.getTransactionSelector(transactionType);
-
+    await metamaskPage.callTransactionInterface();
     await metamaskPage.operateTransaction(result);
   }
 

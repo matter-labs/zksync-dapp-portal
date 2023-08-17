@@ -204,14 +204,14 @@ export class MetamaskPage extends BasePage {
   }
 
   async callTransactionInterface() {
-    const externalPage = await new ExternalPage(this.world);
-    selector = await externalPage.commonButtonByItsName("Change wallet network");
+    const mainPage = await new MainPage(this.world);
+    selector = await mainPage.commonButtonByItsName("Change wallet network");
     const networkChangeRequest = await this.world.page?.locator(selector).isVisible();
     if (networkChangeRequest) {
       await this.switchNetwork();
     }
     await setTimeout(config.defaultTimeout.timeout);
-    selector = await externalPage.commonButtonByItsName("Continue");
+    selector = await mainPage.commonButtonByItsName("Continue");
     const continueBtn = await this.world.page?.locator(selector).isVisible();
     if (continueBtn) {
       await this.click(selector);
