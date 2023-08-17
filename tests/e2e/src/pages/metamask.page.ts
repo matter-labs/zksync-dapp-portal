@@ -213,7 +213,8 @@ export class MetamaskPage extends BasePage {
     await setTimeout(config.defaultTimeout.timeout);
     selector = await mainPage.commonButtonByItsName("Continue");
     const continueBtn = await this.world.page?.locator(selector).isVisible();
-    if (continueBtn) {
+    const modalCard = await this.world.page?.locator(mainPage.modalCard).isVisible();
+    if (continueBtn && !modalCard) {
       await this.click(selector);
     }
   }
