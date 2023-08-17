@@ -14,7 +14,7 @@ Feature: Withdraw
     Then Element with "text" "0x2CF4F78917A16C9584AeB5d4c5bD2713d724C75d" should be "visible"
     Then Element with "class" "amount-input-field" should be "visible"
     Then Element with "class" "amount-input-field" should be "clickable"
-    Then Element with "alt" "ETH token icon" should be "visible"
+    Then Element with "partial src" "eth.svg" should be "visible"
     Then Element with "placeholder" "0" should be "visible"
     Then Element with "class" "break-all" should be "visible"
     Then Element with "data-testid" "token-dropDown" should be "visible"
