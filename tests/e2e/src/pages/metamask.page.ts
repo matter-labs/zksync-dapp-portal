@@ -5,7 +5,6 @@ import { BasePage } from "./base.page";
 import { MainPage } from "./main.page";
 import { Extension } from "../data/data";
 import { depositTag, Helper, transactionsTag } from "../helpers/helper";
-import { ExternalPage } from "../pages/external.page";
 import { config, wallet } from "../support/config";
 
 import type { ICustomWorld } from "../support/custom-world";
@@ -221,7 +220,7 @@ export class MetamaskPage extends BasePage {
   }
 
   async operateTransaction(triggeredElement: string) {
-    const externalPage = await new ExternalPage(this.world);
+    const mainPage = await new MainPage(this.world);
     const popUpContext = await this.catchPopUpByClick(`//span[contains(text(),'${triggeredElement}')]`);
     await setTimeout(2.5 * 1000);
     await popUpContext?.setViewportSize(config.popUpWindowSize);
@@ -240,7 +239,7 @@ export class MetamaskPage extends BasePage {
           allowanceFinalized = await this.world.page?.locator(selector).isVisible();
         } while (!allowanceFinalized);
       }
-      await this.click(await externalPage.buttonOfModalCard("Continue"));
+      await this.click(await mainPage.buttonOfModalCard("Continue"));
     }
   }
 
