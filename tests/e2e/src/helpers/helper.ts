@@ -24,7 +24,7 @@ let authorizedTag: boolean;
 let unauthorizedTag: boolean;
 let emptyWalletTag: boolean;
 let incognitoTag: boolean;
-let transactionsTag: boolean;
+export let transactionsTag: boolean;
 let noBlockChain: boolean;
 let wallet_1: string[];
 let wallet_2: string[];
