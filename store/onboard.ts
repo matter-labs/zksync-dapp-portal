@@ -1,7 +1,7 @@
 import { configureChains, createConfig, getPublicClient, getWalletClient } from "@wagmi/core";
 import { zkSync, zkSyncTestnet } from "@wagmi/core/chains";
 import { publicProvider } from "@wagmi/core/providers/public";
-import { EthereumClient, w3mConnectors, w3mProvider } from "@web3modal/ethereum";
+import { EthereumClient, w3mConnectors } from "@web3modal/ethereum";
 import { Web3Modal } from "@web3modal/html";
 import { defineStore, storeToRefs } from "pinia";
 
@@ -62,10 +62,7 @@ export const useOnboardStore = defineStore("onboard", () => {
   const { selectedColorMode } = useColorMode();
   const { selectedNetwork, l1Network } = storeToRefs(useNetworkStore());
 
-  const { publicClient } = configureChains(extendedChains, [
-    w3mProvider({ projectId: env.walletConnectProjectID }),
-    publicProvider(),
-  ]);
+  const { publicClient } = configureChains(extendedChains, [publicProvider()]);
   const wagmiClient = createConfig({
     autoConnect: true,
     connectors: w3mConnectors({
@@ -110,7 +107,7 @@ export const useOnboardStore = defineStore("onboard", () => {
     {
       projectId: env.walletConnectProjectID,
       enableNetworkView: false,
-      enableAccountView: true,
+      enableAccountView: false,
       themeMode: selectedColorMode.value,
       explorerRecommendedWalletIds: [
         "c57ca95b47569778a828d19178114f4db188b89b763c899ba0be274e97267d96",

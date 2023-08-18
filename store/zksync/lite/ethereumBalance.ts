@@ -34,7 +34,7 @@ export const useLiteEthereumBalanceStore = defineStore("liteEthereumBalances", (
     }
     return Object.values(tokens.value).map((token) => ({
       ...token,
-      amount: ethereumBalance.value!.find((balance) => balance.contractAddress === token.address)?.tokenBalance ?? "0",
+      amount: ethereumBalance.value!.find((balance) => balance.address === token.address)?.amount ?? "0",
     }));
   });
   watch(
