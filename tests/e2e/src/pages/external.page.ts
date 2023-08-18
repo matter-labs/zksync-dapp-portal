@@ -3,7 +3,6 @@ import { setTimeout } from "timers/promises";
 
 import { BasePage } from "./base.page";
 import { address, MetamaskPage } from "./metamask.page";
-import { MainPage } from "../pages/main.page";
 import { config } from "../support/config";
 
 import type { ICustomWorld } from "../support/custom-world";
@@ -22,6 +21,10 @@ export class ExternalPage extends BasePage {
     return "//*[@id='react-select-address-chain-select-live-region']";
   }
 
+  get menuWalletButton() {
+    return "//button/div[contains(text(), '0x')]";
+  }
+
   async revokeButton(value: string) {
     return `//button[contains(text(), '${value}')]`;
   }
@@ -32,13 +35,8 @@ export class ExternalPage extends BasePage {
     return result;
   }
 
-  async buttonOfModalCard(buttonText: string) {
-    const mainPage = new MainPage(this.world);
-    return `${mainPage.modalCard}//button[contains(., '${buttonText}')]`;
-  }
-
   async clickByMenuWalletButton() {
-    selector = "//button/div[contains(text(), '0x')]";
+    selector = this.menuWalletButton;
     await this.world.page?.waitForSelector(selector);
     await this.world.page?.locator(selector).first().click(config.defaultTimeout);
   }
