@@ -11,9 +11,9 @@
     "test:unit": "vitest --environment jsdom",
     "test:unit:ci": "TZ=UTC-3 vitest --environment jsdom --run",
     "generate": "nuxt generate && npm run generate-meta",
-    "generate:node:memory": "cross-env NODE_TYPE=memory nuxt generate",
-    "generate:node:docker": "cross-env NODE_TYPE=dockerized nuxt generate",
-    "generate:node:hyperchain": "ts-node --transpile-only scripts/hyperchains/empty-check.ts && cross-env NODE_TYPE=hyperchain nuxt generate",
+    "generate:node:memory": "cross-env NODE_TYPE=memory npm run generate",
+    "generate:node:docker": "cross-env NODE_TYPE=dockerized npm run generate",
+    "generate:node:hyperchain": "ts-node --transpile-only scripts/hyperchains/empty-check.ts && cross-env NODE_TYPE=hyperchain npm run generate",
     "generate-meta": "ts-node --transpile-only scripts/updateBridgeMetaTags.ts",
     "hyperchain:create": "ts-node --transpile-only scripts/hyperchains/create.ts",
     "hyperchain:migrate": "ts-node --transpile-only scripts/hyperchains/migrate.ts",
@@ -61,6 +61,7 @@
     "*.{vue,js,ts,html,json}": "npm run lint"
   },
   "dependencies": {
+    "@ankr.com/ankr.js": "^0.4.0",
     "@chenfengyuan/vue-qrcode": "^2.0.0",
     "@headlessui/vue": "^1.7.7",
     "@heroicons/vue": "^2.0.14",
@@ -80,7 +81,6 @@
     "@wagmi/core": "^1.3.3",
     "@web3modal/ethereum": "^2.6.2",
     "@web3modal/html": "^2.6.2",
-    "alchemy-sdk": "^2.8.1",
     "cheerio": "^1.0.0-rc.12",
     "crypto-js": "^4.1.1",
     "date-fns": "^2.29.3",

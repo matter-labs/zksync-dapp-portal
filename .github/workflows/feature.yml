@@ -29,6 +29,12 @@ jobs:
         run: |
           npm run lint
 
+      - name: Setup .env
+        run: |
+          echo "WALLET_CONNECT_PROJECT_ID=${{ secrets.WALLET_CONNECT_PROJECT_ID }}" > .env
+          echo "ANKR_TOKEN=${{ secrets.ANKR_TOKEN }}" >> .env
+          echo "TURNSTILE_KEY=${{ secrets.ANKR_TOKEN }}" >> .env
+
       - name: Build
         run: |
           npm run generate
