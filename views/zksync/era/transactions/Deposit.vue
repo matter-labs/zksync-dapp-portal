@@ -91,7 +91,7 @@
         </CommonAlert>
       </transition>
       <transition v-bind="TransitionAlertScaleInOutTransition">
-        <CommonAlert v-if="recommendedBalance && feeToken" class="mt-4" variant="error" :icon="ExclamationTriangleIcon">
+        <CommonAlert v-if="recommendedBalance && feeToken" class="mt-1" variant="error" :icon="ExclamationTriangleIcon">
           <p>
             Insufficient <span class="font-medium">{{ feeToken?.symbol }}</span> balance on
             {{ destinations.ethereum.label }} to cover the fee. We recommend having at least
