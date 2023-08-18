@@ -2,7 +2,7 @@
 import { setTimeout } from "timers/promises";
 
 import { BasePage } from "./base.page";
-import { MetamaskPage } from "./metamask.page";
+import { address, MetamaskPage } from "./metamask.page";
 import { MainPage } from "../pages/main.page";
 import { config } from "../support/config";
 
@@ -45,17 +45,12 @@ export class ExternalPage extends BasePage {
 
   async revokeAllowance() {
     metamaskPage = await new MetamaskPage(this.world);
-    console.log("going to take wallet address");
-    const currentWalletAddress = await metamaskPage.getCurrentWalletAddress();
-    console.log("Wallet address is " + currentWalletAddress);
     const networkChainId = "?chainId=5"; // Goerli
-    const revokeGoerliUrl = "https://revoke.cash/address/" + currentWalletAddress + networkChainId;
+    const revokeGoerliUrl = "https://revoke.cash/address/" + address + networkChainId;
     const networkForRevokeIsSelected = await this.checkNetworkForRevoke("Goerli");
     if (!networkForRevokeIsSelected) {
-      console.log("going to take insert revoke adress");
       await this.goTo(revokeGoerliUrl);
     }
-    console.log("Im on the revoke page");
     await setTimeout(config.defaultTimeout.timeout);
     selector = await this.revokeButton("Switch Network");
     const switchNetworkIsVisible = await this.world.page?.locator(selector).isVisible();

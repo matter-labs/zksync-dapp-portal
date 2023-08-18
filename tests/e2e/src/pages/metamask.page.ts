@@ -4,7 +4,7 @@ import { setTimeout } from "timers/promises";
 import { BasePage } from "./base.page";
 import { MainPage } from "./main.page";
 import { Extension } from "../data/data";
-import { depositTag, Helper } from "../helpers/helper";
+import { depositTag, Helper, transactionsTag } from "../helpers/helper";
 import { ExternalPage } from "../pages/external.page";
 import { config, wallet } from "../support/config";
 
@@ -14,6 +14,7 @@ let page: any;
 let element: any;
 let metamaskHomeUrl: string;
 let metamaskWelcomeUrl: string;
+export let address: string;
 let selector: string;
 let testId: any;
 let logoutTrigger: any = undefined;
@@ -168,23 +169,14 @@ export class MetamaskPage extends BasePage {
     }
   }
 
-  async getCurrentWalletAddress() {
-    console.log("create new page");
-    const newPage = await this.world.context?.newPage();
-    console.log("getting mm url");
-    await this.getMetamaskExtensionUrl();
-    console.log("going to go to mm url");
-    await newPage?.goto(metamaskWelcomeUrl);
-    console.log("reload a page");
-    await newPage?.reload();
-    await newPage?.locator("//button[@data-testid='popover-close']").click();
-    await newPage?.locator(this.copyWalletAddress).click();
-    console.log("going to copy address");
-    const address = await newPage?.evaluate("navigator.clipboard.readText()");
-    //await newPage?.close();
-    console.log("going to bring a previous page to front");
-    await page.bringToFront();
-    return address;
+  async extractCurrentWalletAddress() {
+    const currentURL = page.url();
+    await page.goto(metamaskWelcomeUrl);
+    await page.reload();
+    await page.locator("//button[@data-testid='popover-close']").click();
+    await page.locator(this.copyWalletAddress).click();
+    address = await page.evaluate("navigator.clipboard.readText()");
+    await page.goto(currentURL);
   }
 
   async authorizeInMetamaskExtension(secretPhrase: Array<string>, password: string) {
@@ -207,6 +199,9 @@ export class MetamaskPage extends BasePage {
       }
     }
     logoutTrigger = false;
+    if (transactionsTag) {
+      await this.extractCurrentWalletAddress();
+    }
   }
 
   async callTransactionInterface() {
