@@ -54,7 +54,6 @@ export default (
     if (fee.value.l1GasLimit && fee.value.maxFeePerGas && fee.value.maxPriorityFeePerGas) {
       return fee.value.l1GasLimit
         .mul(fee.value.maxFeePerGas)
-        .add(fee.value.l1GasLimit.mul(fee.value.maxPriorityFeePerGas))
         .add(fee.value.baseCost || "0")
         .toString();
     } else if (fee.value.l1GasLimit && fee.value.gasPrice) {

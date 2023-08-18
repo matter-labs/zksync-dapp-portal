@@ -74,7 +74,8 @@
       <transition v-bind="TransitionOpacity()">
         <div v-if="amountError" class="amount-input-error">
           <template v-if="amountError === 'insufficient_balance'">Insufficient balance</template>
-          <template v-else-if="amountError === 'exceeds_max_amount'">
+          <template v-else-if="amountError === 'exceeds_balance' && !maxAmount">Amount exceeds balance</template>
+          <template v-else-if="amountError === 'exceeds_max_amount' || amountError === 'exceeds_balance'">
             Max amount is
             <button
               type="button"
@@ -228,6 +229,9 @@ const setMax = () => {
 const amountError = computed(() => {
   if (!selectedToken.value) {
     return;
+  }
+  if (tokenBalance.value && totalComputeAmount.value.gt(tokenBalance.value.amount)) {
+    return "exceeds_balance";
   }
   if (props.maxAmount && totalComputeAmount.value.gt(props.maxAmount)) {
     if (BigNumber.from(props.maxAmount).isZero()) {

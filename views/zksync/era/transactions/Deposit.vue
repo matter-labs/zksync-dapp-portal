@@ -18,7 +18,7 @@
       :fee-values="feeValues"
       :destination="destination"
       :transaction="transaction"
-      :button-disabled="continueButtonDisabled || !enoughBalanceForTransaction"
+      :button-disabled="continueButtonDisabled"
       :estimate="estimate"
       :key="`${account.address}-${transactionKey}`"
       @new-transaction="resetForm"
@@ -26,7 +26,14 @@
       <template #alerts>
         <transition v-bind="TransitionAlertScaleInOutTransition">
           <div v-if="!enoughBalanceForTransaction" class="mx-4 my-3">
-            <CommonAlert variant="error" :icon="ExclamationTriangleIcon">
+            <CommonAlert v-if="amountError === 'exceeds_max_amount'" variant="error" :icon="ExclamationTriangleIcon">
+              <p>
+                The inputted amount is higher than the recommended maximum amount. This means your transaction might
+                fail
+              </p>
+              <button type="button" class="alert-link" @click="transactionConfirmModalOpened = false">Go back</button>
+            </CommonAlert>
+            <CommonAlert v-else-if="continueButtonDisabled" variant="error" :icon="ExclamationTriangleIcon">
               <p>
                 The fee has changed since the last estimation. Insufficient
                 <span class="font-medium">{{ selectedToken?.symbol }}</span> balance to pay for transaction. Please go
@@ -366,15 +373,7 @@ const totalComputeAmount = computed(() => {
     return BigNumber.from("0");
   }
 });
-const enoughBalanceForTransaction = computed(() => {
-  if (!fee.value || !tokenBalance.value || !selectedToken.value) {
-    return true;
-  }
-  const totalToPay = totalComputeAmount.value.add(
-    selectedToken.value.address === feeToken.value?.address ? fee.value : "0"
-  );
-  return BigNumber.from(tokenBalance.value).gte(totalToPay);
-});
+const enoughBalanceForTransaction = computed(() => !amountError.value);
 
 const transaction = computed<ConfirmationModalTransaction | undefined>(() => {
   const toAddress = props.address ?? account.value.address;
@@ -419,7 +418,7 @@ const continueButtonDisabled = computed(() => {
   if (
     !transaction.value ||
     !enoughBalanceToCoverFee.value ||
-    !!amountError.value ||
+    !(!amountError.value || amountError.value === "exceeds_max_amount") ||
     BigNumber.from(transaction.value.amount).isZero()
   )
     return true;
