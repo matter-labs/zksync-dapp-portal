@@ -93,6 +93,10 @@ export class MainPage extends BasePage {
     return `//button[contains(., '${value}')]`;
   }
 
+  async buttonOfModalCard(buttonText: string) {
+    return `${this.modalCard}//button[contains(., '${buttonText}')]`;
+  }
+
   async selectTransaction(transactionType: string) {
     try {
       let route: string;
