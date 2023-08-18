@@ -76,11 +76,6 @@ When(
   }
 );
 
-When("I choose {string} as token", config.stepTimeout, async function (this: ICustomWorld, token: string) {
-  mainPage = new MainPage(this);
-  await mainPage.chooseToken(token);
-});
-
 When(
   "Message {string} should be visible",
   { timeout: 181 * 1000 },
