@@ -30,7 +30,7 @@
       <TransactionFeeDetails class="my-2" label="Fee:" :fee-token="feeToken" :fee-amount="lastFee" />
 
       <TransactionConfirmModalFooter>
-        <template #alerts>
+        <template #alerts v-if="!newFeeAlert">
           <slot name="alerts" />
         </template>
         <template #default>
