@@ -169,14 +169,20 @@ export class MetamaskPage extends BasePage {
   }
 
   async getCurrentWalletAddress() {
+    console.log("create new page");
     const newPage = await this.world.context?.newPage();
+    console.log("getting mm url");
     await this.getMetamaskExtensionUrl();
+    console.log("going to go to mm url");
     await newPage?.goto(metamaskWelcomeUrl);
+    console.log("reload a page");
     await newPage?.reload();
     await newPage?.locator("//button[@data-testid='popover-close']").click();
     await newPage?.locator(this.copyWalletAddress).click();
+    console.log("going to copy address");
     const address = await newPage?.evaluate("navigator.clipboard.readText()");
     //await newPage?.close();
+    console.log("going to bring a previous page to front");
     await page.bringToFront();
     return address;
   }
