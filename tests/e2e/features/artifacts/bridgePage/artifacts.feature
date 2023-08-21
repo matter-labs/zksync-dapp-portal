@@ -181,7 +181,7 @@ Feature: Withdraw
         Then Element with "xpath" "//*[contains(@class,'solid') and text()=' Connect wallet ']" should be "visible"
         Then Element with "xpath" "//*[contains(@class,'solid') and text()=' Connect wallet ']" should be "clickable"
 
-  @id1609
+  @id1609 @id1607
   Scenario: Check Explore ecosystem button on Bridge Deposit
     Given I go to page "/bridge?network=era-goerli"
     When I click by text "Deposit"
@@ -190,6 +190,22 @@ Feature: Withdraw
     Then Message "Transaction submitted" should be visible
     Then Element with "partial text" "Explore ecosystem" should be "visible"
     Then Element with "href" "https://ecosystem.zksync.io" should be "visible"
-    Then Element with "href" "https://ecosystem.zksync.io" should be "clickable"
     Then I click by "partial text" with "Explore ecosystem" value
     Then New page has "https://ecosystem.zksync.io/" address
+    #id1607 Check other elements on window
+    Then Element with "partial class" "progress-plane-animation" should be "visible"
+    Then Element with "text" " Track status " should be "visible"
+    Then Element with "text" " Your funds will be available on " should be "visible"
+    Then Element with "text" " Make another transaction " should be "visible"
+
+    @id1611
+    Scenario: Check the editing recipient address in Bridge (Deposit)
+      Given I go to page "/bridge?network=era-goerli"
+      When I click by text "Deposit"
+      When I click by "text" with "Your zkSync Era Testnet account" value
+      Then Element with "text" "Bridge to" should be "visible"
+      When I fill the "Address or ENS or contact name" input field on the Contacts page with "0x52B6d10d7d865B3d4103f8809AA3521288568f46" text
+      When I click by text "0x52B6...f46"
+      Then Element with "text" "zkSync Era Testnet address" should be "visible"
+      Then Element with "text" "0x52B6...f46" should be "visible"
+      
