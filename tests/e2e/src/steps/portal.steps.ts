@@ -171,9 +171,9 @@ Then("Clipboard is not empty", async function (this: ICustomWorld) {
 
 Given(
   "I fill the input field contains {string} type {string} value with {string} text",
-  async function (this: ICustomWorld, inputIDType: string, inputIDName: string, text: string) {
+  async function (this: ICustomWorld, selectorType: string, selectorValue: string, text: string) {
     basePage = new BasePage(this);
-    await basePage.fillSpecificField(inputIDType, inputIDName, text);
+    await basePage.fillSpecificField(selectorType, selectorValue, text);
   }
 );
 
