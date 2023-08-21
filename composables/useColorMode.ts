@@ -1,10 +1,11 @@
 import { useColorMode } from "@vueuse/core";
 
-export default () => {
-  const { store } = useColorMode({
-    initialValue: "dark",
-  });
+const { store } = useColorMode({
+  initialValue: "dark",
+  listenToStorageChanges: false,
+});
 
+export default () => {
   const selectedColorMode = computed(() => (store.value === "auto" ? "dark" : store.value));
 
   const switchColorMode = (colorMode?: "dark" | "light") => {

@@ -73,7 +73,9 @@
       </div>
       <transition v-bind="TransitionOpacity()">
         <div v-if="amountError" class="amount-input-error">
-          <template v-if="amountError === 'insufficient_balance'">Insufficient balance</template>
+          <template v-if="amountError === 'insufficient_balance' || maxDecimalAmount === '0'">
+            Insufficient balance
+          </template>
           <template v-else-if="amountError === 'exceeds_balance' && !maxAmount">Amount exceeds balance</template>
           <template v-else-if="amountError === 'exceeds_max_amount' || amountError === 'exceeds_balance'">
             Max amount is
