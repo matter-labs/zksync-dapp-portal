@@ -132,7 +132,7 @@ Feature: Withdraw
 
     @id756
     Scenario: Check the Bridge artifacts on Deposit (Testnet)
-      Given I go to "http://localhost:3000/bridge?network=era-goerli" url
+      Given I go to page "/bridge?network=era-goerli"
       Then Element with "text" "Bridge" should be "visible"
       Then Element with "text" "Deposit" should be "visible"
       Then Element with "text" "Withdraw" should be "visible"
@@ -193,4 +193,3 @@ Feature: Withdraw
     Then Element with "href" "https://ecosystem.zksync.io" should be "clickable"
     Then I click by "partial text" with "Explore ecosystem" value
     Then New page has "https://ecosystem.zksync.io/" address
-    
