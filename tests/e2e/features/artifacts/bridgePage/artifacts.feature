@@ -188,15 +188,16 @@ Feature: Withdraw
     When I choose "ETH" as token and insert "0.0000000001" as amount
     When I "confirm" transaction after clicking "Add funds to zkSync Era Testnet" button
     Then Message "Transaction submitted" should be visible
-    Then Element with "partial text" "Explore ecosystem" should be "visible"
+    Then Element with "text" " Explore ecosystem " should be "visible"
     Then Element with "href" "https://ecosystem.zksync.io" should be "visible"
-    Then I click by "partial text" with "Explore ecosystem" value
-    Then New page has "https://ecosystem.zksync.io/" address
-    #id1607 Check other elements on window
+        #id1607 Check other elements on window
     Then Element with "partial class" "progress-plane-animation" should be "visible"
     Then Element with "text" " Track status " should be "visible"
     Then Element with "text" " Your funds will be available on " should be "visible"
     Then Element with "text" " Make another transaction " should be "visible"
+        #Check redirection
+    Then I click by "text" with " Explore ecosystem " value
+    Then New page has "https://ecosystem.zksync.io/" address
 
     @id1611
     Scenario: Check the editing recipient address in Bridge (Deposit)
@@ -204,7 +205,7 @@ Feature: Withdraw
       When I click by text "Deposit"
       When I click by "text" with "Your zkSync Era Testnet account" value
       Then Element with "text" "Bridge to" should be "visible"
-      When I fill the "Address or ENS or contact name" input field on the Contacts page with "0x52B6d10d7d865B3d4103f8809AA3521288568f46" text
+      When I fill the input field contains "placeholder" type "Address or ENS or contact name" value with "0x52B6d10d7d865B3d4103f8809AA3521288568f46" text
       When I click by text "0x52B6...f46"
       Then Element with "text" "zkSync Era Testnet address" should be "visible"
       Then Element with "text" "0x52B6...f46" should be "visible"

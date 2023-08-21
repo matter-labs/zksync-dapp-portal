@@ -94,7 +94,8 @@ export class MetamaskPage extends BasePage {
   }
 
   get confirmBtn() {
-    return "//div[@class='confirmation-footer']//button[2]";
+    //return "//div[@class='confirmation-footer']//button[2]";
+    return "//*[contains(text(), 'Switch network')]";
   }
 
   get mainBtn() {
