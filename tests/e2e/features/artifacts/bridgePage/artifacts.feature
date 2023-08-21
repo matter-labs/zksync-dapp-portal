@@ -191,6 +191,6 @@ Feature: Withdraw
     Then Element with "partial text" "Explore ecosystem" should be "visible"
     Then Element with "href" "https://ecosystem.zksync.io" should be "visible"
     Then Element with "href" "https://ecosystem.zksync.io" should be "clickable"
-    Then I click by "text" with "Explore ecosystem" value
+    Then I click by "partial text" with "Explore ecosystem" value
     Then New page has "https://ecosystem.zksync.io/" address
     
