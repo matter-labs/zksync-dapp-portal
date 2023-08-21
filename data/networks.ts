@@ -29,6 +29,10 @@ export const l1Networks = {
   sepolia: {
     ...sepolia,
     name: "Sepolia Testnet",
+    rpcUrls: {
+      public: { http: ["https://sepolia.gateway.tenderly.co"] },
+      default: { http: ["https://sepolia.gateway.tenderly.co"] },
+    },
   },
 } as const;
 export type L1Network = Chain;

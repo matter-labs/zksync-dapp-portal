@@ -53,6 +53,21 @@ To use Portal with your ZK Stack Hyperchain, see the guide [here](./hyperchains/
 
 ## 🛠 Development
 
+### Advanced configuration
+
+#### L1 Balances:
+By default, L1 balances are fetched via a public RPC. For faster loading speeds and reduced load on your L1 RPC provider, consider using [Ankr's RPC service](https://www.ankr.com/rpc/). Obtain an Ankr token and update the `.env` file:
+```bash
+ANKR_TOKEN=your_ankr_token_here
+```
+
+#### Wallet Connect Project Setup:
+Before deploying your own version of the Portal, ensure you create your own Wallet Connect project on [walletconnect.com](https://walletconnect.com). After creating the project, update the project ID in the `.env` file:
+```bash
+WALLET_CONNECT_PROJECT_ID=your_project_id_here
+```
+
+
 ### 🔧 Setup
 
 Ensure you've installed the necessary dependencies:

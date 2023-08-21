@@ -10,6 +10,7 @@ import { useOnboardStore } from "@/store/onboard";
 import { useEraTokensStore } from "@/store/zksync/era/tokens";
 
 export const useEraEthereumBalanceStore = defineStore("eraEthereumBalances", () => {
+  const runtimeConfig = useRuntimeConfig();
   const onboardStore = useOnboardStore();
   const ethereumBalancesStore = useEthereumBalanceStore();
   const eraTokensStore = useEraTokensStore();
@@ -24,13 +25,7 @@ export const useEraEthereumBalanceStore = defineStore("eraEthereumBalances", () 
     if (!tokens.value) throw new Error("Tokens are not available");
     if (!ethereumBalance.value) throw new Error("Ethereum balances are not available");
 
-    return Object.fromEntries(
-      ethereumBalance.value
-        .filter((token) => token.tokenBalance)
-        .map((token) => {
-          return [token.contractAddress, token.tokenBalance!];
-        })
-    );
+    return Object.fromEntries(ethereumBalance.value.map((token) => [token.address, token.amount]));
   };
   const getBalancesFromRPC = async () => {
     await eraTokensStore.requestTokens();
@@ -71,7 +66,7 @@ export const useEraEthereumBalanceStore = defineStore("eraEthereumBalances", () 
     async () => {
       if (!l1Network.value) throw new Error(`L1 network is not available on ${selectedNetwork.value.name}`);
 
-      if (["mainnet", "goerli", "sepolia"].includes(l1Network.value?.network)) {
+      if (["mainnet", "goerli"].includes(l1Network.value?.network) && runtimeConfig.public.ankrToken) {
         return getBalancesFromApi();
       } else {
         return getBalancesFromRPC();
