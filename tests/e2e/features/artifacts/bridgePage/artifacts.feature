@@ -186,7 +186,6 @@ Feature: Withdraw
     Given I go to page "/bridge?network=era-goerli"
     When I click by text "Deposit"
     When I choose "ETH" as token and insert "0.0000000001" as amount
-    Then I confirm the network switching
     When I "confirm" transaction after clicking "Add funds to zkSync Era Testnet" button
     Then Message "Transaction submitted" should be visible
     Then Element with "partial text" "Explore ecosystem" should be "visible"
