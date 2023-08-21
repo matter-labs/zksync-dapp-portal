@@ -28,8 +28,8 @@ Feature: Artifacts - UI
     Then Element with "placeholder" "Address or ENS or contact name" should be "visible"
     #add new contact
     Given I click by "text" with "Add contact" value
-    When I fill the "Name of the contact" input field on the Contacts page with "My second contact" text
-    When I fill the "Ethereum address" input field on the Contacts page with "0x26A4c5Dfe2cA3c9E7E8C417B689F41b6b5745C37" text
+    When I fill the input field contains "placeholder" type "Name of the contact" value with "My second contact" text
+    When I fill the input field contains "placeholder" type "Ethereum address" value with "0x26A4c5Dfe2cA3c9E7E8C417B689F41b6b5745C37" text
     When I click on the Save contact button
     When I close modal card
     Then Element with "text" "My second contact" should be "visible"
@@ -43,8 +43,8 @@ Feature: Artifacts - UI
     Given I am on the Main page
     When I go to page "/contacts"
     When I click by text "Add contact"
-    When I fill the "Name of the contact" input field on the Contacts page with "Test" text
-    When I fill the "Ethereum address" input field on the Contacts page with "<An incorrect address value>" text
+    When I fill the input field contains "placeholder" type "Name of the contact" value with "Test" text
+    When I fill the input field contains "placeholder" type "Ethereum address" value with "<An incorrect address value>" text
     Then I click by text "Save contact"
     Then Element with "text" "Valid 0x Ethereum address required" should be "visible"
     Then Element with "partial class" "has-error" should be "visible"
@@ -62,8 +62,8 @@ Feature: Artifacts - UI
     When I go to page "/contacts"
       #add new contact
     Given I click by "text" with "Add contact" value
-    When I fill the "Name of the contact" input field on the Contacts page with "My second contact" text
-    When I fill the "Ethereum address" input field on the Contacts page with "0x26A4c5Dfe2cA3c9E7E8C417B689F41b6b5745C37" text
+    When I fill the input field contains "placeholder" type "Name of the contact" value with "My second contact" text
+    When I fill the input field contains "placeholder" type "Ethereum address" value with "0x26A4c5Dfe2cA3c9E7E8C417B689F41b6b5745C37" text
     When I click on the Save contact button
     When I close modal card
       #check the UI artifacts
