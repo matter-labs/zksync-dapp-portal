@@ -147,11 +147,11 @@ Feature: Withdraw
       Then Element with "id" "amount-input" should be "clickable"
       Then Element with "text" " Max " should be "visible"
       Then Element with "text" " Max " should be "clickable"
-      #Block To:
+      #Block
       Then Element with "text" "Your zkSync Era Testnet account" should be "visible"
       Then Element with "text" "Your zkSync Era Testnet account" should be "clickable"
-      Then Element with "text" "0xa439...046" should be "visible"
-      Then Element with "text" "0xa439...046" should be "clickable"
+      Then Element with "text" "0x2CF4...75d" should be "visible"
+      Then Element with "text" "0x2CF4...75d" should be "clickable"
       Then Element with "class" "address-avatar address-card-avatar" should be "visible"
       Then Element with "partial src" "eth.svg" should be "visible"
       #Fee block
