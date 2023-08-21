@@ -64,7 +64,7 @@ Feature: Withdraw
     Given I go to page "/transaction/zksync/era/withdraw/?network=era-<network>"
     When I click by "testId" with "your-account" value
     Then I click by "testId" with "token-dropDown" value
-    When I fill the "Symbol or address" input field on the Contacts page with "USDC" text
+    When I fill the input field contains "placeholder" type "Symbol or address" value with "USDC" text
     Then Element with "text" "<token name>" should be "visible"
     Then Element with "text" "<token address>" should be "visible"
     Then Element with "class" "token-balance-amount" should be "visible"
@@ -80,7 +80,7 @@ Feature: Withdraw
     Given I go to page "/transaction/zksync/era/withdraw/?network=era-<network>"
     When I click by "testId" with "your-account" value
     Then I click by "testId" with "token-dropDown" value
-    When I fill the "Symbol or address" input field on the Contacts page with "AAA" text
+    When I fill the input field contains "placeholder" type "Symbol or address" value with "AAA" text
     Then Element with "partial string" 'No tokens was found for "AAA"' should be "visible"
     Then Element with "partial text" "Make sure you are using correct zkSync network" should be "visible"
 
