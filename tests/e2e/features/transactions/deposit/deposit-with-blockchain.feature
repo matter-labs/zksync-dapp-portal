@@ -22,7 +22,6 @@ Feature: Deposit
   Scenario: Make a deposit with approving an allowance
     Given I reset allowance
     Given I go to the main page
-    Given I am on the Main page
     Given I go to "Deposit" transaction section
     When I click by "text" with "Your account" value
     Then Element with "testId" "fee-amount" should be "visible"

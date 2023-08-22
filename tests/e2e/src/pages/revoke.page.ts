@@ -3,6 +3,7 @@ import { setTimeout } from "timers/promises";
 
 import { BasePage } from "./base.page";
 import { address, MetamaskPage } from "./metamask.page";
+import { Helper } from "../helpers/helper";
 import { config } from "../support/config";
 
 import type { ICustomWorld } from "../support/custom-world";
@@ -11,7 +12,7 @@ let metamaskPage: any;
 let result: any;
 let selector: string;
 
-export class ExternalPage extends BasePage {
+export class RevokePage extends BasePage {
   constructor(world: ICustomWorld) {
     super(world);
   }
@@ -25,24 +26,47 @@ export class ExternalPage extends BasePage {
     return "//button/div[contains(text(), '0x')]";
   }
 
+  get revokeURL() {
+    return "https://revoke.cash/";
+  }
+
   async revokeButton(value: string) {
     return `//button[contains(text(), '${value}')]`;
   }
 
+  async login() {
+    const basePage = new BasePage(this.world);
+    metamaskPage = new MetamaskPage(this.world);
+    const revokeUrl = this.revokeURL;
+    await basePage.goTo(revokeUrl);
+    await basePage.clickByText("Connect Wallet");
+    const popUpContext = await metamaskPage.catchPopUpByClick(`//button[contains(text(),'MetaMask')]`);
+    await popUpContext?.setViewportSize(config.popUpWindowSize);
+    await popUpContext?.click(metamaskPage.nextButton);
+    await popUpContext?.click(metamaskPage.confirmTransaction);
+  }
+
+  async logout() {
+    const basePage = new BasePage(this.world);
+    await this.clickByMenuWalletButton();
+    await basePage.clickByText("Disconnect");
+  }
+
   async checkNetworkForRevoke(network: string) {
+    const helper = await new Helper(this.world);
     const selector = `${this.networkSelectorsListForRevoke}/..//img[@alt='${network}']`;
-    result = await this.world.page?.locator(selector).first().isVisible();
+    result = await helper.checkElementVisible(selector);
     return result;
   }
 
   async clickByMenuWalletButton() {
     selector = this.menuWalletButton;
-    await this.world.page?.waitForSelector(selector);
-    await this.world.page?.locator(selector).first().click(config.defaultTimeout);
+    await this.click(selector);
   }
 
   async revokeAllowance() {
     metamaskPage = await new MetamaskPage(this.world);
+    const helper = await new Helper(this.world);
     const networkChainId = "?chainId=5"; // Goerli
     const revokeGoerliUrl = "https://revoke.cash/address/" + address + networkChainId;
     const networkForRevokeIsSelected = await this.checkNetworkForRevoke("Goerli");
@@ -51,7 +75,7 @@ export class ExternalPage extends BasePage {
     }
     await setTimeout(config.defaultTimeout.timeout);
     selector = await this.revokeButton("Switch Network");
-    const switchNetworkIsVisible = await this.world.page?.locator(selector).isVisible();
+    const switchNetworkIsVisible = await helper.checkElementVisible(selector);
     if (switchNetworkIsVisible) {
       const popUpContext = await metamaskPage.catchPopUpByClick(selector);
       await popUpContext?.setViewportSize(config.popUpWindowSize);
@@ -60,7 +84,7 @@ export class ExternalPage extends BasePage {
 
     await setTimeout(config.defaultTimeout.timeout);
     selector = await this.revokeButton("Revoke");
-    const revokeButtonIsVisible = await this.world.page?.locator(selector).isVisible();
+    const revokeButtonIsVisible = await helper.checkElementVisible(selector);
     if (revokeButtonIsVisible) {
       const popUpContext = await metamaskPage.catchPopUpByClick(selector);
       await popUpContext?.setViewportSize(config.popUpWindowSize);
@@ -69,12 +93,7 @@ export class ExternalPage extends BasePage {
     }
 
     selector = await this.revokeButton("Revoking");
-    let revokingButtonIsVisible = await this.world.page?.locator(selector).isVisible();
-    if (revokingButtonIsVisible) {
-      do {
-        await setTimeout(3 * 1000);
-        revokingButtonIsVisible = await this.world.page?.locator(selector).isVisible();
-      } while (revokingButtonIsVisible);
-    }
+    await helper.checkElementVisible(selector); // should appear
+    await helper.checkElementHidden(selector); // should disappear
   }
 }

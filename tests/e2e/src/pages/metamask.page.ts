@@ -169,12 +169,13 @@ export class MetamaskPage extends BasePage {
   }
 
   async extractCurrentWalletAddress() {
+    const helper = await new Helper(this.world);
     const currentURL = page.url();
     await page.goto(metamaskWelcomeUrl);
     await page.reload();
     await page.locator("//button[@data-testid='popover-close']").click();
     await page.locator(this.copyWalletAddress).click();
-    address = await page.evaluate("navigator.clipboard.readText()");
+    address = await helper.getClipboardValue();
     await page.goto(currentURL);
   }
 
@@ -204,43 +205,39 @@ export class MetamaskPage extends BasePage {
   }
 
   async callTransactionInterface() {
+    const helper = await new Helper(this.world);
     const mainPage = await new MainPage(this.world);
     selector = await mainPage.commonButtonByItsName("Change wallet network");
-    const networkChangeRequest = await this.world.page?.locator(selector).isVisible();
+    const networkChangeRequest = await helper.checkElementVisible(selector);
     if (networkChangeRequest) {
       await this.switchNetwork();
     }
     await setTimeout(config.defaultTimeout.timeout);
     selector = await mainPage.commonButtonByItsName("Continue");
-    const continueBtn = await this.world.page?.locator(selector).isVisible();
-    const modalCard = await this.world.page?.locator(mainPage.modalCard).isVisible();
+    const continueBtn = await helper.checkElementVisible(selector);
+    const modalCard = await helper.checkElementVisible(mainPage.modalCard);
     if (continueBtn && !modalCard) {
       await this.click(selector);
     }
   }
 
-  async operateTransaction(triggeredElement: string) {
+  async approveAllovance(triggeredElement: string) {
+    const helper = await new Helper(this.world);
     const mainPage = await new MainPage(this.world);
+    selector = `${mainPage.modalCard}//*[contains(text(), 'Allowance approved')]`;
+    if (triggeredElement === "Approve allowance") {
+      await helper.checkElementVisible(selector);
+      await helper.checkElementHidden(selector);
+      await this.click(await mainPage.buttonOfModalCard("Continue"));
+    }
+  }
+
+  async operateTransaction(triggeredElement: string) {
     const popUpContext = await this.catchPopUpByClick(`//span[contains(text(),'${triggeredElement}')]`);
     await setTimeout(2.5 * 1000);
     await popUpContext?.setViewportSize(config.popUpWindowSize);
-    // will be required for metamask > v10.14.1
-    // if (triggeredElement === "Approve allowance") {
-    //   await popUpContext?.click(this.metamaskUseDefaultButton);
-    // }
     await popUpContext?.click(this.confirmTransaction);
-
-    if (triggeredElement === "Approve allowance") {
-      selector = "//div[@class='modal-card']//*[contains(text(), 'Allowance approved')]";
-      let allowanceFinalized = await this.world.page?.locator(selector).isVisible();
-      if (!allowanceFinalized) {
-        do {
-          await setTimeout(5 * 1000);
-          allowanceFinalized = await this.world.page?.locator(selector).isVisible();
-        } while (!allowanceFinalized);
-      }
-      await this.click(await mainPage.buttonOfModalCard("Continue"));
-    }
+    await this.approveAllovance(triggeredElement);
   }
 
   async catchPopUpByClick(element: string) {

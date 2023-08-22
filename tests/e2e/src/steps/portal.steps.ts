@@ -6,10 +6,10 @@ import { NetworkSwitcher } from "../data/data";
 import { Helper } from "../helpers/helper";
 import { BasePage } from "../pages/base.page";
 import { ContactsPage } from "../pages/contacts.page";
-import { ExternalPage } from "../pages/external.page";
 import { LoginPage } from "../pages/login.page";
 import { MainPage } from "../pages/main.page";
 import { MetamaskPage } from "../pages/metamask.page";
+import { RevokePage } from "../pages/revoke.page";
 import { config } from "../support/config";
 
 import type { ICustomWorld } from "../support/custom-world";
@@ -17,7 +17,7 @@ import type { ICustomWorld } from "../support/custom-world";
 let basePage: BasePage;
 let mainPage: MainPage;
 let loginPage: LoginPage;
-let externalPage: ExternalPage;
+let revokePage: RevokePage;
 let metamaskPage: MetamaskPage;
 let contactsPage: ContactsPage;
 let helper: Helper;
@@ -371,24 +371,8 @@ Then(
 );
 
 Given("I reset allowance", config.stepExtraTimeout, async function (this: ICustomWorld) {
-  externalPage = new ExternalPage(this);
-  basePage = new BasePage(this);
-  metamaskPage = new MetamaskPage(this);
-
-  const revokeUrl = "https://revoke.cash/";
-
-  await basePage.goTo(revokeUrl);
-  // login
-  await basePage.clickByText("Connect Wallet");
-  const popUpContext = await metamaskPage.catchPopUpByClick(`//button[contains(text(),'MetaMask')]`);
-  await popUpContext?.setViewportSize(config.popUpWindowSize);
-  await popUpContext?.click(metamaskPage.nextButton);
-  await popUpContext?.click(metamaskPage.confirmTransaction);
-
-  // operate
-  await externalPage.revokeAllowance();
-
-  // logout
-  await externalPage.clickByMenuWalletButton();
-  await basePage.clickByText("Disconnect");
+  revokePage = new RevokePage(this);
+  await revokePage.login();
+  await revokePage.revokeAllowance();
+  await revokePage.logout();
 });
