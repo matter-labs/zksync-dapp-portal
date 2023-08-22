@@ -1,6 +1,7 @@
 <template>
   <TokenLine
     :symbol="symbol"
+    :name="name"
     :address="address"
     :decimals="decimals"
     :icon-url="iconUrl"
@@ -55,6 +56,9 @@ const props = defineProps({
   symbol: {
     type: String,
     required: true,
+  },
+  name: {
+    type: String,
   },
   address: {
     type: String,
