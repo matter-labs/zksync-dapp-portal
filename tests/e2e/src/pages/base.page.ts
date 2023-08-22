@@ -47,6 +47,17 @@ export class BasePage {
     await this.world.page?.fill(selector, text, config.increasedTimeout);
   }
 
+  async fillSpecificField(selectorType: string, selectorValue: string, text: string) {
+    const helper = new Helper(this.world);
+    selector = `//*[@${selectorType}="${selectorValue}"]`;
+    if (text === "clipboard") {
+      const result = await helper.getClipboardValue();
+      await this.fill(selector, result);
+    } else {
+      await this.fill(selector, text);
+    }
+  }
+
   async clickBy(elementType: string, value: string) {
     element = await this.returnElementByType(elementType, value);
     await element.click(config.increasedTimeout);

@@ -5,7 +5,14 @@
     </template>
     <template #default>
       <CommonButtonLineBodyInfo class="text-left">
-        <template #label>{{ symbol }}</template>
+        <template #label>
+          <div class="flex flex-wrap items-center gap-1.5">
+            <span>{{ symbol }}</span>
+            <div v-if="name" class="truncate text-xs text-gray-secondary dark:text-neutral-400">
+              {{ name }}
+            </div>
+          </div>
+        </template>
         <template #underline>
           <span class="hidden xs:block" :title="address">{{ shortenAddress(address, 5) }}</span>
           <span class="xs:hidden" :title="address">{{ shortenAddress(address, 2) }}</span>
@@ -31,6 +38,9 @@ defineProps({
   symbol: {
     type: String,
     required: true,
+  },
+  name: {
+    type: String,
   },
   address: {
     type: String,
