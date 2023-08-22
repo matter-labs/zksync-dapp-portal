@@ -16,3 +16,4 @@ Feature: Deposit
     When I "confirm" transaction after clicking "Add funds to zkSync Era Testnet" button
     Then Message "Transaction submitted" should be visible
     Then Element with "partial href" "https://goerli.etherscan.io/tx/" should be "clickable"
+    
