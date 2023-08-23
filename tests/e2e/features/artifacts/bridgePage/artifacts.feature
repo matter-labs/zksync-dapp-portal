@@ -34,7 +34,7 @@ Feature: Withdraw
     Then Element with "text" " Track status " should be "clickable"
     Then Element with "text" " Make another transaction " should be "visible"
     Then Element with "text" " Explore ecosystem " should be "visible"
-        #Check redirection
+        #Check redirection   id1609
     Then I click by "text" with " Explore ecosystem " value
     Then New page has "https://ecosystem.zksync.io/" address
 
