@@ -18,6 +18,25 @@ Feature: Withdraw
     Then Element with "text" " Track status " should be "visible"
     Then Element with "text" " Your funds will be available on " should be "visible"
     Then Element with "text" " Make another transaction " should be "visible"
+    #Time of tx
+    Then Element with "class" "button-line-body-info-underline" should be "visible"
+    Then Element with "text" "0.0000000001" should be "visible"
+    Then Modal card element with the "//*[text()='ETH']" xpath should be "visible"
+    #Token icon
+    Then Modal card element with the "//*[contains(@src, 'eth.svg')]" xpath should be "visible"
+    Then Modal card element with the "//*[text()='<$0.01']" xpath should be "visible"
+    Then Arrow element for "Deposit" external link should be "visible"
+    Then Arrow element for "Deposit" external link should be "clickable"
+    Then Element with "text" " Your funds will be available on " should be "visible"
+    Then Element with "text" "zkSync Era Testnet" should be "visible"
+    Then Element with "text" " after the transaction is committed on " should be "visible"
+    Then Element with "text" "Ethereum Goerli Testnet" should be "visible"
+    Then Element with "text" " and then processed on " should be "visible"
+    Then Element with "text" "zkSync Era Testnet" should be "visible"
+    Then Element with "text" ". You are free to close this page. " should be "clickable"
+    Then Element with "text" " Track status " should be "clickable"
+    Then Element with "text" " Make another transaction " should be "visible"
+    Then Element with "text" " Explore ecosystem " should be "visible"
         #Check redirection
     Then I click by "text" with " Explore ecosystem " value
     Then New page has "https://ecosystem.zksync.io/" address
