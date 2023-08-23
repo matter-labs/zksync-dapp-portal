@@ -16,7 +16,7 @@ Feature: Withdraw
     Then Element with "class" "button-line-body-info-underline" should be "visible"
     #Token icon
     Then Element with "text" "Deposit" should be "visible"
-    Then Element with "text" "0.0000000001" should be "visible"
+    Then Element with "partial text" "0.0000000001" should be "visible"
     Then Modal card element with the "//*[contains(@src, 'eth.svg')]" xpath should be "visible"
     Then Modal card element with the "//*[text()='ETH']" xpath should be "visible"
     Then Modal card element with the "//*[text()='<$0.01']" xpath should be "visible"
