@@ -4,6 +4,18 @@ Feature: Withdraw
   Background:
     Given Connect Metamask extension with login action
 
+  @id1609 @id1607
+  Scenario: Check Explore ecosystem button on Bridge Deposit
+    Given I go to page "/bridge?network=era-goerli"
+    When I click by text "Deposit"
+    When I choose "ETH" as token and insert "0.0000000001" as amount
+    When I "confirm" transaction after clicking "Add funds to zkSync Era Testnet" button
+    Then Message "Transaction submitted" should be visible
+    Then Element with "text" " Explore ecosystem " should be "visible"
+    Then Element with "href" "https://ecosystem.zksync.io" should be "visible"
+    Then I click by "text" with " Explore ecosystem " value
+    Then New page has "https://ecosystem.zksync.io/" address
+
   @id1602
   Scenario: Check the Account Dropdown Artifacts on the Bridge Page
     Given I go to page "/bridge?network=era-goerli"
