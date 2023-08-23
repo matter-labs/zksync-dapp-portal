@@ -1,10 +1,9 @@
 import { watch } from "vue";
 
-import { BigNumber } from "ethers";
-import { ethers } from "ethers";
+import { BigNumber, ethers, VoidSigner } from "ethers";
 import { $fetch } from "ohmyfetch";
 import { defineStore, storeToRefs } from "pinia";
-import { L1Signer, Web3Provider } from "zksync-web3";
+import { L1Signer, L1VoidSigner, Web3Provider } from "zksync-web3";
 
 import type { Api, TokenAmount } from "@/types";
 
@@ -48,6 +47,14 @@ export const useEraWalletStore = defineStore("eraWallet", () => {
     const eraL1Signer = L1Signer.from(web3Provider.getSigner(), eraProviderStore.requestProvider());
     return eraL1Signer;
   });
+  const getL1VoidSigner = () => {
+    if (!account.value.address) throw new Error("Address is not available");
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const web3Provider = new ethers.providers.Web3Provider(onboardStore.getPublicClient() as any, "any");
+    const voidSigner = new VoidSigner(account.value.address, web3Provider);
+    return L1VoidSigner.from(voidSigner, eraProviderStore.requestProvider()) as unknown as L1Signer;
+  };
 
   const {
     result: accountState,
@@ -179,6 +186,7 @@ export const useEraWalletStore = defineStore("eraWallet", () => {
   return {
     getSigner,
     getL1Signer,
+    getL1VoidSigner,
 
     balance,
     balanceInProgress: computed(() => balanceInProgress.value),

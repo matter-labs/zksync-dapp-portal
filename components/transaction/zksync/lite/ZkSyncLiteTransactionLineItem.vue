@@ -184,7 +184,7 @@ const icon = computed(() => {
 const time = computed(() => {
   const date = new Date(props.transaction.createdAt!);
   return `
-    ${props.displayDate ? date.toLocaleDateString([], { day: "numeric", month: "long" }) + " ∙" : ""}
+    ${props.displayDate ? date.toLocaleDateString("en-US", { day: "numeric", month: "long" }) + " ∙" : ""}
     ${date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
   `;
 });

@@ -1,7 +1,10 @@
 <template>
   <TransactionLineItem :icon="icon" :explorer-url="blockExplorerUrl" :transaction-hash="transfer.transactionHash!">
     <template #top-left>{{ label }}</template>
-    <template #bottom-left>{{ time }}</template>
+    <template #bottom-left>
+      <span>{{ time }}</span>
+      <slot name="bottom-left"></slot>
+    </template>
     <template #top-right>
       <TokenAmount v-if="token" :token="token" :amount="computeAmount" :direction="direction" />
     </template>
@@ -112,7 +115,7 @@ const icon = computed(() => {
 const time = computed(() => {
   const date = new Date(props.transfer.timestamp);
   return `
-    ${props.displayDate ? date.toLocaleDateString([], { day: "numeric", month: "long" }) + " ∙" : ""}
+    ${props.displayDate ? date.toLocaleDateString("en-US", { day: "numeric", month: "long" }) + " ∙" : ""}
     ${date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
   `;
 });

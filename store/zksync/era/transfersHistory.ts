@@ -10,7 +10,7 @@ import { useEraProviderStore } from "@/store/zksync/era/provider";
 import { useEraTokensStore } from "@/store/zksync/era/tokens";
 import { mapApiTransfer } from "@/utils/zksync/era/mappers";
 
-const TRANSACTIONS_FETCH_LIMIT = 25;
+const TRANSACTIONS_FETCH_LIMIT = 50;
 
 export const useEraTransfersHistoryStore = defineStore("eraTransfersHistory", () => {
   const onboardStore = useOnboardStore();

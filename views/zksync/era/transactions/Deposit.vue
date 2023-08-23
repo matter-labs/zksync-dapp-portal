@@ -176,6 +176,7 @@ import { useOnboardStore } from "@/store/onboard";
 import { useEraEthereumBalanceStore } from "@/store/zksync/era/ethereumBalance";
 import { useEraProviderStore } from "@/store/zksync/era/provider";
 import { useEraTokensStore } from "@/store/zksync/era/tokens";
+import { useEraWalletStore } from "@/store/zksync/era/wallet";
 import { TOKEN_ALLOWANCE } from "@/utils/doc-links";
 import { checksumAddress, decimalToBigNumber, formatRawTokenPrice, parseTokenAmount } from "@/utils/formatters";
 import { TransitionAlertScaleInOutTransition, TransitionOpacity } from "@/utils/transitions";
@@ -196,6 +197,7 @@ const onboardStore = useOnboardStore();
 const eraTokensStore = useEraTokensStore();
 const eraProviderStore = useEraProviderStore();
 const eraEthereumBalance = useEraEthereumBalanceStore();
+const eraWalletStore = useEraWalletStore();
 const { account } = storeToRefs(onboardStore);
 const { eraNetwork } = storeToRefs(eraProviderStore);
 const { destinations } = storeToRefs(useDestinationsStore());
@@ -330,13 +332,7 @@ const {
   enoughBalanceToCoverFee,
   estimateFee,
   resetFee,
-} = useFee(
-  computed(() => account.value.address),
-  tokens,
-  balance,
-  eraProviderStore.requestProvider,
-  onboardStore.getPublicClient
-);
+} = useFee(tokens, balance, eraWalletStore.getL1VoidSigner, onboardStore.getPublicClient);
 watch(enoughBalanceToCoverFee, (isEnough) => {
   if (!isEnough && transactionConfirmModalOpened.value) {
     transactionConfirmModalOpened.value = false;

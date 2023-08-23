@@ -1,7 +1,6 @@
 import { computed, ref } from "vue";
 
-import { BigNumber, ethers, VoidSigner } from "ethers";
-import { L1VoidSigner } from "zksync-web3";
+import { BigNumber } from "ethers";
 import { L1_RECOMMENDED_MIN_ERC20_DEPOSIT_GAS_LIMIT } from "zksync-web3/build/src/utils";
 
 import useTimedCache from "@/composables/useTimedCache";
@@ -9,7 +8,7 @@ import useTimedCache from "@/composables/useTimedCache";
 import type { Token, TokenAmount } from "@/types";
 import type { PublicClient } from "@wagmi/core";
 import type { Ref } from "vue";
-import type { L1Signer, Provider } from "zksync-web3";
+import type { L1Signer } from "zksync-web3";
 
 import { ETH_L2_ADDRESS } from "@/utils/constants";
 import { retry } from "@/utils/helpers";
@@ -25,24 +24,14 @@ export type DepositFeeValues = {
 };
 
 export default (
-  address: Ref<string | undefined>,
   tokens: Ref<{ [tokenSymbol: string]: Token } | undefined>,
   balances: Ref<TokenAmount[]>,
-  getEraProvider: () => Provider,
+  getL1VoidSigner: () => L1Signer,
   getPublicClient: () => PublicClient
 ) => {
   let params = {
     to: undefined as string | undefined,
     tokenAddress: undefined as string | undefined,
-  };
-
-  const getVoidL1Signer = () => {
-    if (!address.value) throw new Error("Address is not available");
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const web3Provider = new ethers.providers.Web3Provider(getPublicClient() as any, "any");
-    const voidSigner = new VoidSigner(address.value, web3Provider);
-    return L1VoidSigner.from(voidSigner, getEraProvider()) as unknown as L1Signer;
   };
 
   const fee = ref<DepositFeeValues | undefined>();
@@ -78,7 +67,7 @@ export default (
   });
 
   const getEthTransactionFee = async () => {
-    const signer = getVoidL1Signer();
+    const signer = getL1VoidSigner();
     if (!signer) throw new Error("Signer is not available");
 
     return retry(async () => {
