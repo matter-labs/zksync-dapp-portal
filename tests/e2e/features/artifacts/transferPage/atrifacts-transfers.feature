@@ -147,3 +147,59 @@ Feature: Artifacts - UI
     Then Element with "text" "ZZ" should be "visible"
     Then Element with "text" "0x1ab721...184" should be "visible"
     Then Element with "partial src" "zz.png" should be "visible"
+
+  @id1364 @Transfer
+  Scenario: Check artifacts on the Send to page - Transfer
+    Given I am on the Main page
+    When I go to page "/transaction/zksync/era/send/?address=0x2CF4F78917A16C9584AeB5d4c5bD2713d724C75d"
+    Then Element with "text" "Send to" should be "visible"
+    Then Element with "text" "0x2CF4F78917A16C9584AeB5d4c5bD2713d724C75d" should be "visible"
+    Then Element with "testId" "token-dropDown" should be "visible"
+    Then Element with "testId" "token-dropDown" should be "clickable"
+    #Balance
+    Then Element with "text" " Balance: " should be "visible"
+    Then Element with "class" "break-all" should be "visible"
+    #Max button
+    Then Element with "partial text" "Max" should be "visible"
+    Then Element with "partial text" "Max" should be "clickable"
+    #Value field
+    Then Element with "id" "amount-input" should be "visible"
+    Then Element with "placeholder" "0" should be "visible"
+    Then Element with "testId" "fee-amount" should be "visible"
+    Then Fee should have "$" value
+    Then Fee should have "ETH" value
+    Then Circle timer for fee updating should be visible
+    When I confirm the network switching
+    Then Element with "text" " Continue " should be "visible"
+
+  @id1566 @Transfer
+  Scenario: Check artifacts on the Confirm transaction modal - Transfer
+    Given I am on the Main page
+    When I go to page "/transaction/zksync/era/send/?address=0x2CF4F78917A16C9584AeB5d4c5bD2713d724C75d"
+    When I choose "ETH" as token and insert "0.0001" as amount
+    When I confirm the network switching
+    Then Element with "text" " Continue " should be "clickable"
+    When I click by text " Continue "
+    Then Element with "text" "Confirm transaction" should be "visible"
+    Then Element with "text" "Your zkSync Era Testnet account" should be "visible"
+    Then Element with "partial class" "address-card-avatar" should be "visible"
+    Then Modal card element with the "//*[text()='0x2CF4...75d']" xpath should be "visible"
+    Then Modal card element with the "//*[@alt='ETH token icon']" xpath should be "visible"
+    Then Modal card element with the "//*[text()='0x000000...00A']" xpath should be "visible"
+    Then Modal card element with the "//*[@class='token-balance-price']" xpath should be "visible"
+    Then Modal card element with the "//*[contains(@src, 'eth.svg')]" xpath should be "visible"
+    #"Fee:" block
+    Then Modal card element with the "//*[contains(text(),'Fee:')]" xpath should be "visible"
+    Then Modal card element with the "//*[contains(@class, 'my-2')]//button[contains(., '$')]" xpath should be "visible"
+    Then Modal card element with the "//*[contains(@class, 'my-2')]//button[contains(., 'of')]" xpath should be "visible"
+    Then Modal card element with the "//*[contains(@class, 'my-2')]//*[contains(@src, 'eth.svg')]" xpath should be "visible"
+    Then Modal card element with the "//*[contains(@class, 'my-2')]//button[contains(., 'ETH')]" xpath should be "visible"
+    #"Total to pay:" block
+    Then Modal card element with the "//*[contains(text(),'Total to pay:')]" xpath should be "visible"
+    Then Modal card element with the "//*[contains(@class, '-my-0.5')]//button[contains(., '$')]" xpath should be "visible"
+    Then Modal card element with the "//*[contains(@class, '-my-0.5')]//button[contains(., 'of')]" xpath should be "visible"
+    Then Modal card element with the "//*[contains(@class, '-my-0.5')]//*[contains(@src, 'eth.svg')]" xpath should be "visible"
+    Then Modal card element with the "//*[contains(@class, '-my-0.5')]//button[contains(., 'ETH')]" xpath should be "visible"
+    Then Element with "text" "Send to zkSync Era Testnet" should be "visible"
+    Then Element with "text" "Send to zkSync Era Testnet" should be "clickable"
+    

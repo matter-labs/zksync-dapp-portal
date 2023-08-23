@@ -85,6 +85,13 @@ When(
   }
 );
 
+When("Circle timer for fee updating should be visible", config.stepTimeout, async function (this: ICustomWorld) {
+  mainPage = new MainPage(this);
+  element = mainPage.circleTimerElement;
+  result = await this.page?.locator(element);
+  await expect(result).toBeVisible();
+});
+
 When(
   "I {string} transaction after clicking {string} button",
   config.stepTimeout,

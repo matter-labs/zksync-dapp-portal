@@ -10,6 +10,7 @@ export const getTokensByNetworkId = async (networkId: number) => {
       l1Address: checksumAddress(token.l1Address),
       address: l2Address,
       symbol: token.symbol,
+      name: token.name,
       decimals: token.decimals,
       iconUrl: token.imageUrl,
       enabledForFees: l2Address === ETH_L2_ADDRESS,
