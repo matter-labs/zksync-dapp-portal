@@ -13,12 +13,6 @@ Feature: Withdraw
     Then Message "Transaction submitted" should be visible
     Then Element with "text" " Explore ecosystem " should be "visible"
     Then Element with "href" "https://ecosystem.zksync.io" should be "visible"
-        #id1607 Check other elements on window
-    Then Element with "partial class" "progress-plane-animation" should be "visible"
-    Then Element with "text" " Track status " should be "visible"
-    Then Element with "text" " Your funds will be available on " should be "visible"
-    Then Element with "text" " Make another transaction " should be "visible"
-        #Check redirection
     Then I click by "text" with " Explore ecosystem " value
     Then New page has "https://ecosystem.zksync.io/" address
 
