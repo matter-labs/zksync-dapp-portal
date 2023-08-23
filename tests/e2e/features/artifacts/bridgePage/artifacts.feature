@@ -13,9 +13,8 @@ Feature: Withdraw
     Then Message "Transaction submitted" should be visible
         #id1607 Check other elements on window
     Then Element with "partial class" "progress-plane-animation" should be "visible"
-    #Time of tx
     Then Element with "class" "button-line-body-info-underline" should be "visible"
-    Then Element with "text" "0.0000000001" should be "visible"
+    Then Element with "partial text" "0.0000000001" should be "visible"
     #Token icon
     Then Element with "text" "Deposit" should be "visible"
     Then Element with "text" "0.000000001" should be "visible"
