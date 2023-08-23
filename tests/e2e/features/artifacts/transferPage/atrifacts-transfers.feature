@@ -187,9 +187,19 @@ Feature: Artifacts - UI
     Then Modal card element with the "//*[@alt='ETH token icon']" xpath should be "visible"
     Then Modal card element with the "//*[text()='0x000000...00A']" xpath should be "visible"
     Then Modal card element with the "//*[@class='token-balance-price']" xpath should be "visible"
-    Then Modal card element with the "//*[contains(@src, 'eth.svg?alt=media&token=1985e3d8-3aa7-4d04-8839-565d4c341615')]" xpath should be "visible"
-    Then Modal card element with the "//*[contains(@class,'fee-details-container') and //span[contains(text(),'Fee')]]" xpath should be "visible"
-    Then Modal card element with the "//*[contains(@class,'fee-details-container') and //span[contains(text(),'Total to pay')]]" xpath should be "visible"
+    Then Modal card element with the "//*[contains(@src, 'eth.svg')]" xpath should be "visible"
+    #"Fee:" block
+    Then Modal card element with the "//*[contains(text(),'Fee:')]" xpath should be "visible"
+    Then Modal card element with the "//*[contains(@class, 'my-2')]//button[contains(., '$')]" xpath should be "visible"
+    Then Modal card element with the "//*[contains(@class, 'my-2')]//button[contains(., 'of')]" xpath should be "visible"
+    Then Modal card element with the "//*[contains(@class, 'my-2')]//*[contains(@src, 'eth.svg')]" xpath should be "visible"
+    Then Modal card element with the "//*[contains(@class, 'my-2')]//button[contains(., 'ETH')]" xpath should be "visible"
+    #"Total to pay:" block
+    Then Modal card element with the "//*[contains(text(),'Total to pay:')]" xpath should be "visible"
+    Then Modal card element with the "//*[contains(@class, '-my-0.5')]//button[contains(., '$')]" xpath should be "visible"
+    Then Modal card element with the "//*[contains(@class, '-my-0.5')]//button[contains(., 'of')]" xpath should be "visible"
+    Then Modal card element with the "//*[contains(@class, '-my-0.5')]//*[contains(@src, 'eth.svg')]" xpath should be "visible"
+    Then Modal card element with the "//*[contains(@class, '-my-0.5')]//button[contains(., 'ETH')]" xpath should be "visible"
     Then Element with "text" "Send to zkSync Era Testnet" should be "visible"
     Then Element with "text" "Send to zkSync Era Testnet" should be "clickable"
     
