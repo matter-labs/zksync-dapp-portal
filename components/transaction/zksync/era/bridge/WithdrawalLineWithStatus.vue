@@ -1,13 +1,13 @@
 <template>
   <EraTransferLineItem :transfer="transfer" display-date>
     <template #bottom-left>
-      <div class="flex flex-wrap items-center gap-x-1">
+      <div class="items-center gap-x-1">
         <template v-if="transfer.status === 'loading'">
-          <span class="align-middle">Status: <CommonContentLoader :length="25" /></span>
+          <div class="align-middle">Status: <CommonContentLoader :length="25" /></div>
         </template>
         <template v-else-if="transfer.status === 'not-completed'">
-          <span>Status: <CommonSpinner class="inline h-4 w-4" /> In Progress.</span>
-          <span>
+          <div>Status: <CommonSpinner class="inline h-4 w-4" /> In Progress.</div>
+          <div>
             <CommonTimer :future-date="transfer.expectedCompletionTimestamp" @finish="emit('timer-finished')">
               <template #default="{ timer, isTimerFinished }">
                 <template v-if="isTimerFinished">Will be done soon.</template>
@@ -16,13 +16,13 @@
                 >
               </template>
             </CommonTimer>
-          </span>
+          </div>
         </template>
         <template v-else-if="transfer.status === 'completed'">
-          <span class="align-middle">Status: <CheckIcon class="-mt-0.5 inline h-4 w-4 dark:text-white" /> Done</span>
+          <div class="align-middle">Status: <CheckIcon class="-mt-0.5 inline h-4 w-4 dark:text-white" /> Done</div>
         </template>
         <template v-else-if="transfer.status === 'request-failed'">
-          <span class="align-middle">Status: <span class="text-red-500">Unknown</span></span>
+          <div class="align-middle">Status: <span class="text-red-500">Unknown</span></div>
         </template>
       </div>
     </template>

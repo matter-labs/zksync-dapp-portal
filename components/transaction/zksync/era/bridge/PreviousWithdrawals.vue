@@ -22,6 +22,7 @@ import { storeToRefs } from "pinia";
 import PreviousTransactionsDropdown from "./PreviousTransactionsDropdown.vue";
 import WithdrawalLineWithStatus from "./WithdrawalLineWithStatus.vue";
 
+import useInterval from "@/composables/useInterval";
 import useWithdrawalStatuses from "@/composables/zksync/era/bridge/withdrawalStatuses";
 
 import { useOnboardStore } from "@/store/onboard";
@@ -49,12 +50,18 @@ const fetch = () => {
 };
 fetch();
 
+const { reset: resetAutoUpdate, stop: stopAutoUpdate } = useInterval(() => {
+  fetch();
+}, 60000);
+
 const unsubscribe = onboardStore.subscribeOnAccountChange((newAddress) => {
   if (!newAddress) return;
+  resetAutoUpdate();
   fetch();
 });
 
 onBeforeUnmount(() => {
+  stopAutoUpdate();
   unsubscribe();
 });
 </script>

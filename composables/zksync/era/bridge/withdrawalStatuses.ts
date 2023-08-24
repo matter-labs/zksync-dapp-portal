@@ -64,14 +64,15 @@ export default () => {
           status,
           expectedCompletionTimestamp: new Date(new Date(e.timestamp).getTime() + WITHDRAWAL_DELAY).toISOString(),
         };
-      });
+      })
+      .slice(0, 5);
   });
 
-  const updateWithdrawalStatus = (transactionHash: string, force = false) => {
+  const updateWithdrawalStatus = async (transactionHash: string, force = false) => {
     const transfer = recentWithdrawals.value.find((e) => e.transactionHash === transactionHash);
     if (transfer && transfer.status !== "completed") {
       const fn = force ? forceCheckWithdrawalStatus : checkWithdrawalStatus;
-      fn(transactionHash)
+      return await fn(transactionHash)
         .then((isCompleted) => {
           withdrawalStatuses.value[transactionHash] = isCompleted ? "completed" : "not-completed";
           if (isCompleted) {
@@ -83,13 +84,11 @@ export default () => {
         });
     }
   };
-  const updateAllWithdrawalStatuses = () => {
+  const updateAllWithdrawalStatuses = async () => {
     eraTransfersHistoryStore.requestRecentTransfers();
-    recentWithdrawals.value
-      .map((e) => e.transactionHash)
-      .forEach((transactionHash) => {
-        updateWithdrawalStatus(transactionHash!);
-      });
+    for (const withdrawalTransfer of recentWithdrawals.value) {
+      await updateWithdrawalStatus(withdrawalTransfer.transactionHash!);
+    }
   };
   watch(
     () => recentWithdrawals.value.map((e) => e.transactionHash),
