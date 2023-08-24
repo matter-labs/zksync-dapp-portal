@@ -222,12 +222,11 @@ export class MetamaskPage extends BasePage {
   }
 
   async approveAllovance(selector: string) {
-    const helper = await new Helper(this.world);
     const mainPage = await new MainPage(this.world);
     selector = `${mainPage.modalCard}${selector}`;
     if (selector.includes("Approve allowance")) {
-      await helper.checkElementVisible(selector);
-      await helper.checkElementHidden(selector);
+      selector = `${mainPage.modalCard}//*[contains(text(), 'Allowance approved')]`;
+      await this.world.page?.waitForSelector(selector, config.extraTimeout);
       await this.click(await mainPage.buttonOfModalCard("Continue"));
     }
   }
