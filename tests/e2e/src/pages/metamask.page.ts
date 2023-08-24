@@ -221,23 +221,29 @@ export class MetamaskPage extends BasePage {
     }
   }
 
-  async approveAllovance(triggeredElement: string) {
+  async approveAllovance(selector: string) {
     const helper = await new Helper(this.world);
     const mainPage = await new MainPage(this.world);
-    selector = `${mainPage.modalCard}//*[contains(text(), 'Allowance approved')]`;
-    if (triggeredElement === "Approve allowance") {
+    selector = `${mainPage.modalCard}${selector}`;
+    if (selector.includes("Approve allowance")) {
       await helper.checkElementVisible(selector);
       await helper.checkElementHidden(selector);
       await this.click(await mainPage.buttonOfModalCard("Continue"));
     }
   }
 
-  async operateTransaction(triggeredElement: string) {
-    const popUpContext = await this.catchPopUpByClick(`//span[contains(text(),'${triggeredElement}')]`);
-    await setTimeout(2.5 * 1000);
+  async operateTransaction(selector: string, argument: string) {
+    const popUpContext = await this.catchPopUpByClick(selector);
+    await setTimeout(config.minimalTimeout.timeout);
     await popUpContext?.setViewportSize(config.popUpWindowSize);
-    await popUpContext?.click(this.confirmTransaction);
-    await this.approveAllovance(triggeredElement);
+    if (argument == "confirm") {
+      await popUpContext?.click(this.confirmTransaction);
+    } else if (argument == "next and confirm") {
+      await popUpContext?.click(this.nextButton);
+      await popUpContext?.click(this.confirmTransaction);
+    } else if (argument == "networkSwitch") {
+      await popUpContext?.click(this.switchNetworkButton);
+    }
   }
 
   async catchPopUpByClick(element: string) {

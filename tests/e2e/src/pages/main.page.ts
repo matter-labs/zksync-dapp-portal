@@ -133,14 +133,15 @@ export class MainPage extends BasePage {
 
   async makeTransaction(actionType: string, transactionType: string) {
     metamaskPage = await new MetamaskPage(this.world);
-    result = await this.getTransactionSelector(transactionType);
+    const selector = await this.getTransactionSelector(transactionType);
     await metamaskPage.callTransactionInterface();
-    await metamaskPage.operateTransaction(result);
+    await metamaskPage.operateTransaction(selector, "confirm");
+    await metamaskPage.approveAllovance(selector);
   }
 
   async getTransactionSelector(transactionType: string) {
-    result = transactionType;
-    return result;
+    const selector = `//*[contains(text(),'${transactionType}')]`;
+    return selector;
   }
 
   async monitorBalance(walletAddress: string, layer: string) {

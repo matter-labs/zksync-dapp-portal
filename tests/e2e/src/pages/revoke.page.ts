@@ -11,6 +11,7 @@ import type { ICustomWorld } from "../support/custom-world";
 let metamaskPage: any;
 let result: any;
 let selector: string;
+let argument: string;
 
 export class RevokePage extends BasePage {
   constructor(world: ICustomWorld) {
@@ -26,6 +27,10 @@ export class RevokePage extends BasePage {
     return "//button/div[contains(text(), '0x')]";
   }
 
+  get metamaskButton() {
+    return `//button[contains(text(),'MetaMask')]`;
+  }
+
   get revokeURL() {
     return "https://revoke.cash/";
   }
@@ -38,12 +43,11 @@ export class RevokePage extends BasePage {
     const basePage = new BasePage(this.world);
     metamaskPage = new MetamaskPage(this.world);
     const revokeUrl = this.revokeURL;
+    selector = this.metamaskButton;
+    argument = "next and confirm";
     await basePage.goTo(revokeUrl);
     await basePage.clickByText("Connect Wallet");
-    const popUpContext = await metamaskPage.catchPopUpByClick(`//button[contains(text(),'MetaMask')]`);
-    await popUpContext?.setViewportSize(config.popUpWindowSize);
-    await popUpContext?.click(metamaskPage.nextButton);
-    await popUpContext?.click(metamaskPage.confirmTransaction);
+    await metamaskPage.operateTransaction(selector, argument);
   }
 
   async logout() {
@@ -69,6 +73,7 @@ export class RevokePage extends BasePage {
     const helper = await new Helper(this.world);
     const networkChainId = "?chainId=5"; // Goerli
     const revokeGoerliUrl = "https://revoke.cash/address/" + address + networkChainId;
+    argument = "networkSwitch";
     const networkForRevokeIsSelected = await this.checkNetworkForRevoke("Goerli");
     if (!networkForRevokeIsSelected) {
       await this.goTo(revokeGoerliUrl);
@@ -77,18 +82,15 @@ export class RevokePage extends BasePage {
     selector = await this.revokeButton("Switch Network");
     const switchNetworkIsVisible = await helper.checkElementVisible(selector);
     if (switchNetworkIsVisible) {
-      const popUpContext = await metamaskPage.catchPopUpByClick(selector);
-      await popUpContext?.setViewportSize(config.popUpWindowSize);
-      await popUpContext?.click(metamaskPage.switchNetworkButton);
+      await metamaskPage.operateTransaction(selector, argument);
     }
 
     await setTimeout(config.defaultTimeout.timeout);
+    argument = "confirm";
     selector = await this.revokeButton("Revoke");
     const revokeButtonIsVisible = await helper.checkElementVisible(selector);
     if (revokeButtonIsVisible) {
-      const popUpContext = await metamaskPage.catchPopUpByClick(selector);
-      await popUpContext?.setViewportSize(config.popUpWindowSize);
-      await popUpContext?.click(metamaskPage.confirmTransaction);
+      await metamaskPage.operateTransaction(selector, argument);
       await this.revokeAllowance();
     }
 
