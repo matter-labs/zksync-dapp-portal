@@ -94,6 +94,7 @@ export default () => {
   watch(
     () => recentWithdrawals.value.map((e) => e.transactionHash),
     () => {
+      if (!eraNetwork.value.blockExplorerApi) return;
       updateAllWithdrawalStatuses();
     },
     { immediate: true }
