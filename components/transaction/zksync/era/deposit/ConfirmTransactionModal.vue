@@ -337,9 +337,11 @@ const makeTransaction = async () => {
         status.value = "not-started";
       })
       .finally(() => {
-        eraTransfersHistoryStore.reloadRecentTransfers().catch(() => undefined);
-        walletEraStore.requestBalance({ force: true }).catch(() => undefined);
-        eraEthereumBalanceStore.requestBalance({ force: true }).catch(() => undefined);
+        setTimeout(() => {
+          eraTransfersHistoryStore.reloadRecentTransfers().catch(() => undefined);
+          walletEraStore.requestBalance({ force: true }).catch(() => undefined);
+          eraEthereumBalanceStore.requestBalance({ force: true }).catch(() => undefined);
+        }, 2000);
       });
   }
 };

@@ -5,7 +5,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, onBeforeMount, onBeforeUnmount, ref } from "vue";
+import { computed, onBeforeMount, onBeforeUnmount, ref, watch } from "vue";
 
 const props = defineProps({
   futureDate: {
@@ -13,11 +13,23 @@ const props = defineProps({
     required: true,
   },
 });
+const emit = defineEmits<{
+  (eventName: "finish"): void;
+}>();
 
 const timer = ref("");
 const isTimerFinished = computed(() => timer.value === "00:00:00");
-let intervalId: ReturnType<typeof setInterval> | undefined = undefined;
+watch(
+  isTimerFinished,
+  (isFinished) => {
+    if (isFinished) {
+      emit("finish");
+    }
+  },
+  { immediate: true }
+);
 
+let intervalId: ReturnType<typeof setInterval> | undefined = undefined;
 const updateTimer = () => {
   const currentTime = new Date().getTime();
   const targetTime = new Date(props.futureDate).getTime();
