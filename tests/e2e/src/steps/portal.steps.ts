@@ -393,6 +393,8 @@ Then("Faucet tokens animation should be visible", config.stepTimeout, async func
 
 Given("I reset allowance", config.stepExtraTimeout, async function (this: ICustomWorld) {
   revokePage = new RevokePage(this);
+  metamaskPage = new MetamaskPage(this);
+  await metamaskPage.extractCurrentWalletAddress();
   await revokePage.login();
   await revokePage.revokeAllowance();
   await revokePage.logout();
