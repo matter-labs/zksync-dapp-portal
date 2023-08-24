@@ -1,3 +1,4 @@
+import { useStorage } from "@vueuse/core";
 import { storeToRefs } from "pinia";
 
 import useTimedCache from "@/composables/useTimedCache";
@@ -5,6 +6,7 @@ import useTimedCache from "@/composables/useTimedCache";
 import type { Hash } from "@/types";
 import type { EraTransfer } from "@/utils/zksync/era/mappers";
 
+import { useEraProviderStore } from "@/store/zksync/era/provider";
 import { useEraTransfersHistoryStore } from "@/store/zksync/era/transfersHistory";
 import { useEraWalletStore } from "@/store/zksync/era/wallet";
 
@@ -35,30 +37,49 @@ const forceCheckWithdrawalStatus = (transactionHash: string) => {
 export default () => {
   const eraTransfersHistoryStore = useEraTransfersHistoryStore();
   const { transfers } = storeToRefs(eraTransfersHistoryStore);
+  const { eraNetwork } = storeToRefs(useEraProviderStore());
 
-  const transferStatuses = ref({} as { [transactionHash: string]: TransferWithStatus["status"] });
+  const storageCompletedWithdrawals = useStorage<{ [networkKey: string]: string[] }>("completed-era-withdrawals", {});
+  const completedWithdrawals = computed<string[]>({
+    get: () => {
+      return storageCompletedWithdrawals.value[eraNetwork.value.key] || [];
+    },
+    set: (withdrawalsTransactionHashes: string[]) => {
+      storageCompletedWithdrawals.value[eraNetwork.value.key] = withdrawalsTransactionHashes;
+    },
+  });
+
+  const withdrawalStatuses = ref({} as { [transactionHash: string]: TransferWithStatus["status"] });
   const recentWithdrawals = computed(() => {
     const minTimestamp = Date.now() - WITHDRAWAL_DELAY * 2;
     return transfers.value
       .filter((transfer) => transfer.type === "withdrawal" && new Date(transfer.timestamp).getTime() > minTimestamp)
-      .map(
-        (e): TransferWithStatus => ({
+      .map((e): TransferWithStatus => {
+        const isTransactionCompleted = completedWithdrawals.value.includes(e.transactionHash!);
+        const status: TransferWithStatus["status"] = isTransactionCompleted
+          ? "completed"
+          : withdrawalStatuses.value[e.transactionHash!] ?? "loading";
+        return {
           ...e,
-          status: transferStatuses.value[e.transactionHash!] ?? "loading",
+          status,
           expectedCompletionTimestamp: new Date(new Date(e.timestamp).getTime() + WITHDRAWAL_DELAY).toISOString(),
-        })
-      );
+        };
+      });
   });
 
   const updateWithdrawalStatus = (transactionHash: string, force = false) => {
-    if (transactionHash && transferStatuses.value[transactionHash] !== "completed") {
+    const transfer = recentWithdrawals.value.find((e) => e.transactionHash === transactionHash);
+    if (transfer && transfer.status !== "completed") {
       const fn = force ? forceCheckWithdrawalStatus : checkWithdrawalStatus;
       fn(transactionHash)
         .then((isCompleted) => {
-          transferStatuses.value[transactionHash] = isCompleted ? "completed" : "not-completed";
+          withdrawalStatuses.value[transactionHash] = isCompleted ? "completed" : "not-completed";
+          if (isCompleted) {
+            completedWithdrawals.value.push(transactionHash);
+          }
         })
         .catch(() => {
-          transferStatuses.value[transactionHash] = "request-failed";
+          withdrawalStatuses.value[transactionHash] = "request-failed";
         });
     }
   };
