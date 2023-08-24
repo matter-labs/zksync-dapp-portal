@@ -88,6 +88,19 @@ export class Helper {
     return result;
   }
 
+  async checkSelectorHidden(selector: string, waitTime = 10000): Promise<boolean> {
+    result = true;
+    try {
+      await this.world.page?.waitForSelector(selector, {
+        state: "hidden",
+        timeout: waitTime,
+      });
+    } catch {
+      result = false;
+    }
+    return result;
+  }
+
   async checkElementClickable(element: any, waitTime = 10000): Promise<boolean> {
     result = true;
     try {

@@ -97,7 +97,7 @@ export class RevokePage extends BasePage {
     selector = await this.revokeButton("Revoking");
     const revokingButtonIsVisible = await helper.checkElementVisible(selector);
     if (revokingButtonIsVisible) {
-      await this.world.page?.waitForSelector(selector, { state: "hidden", timeout: config.increasedTimeout.timeout });
+      await helper.checkSelectorHidden(selector, config.increasedTimeout.timeout);
     }
   }
 }
