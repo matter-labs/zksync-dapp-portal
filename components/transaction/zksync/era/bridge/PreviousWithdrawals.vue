@@ -4,13 +4,16 @@
     :active-transactions="withdrawalsNotCompletedAmount"
     :visible="visible"
   >
-    <WithdrawalLineWithStatus
-      v-for="(item, index) in recentWithdrawals"
-      :key="index"
-      :transfer="item"
-      display-date
-      @timer-finished="() => updateSingleWithdrawal(item.transactionHash!)"
-    />
+    <template #default="{ opened }">
+      <WithdrawalLineWithStatus
+        v-for="(item, index) in recentWithdrawals"
+        :key="index"
+        :transfer="item"
+        display-date
+        :tabindex="opened ? undefined : -1"
+        @timer-finished="() => updateSingleWithdrawal(item.transactionHash!)"
+      />
+    </template>
   </PreviousTransactionsDropdown>
 </template>
 

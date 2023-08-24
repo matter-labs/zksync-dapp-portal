@@ -15,8 +15,8 @@
         </span>
         <ChevronDownIcon class="h-4 w-4 transition-transform" :class="{ '-rotate-180': opened }" />
       </button>
-      <CommonHeightTransition class="-mx-3 -mb-3" :opened="opened">
-        <slot />
+      <CommonHeightTransition :tabindex="-1" class="-mx-3 -mb-3" :opened="opened">
+        <slot v-bind="{ opened }" />
       </CommonHeightTransition>
     </CommonContentBlock>
   </CommonHeightTransition>
