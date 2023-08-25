@@ -77,7 +77,7 @@ export class Helper {
     resetAllowanceTag = filteredTag("@resetAllowance");
   }
 
-  async checkElementVisible(element: string, waitTime = 1000): Promise<boolean> {
+  async checkElementVisible(element: string, waitTime = 10000): Promise<boolean> {
     result = true;
     try {
       await this.world.page?.locator(element).waitFor({

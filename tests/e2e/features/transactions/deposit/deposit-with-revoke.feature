@@ -6,7 +6,7 @@ Feature: Deposit
 
 
   # It takes ~2m40.775s
-  @id1295 @id1437 @id1494 @id1446
+  @id1295 @id1437 @id1494 @id1446 @id1439
   Scenario: Make a deposit with approving an allowance
     Given I reset allowance
     Given I go to the main page
@@ -32,8 +32,21 @@ Feature: Deposit
     Then Modal card element with the "//*[contains(text(),'Track status')]" xpath should be "visible"
     Then Modal card element with the "//*[contains(text(),'Track status')]" xpath should be "clickable" 
     ### end 1446
+    # start of 1439
+    Then Modal card element with the "//*[text()='Allowance approved']" xpath should be "visible"
+    Then Modal card element with the "//*[text()='Allowance']" xpath should be "visible"
+    Then Modal card element with the "//*[text()='0.0000000001']" xpath should be "visible"
+    Then Modal card element with the "//*[@alt='DAI token icon']" xpath should be "visible"
+    Then Modal card element with the "//*[@title='DAI']" xpath should be "visible"
+    Then Modal card element with the "//*[text()='Approved amount']" xpath should be "visible"
+    Then Modal card element with the "//*[@class='line-button-with-img-icon']" xpath should be "visible"
+    Then Modal card element with the "//*[@class='line-button-with-img-icon']" xpath should be "clickable"
+    Then Modal card element with the "//*[text()=' Allowance for ']" xpath should be "visible"
+    Then Modal card element with the "//*[text()=' is successfully approved for ']" xpath should be "visible"
+    Then Modal card element with the "//*[text()='zkSync Era Testnet']" xpath should be "visible"
+    Then Modal card element with the "//*[text()=' network. You can now proceed with the deposit ']" xpath should be "visible"
+    ### end of 1439
     Then I approve allovance after clicking "Approve allowance" button
-    
     When I "confirm" transaction after clicking "Add funds to zkSync Era Testnet" button
     Then Modal card element with the "//*[contains(text(),'Track status')]" xpath should be "visible"
     Then Modal card element with the "//*[contains(text(),'Track status')]" xpath should be "clickable"
