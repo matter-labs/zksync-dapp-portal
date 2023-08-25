@@ -288,12 +288,20 @@ Given(
 
 Then("Fee should have {string} value", config.stepTimeout, async function (this: ICustomWorld, fee: string) {
   mainPage = new MainPage(this);
-  basePage = new BasePage(this);
   element = mainPage.feeValue;
   await this.page?.waitForTimeout(5000); // required
   await this.page?.waitForSelector(element);
   result = await this.page?.locator(element);
   await expect(result).toContainText(fee);
+});
+
+Then("Fee should not have {string} value", config.stepTimeout, async function (this: ICustomWorld, fee: string) {
+  mainPage = new MainPage(this);
+  element = mainPage.feeValue;
+  await this.page?.waitForTimeout(5000); // required
+  await this.page?.waitForSelector(element);
+  result = await this.page?.locator(element);
+  await expect(result).not.toContainText(fee);
 });
 
 Then(
@@ -320,6 +328,18 @@ When(
   async function (this: ICustomWorld, textElement: string) {
     mainPage = new MainPage(this);
     await mainPage.clickModalCardElement(textElement);
+  }
+);
+
+When(
+  "Element {string} should dissapear in {int} seconds",
+  config.stepTimeout,
+  async function (this: ICustomWorld, string: string, timeout: number) {
+    helper = new Helper(this);
+    const basePage = new BasePage(this);
+    const selector = `//*[@${basePage.byTestId}'fee-amount']//*[@alt='${string}']`;
+    result = await helper.checkSelectorHidden(selector, timeout * 1000);
+    await expect(result).toBe(true);
   }
 );
 
