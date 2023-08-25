@@ -17,7 +17,6 @@ Feature: Deposit
     Then I "confirm" transaction after clicking "Approve allowance" button
     # start 1446
     Then Modal card element with the "//*[text()='Approving allowance']" xpath should be "visible"
-    # Then Modal card element with the "//*[@id='headlessui-dialog-panel-120']" xpath should be "visible"
     Then Modal card element with the "//*[text()='Allowance']" xpath should be "visible"
     Then Modal card element with the "//*[text()='0.0000000001']" xpath should be "visible"
     Then Modal card element with the "//*[@alt='DAI token icon']" xpath should be "visible"
