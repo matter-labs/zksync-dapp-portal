@@ -152,8 +152,7 @@ export class MainPage extends BasePage {
     metamaskPage = await new MetamaskPage(this.world);
     const selector = await this.getTransactionSelector(transactionType);
     await metamaskPage.callTransactionInterface();
-    await metamaskPage.operateTransaction(selector, "confirm");
-    await metamaskPage.approveAllovance(selector);
+    await metamaskPage.operateTransaction(selector, actionType);
   }
 
   async getTransactionSelector(transactionType: string) {

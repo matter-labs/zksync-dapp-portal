@@ -103,6 +103,17 @@ When(
   }
 );
 
+When(
+  "I approve allovance after clicking {string} button",
+  config.stepExtraTimeout,
+  async function (this: ICustomWorld, transactionBtn: string) {
+    metamaskPage = new MetamaskPage(this);
+    mainPage = new MainPage(this);
+    const selector = await mainPage.getTransactionSelector(transactionBtn);
+    await metamaskPage.approveAllovance(selector);
+  }
+);
+
 Then(
   "Element with {string} {string} should be {string}",
   config.stepTimeout,
