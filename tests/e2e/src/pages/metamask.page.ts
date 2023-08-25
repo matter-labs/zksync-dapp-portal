@@ -221,7 +221,7 @@ export class MetamaskPage extends BasePage {
     }
   }
 
-  async approveAllovance(selector: string) {
+  async approveAllowance(selector: string) {
     const mainPage = await new MainPage(this.world);
     selector = `${mainPage.modalCard}${selector}`;
     if (selector.includes("Approve allowance")) {

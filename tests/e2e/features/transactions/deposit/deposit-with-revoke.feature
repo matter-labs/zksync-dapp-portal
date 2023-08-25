@@ -45,7 +45,7 @@ Feature: Deposit
     Then Modal card element with the "//*[text()='zkSync Era Testnet']" xpath should be "visible"
     Then Modal card element with the "//*[text()=' network. You can now proceed with the deposit ']" xpath should be "visible"
     ### end of 1439
-    Then I approve allovance after clicking "Approve allowance" button
+    Then I approve allowance after clicking "Approve allowance" button
     When I "confirm" transaction after clicking "Add funds to zkSync Era Testnet" button
     Then Modal card element with the "//*[contains(text(),'Track status')]" xpath should be "visible"
     Then Modal card element with the "//*[contains(text(),'Track status')]" xpath should be "clickable"
