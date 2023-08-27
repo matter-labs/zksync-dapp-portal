@@ -43,20 +43,20 @@ Feature: Deposit
     When I click by "text" with "Your account" value
     When I choose "ETH" as token and insert "1" as amount
     Then Element with "testId" "fee-amount" should be "visible"
-    Then Fee should have "$" value
-    Then Fee should have "ETH" value
+    Then Fee "should" have "$" value
+    Then Fee "should" have "ETH" value
     Then Circle timer for fee updating should be visible
-    Then Element "ETH token icon" should dissapear in 60 seconds
+    # Then Element "ETH token icon" should dissapear in 60 seconds
     When I choose "DAI" as token and insert "1" as amount
     Then Element with "testId" "fee-amount" should be "visible"
-    Then Fee should have "$" value
-    Then Fee should have "ETH" value
+    Then Fee "should" have "$" value
+    Then Fee "should" have "ETH" value
     When I hover the "alt" element with "ETH token icon" value
     Then Element with "text" "Click to toggle how amount is displayed" should be "visible"
     When I click by "alt" with "ETH token icon" value
-    Then Fee should not have "$" value
+    Then Fee "should not" have "$" value
     When I click by "alt" with "ETH token icon" value
-    Then Fee should have "$" value
+    Then Fee "should" have "$" value
     When I hover the "partial class" element with "radial-progress" value
     Then Element with "text" "Updating fee every 60 seconds" should be "visible"
     

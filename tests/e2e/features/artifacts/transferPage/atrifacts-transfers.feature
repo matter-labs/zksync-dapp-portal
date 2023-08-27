@@ -195,8 +195,8 @@ Feature: Artifacts - UI
     Then Element with "id" "amount-input" should be "visible"
     Then Element with "placeholder" "0" should be "visible"
     Then Element with "testId" "fee-amount" should be "visible"
-    Then Fee should have "$" value
-    Then Fee should have "ETH" value
+    Then Fee "should" have "$" value
+    Then Fee "should" have "ETH" value
     Then Circle timer for fee updating should be visible
     When I confirm the network switching
     Then Element with "text" " Continue " should be "visible"

@@ -118,6 +118,19 @@ export class MainPage extends BasePage {
     return `${this.modalCard}//button[text()='${buttonText}']`;
   }
 
+  async feeValueIs(flag: string, value: string) {
+    const helperPage = await new Helper(this.world);
+    const element = this.feeValue;
+    await this.world.page?.waitForTimeout(5000); // required
+    await helperPage.checkElementVisible(element);
+    result = await this.world.page?.locator(element);
+    if (flag == "should") {
+      return await expect(result).toContainText(value);
+    } else if (flag == "should not") {
+      return await expect(result).not.toContainText(value);
+    }
+  }
+
   async selectTransaction(transactionType: string) {
     try {
       let route: string;

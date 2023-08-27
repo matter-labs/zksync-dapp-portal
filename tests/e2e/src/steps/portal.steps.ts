@@ -294,23 +294,14 @@ Given(
   }
 );
 
-Then("Fee should have {string} value", config.stepTimeout, async function (this: ICustomWorld, fee: string) {
-  mainPage = new MainPage(this);
-  element = mainPage.feeValue;
-  await this.page?.waitForTimeout(5000); // required
-  await this.page?.waitForSelector(element);
-  result = await this.page?.locator(element);
-  await expect(result).toContainText(fee);
-});
-
-Then("Fee should not have {string} value", config.stepTimeout, async function (this: ICustomWorld, fee: string) {
-  mainPage = new MainPage(this);
-  element = mainPage.feeValue;
-  await this.page?.waitForTimeout(5000); // required
-  await this.page?.waitForSelector(element);
-  result = await this.page?.locator(element);
-  await expect(result).not.toContainText(fee);
-});
+Then(
+  "Fee {string} have {string} value",
+  config.stepTimeout,
+  async function (this: ICustomWorld, flag: string, value: string) {
+    mainPage = new MainPage(this);
+    await mainPage.feeValueIs(flag, value);
+  }
+);
 
 Then(
   "Modal card element with the {string} xpath should be {string}",
