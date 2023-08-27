@@ -4,7 +4,7 @@ Feature: Deposit
   Background:
     Given Connect Metamask extension with login action
 
-  @id1418 @id1280
+  @id1418 @id1396
   Scenario: Make a deposit in ETH
     Given I am on the Main page
     Given I go to "Deposit" transaction section
@@ -16,6 +16,12 @@ Feature: Deposit
     When I choose "ETH" as token and insert "0.0000000001" as amount
     When I "confirm" transaction after clicking "Add funds to zkSync Era Testnet" button
     Then Message "Transaction submitted" should be visible
+    # id1396
+    Then Element with "text" " Go to Assets page " should be "visible"
+    Then Element with "text" " Go to Assets page " should be "clickable"
+    When I click by the "//*[text()=' Go to Assets page ']" text element on the Modal card
+    Then I am on the Main page without a NetworkSwitcher 
+    
 
   @id1280
   Scenario: Deposit - Track status Link redirection

@@ -254,7 +254,7 @@ export class MetamaskPage extends BasePage {
       this.world.context?.waitForEvent("page"),
       await helper.checkElementVisible(element),
       await this.world.page?.locator(element).first().click(),
-      await setTimeout(config.defaultTimeout.timeout),
+      await setTimeout(config.minimalTimeout.timeout),
       await this.isFeeAlert(element),
     ]);
     return popUp;

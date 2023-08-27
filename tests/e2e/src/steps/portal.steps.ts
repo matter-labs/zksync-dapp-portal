@@ -237,6 +237,14 @@ Given("I am on the Main page", async function (this: ICustomWorld) {
   await expect(this.page?.url()).toBe(config.BASE_URL + NetworkSwitcher.zkSyncEraGoerli);
 });
 
+Given("I am on the Main page without a NetworkSwitcher", async function (this: ICustomWorld) {
+  const basePage = new BasePage(this);
+  element = await basePage.returnElementByType("text", "Assets");
+  await this.page?.waitForTimeout(2000);
+  await expect(element).toBeVisible(config.increasedTimeout);
+  await expect(this.page?.url()).toBe(config.BASE_URL + "/");
+});
+
 Then("Current page have {string} address", config.stepTimeout, async function (this: ICustomWorld, route: string) {
   mainPage = new MainPage(this);
   helper = new Helper(this);
