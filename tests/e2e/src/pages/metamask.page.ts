@@ -72,7 +72,7 @@ export class MetamaskPage extends BasePage {
   }
 
   get declineBtn() {
-    return "//*[@data-testid='page-container-footer-cancel']";
+    return `//*[@data-testid='page-container-footer-cancel'] | //button[contains(text(), 'Reject')]`;
   }
 
   get newPasswordField() {
@@ -212,7 +212,7 @@ export class MetamaskPage extends BasePage {
     if (networkChangeRequest) {
       await this.switchNetwork();
     }
-    await setTimeout(config.defaultTimeout.timeout);
+    await setTimeout(config.minimalTimeout.timeout);
     selector = await mainPage.commonButtonByItsName("Continue");
     const continueBtn = await helper.checkElementVisible(selector);
     const modalCard = await helper.checkElementVisible(mainPage.modalCard);
@@ -242,6 +242,8 @@ export class MetamaskPage extends BasePage {
       await popUpContext?.click(this.confirmTransaction);
     } else if (argument == "networkSwitch") {
       await popUpContext?.click(this.switchNetworkButton);
+    } else if (argument == "reject") {
+      await popUpContext?.click(this.declineBtn, config.increasedTimeout);
     }
   }
 

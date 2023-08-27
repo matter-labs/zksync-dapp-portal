@@ -16,3 +16,13 @@ Feature: Deposit
     When I choose "ETH" as token and insert "0.0000000001" as amount
     When I "confirm" transaction after clicking "Add funds to zkSync Era Testnet" button
     Then Message "Transaction submitted" should be visible
+
+  @id1394
+  Scenario: Reject Deposit transaction
+    Given I am on the Main page
+    Given I go to "Deposit" transaction section
+    When I click by "text" with "Your account" value
+    When I choose "ETH" as token and insert "0.0000000001" as amount
+    When I "reject" transaction after clicking "Add funds to zkSync Era Testnet" button
+    Then Element with "text" "Add funds to zkSync Era Testnet" should be "visible"
+    Then Element with "text" "Add funds to zkSync Era Testnet" should be "clickable"

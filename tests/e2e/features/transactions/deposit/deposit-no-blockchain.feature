@@ -60,3 +60,11 @@ Feature: Deposit
     When I hover the "partial class" element with "radial-progress" value
     Then Element with "text" "Updating fee every 60 seconds" should be "visible"
     
+  @id1325
+  Scenario: Deposit - Send 0 funds
+    Given I am on the Main page
+    When I go to "Deposit" transaction section
+    When I click by "text" with "Your account" value
+    When I choose "ETH" as token and insert "0" as amount
+    When I confirm the network switching
+    Then Element with "text" " Continue " should be "disabled"
