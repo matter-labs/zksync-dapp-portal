@@ -330,7 +330,6 @@ When(
     mainPage = new MainPage(this);
     result = await mainPage.isElementDissapeared(selecterValue, seconds);
     await expect(result).toBe(true);
-    console.timeEnd();
   }
 );
 
