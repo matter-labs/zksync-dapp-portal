@@ -22,7 +22,6 @@ Feature: Deposit
     When I click by "text" with " Go to Assets page " value
     Then I am on the Main page 
     
-
   @id1280
   Scenario: Deposit - Track status Link redirection
     Given I am on the Main page
@@ -36,6 +35,18 @@ Feature: Deposit
     When I click by the "//*[text()=' Track status ']" text element on the Modal card
     Then New page has "https://goerli.etherscan.io/tx/" partial address
 
+  @id1280
+  Scenario: Deposit - Track status Link redirection
+    Given I am on the Main page
+    Given I go to "Deposit" transaction section
+    When I click by "text" with "Your account" value
+    When I choose "ETH" as token and insert "0.0000000001" as amount
+    When I "confirm" transaction after clicking "Add funds to zkSync Era Testnet" button
+    Then Message "Transaction submitted" should be visible
+    Then Modal card element with the "//*[contains(text(),'Track status')]" xpath should be "visible"
+    Then Modal card element with the "//*[contains(text(),'Track status')]" xpath should be "clickable"
+    When I click by the "//*[text()=' Track status ']" text element on the Modal card
+    Then New page has "https://goerli.etherscan.io/tx/" partial address
 
   @id1394
   Scenario: Reject Deposit transaction
