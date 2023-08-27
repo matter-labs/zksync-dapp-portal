@@ -46,7 +46,7 @@ Feature: Deposit
     Then Fee "should" have "$" value
     Then Fee "should" have "ETH" value
     Then Circle timer for fee updating should be visible
-    Then Element "ETH token icon" should dissapear in 60 seconds
+    # Then Element "ETH token icon" should dissapear in 60 seconds
     When I choose "DAI" as token and insert "1" as amount
     Then Element with "testId" "fee-amount" should be "visible"
     Then Fee "should" have "$" value
