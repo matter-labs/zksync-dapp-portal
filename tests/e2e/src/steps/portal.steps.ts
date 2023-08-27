@@ -333,13 +333,15 @@ When(
 
 When(
   "Element {string} should dissapear in {int} seconds",
-  config.stepTimeout,
+  config.stepExtraTimeout,
   async function (this: ICustomWorld, string: string, timeout: number) {
+    console.time();
     helper = new Helper(this);
     const basePage = new BasePage(this);
     const selector = `//*[@${basePage.byTestId}'fee-amount']//*[@alt='${string}']`;
     result = await helper.checkSelectorHidden(selector, timeout * 1000);
     await expect(result).toBe(true);
+    console.timeEnd();
   }
 );
 
