@@ -338,7 +338,7 @@ When(
     helper = new Helper(this);
     const basePage = new BasePage(this);
     const selector = `//*[@${basePage.byTestId}'fee-amount']//*[@alt='${string}']`;
-    const timeout = (seconds + 10) * 1000; // plus extra 10 seconds to avoid false positive timeout issues
+    const timeout = (seconds + 5) * 1000; // plus extra 5 seconds to avoid false positive timeout issues
     result = await helper.checkSelectorHidden(selector, timeout);
     await expect(result).toBe(true);
   }
