@@ -289,6 +289,9 @@ export class MainPage extends BasePage {
 
   async maxAmountIsSet() {
     const basePage = new BasePage(this.world);
-    basePage.verifyContent("class", "amount-input-field", maxBalanceErrorValue, "value");
+    const elementType = "class";
+    const elementValue = "amount-input-field";
+    const contentType = "value";
+    basePage.verifyContent(elementType, elementValue, maxBalanceErrorValue, contentType);
   }
 }

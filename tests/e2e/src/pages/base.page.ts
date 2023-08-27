@@ -277,9 +277,14 @@ export class BasePage {
     }
   }
 
+  /**
+   * verifyContent checks if we have a value or text in an arbitrary elementType with an arbitrary elementValue
+   * @param elementType - f.e. class/alt/id/text
+   * @param elementValue - value of elementType
+   * @param content - what we are going to verify
+   * @param contentType - value or text
+   */
   async verifyContent(elementType: string, elementValue: string, content: string, contentType: string) {
-    // elementType - f.e. class/text, elementValue - value of class/text
-    // content - what we are going to verify, contentType - value or text
     element = await this.returnElementByType(elementType, elementValue);
     if (contentType === "value") {
       await expect(element).toHaveValue(content);
