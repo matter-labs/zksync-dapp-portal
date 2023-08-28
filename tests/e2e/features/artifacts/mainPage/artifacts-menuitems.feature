@@ -55,10 +55,10 @@ Feature: Artifacts - UI
     Then Element with "testId" "close-button" should be "clickable"
     Then Element with "text" "Selected network" should be "visible"
     Then Element with "text" "Other networks" should be "visible"
-    Then Element with "src" "/img/era.svg?v=1" should be "visible"
-    Then Element with "src" "/img/era.svg?v=1" should be "clickable"
-    Then Element with "src" "/img/ethereum.svg?v=1" should be "visible"
-    Then Element with "src" "/img/ethereum.svg?v=1" should be "clickable"
+    Then Element with "src" "/img/era.svg" should be "visible"
+    Then Element with "src" "/img/era.svg" should be "clickable"
+    Then Element with "src" "/img/ethereum.svg" should be "visible"
+    Then Element with "src" "/img/ethereum.svg" should be "clickable"
 
   @id1409:II
   Scenario: Check artifacts on the View on Explorer menu for Era Testnet
@@ -72,10 +72,10 @@ Feature: Artifacts - UI
     Then Element with "testId" "close-button" should be "clickable"
     Then Element with "text" "Selected network" should be "visible"
     Then Element with "text" "Other networks" should be "visible"
-    Then Element with "src" "/img/era.svg?v=1" should be "visible"
-    Then Element with "src" "/img/era.svg?v=1" should be "clickable"
-    Then Element with "src" "/img/ethereum.svg?v=1" should be "visible"
-    Then Element with "src" "/img/ethereum.svg?v=1" should be "clickable"
+    Then Element with "src" "/img/era.svg" should be "visible"
+    Then Element with "src" "/img/era.svg" should be "clickable"
+    Then Element with "src" "/img/ethereum.svg" should be "visible"
+    Then Element with "src" "/img/ethereum.svg" should be "clickable"
 
   @id1581:I
   Scenario: Check artifacts on the View on Explorer menu for Lite Mainnet
@@ -89,10 +89,10 @@ Feature: Artifacts - UI
     Then Element with "testId" "close-button" should be "clickable"
     Then Element with "text" "Selected network" should be "visible"
     Then Element with "text" "Other networks" should be "visible"
-    Then Element with "src" "/img/zksync-lite.svg?v=1" should be "visible"
-    Then Element with "src" "/img/zksync-lite.svg?v=1" should be "clickable"
-    Then Element with "src" "/img/ethereum.svg?v=1" should be "visible"
-    Then Element with "src" "/img/ethereum.svg?v=1" should be "clickable"
+    Then Element with "src" "/img/zksync-lite.svg" should be "visible"
+    Then Element with "src" "/img/zksync-lite.svg" should be "clickable"
+    Then Element with "src" "/img/ethereum.svg" should be "visible"
+    Then Element with "src" "/img/ethereum.svg" should be "clickable"
 
   @id1581:II
   Scenario: Check artifacts on the View on Explorer menu for Lite Goerli
@@ -106,7 +106,7 @@ Feature: Artifacts - UI
     Then Element with "testId" "close-button" should be "clickable"
     Then Element with "text" "Selected network" should be "visible"
     Then Element with "text" "Other networks" should be "visible"
-    Then Element with "src" "/img/zksync-lite.svg?v=1" should be "visible"
-    Then Element with "src" "/img/zksync-lite.svg?v=1" should be "clickable"
-    Then Element with "src" "/img/ethereum.svg?v=1" should be "visible"
-    Then Element with "src" "/img/ethereum.svg?v=1" should be "clickable"
+    Then Element with "src" "/img/zksync-lite.svg" should be "visible"
+    Then Element with "src" "/img/zksync-lite.svg" should be "clickable"
+    Then Element with "src" "/img/ethereum.svg" should be "visible"
+    Then Element with "src" "/img/ethereum.svg" should be "clickable"

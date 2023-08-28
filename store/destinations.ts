@@ -21,52 +21,57 @@ export const useDestinationsStore = defineStore("destinations", () => {
     zkSyncLite: {
       key: "zkSyncLite",
       label: zkSyncLiteNetwork.value.name,
-      iconUrl: "/img/zksync-lite.svg?v=1",
+      iconUrl: "/img/zksync-lite.svg",
     },
     era: {
       key: "era",
       label: eraNetwork.value.name,
-      iconUrl: "/img/era.svg?v=1",
+      iconUrl: "/img/era.svg",
     },
     ethereum: {
       key: "ethereum",
       label: `Ethereum ${l1Network.value ? l1Network.value.name : ""}`,
-      iconUrl: "/img/ethereum.svg?v=1",
+      iconUrl: "/img/ethereum.svg",
     },
     layerswap: {
       key: "layerswap",
       label: "Layerswap",
-      iconUrl: "/img/layerswap.svg?v=1",
+      iconUrl: "/img/layerswap.svg",
     },
     orbiter: {
       key: "orbiter",
       label: "Orbiter",
-      iconUrl: "/img/orbiter.svg?v=1",
+      iconUrl: "/img/orbiter.svg",
     },
     banxa: {
       key: "banxa",
       label: "Banxa",
-      iconUrl: "/img/banxa.svg?v=1",
+      iconUrl: "/img/banxa.svg",
     },
     ramp: {
       key: "ramp",
       label: "Ramp",
-      iconUrl: "/img/ramp.svg?v=1",
+      iconUrl: "/img/ramp.svg",
     },
     moonpay: {
       key: "moonpay",
       label: "Moonpay",
-      iconUrl: "/img/moonpay.svg?v=1",
+      iconUrl: "/img/moonpay.svg",
     },
     binance: {
       key: "binance",
       label: "Binance",
-      iconUrl: "/img/binance.svg?v=1",
+      iconUrl: "/img/binance.svg",
     },
     zigzag: {
       key: "zigzag",
       label: "ZigZag",
-      iconUrl: "/img/zigzag.svg?v=1",
+      iconUrl: "/img/zigzag.svg",
+    },
+    rhino: {
+      key: "rhino",
+      label: "rhino.fi",
+      iconUrl: "/img/rhino.svg",
     },
   }));
 
