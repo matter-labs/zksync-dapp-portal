@@ -229,6 +229,17 @@ Feature: Artifacts - UI
     When I "confirm" transaction after clicking "Send to zkSync Era Testnet" button
     #Links check
     Then Element with "href" "https://goerli.explorer.zksync.io/address/0x2CF4F78917A16C9584AeB5d4c5bD2713d724C75d" should be "clickable"
+    Then I click by "href" with "https://goerli.explorer.zksync.io/address/0x2CF4F78917A16C9584AeB5d4c5bD2713d724C75d" value
+    Then New page has "goerli.explorer.zksync.io/address/0x2CF4F78917A16C9584AeB5d4c5bD2713d724C75d" partial address
+    #
     Then Element with "partial href" "https://goerli.explorer.zksync.io/tx/" should be "clickable"
+    Then I click by "href" with "https://goerli.explorer.zksync.io/tx/" value
+    Then New page has "https://goerli.explorer.zksync.io/tx/" partial address
+    #
     Then Element with "partial href" "/transaction/zksync/era" should be "clickable"
+    Then I click by "href" with "/transaction/zksync/era" value
+    Then New page has "/transaction/zksync/era" partial address
+    #
     Then Element with "href" "/" should be "clickable"
+    Then I click by "href" with "/" value
+    Then New page has "/" address
