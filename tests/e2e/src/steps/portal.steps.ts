@@ -80,10 +80,10 @@ When(
 
 When(
   "Message {string} should be visible",
-  { timeout: 181 * 1000 },
+  config.stepTimeout,
   async function (this: ICustomWorld, successMessage: string) {
     result = await this.page?.locator(`//*[text()="${successMessage}"]`).first();
-    await expect(result).toBeVisible({ timeout: 180 * 1000 });
+    await expect(result).toBeVisible(config.stepTimeout);
   }
 );
 
@@ -375,4 +375,19 @@ Given("I reset allowance", config.stepExtraTimeout, async function (this: ICusto
   await revokePage.login();
   await revokePage.revokeAllowance();
   await revokePage.logout();
+});
+
+When("I save Max Balance Error Value", config.stepTimeout, async function (this: ICustomWorld) {
+  mainPage = new MainPage(this);
+  await mainPage.saveMaxBalanceErrorValue();
+});
+
+When("I click on the underlined Max amount number", config.stepTimeout, async function (this: ICustomWorld) {
+  mainPage = new MainPage(this);
+  await mainPage.click(mainPage.amountInputErrorButton);
+});
+
+When("Max amount is set to the input field", config.stepTimeout, async function (this: ICustomWorld) {
+  mainPage = new MainPage(this);
+  await mainPage.maxAmountIsSet();
 });

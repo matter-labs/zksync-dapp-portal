@@ -4,7 +4,7 @@ import { setTimeout } from "timers/promises";
 import { BasePage } from "./base.page";
 import { MainPage } from "./main.page";
 import { Extension } from "../data/data";
-import { depositTag, Helper, transactionsTag } from "../helpers/helper";
+import { depositTag, Helper, resetAllowanceTag } from "../helpers/helper";
 import { config, wallet } from "../support/config";
 
 import type { ICustomWorld } from "../support/custom-world";
@@ -199,7 +199,7 @@ export class MetamaskPage extends BasePage {
       }
     }
     logoutTrigger = false;
-    if (transactionsTag) {
+    if (resetAllowanceTag) {
       await this.extractCurrentWalletAddress();
     }
   }

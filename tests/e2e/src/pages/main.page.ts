@@ -11,6 +11,7 @@ import type { ICustomWorld } from "../support/custom-world";
 
 let metamaskPage: any;
 let result: any;
+let maxBalanceErrorValue: string;
 
 export class MainPage extends BasePage {
   constructor(world: ICustomWorld) {
@@ -83,6 +84,10 @@ export class MainPage extends BasePage {
 
   get networkSwitcher() {
     return `${this.byTestId}network-switcher`;
+  }
+
+  get amountInputErrorButton() {
+    return `//*[@class="amount-input-error"]//button`;
   }
 
   async getButton(buttonName: string) {
@@ -256,5 +261,16 @@ export class MainPage extends BasePage {
   async clickOnButton(buttonName: string) {
     const selector = await this.getButton(buttonName);
     await this.click(selector);
+  }
+
+  async saveMaxBalanceErrorValue() {
+    const helper = new Helper(this.world);
+    const selector = this.amountInputErrorButton;
+    maxBalanceErrorValue = await helper.getTextFromLocator(selector);
+  }
+
+  async maxAmountIsSet() {
+    const basePage = new BasePage(this.world);
+    basePage.verifyContent("class", "amount-input-field", maxBalanceErrorValue, "value");
   }
 }
