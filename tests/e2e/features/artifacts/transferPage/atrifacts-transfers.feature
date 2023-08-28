@@ -216,6 +216,8 @@ Feature: Artifacts - UI
     Then I confirm the network switching
     Then Element with "partial class" "is-max" should be "visible"
     Then Max amount is set to the input field
+      #Check Continue button is clickable
+    Then Element with "text" " Continue " should be "clickable"
 
   @id1538 @Transfer
   Scenario: Check Transaction submitted window redirection links
