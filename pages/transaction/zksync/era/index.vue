@@ -67,6 +67,13 @@
           target="_blank"
           href="https://www.orbiter.finance/?source=zkSync%20Era"
         />
+        <DestinationItem
+          v-bind="destinations.rhino"
+          :icon="ArrowUpRightIcon"
+          as="a"
+          target="_blank"
+          href="https://app.rhino.fi/bridge?chainOut=ETHEREUM&chain=ZKSYNC&token=ETH"
+        />
       </CommonCardWithLineButtons>
     </template>
   </div>
