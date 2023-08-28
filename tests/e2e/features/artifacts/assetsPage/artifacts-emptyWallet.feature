@@ -35,7 +35,7 @@ Feature: Artifacts - UI
       | goerli  | send        |
       | mainnet | withdraw    |
       | goerli  | withdraw    |
-
+      
     @id1676 @Transfer
     Scenario: Check "Insufficient balance" warning message (Zero token balance) (Transfer)
       Then A wallet should be "empty"
@@ -47,3 +47,15 @@ Feature: Artifacts - UI
           # Technical step to see Continue button
       Then I confirm the network switching
       Then Element with "text" " Continue " should be "disabled"
+
+  @id1678
+  Scenario: Check "Insufficient balance" warning message (Zero token balance) (Bridge)
+    Then A wallet should be "empty"
+    When I go to page "/bridge?network=era-goerli"
+    When I click by text "Withdraw"
+    When I choose "ETH" as token and insert "1000" as amount
+    Then Message " Insufficient balance " should be visible
+    #Error state
+    Then Element with "partial class" "has-error" should be "visible"
+    Then Element with "partial class" "amount-input-error" should be "visible"
+    
