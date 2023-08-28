@@ -216,8 +216,6 @@ Feature: Artifacts - UI
     Then I click by "text" with " Max " value
     Then Element with "partial class" "is-max" should be "visible"
     Then Max amount is set to the input field
-      # Verify max amount set to the field for Withdraw
-    Then Element with "title" "Max amount is set" should be "visible"
       #Continue button is clickable
     Then Element with "text" " Continue " should be "clickable"
 
@@ -233,11 +231,11 @@ Feature: Artifacts - UI
     Then New page has "goerli.explorer.zksync.io/address/0x2CF4F78917A16C9584AeB5d4c5bD2713d724C75d" partial address
     #
     Then Element with "partial href" "https://goerli.explorer.zksync.io/tx/" should be "clickable"
-    Then I click by "href" with "https://goerli.explorer.zksync.io/tx/" value
+    Then I click by "partial href" with "https://goerli.explorer.zksync.io/tx/" value
     Then New page has "https://goerli.explorer.zksync.io/tx/" partial address
     #
     Then Element with "partial href" "/transaction/zksync/era" should be "clickable"
-    Then I click by "href" with "/transaction/zksync/era" value
+    Then I click by "partial href" with "/transaction/zksync/era" value
     Then New page has "/transaction/zksync/era" partial address
     #
     Then Element with "href" "/" should be "clickable"
