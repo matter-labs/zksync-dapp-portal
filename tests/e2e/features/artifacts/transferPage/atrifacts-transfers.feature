@@ -166,6 +166,7 @@ Feature: Artifacts - UI
     Then Fee should have "$" value
     Then Fee should have "ETH" value
     Then Circle timer for fee updating should be visible
+    When I confirm the network switching
     #Max button
     Then Element with "partial text" "Max" should be "visible"
     Then Element with "partial text" "Max" should be "clickable"
@@ -173,7 +174,6 @@ Feature: Artifacts - UI
     Then I click by "text" with " Max " value
     Then Element with "partial class" "is-max" should be "visible"
     Then Max amount is set to the input field
-    When I confirm the network switching
     Then Element with "text" " Continue " should be "visible"
 
   @id1566 @Transfer
