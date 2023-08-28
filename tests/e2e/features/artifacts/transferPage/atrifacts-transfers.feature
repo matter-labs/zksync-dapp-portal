@@ -206,7 +206,6 @@ Feature: Artifacts - UI
   @id1286 @Transfer
   Scenario: Check max button functionality
     When I go to page "/transaction/zksync/era/send/?address=0x2CF4F78917A16C9584AeB5d4c5bD2713d724C75d"
-    Then I confirm the network switching
       #Max button is displayed
     Then Element with "partial text" "Max" should be "visible"
     Then Element with "partial text" "Max" should be "clickable"
@@ -217,6 +216,7 @@ Feature: Artifacts - UI
     Then Element with "partial class" "is-max" should be "visible"
     Then Max amount is set to the input field
       #Continue button is clickable
+    Then I confirm the network switching
     Then Element with "text" " Continue " should be "clickable"
 
   @id1538 @Transfer
@@ -240,4 +240,4 @@ Feature: Artifacts - UI
     #
     Then Element with "href" "/" should be "clickable"
     Then I click by "href" with "/" value
-    Then New page has "/" address
+    Then New page has "/" partial address
