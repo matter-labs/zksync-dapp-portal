@@ -213,10 +213,10 @@ Feature: Artifacts - UI
     Then Element with "partial title" "Your max amount is" should be "visible"
       #Verify "Max" button is highlighted after clicking on it
     Then I click by "text" with " Max " value
+    Then I confirm the network switching
     Then Element with "partial class" "is-max" should be "visible"
     Then Max amount is set to the input field
       #Continue button is clickable
-    Then I confirm the network switching
     Then Element with "text" " Continue " should be "clickable"
 
   @id1538 @Transfer
