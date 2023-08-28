@@ -46,3 +46,28 @@ Feature: Artifacts - UI
     #Error state
     Then Element with "partial class" "has-error" should be "visible"
     Then Element with "partial class" "amount-input-error" should be "visible"
+
+    @id1618
+    Scenario: Check the Empty wallet Artifacts on the Bridge Deposit Page
+      Given I go to page "/bridge?network=era-goerli"
+      When I click by text "Deposit"
+      When I choose "ETH" as token and insert "0" as amount
+      When Element with "text" " Insufficient " should be "visible"
+      Then Message "ETH" should be visible
+      Then Message " balance on Ethereum Goerli Testnet to cover the fee. We recommend having at least " should be visible
+      Then Message " on Goerli Testnet for deposit. " should be visible
+      Then Element with "text" "Fee:" should be "invisible"
+      #Fee component
+      Then Element with "data-testid" "fee-amount" should be "invisible"
+
+    @id1677
+    Scenario: Check "Insufficient balance" warning message (Zero token balance) (Bridge)
+      Given A wallet should be "empty"
+      When I go to page "/bridge?network=era-goerli"
+      When I click by text "Deposit"
+      When I choose "ETH" as token and insert "1000" as amount
+      Then Message " Insufficient balance " should be visible
+      #Error state
+      Then Element with "partial class" "has-error" should be "visible"
+      Then Element with "partial class" "amount-input-error" should be "visible"
+      

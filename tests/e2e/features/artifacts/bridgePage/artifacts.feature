@@ -234,3 +234,37 @@ Feature: Withdraw
       When I click by text "0x52B6...f46"
       Then Element with "text" "zkSync Era Testnet address" should be "visible"
       Then Element with "text" "0x52B6...f46" should be "visible"
+
+    @id1605:I
+    Scenario Outline: Check redirection for the Bridge "View on Explorer" links (Testnet)
+      Given I go to page "/bridge?network=era-goerli"
+      When I click by partial text "..."
+      Then Element with "text" "View on Explorer" should be "visible"
+      When I click by text "View on Explorer"
+      Then Modal card element with the "//*[text()='View on explorer']" xpath should be "visible"
+      When I click by the "<Explorer item>" text on the Explorer Modal
+      Then New page has "<url>" address
+
+    Examples:
+      | Explorer item           | url                                                                                   |
+      | zkSync Era Testnet      | https://goerli.explorer.zksync.io/address/0x2CF4F78917A16C9584AeB5d4c5bD2713d724C75d  |
+      | Ethereum Goerli Testnet | https://goerli.etherscan.io/address/0x2CF4F78917A16C9584AeB5d4c5bD2713d724C75d        |
+      | zkSync Lite Goerli      | https://goerli.zkscan.io/explorer/accounts/0x2cf4f78917a16c9584aeb5d4c5bd2713d724c75d |
+
+
+    @id1605:II
+    Scenario Outline: Check redirection for the Bridge "View on Explorer" links (Mainnet)
+      Given I go to page "/bridge?network=era-mainnet"
+      When I click by partial text "..."
+      Then Element with "text" "View on Explorer" should be "visible"
+      When I click by text "View on Explorer"
+      Then Modal card element with the "//*[text()='View on explorer']" xpath should be "visible"
+      When I click by the "<Explorer item>" text on the Explorer Modal
+      Then New page has "<url>" address
+
+    Examples:
+      | Explorer item      | url                                                                             |
+      | zkSync Era Mainnet | https://explorer.zksync.io/address/0x2CF4F78917A16C9584AeB5d4c5bD2713d724C75d   |
+      | Ethereum Mainnet   | https://etherscan.io/address/0x2CF4F78917A16C9584AeB5d4c5bD2713d724C75d         |
+      | zkSync Lite Mainnet| https://zkscan.io/explorer/accounts/0x2cf4f78917a16c9584aeb5d4c5bd2713d724c75d  | 
+  
