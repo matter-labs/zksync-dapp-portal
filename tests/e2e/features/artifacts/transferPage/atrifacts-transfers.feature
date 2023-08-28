@@ -159,13 +159,6 @@ Feature: Artifacts - UI
     #Balance
     Then Element with "text" " Balance: " should be "visible"
     Then Element with "class" "break-all" should be "visible"
-    #Max button
-    Then Element with "partial text" "Max" should be "visible"
-    Then Element with "partial text" "Max" should be "clickable"
-    Then Element with "partial title" "Your max amount is" should be "visible"
-    Then I click by "text" with " Max " value
-    Then Element with "partial class" "is-max" should be "visible"
-    Then Max amount is set to the input field
     #Value field
     Then Element with "id" "amount-input" should be "visible"
     Then Element with "placeholder" "0" should be "visible"
@@ -173,6 +166,13 @@ Feature: Artifacts - UI
     Then Fee should have "$" value
     Then Fee should have "ETH" value
     Then Circle timer for fee updating should be visible
+    #Max button
+    Then Element with "partial text" "Max" should be "visible"
+    Then Element with "partial text" "Max" should be "clickable"
+    Then Element with "partial title" "Your max amount is" should be "visible"
+    Then I click by "text" with " Max " value
+    Then Element with "partial class" "is-max" should be "visible"
+    Then Max amount is set to the input field
     When I confirm the network switching
     Then Element with "text" " Continue " should be "visible"
 
