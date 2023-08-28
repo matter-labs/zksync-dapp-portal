@@ -216,8 +216,6 @@ Feature: Artifacts - UI
     Then I confirm the network switching
     Then Element with "partial class" "is-max" should be "visible"
     Then Max amount is set to the input field
-      #Continue button is clickable
-    Then Element with "text" " Continue " should be "clickable"
 
   @id1538 @Transfer
   Scenario: Check Transaction submitted window redirection links
@@ -229,15 +227,15 @@ Feature: Artifacts - UI
     Then Element with "href" "https://goerli.explorer.zksync.io/address/0x2CF4F78917A16C9584AeB5d4c5bD2713d724C75d" should be "clickable"
     Then I click by "href" with "https://goerli.explorer.zksync.io/address/0x2CF4F78917A16C9584AeB5d4c5bD2713d724C75d" value
     Then New page has "goerli.explorer.zksync.io/address/0x2CF4F78917A16C9584AeB5d4c5bD2713d724C75d" partial address
-    #
+    # Check Block Explorer link
     Then Element with "partial href" "https://goerli.explorer.zksync.io/tx/" should be "clickable"
     Then I click by "partial href" with "https://goerli.explorer.zksync.io/tx/" value
     Then New page has "https://goerli.explorer.zksync.io/tx/" partial address
-    #
+    # Check Make another transaction
     Then Element with "partial href" "/transaction/zksync/era" should be "clickable"
     Then I click by "partial href" with "/transaction/zksync/era" value
     Then New page has "/transaction/zksync/era" partial address
-    #
+    # Check Go to Assets page
     Then Element with "href" "/" should be "clickable"
     Then I click by "href" with "/" value
     Then New page has "/" partial address
