@@ -148,7 +148,7 @@ Feature: Artifacts - UI
     Then Element with "text" "0x1ab721...184" should be "visible"
     Then Element with "partial src" "zz.png" should be "visible"
 
-  @id1364 @id1343  @id1286 @Transfer
+  @id1364 @id1343  @Transfer
   Scenario: Check artifacts on the Send to page - Transfer
     Given I am on the Main page
     When I go to page "/transaction/zksync/era/send/?address=0x2CF4F78917A16C9584AeB5d4c5bD2713d724C75d"
@@ -159,6 +159,9 @@ Feature: Artifacts - UI
     #Balance
     Then Element with "text" " Balance: " should be "visible"
     Then Element with "class" "break-all" should be "visible"
+    #Max button
+    Then Element with "partial text" "Max" should be "visible"
+    Then Element with "partial text" "Max" should be "clickable"
     #Value field
     Then Element with "id" "amount-input" should be "visible"
     Then Element with "placeholder" "0" should be "visible"
@@ -167,13 +170,6 @@ Feature: Artifacts - UI
     Then Fee should have "ETH" value
     Then Circle timer for fee updating should be visible
     When I confirm the network switching
-    #Max button
-    Then Element with "partial text" "Max" should be "visible"
-    Then Element with "partial text" "Max" should be "clickable"
-    Then Element with "partial title" "Your max amount is" should be "visible"
-    Then I click by "text" with " Max " value
-    Then Element with "partial class" "is-max" should be "visible"
-    Then Max amount is set to the input field
     Then Element with "text" " Continue " should be "visible"
 
   @id1566 @Transfer
@@ -206,6 +202,22 @@ Feature: Artifacts - UI
     Then Modal card element with the "//*[contains(@class, '-my-0.5')]//button[contains(., 'ETH')]" xpath should be "visible"
     Then Element with "text" "Send to zkSync Era Testnet" should be "visible"
     Then Element with "text" "Send to zkSync Era Testnet" should be "clickable"
+
+  @id1286 @Transfer
+  Scenario: Check max button functionality
+    When I go to page "/transaction/zksync/era/send/?address=0x2CF4F78917A16C9584AeB5d4c5bD2713d724C75d"
+    Then I confirm the network switching
+      #Max button is displayed
+    Then Element with "partial text" "Max" should be "visible"
+    Then Element with "partial text" "Max" should be "clickable"
+      #Hover tooltip check
+    Then Element with "partial title" "Your max amount is" should be "visible"
+      #Verify "Max" button is highlighted after clicking on it
+    Then I click by "text" with " Max " value
+    Then Element with "partial class" "is-max" should be "visible"
+    Then Max amount is set to the input field
+      #Check Continue button is clickable
+    Then Element with "text" " Continue " should be "clickable"
 
   @id1538 @Transfer
   Scenario: Check Transaction submitted window redirection links
