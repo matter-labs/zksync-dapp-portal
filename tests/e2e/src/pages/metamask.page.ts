@@ -4,7 +4,7 @@ import { setTimeout } from "timers/promises";
 import { BasePage } from "./base.page";
 import { MainPage } from "./main.page";
 import { Extension } from "../data/data";
-import { depositTag, Helper } from "../helpers/helper";
+import { depositTag, Helper, resetAllowanceTag } from "../helpers/helper";
 import { config, wallet } from "../support/config";
 
 import type { ICustomWorld } from "../support/custom-world";
@@ -13,6 +13,8 @@ let page: any;
 let element: any;
 let metamaskHomeUrl: string;
 let metamaskWelcomeUrl: string;
+export let address: string;
+let selector: string;
 let testId: any;
 let logoutTrigger: any = undefined;
 
@@ -49,6 +51,14 @@ export class MetamaskPage extends BasePage {
     return "//*[@data-testid='advanced-setting-reset-account']//button[1]"; // //button[contains(text(),'Reset')]|
   }
 
+  get nextButton() {
+    return "//button[contains(text(), 'Next')]";
+  }
+
+  get switchNetworkButton() {
+    return "//button[contains(text(), 'Switch network')]";
+  }
+
   get extensionDetailsBtn() {
     return "id=detailsButton";
   }
@@ -58,7 +68,7 @@ export class MetamaskPage extends BasePage {
   }
 
   get confirmTransaction() {
-    return "//*[@data-testid='page-container-footer-next']";
+    return `//*[@data-testid='page-container-footer-next'] | //button[contains(text(), 'Confirm')]`;
   }
 
   get declineBtn() {
@@ -109,6 +119,10 @@ export class MetamaskPage extends BasePage {
     return `@value='${value}'`;
   }
 
+  get copyWalletAddress() {
+    return "//button[@class='selected-account__clickable']";
+  }
+
   //metamask home page
   get headerIcon() {
     return "(//*[contains(@class,'app-header')]//div[contains(@class,'identicon')])[1]";
@@ -154,6 +168,17 @@ export class MetamaskPage extends BasePage {
     }
   }
 
+  async extractCurrentWalletAddress() {
+    const helper = await new Helper(this.world);
+    const currentURL = page.url();
+    await page.goto(metamaskWelcomeUrl);
+    await page.reload();
+    await page.locator("//button[@data-testid='popover-close']").click();
+    await page.locator(this.copyWalletAddress).click();
+    address = await helper.getClipboardValue();
+    await page.goto(currentURL);
+  }
+
   async authorizeInMetamaskExtension(secretPhrase: Array<string>, password: string) {
     const helper = await new Helper(this.world);
     const wallet_password = await helper.decrypt(wallet.password);
@@ -174,20 +199,49 @@ export class MetamaskPage extends BasePage {
       }
     }
     logoutTrigger = false;
+    if (resetAllowanceTag) {
+      await this.extractCurrentWalletAddress();
+    }
   }
 
-  async operateTransaction(triggeredElement: string) {
-    //change network
-    try {
+  async callTransactionInterface() {
+    const helper = await new Helper(this.world);
+    const mainPage = await new MainPage(this.world);
+    selector = await mainPage.commonButtonByItsName("Change wallet network");
+    const networkChangeRequest = await helper.checkElementVisible(selector);
+    if (networkChangeRequest) {
       await this.switchNetwork();
-    } finally {
-      await setTimeout(config.minimalTimeout.timeout);
-      await this.click(this.continueBtn);
+    }
+    await setTimeout(config.defaultTimeout.timeout);
+    selector = await mainPage.commonButtonByItsName("Continue");
+    const continueBtn = await helper.checkElementVisible(selector);
+    const modalCard = await helper.checkElementVisible(mainPage.modalCard);
+    if (continueBtn && !modalCard) {
+      await this.click(selector);
+    }
+  }
 
-      const popUpContext = await this.catchPopUpByClick(`//span[contains(text(),'${triggeredElement}')]`);
-      await setTimeout(config.minimalTimeout.timeout);
-      await popUpContext?.setViewportSize(config.popUpWindowSize);
+  async approveAllovance(selector: string) {
+    const mainPage = await new MainPage(this.world);
+    selector = `${mainPage.modalCard}${selector}`;
+    if (selector.includes("Approve allowance")) {
+      selector = `${mainPage.modalCard}//*[contains(text(), 'Allowance approved')]`;
+      await this.world.page?.waitForSelector(selector, config.extraTimeout);
+      await this.click(await mainPage.buttonOfModalCard("Continue"));
+    }
+  }
+
+  async operateTransaction(selector: string, argument: string) {
+    const popUpContext = await this.catchPopUpByClick(selector);
+    await setTimeout(config.minimalTimeout.timeout);
+    await popUpContext?.setViewportSize(config.popUpWindowSize);
+    if (argument == "confirm") {
       await popUpContext?.click(this.confirmTransaction);
+    } else if (argument == "next and confirm") {
+      await popUpContext?.click(this.nextButton);
+      await popUpContext?.click(this.confirmTransaction);
+    } else if (argument == "networkSwitch") {
+      await popUpContext?.click(this.switchNetworkButton);
     }
   }
 

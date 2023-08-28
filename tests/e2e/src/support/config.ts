@@ -40,7 +40,9 @@ export const config = {
   defaultTimeout: { timeout: 6 * 1000 },
   minimalTimeout: { timeout: 1 * 1000 },
   increasedTimeout: { timeout: 15 * 1000 },
+  extraTimeout: { timeout: 30 * 1000 },
   stepTimeout: { timeout: 60 * 1000 },
+  stepExtraTimeout: { timeout: 180 * 1000 },
   feeLimitations: true,
   feeBoundaryLevel: 0.2, // in ETH
   networkL1: "goerli",

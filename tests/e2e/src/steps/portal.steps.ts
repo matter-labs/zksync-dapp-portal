@@ -9,6 +9,7 @@ import { ContactsPage } from "../pages/contacts.page";
 import { LoginPage } from "../pages/login.page";
 import { MainPage } from "../pages/main.page";
 import { MetamaskPage } from "../pages/metamask.page";
+import { RevokePage } from "../pages/revoke.page";
 import { config } from "../support/config";
 
 import type { ICustomWorld } from "../support/custom-world";
@@ -16,6 +17,7 @@ import type { ICustomWorld } from "../support/custom-world";
 let basePage: BasePage;
 let mainPage: MainPage;
 let loginPage: LoginPage;
+let revokePage: RevokePage;
 let metamaskPage: MetamaskPage;
 let contactsPage: ContactsPage;
 let helper: Helper;
@@ -78,10 +80,10 @@ When(
 
 When(
   "Message {string} should be visible",
-  { timeout: 181 * 1000 },
+  config.stepTimeout,
   async function (this: ICustomWorld, successMessage: string) {
     result = await this.page?.locator(`//*[text()="${successMessage}"]`).first();
-    await expect(result).toBeVisible({ timeout: 180 * 1000 });
+    await expect(result).toBeVisible(config.stepTimeout);
   }
 );
 
@@ -94,7 +96,7 @@ When("Circle timer for fee updating should be visible", config.stepTimeout, asyn
 
 When(
   "I {string} transaction after clicking {string} button",
-  config.stepTimeout,
+  config.stepExtraTimeout,
   async function (this: ICustomWorld, actionType: string, transactionBtn: string) {
     mainPage = new MainPage(this);
     await mainPage.makeTransaction(actionType, transactionBtn);
@@ -210,6 +212,11 @@ Given("I click on the Edit contact button", async function (this: ICustomWorld) 
 Given("I click on the {string} contact button", async function (this: ICustomWorld, removeButtonName: string) {
   contactsPage = new ContactsPage(this);
   await contactsPage.pressRemoveBtnModal(removeButtonName);
+});
+
+Given("I go to the main page", config.stepTimeout, async function (this: ICustomWorld) {
+  await this.page?.waitForLoadState("load", config.defaultTimeout);
+  await this.page?.goto(config.BASE_URL + config.DAPP_NETWORK);
 });
 
 Given("I am on the Main page", async function (this: ICustomWorld) {
@@ -362,3 +369,25 @@ Then(
     await expect(element).toBeVisible();
   }
 );
+
+Given("I reset allowance", config.stepExtraTimeout, async function (this: ICustomWorld) {
+  revokePage = new RevokePage(this);
+  await revokePage.login();
+  await revokePage.revokeAllowance();
+  await revokePage.logout();
+});
+
+When("I save Max Balance Error Value", config.stepTimeout, async function (this: ICustomWorld) {
+  mainPage = new MainPage(this);
+  await mainPage.saveMaxBalanceErrorValue();
+});
+
+When("I click on the underlined Max amount number", config.stepTimeout, async function (this: ICustomWorld) {
+  mainPage = new MainPage(this);
+  await mainPage.click(mainPage.amountInputErrorButton);
+});
+
+When("Max amount is set to the input field", config.stepTimeout, async function (this: ICustomWorld) {
+  mainPage = new MainPage(this);
+  await mainPage.maxAmountIsSet();
+});

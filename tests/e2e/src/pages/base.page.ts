@@ -278,6 +278,8 @@ export class BasePage {
   }
 
   async verifyContent(elementType: string, elementValue: string, content: string, contentType: string) {
+    // elementType - f.e. class/text, elementValue - value of class/text
+    // content - what we are going to verify, contentType - value or text
     element = await this.returnElementByType(elementType, elementValue);
     if (contentType === "value") {
       await expect(element).toHaveValue(content);

@@ -11,6 +11,7 @@ import type { ICustomWorld } from "../support/custom-world";
 
 let metamaskPage: any;
 let result: any;
+let maxBalanceErrorValue: string;
 
 export class MainPage extends BasePage {
   constructor(world: ICustomWorld) {
@@ -85,12 +86,24 @@ export class MainPage extends BasePage {
     return `${this.byTestId}network-switcher`;
   }
 
+  get amountInputErrorButton() {
+    return `//*[@class="amount-input-error"]//button`;
+  }
+
   async getButton(buttonName: string) {
     return `//*[@type='button' and contains(., '${buttonName}')] | //button[text()[contains(string(), '${buttonName}')]]`;
   }
 
   get confirmFeeChangeButton() {
     return "//button[text()='Confirm']";
+  }
+
+  async commonButtonByItsName(value: string) {
+    return `//button[contains(., '${value}')]`;
+  }
+
+  async buttonOfModalCard(buttonText: string) {
+    return `${this.modalCard}//button[text()='${buttonText}']`;
   }
 
   async selectTransaction(transactionType: string) {
@@ -125,14 +138,15 @@ export class MainPage extends BasePage {
 
   async makeTransaction(actionType: string, transactionType: string) {
     metamaskPage = await new MetamaskPage(this.world);
-    result = await this.getTransactionSelector(transactionType);
-
-    await metamaskPage.operateTransaction(result);
+    const selector = await this.getTransactionSelector(transactionType);
+    await metamaskPage.callTransactionInterface();
+    await metamaskPage.operateTransaction(selector, "confirm");
+    await metamaskPage.approveAllovance(selector);
   }
 
   async getTransactionSelector(transactionType: string) {
-    result = transactionType;
-    return result;
+    const selector = `//*[contains(text(),'${transactionType}')]`;
+    return selector;
   }
 
   async monitorBalance(walletAddress: string, layer: string) {
@@ -247,5 +261,16 @@ export class MainPage extends BasePage {
   async clickOnButton(buttonName: string) {
     const selector = await this.getButton(buttonName);
     await this.click(selector);
+  }
+
+  async saveMaxBalanceErrorValue() {
+    const helper = new Helper(this.world);
+    const selector = this.amountInputErrorButton;
+    maxBalanceErrorValue = await helper.getTextFromLocator(selector);
+  }
+
+  async maxAmountIsSet() {
+    const basePage = new BasePage(this.world);
+    basePage.verifyContent("class", "amount-input-field", maxBalanceErrorValue, "value");
   }
 }
