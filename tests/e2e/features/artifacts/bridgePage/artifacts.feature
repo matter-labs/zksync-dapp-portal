@@ -77,9 +77,9 @@ Feature: Withdraw
     Then Element with "text" "Selected network" should be "visible"
     Then Element with "text" "Other networks" should be "visible"
     Then Modal card element with the "//*[text()='zkSync Era Testnet']" xpath should be "visible"
-    Then Modal card element with the "//*[@src='/img/era.svg?v=1']" xpath should be "visible"
+    Then Modal card element with the "//*[@src='/img/era.svg']" xpath should be "visible"
     Then Modal card element with the "//*[text()='Ethereum Goerli Testnet']" xpath should be "visible"
-    Then Modal card element with the "//*[@src='/img/ethereum.svg?v=1']" xpath should be "visible"
+    Then Modal card element with the "//*[@src='/img/ethereum.svg']" xpath should be "visible"
 
   @id1604:II
   Scenario: Check the View on Explorer Artifacts on the Bridge Page (Mainnet)
@@ -93,9 +93,9 @@ Feature: Withdraw
     Then Element with "text" "Selected network" should be "visible"
     Then Element with "text" "Other networks" should be "visible"
     Then Modal card element with the "//*[text()='zkSync Era Mainnet']" xpath should be "visible"
-    Then Modal card element with the "//*[@src='/img/era.svg?v=1']" xpath should be "visible"
+    Then Modal card element with the "//*[@src='/img/era.svg']" xpath should be "visible"
     Then Modal card element with the "//*[text()='Ethereum Mainnet']" xpath should be "visible"
-    Then Modal card element with the "//*[@src='/img/ethereum.svg?v=1']" xpath should be "visible"
+    Then Modal card element with the "//*[@src='/img/ethereum.svg']" xpath should be "visible"
 
   @id1597
   Scenario: Check the Bridge artifacts on Withdraw (Testnet)

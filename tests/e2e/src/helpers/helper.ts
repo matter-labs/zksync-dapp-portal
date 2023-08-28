@@ -18,13 +18,14 @@ const iv = Buffer.from(wallet.salt, "hex"); //crypto.randomBytes(16);
 
 let result: any;
 export let depositTag: boolean;
+export let resetAllowanceTag: boolean;
 let withdrawTag: boolean;
 let transferTag: boolean;
 let authorizedTag: boolean;
 let unauthorizedTag: boolean;
 let emptyWalletTag: boolean;
 let incognitoTag: boolean;
-export let transactionsTag: boolean;
+let transactionsTag: boolean;
 let noBlockChain: boolean;
 let wallet_1: string[];
 let wallet_2: string[];
@@ -73,6 +74,7 @@ export class Helper {
     unauthorizedTag = filteredTag("@unauthorized");
     emptyWalletTag = filteredTag("@emptyWallet");
     noBlockChain = filteredTag("@noBlockChain");
+    resetAllowanceTag = filteredTag("@resetAllowance");
   }
 
   async checkElementVisible(element: string, waitTime = 10000): Promise<boolean> {
@@ -237,7 +239,7 @@ export class Helper {
     if (!incognitoTag && !transactionsTag && !emptyWalletTag) {
       await metamaskPage.authorizeInMetamaskExtension(wallet_1, wallet_password);
       await basePage.goTo(targetUrl);
-    } else if (transactionsTag && !incognitoTag) {
+    } else if (transactionsTag && !incognitoTag && !emptyWalletTag) {
       const isLogout = await metamaskPage.isLogout();
       if (isLogout === undefined && depositTag) {
         // await this.thresholdBalanceIsOk();

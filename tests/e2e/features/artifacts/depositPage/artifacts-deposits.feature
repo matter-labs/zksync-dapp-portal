@@ -22,7 +22,7 @@ Feature: Artifacts - UI
     Then Modal card element with the "//*[text()='0x3e7676...D4b']" xpath should be "visible"
     Then Modal card element with the "//*[@class='token-balance-price']" xpath should be "visible"
     Then Modal card element with the "//*[text()='Approving allowance for deposit']" xpath should be "visible"
-    Then Modal card element with the "//*[@src='/img/era.svg?v=1']" xpath should be "visible"
+    Then Modal card element with the "//*[@src='/img/era.svg']" xpath should be "visible"
     Then Element with "partial text" " Allowance lets you safely authorize the deposit process to access a specific amount of your tokens. No funds will be deducted after signing, except for " should be "visible"
     Then Modal card element with the "//*[contains(text(),'Learn more')]" xpath should be "visible"
     Then Modal card element with the "//*[contains(text(),'Learn more')]" xpath should be "clickable"
