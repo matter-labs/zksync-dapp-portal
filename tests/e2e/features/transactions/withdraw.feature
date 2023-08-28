@@ -62,4 +62,32 @@ Feature: Withdraw
     Then Element with "class" "amount-input-token" should be "visible"
     Then Element with "class" "amount-input-token" should be "clickable"
 
-
+  @id1601 @id1608
+  Scenario: make a Withdraw (Bridge)
+    Given I go to page "/bridge?network=era-goerli"
+    When I click by text "Withdraw"
+    When I choose "ETH" as token and insert "0.0000000001" as amount
+    When I "confirm" transaction after clicking "Send to Ethereum Goerli Testnet" button
+    Then Message "Transaction submitted" should be visible
+    #Part 2 - Transaction submitted" pop up artifacts id1608
+    Then Element with "partial class" "progress-plane-animation" should be "visible"
+    Then Element with "partial href and text" "'https://goerli.explorer.zksync.io/tx' and 'Withdraw'" should be "visible"
+    Then Element with "partial href and text" "'https://goerli.explorer.zksync.io/tx' and 'Withdraw'" should be "clickable"
+    #Time of tx
+    Then Element with "class" "button-line-body-info-underline" should be "visible"
+    Then Element with "text" "0.0000000001" should be "visible"
+    Then Modal card element with the "//*[text()='ETH']" xpath should be "visible"
+    #Token icon
+    Then Modal card element with the "//*[contains(@src, 'eth.svg')]" xpath should be "visible"
+    Then Modal card element with the "//*[text()='<$0.01']" xpath should be "visible"
+    Then Arrow element for "Withdraw" external link should be "visible"
+    Then Arrow element for "Withdraw" external link should be "clickable"
+    Then Element with "text" " Your funds will be available on the " should be "visible"
+    Then Element with "text" "Ethereum Goerli Testnet" should be "visible"
+    Then Element with "text" " after a " should be "visible"
+    Then Element with "text" "~24-hour delay" should be "visible"
+    Then Element with "text" ". During this time, the transaction will be processed and finalized. You are free to close this page. " should be "visible"
+    Then Element with "text" " Learn more " should be "visible"
+    Then Element with "text" " Learn more " should be "clickable"
+    Then Element with "text" " Make another transaction " should be "visible"
+    Then Element with "text" " Explore ecosystem " should be "visible"

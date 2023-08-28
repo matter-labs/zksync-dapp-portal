@@ -297,3 +297,13 @@ Feature: External Redirection on the Main Page
       | Layerswap       | https://www.layerswap.io/app?sourceExchangeName=ZKSYNCERA_MAINNET     |
       | Orbiter         | https://www.orbiter.finance/?source=zkSync%20Era&dest=Ethereum        |
    
+  @id1610
+  Scenario: Check redirection for the "Explore ecosystem" button (Withdraw Bridge)
+    Given I go to page "/bridge?network=era-goerli"
+    When I click by text "Withdraw"
+    When I choose "ETH" as token and insert "0.0000000001" as amount
+    When I "confirm" transaction after clicking "Send to Ethereum Goerli Testnet" button
+    Then Message "Transaction submitted" should be visible
+    When I click by text " Explore ecosystem "
+    Then New page has "https://ecosystem.zksync.io/" address
+    
