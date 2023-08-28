@@ -210,9 +210,12 @@ Feature: Artifacts - UI
       #Max button is displayed
     Then Element with "partial text" "Max" should be "visible"
     Then Element with "partial text" "Max" should be "clickable"
+      #Hover tooltip check
+    Then Element with "partial title" "Your max amount is" should be "visible"
       #Verify "Max" button is highlighted after clicking on it
     Then I click by "text" with " Max " value
     Then Element with "partial class" "is-max" should be "visible"
+    Then Max amount is set to the input field
       # Verify max amount set to the field for Withdraw
     Then Element with "title" "Max amount is set" should be "visible"
       #Continue button is clickable
