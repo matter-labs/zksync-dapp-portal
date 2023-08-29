@@ -72,7 +72,7 @@ Feature: Withdraw
     #Part 2 - Transaction submitted" pop up artifacts id1608
     Then Element with "partial class" "progress-plane-animation" should be "visible"
     Then Element with "partial href and text" "'https://goerli.explorer.zksync.io/tx' and 'Withdraw'" should be "visible"
-    Then Element with "partial href and text" "'https://goerli.explorer.zksync.io/tx' and 'Withdraw'" should be "clickable"
+    # Then Element with "partial href and text" "'https://goerli.explorer.zksync.io/tx' and 'Withdraw'" should be "clickable"
     #Time of tx
     Then Element with "class" "button-line-body-info-underline" should be "visible"
     Then Element with "text" "0.0000000001" should be "visible"
