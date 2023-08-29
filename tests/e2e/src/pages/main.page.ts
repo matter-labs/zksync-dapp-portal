@@ -131,6 +131,14 @@ export class MainPage extends BasePage {
     }
   }
 
+  async isElementDissapeared(selecterValue: string, seconds: number) {
+    const helper = new Helper(this.world);
+    const basePage = new BasePage(this.world);
+    const selector = `//*[@${basePage.byTestId}'fee-amount']//*[@alt='${selecterValue}']`;
+    const timeout = (seconds + 5) * 1000; // plus extra 5 seconds to avoid false positive timeout issues
+    return await helper.checkSelectorHidden(selector, timeout);
+  }
+
   async selectTransaction(transactionType: string) {
     try {
       let route: string;

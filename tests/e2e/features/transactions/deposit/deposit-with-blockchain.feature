@@ -19,7 +19,7 @@ Feature: Deposit
     # id1396
     Then Element with "text" " Go to Assets page " should be "visible"
     Then Element with "text" " Go to Assets page " should be "clickable"
-    When I click by the "//*[text()=' Go to Assets page ']" text element on the Modal card
+    When I click by "text" with " Go to Assets page " value
     Then I am on the Main page without a NetworkSwitcher 
     
 

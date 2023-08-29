@@ -333,12 +333,9 @@ When(
 When(
   "Element {string} should dissapear in {int} seconds",
   config.stepExtraTimeout,
-  async function (this: ICustomWorld, string: string, seconds: number) {
-    helper = new Helper(this);
-    const basePage = new BasePage(this);
-    const selector = `//*[@${basePage.byTestId}'fee-amount']//*[@alt='${string}']`;
-    const timeout = (seconds + 5) * 1000; // plus extra 5 seconds to avoid false positive timeout issues
-    result = await helper.checkSelectorHidden(selector, timeout);
+  async function (this: ICustomWorld, selecterValue: string, seconds: number) {
+    mainPage = new MainPage(this);
+    result = await mainPage.isElementDissapeared(selecterValue, seconds);
     await expect(result).toBe(true);
   }
 );
