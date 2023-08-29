@@ -152,8 +152,7 @@ export class MainPage extends BasePage {
     metamaskPage = await new MetamaskPage(this.world);
     const selector = await this.getTransactionSelector(transactionType);
     await metamaskPage.callTransactionInterface();
-    await metamaskPage.operateTransaction(selector, "confirm");
-    await metamaskPage.approveAllovance(selector);
+    await metamaskPage.operateTransaction(selector, actionType);
   }
 
   async getTransactionSelector(transactionType: string) {
@@ -208,18 +207,23 @@ export class MainPage extends BasePage {
     let link: any;
     if (externalLinkName === "Layerswap") {
       link = "https://www.layerswap.io/?sourceExchangeName=ZKSYNCERA_MAINNET";
+      const selector = `//*[contains(@href,'${link}')]` + this.externalLinkArrow;
+      await this.verifyElement("xpath", selector, checkType);
     } else if (externalLinkName === "Orbiter") {
       link = "https://www.orbiter.finance/?source=zkSync%20Era";
+      const selector = `//*[contains(@href,'${link}')]` + this.externalLinkArrow;
+      await this.verifyElement("xpath", selector, checkType);
     } else if (externalLinkName === "Transfer" || externalLinkName === "Withdraw") {
       link = "https://goerli.explorer.zksync.io/tx";
+      const selector = this.modalCard + `//*[contains(@href,'${link}')]` + this.externalLinkArrow;
+      await this.verifyElement("xpath", selector, checkType);
     } else if (externalLinkName === "Deposit") {
       link = "https://goerli.etherscan.io/tx/";
+      const selector = this.modalCard + `//*[contains(@href,'${link}')]` + this.externalLinkArrow;
+      await this.verifyElement("xpath", selector, checkType);
     } else {
       return console.error("An incorrect link name has been provided");
     }
-
-    const selector = `//*[contains(@href,'${link}')]` + this.externalLinkArrow;
-    await this.verifyElement("xpath", selector, checkType);
   }
 
   async clickModalCardElement(selectorValue: string) {
