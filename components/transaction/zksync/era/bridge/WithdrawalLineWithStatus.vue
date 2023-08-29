@@ -12,7 +12,7 @@
               <template #default="{ timer, isTimerFinished }">
                 <template v-if="isTimerFinished">Will be done soon.</template>
                 <template v-else
-                  >Est. time: <span class="font-mono">{{ timer }}</span></template
+                  >Est. time: <span class="font-mono" data-testId="withdraw-timer">{{ timer }}</span></template
                 >
               </template>
             </CommonTimer>
