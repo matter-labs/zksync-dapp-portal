@@ -7,7 +7,7 @@ Feature: Deposit
 
   @id1493 @id1495 @id1496
   Scenario: Redirection - approving allowance modal
-    # Given I reset allowance
+    Given I reset allowance
     Given I go to the main page
     Given I go to "Deposit" transaction section
     When I click by "text" with "Your account" value
