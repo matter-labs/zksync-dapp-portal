@@ -20,7 +20,7 @@ Feature: Deposit
     Then Element with "text" " Go to Assets page " should be "visible"
     Then Element with "text" " Go to Assets page " should be "clickable"
     When I click by "text" with " Go to Assets page " value
-    Then I am on the Main page without a NetworkSwitcher 
+    Then I am on the Main page 
     
 
   @id1280
