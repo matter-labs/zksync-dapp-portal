@@ -56,12 +56,12 @@ Feature: Deposit
     When I click by "text" with "Your account" value
     Then Element with "testId" "fee-amount" should be "visible"
     When I choose "DAI" as token and insert "1" as amount
-    Then Element with "xpath" "//*[contains(@class, 'alert-container')]" should be "visible"
+    Then Element with "partial class" "alert-container" should be "visible"
     Then Element with "partial text" "Your current allowance for" should be "visible"
-    Then Element with "xpath" "//*[text()='DAI']" should be "visible"
+    Then Element with "text" "DAI" should be "visible"
     Then Element with "partial text" "Depositing more than that will require you to approve a new allowance." should be "visible"
-    Then Element with "xpath" "//*[contains(text(),'Learn more')]" should be "visible"
-    Then Element with "xpath" "//*[contains(text(),'Learn more')]" should be "clickable"
+    Then Element with "partial text" "Learn more" should be "visible"
+    Then Element with "partial text" "Learn more" should be "clickable"
     ### end of id1494
 
   
