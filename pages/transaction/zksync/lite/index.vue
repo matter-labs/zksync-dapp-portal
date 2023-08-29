@@ -15,31 +15,34 @@
         v-bind="destinations.zkSyncLite"
         as="RouterLink"
         :to="{ name: 'transaction-zksync-lite-send', query: $route.query }"
-        description="Send inside zkSync Lite (L2) network"
+        description="Send inside zkSync Lite network"
       />
       <DestinationItem
+        v-if="zkSyncLiteNetwork.l1Network"
         v-bind="destinations.ethereum"
         as="RouterLink"
         :to="{ name: 'transaction-zksync-lite-withdraw', query: $route.query }"
-        description="Withdraw to Ethereum (L1)"
+        :description="`Withdraw to ${destinations.ethereum.label}`"
       />
       <DestinationItem
         v-bind="destinations.era"
         as="RouterLink"
         :to="{ name: 'transaction-zksync-lite-send-era', query: $route.query }"
-        description="Send to zkSync Lite (L2) network"
+        description="Send to zkSync Era∎ network"
       />
     </CommonCardWithLineButtons>
 
-    <TypographyCategoryLabel>Send to exchange</TypographyCategoryLabel>
-    <CommonCardWithLineButtons>
-      <DestinationItem
-        label="Official bridge"
-        :icon-url="destinations.ethereum.iconUrl"
-        description="Send to exchange using official bridge"
-        @click="openedModal = 'withdraw-to-exchange'"
-      />
-    </CommonCardWithLineButtons>
+    <template v-if="zkSyncLiteNetwork.l1Network">
+      <TypographyCategoryLabel>Send to exchange</TypographyCategoryLabel>
+      <CommonCardWithLineButtons>
+        <DestinationItem
+          label="Official bridge"
+          :icon-url="destinations.ethereum.iconUrl"
+          description="Send to exchange using official bridge"
+          @click="openedModal = 'withdraw-to-exchange'"
+        />
+      </CommonCardWithLineButtons>
+    </template>
 
     <TypographyCategoryLabel>Send to another network</TypographyCategoryLabel>
     <CommonCardWithLineButtons>
@@ -73,9 +76,11 @@ import { storeToRefs } from "pinia";
 
 import { useDestinationsStore } from "@/store/destinations";
 import { useOnboardStore } from "@/store/onboard";
+import { useLiteProviderStore } from "@/store/zksync/lite/provider";
 
 const { destinations } = storeToRefs(useDestinationsStore());
 const { account } = storeToRefs(useOnboardStore());
+const { zkSyncLiteNetwork } = storeToRefs(useLiteProviderStore());
 
 const openedModal = ref<"withdraw-to-exchange" | undefined>();
 const closeModal = () => {

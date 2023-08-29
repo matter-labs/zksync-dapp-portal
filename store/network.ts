@@ -1,83 +1,114 @@
 import { useStorage } from "@vueuse/core";
-import { goerli, mainnet } from "@wagmi/core/chains";
 import { defineStore } from "pinia";
 
-import type { Chain } from "@wagmi/core/chains";
-export type EthereumNetworkName = "goerli" | "mainnet";
+import useNetworks from "@/composables/useNetworks";
 
-export type ExtendedChain = Chain & { network: EthereumNetworkName; iconUrl?: string; hostnames: string[] };
-export const chains: ExtendedChain[] = [
-  {
-    ...mainnet,
-    name: "Mainnet",
-    network: "mainnet",
-    iconUrl: "/img/ethereum.svg",
-    hostnames: [],
-  },
-  {
-    ...goerli,
-    name: "Goerli Testnet",
-    hostnames: [],
-  },
-];
+import type { L1Network, L2Network } from "@/data/networks";
+
+import { useRoute } from "#app";
+
+export type Version = "era" | "lite";
 
 export const useNetworkStore = defineStore("network", () => {
-  const selectedEthereumNetworkName = useStorage<EthereumNetworkName>(
-    "selectedEthereumNetwork",
-    chains[0].network,
-    window.sessionStorage
-  );
-  const selectedEthereumNetwork = computed<ExtendedChain>(() => {
-    return chains.find((network) => network.network === selectedEthereumNetworkName.value) ?? chains[0];
-  });
-  const blockExplorerUrl = computed<string | undefined>(
-    () => selectedEthereumNetwork.value.blockExplorers?.default.url
-  );
+  const route = useRoute();
 
-  const lastSelectedEthereumNetworkName = useStorage<EthereumNetworkName | undefined>(
-    "lastSelectedEthereumNetwork",
-    undefined
+  const { eraNetworks, zkSyncLiteNetworks, getVersionByNetwork } = useNetworks();
+  const l2Networks = [...eraNetworks, ...zkSyncLiteNetworks];
+  const defaultNetwork = l2Networks[0];
+
+  const networkUsesLocalStorage = useStorage<boolean>("networkUsesLocalStorage", false);
+  const selectedNetworkKey = useStorage<string>(
+    "selectedNetwork",
+    defaultNetwork.key,
+    networkUsesLocalStorage.value ? window.localStorage : window.sessionStorage
   );
-  const lastSelectedEthereumNetwork = computed<ExtendedChain | undefined>(() => {
-    return chains.find((network) => network.network === lastSelectedEthereumNetworkName.value);
+  const selectedNetwork = computed<L2Network>(() => {
+    return l2Networks.find((e) => e.key === selectedNetworkKey.value) ?? defaultNetwork;
   });
-  const ethereumNetworkChangedWarning = computed(
+
+  const version = computed<Version>(() => getVersionByNetwork(selectedNetwork.value));
+  const l1Network = computed<L1Network | undefined>(() => selectedNetwork.value.l1Network);
+  const l1BlockExplorerUrl = computed<string | undefined>(() => l1Network.value?.blockExplorers?.default.url);
+
+  const networkChangedWarningDisabled = useStorage<boolean>("networkChangedWarningDisabled", false);
+  const lastSelectedNetworkKey = useStorage<string | undefined>("lastSelectedNetworkKey", undefined);
+  const lastSelectedNetwork = computed<L2Network | undefined>(() => {
+    return l2Networks.find((network) => network.key === lastSelectedNetworkKey.value);
+  });
+  const networkChangedWarning = computed(
     () =>
-      !!lastSelectedEthereumNetworkName.value &&
-      lastSelectedEthereumNetwork.value?.network !== selectedEthereumNetwork.value.network
+      !networkChangedWarningDisabled.value &&
+      typeof lastSelectedNetworkKey.value === "string" &&
+      (lastSelectedNetworkKey.value as string) !== "undefined" &&
+      lastSelectedNetwork.value?.key !== selectedNetwork.value.key
   );
-  watch(selectedEthereumNetworkName, (val) => {
-    lastSelectedEthereumNetworkName.value = val;
+  const resetNetworkChangeWarning = () => {
+    lastSelectedNetworkKey.value = selectedNetwork.value.key;
+  };
+  watch(selectedNetworkKey, (val) => {
+    lastSelectedNetworkKey.value = val;
+  });
+  watch([networkUsesLocalStorage, networkChangedWarningDisabled], () => {
+    selectedNetworkKey.value = selectedNetwork.value.key;
   });
 
-  const identifyNetwork = () => {
+  const identifyNetworkByQueryParam = () => {
     const windowLocation = window.location;
     const networkFromQueryParam = new URLSearchParams(windowLocation.search).get("network");
-    const networkOnDomain = chains.find((e) => e.hostnames.includes(windowLocation.origin));
-    const defaultNetwork = chains[0];
-    if (networkFromQueryParam && chains.some((e) => e.network === networkFromQueryParam)) {
-      selectedEthereumNetworkName.value = networkFromQueryParam as EthereumNetworkName;
-    } else if (selectedEthereumNetworkName.value === defaultNetwork.name) {
-      if (networkOnDomain) {
-        selectedEthereumNetworkName.value = networkOnDomain.network;
-      } else {
-        selectedEthereumNetworkName.value = defaultNetwork.network;
-      }
+    if (networkFromQueryParam && l2Networks.some((e) => e.key === networkFromQueryParam)) {
+      selectedNetworkKey.value = networkFromQueryParam;
+      resetNetworkChangeWarning();
     }
   };
-  identifyNetwork();
+  const identifyNetworkByRoute = (routeName: string) => {
+    const getVersionFromRouteName = (): Version | undefined => {
+      if (/(-lite-|.*-lite$)/.test(routeName)) {
+        return "lite";
+      } else if (/(-era-|.*-era$)/.test(routeName)) {
+        return "era";
+      }
+    };
+    const versionFromRoute = getVersionFromRouteName();
+    if (!versionFromRoute || versionFromRoute === version.value) return;
+
+    const networkWithSameL1 = l2Networks.find(
+      (network) =>
+        network.l1Network &&
+        getVersionByNetwork(network) === versionFromRoute &&
+        l1Network.value?.network === network.l1Network.network
+    );
+    if (networkWithSameL1) {
+      selectedNetworkKey.value = networkWithSameL1.key;
+    } else {
+      const anyNetworkWithSameVersion = l2Networks.find(
+        (network) => getVersionByNetwork(network) === versionFromRoute
+      )!;
+      window.location.href = getNetworkUrl(anyNetworkWithSameVersion, route.fullPath);
+    }
+  };
+
+  identifyNetworkByQueryParam(); // need to be done only on load once
+  watch(
+    () => route.name,
+    (routeName) => {
+      if (!routeName) return;
+      identifyNetworkByRoute(routeName.toString());
+    },
+    { immediate: true }
+  );
 
   return {
-    selectedEthereumNetwork,
-    blockExplorerUrl,
+    networkUsesLocalStorage,
+    selectedNetworkKey,
+    selectedNetwork,
 
-    ethereumNetworkChangedWarning,
-    lastSelectedEthereumNetworkName: computed(
-      () => lastSelectedEthereumNetwork.value?.name ?? lastSelectedEthereumNetworkName.value
-    ),
-    lastSelectedEthereumNetwork,
-    resetNetworkChangeWarning: () => {
-      lastSelectedEthereumNetworkName.value = selectedEthereumNetwork.value.network;
-    },
+    version,
+    l1Network,
+    l1BlockExplorerUrl,
+
+    networkChangedWarningDisabled,
+    networkChangedWarning,
+    lastSelectedNetwork,
+    resetNetworkChangeWarning,
   };
 });

@@ -53,9 +53,9 @@
     />
 
     <CommonErrorBlock v-if="balanceError" @try-again="fetchBalances">
-      {{ balanceError.message }}
+      Getting balances error: {{ balanceError.message }}
     </CommonErrorBlock>
-    <form v-else class="transaction-form pb-2" @submit.prevent="">
+    <form v-else class="flex h-full flex-col" @submit.prevent="">
       <CommonAmountInput
         v-model.trim="amount"
         v-model:error="amountError"
@@ -70,7 +70,7 @@
       </CommonErrorBlock>
       <transition v-bind="TransitionOpacity()">
         <TransactionFeeDetails
-          v-if="fee || feeLoading"
+          v-if="!feeError && (fee || feeLoading)"
           class="mt-1"
           label="Fee:"
           :fee-token="feeToken"
@@ -89,7 +89,8 @@
       <transition v-bind="TransitionAlertScaleInOutTransition">
         <CommonAlert v-if="!enoughBalanceToCoverFee" class="mt-1" variant="error" :icon="ExclamationTriangleIcon">
           <p>
-            Insufficient <span class="font-medium">{{ feeToken?.symbol }}</span> balance to cover the fee
+            Insufficient <span class="font-medium">{{ feeToken?.symbol }}</span> balance on
+            {{ destinations.zkSyncLite.label }} to cover the fee
           </p>
           <button type="button" class="alert-link" @click="openFeeTokenModal">Change fee token</button>
         </CommonAlert>
@@ -108,24 +109,24 @@
           </a>
         </CommonAlert>
       </transition>
-    </form>
 
-    <ZksyncLiteTransactionFooter>
-      <template #after-checks>
-        <a
-          v-if="type === 'Withdraw'"
-          class="link mb-2 flex items-center text-sm"
-          :href="LITE_WITHDRAWAL_TIMES"
-          target="_blank"
-        >
-          Will arrive in 10 minutes to 7 hours
-          <ArrowUpRightIcon class="ml-1 mt-0.5 h-3.5 w-3.5" />
-        </a>
-        <CommonButton :disabled="continueButtonDisabled" variant="primary-solid" @click="openConfirmationModal">
-          Continue
-        </CommonButton>
-      </template>
-    </ZksyncLiteTransactionFooter>
+      <ZksyncLiteTransactionFooter>
+        <template #after-checks>
+          <CommonButtonTopLink v-if="type === 'Withdraw'" :href="LITE_WITHDRAWAL_TIMES" target="_blank">
+            Will arrive in 10 minutes to 7 hours
+            <ArrowUpRightIcon class="ml-1 mt-0.5 h-3.5 w-3.5" />
+          </CommonButtonTopLink>
+          <CommonButton
+            type="submit"
+            :disabled="continueButtonDisabled"
+            variant="primary-solid"
+            @click="openConfirmationModal"
+          >
+            Continue
+          </CommonButton>
+        </template>
+      </ZksyncLiteTransactionFooter>
+    </form>
   </div>
 </template>
 
@@ -213,7 +214,8 @@ watch(
   (symbol) => {
     if (!symbol) return;
     liteTokensStore.requestTokenPrice(symbol);
-  }
+  },
+  { immediate: true }
 );
 watch(allBalancePricesLoaded, (loaded) => {
   if (loaded && !selectedToken.value) {
@@ -240,6 +242,7 @@ const {
   inProgress: feeInProgress,
   error: feeError,
   estimateFee,
+  resetFee,
 
   tokensAvailableForFee,
   feeToken,
@@ -338,6 +341,7 @@ watch(
     isAccountActivated,
   ],
   () => {
+    resetFee();
     estimate();
   },
   { immediate: true }
@@ -354,7 +358,8 @@ watch(
   (symbol) => {
     if (!symbol) return;
     liteTokensStore.requestTokenPrice(symbol);
-  }
+  },
+  { immediate: true }
 );
 const openFeeTokenModal = () => {
   selectFeeTokenModalOpened.value = true;
@@ -398,8 +403,14 @@ onBeforeUnmount(() => {
 </script>
 
 <style lang="scss" scoped>
+.lite.dark {
+  .change-fee-token-button {
+    @apply bg-primary-400 hover:bg-primary-300;
+  }
+}
 .change-fee-token-button {
   @apply ml-2 mt-1 flex w-max cursor-pointer items-center rounded bg-primary-100/50 py-1 px-1.5 text-xs font-medium text-primary-400 transition-colors hover:bg-primary-100 xs:-mr-4 xs:mt-0;
+  @apply dark:bg-primary-300 dark:text-white dark:hover:bg-primary-200;
 
   .change-fee-token-icon {
     @apply ml-1 h-3 w-3;

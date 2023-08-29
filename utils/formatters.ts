@@ -63,6 +63,8 @@ export function removeSmallAmount(
   }
   if (acc.endsWith(".0")) {
     return acc.slice(0, -2);
+  } else if (acc.endsWith(".")) {
+    return acc.slice(0, -1);
   }
   return acc;
 }
@@ -71,12 +73,12 @@ export function checksumAddress(address: string) {
   return getAddress(address);
 }
 
-export function capitalize(str: string) {
-  return str[0].toUpperCase() + str.slice(1);
-}
-
 export function formatError(error?: Error) {
   if (!error?.message) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    if (typeof error === "object" && (error as any).code === 4001) {
+      return undefined;
+    }
     error = Object.assign(new Error("Unknown error"), error);
   }
   const message = error?.message;

@@ -1,16 +1,20 @@
 <template>
   <div ref="containerElement" :class="{ 'active-tab-bg-inited': activeTabBgInited }" class="badge-tabs-container">
     <div class="active-tab-bg" :style="activeTabBgStyles"></div>
-    <div
-      v-for="item in options"
-      ref="tabElements"
-      class="badge-tab"
-      :class="{ active: item.key === selected }"
-      :key="item.key"
-      @click="selected = item.key"
-    >
-      {{ item.label }}
-    </div>
+    <ul class="badge-tabs-list">
+      <li
+        v-for="item in options"
+        ref="tabElements"
+        class="badge-tab"
+        :class="{ active: item.key === selected }"
+        :key="item.key"
+        @click.prevent="selected = item.key"
+      >
+        <slot name="tab" :item="item">
+          <div>{{ item.label }}</div>
+        </slot>
+      </li>
+    </ul>
   </div>
 </template>
 
@@ -78,31 +82,37 @@ watch(
 
 <style lang="scss" scoped>
 .badge-tabs-container {
-  @apply relative isolate grid w-full grid-flow-col-dense grid-cols-[max-content] gap-2;
+  @apply relative isolate w-full;
 
   &.active-tab-bg-inited {
-    .badge-tab.active {
+    .badge-tab.active :slotted(*) {
       @apply bg-transparent;
     }
     .active-tab-bg {
-      @apply bg-white transition-all;
+      @apply bg-white transition-all dark:bg-neutral-800;
     }
   }
   &:not(.active-tab-bg-inited) {
-    .badge-tab.active {
-      @apply bg-white;
+    .badge-tab.active :slotted(*) {
+      @apply bg-white dark:bg-neutral-800;
     }
   }
 
-  .badge-tab,
+  .badge-tabs-list {
+    @apply grid w-full grid-flow-col-dense grid-cols-[max-content] gap-2;
+  }
+  .badge-tab :slotted(*),
   .active-tab-bg {
-    @apply rounded-xl;
+    @apply rounded-2xl;
   }
   .badge-tab {
-    @apply w-max cursor-pointer whitespace-nowrap py-1 px-4 text-sm font-medium leading-loose text-gray-secondary transition-colors;
-    &:hover,
-    &.active {
-      @apply text-black;
+    @apply w-max;
+    :slotted(*) {
+      @apply block w-max cursor-pointer whitespace-nowrap py-1 px-4 font-medium leading-loose text-gray-secondary transition-colors dark:text-neutral-400;
+    }
+    :slotted(*):hover,
+    &.active :slotted(*) {
+      @apply text-black dark:text-white;
     }
   }
   .active-tab-bg {

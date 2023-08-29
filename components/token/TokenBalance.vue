@@ -1,43 +1,35 @@
 <template>
-  <CommonButtonLineWithImg class="token-balance" :class="{ 'is-zero-amount': isZeroAmount }" :as="as">
-    <template #image>
-      <TokenImage class="token-balance-image-container" :symbol="symbol" :address="address" :icon-url="iconUrl" />
-    </template>
-    <template #default>
-      <div class="token-info">
-        <div class="token-symbol">{{ symbol }}</div>
-        <div class="token-address hidden xs:block" :title="address">{{ shortenAddress(address, 5) }}</div>
-        <div class="token-address xs:hidden" :title="address">{{ shortenAddress(address, 2) }}</div>
-      </div>
-    </template>
+  <TokenLine
+    :symbol="symbol"
+    :name="name"
+    :address="address"
+    :decimals="decimals"
+    :icon-url="iconUrl"
+    :as="sendRouteName ? 'RouterLink' : as"
+    :icon="sendRouteName ? PaperAirplaneIcon : undefined"
+    :to="sendRouteName ? { name: sendRouteName, query: { token: address } } : undefined"
+    class="token-balance"
+    :class="{ 'is-zero-amount': isZeroAmount }"
+  >
     <template #right>
-      <div class="token-balance-side">
-        <div class="token-balances">
+      <CommonButtonLineBodyInfo class="text-right">
+        <template #secondary>
           <div class="token-balance-amount" :title="fullAmount">
-            <template v-if="priceLoading">
-              <CommonContentLoader :length="15" />
-            </template>
+            <CommonContentLoader v-if="priceLoading" :length="15" />
             <template v-else>{{ displayedAmount }}</template>
           </div>
+        </template>
+        <template #underline>
           <div class="token-balance-price">
-            <template v-if="priceLoading">
-              <CommonContentLoader :length="12" />
-            </template>
+            <CommonContentLoader v-if="priceLoading" :length="12" />
             <template v-else-if="price && !isZeroAmount">
               {{ formatTokenPrice(amount, decimals, price as number) }}
             </template>
           </div>
-        </div>
-        <CommonIconButton
-          v-if="sendRouteName"
-          as="RouterLink"
-          :icon="PaperAirplaneIcon"
-          :to="{ name: sendRouteName, query: { token: address } }"
-          class="send-button"
-        />
-      </div>
+        </template>
+      </CommonButtonLineBodyInfo>
     </template>
-  </CommonButtonLineWithImg>
+  </TokenLine>
 </template>
 
 <script lang="ts" setup>
@@ -50,7 +42,7 @@ import type { TokenPrice } from "@/types";
 import type { BigNumberish } from "ethers";
 import type { Component, PropType } from "vue";
 
-import { formatTokenPrice, parseTokenAmount, removeSmallAmount, shortenAddress } from "@/utils/formatters";
+import { formatTokenPrice, parseTokenAmount, removeSmallAmount } from "@/utils/formatters";
 import { isOnlyZeroes } from "@/utils/helpers";
 
 const props = defineProps({
@@ -64,6 +56,9 @@ const props = defineProps({
   symbol: {
     type: String,
     required: true,
+  },
+  name: {
+    type: String,
   },
   address: {
     type: String,
@@ -111,49 +106,13 @@ const displayedAmount = computed(() => {
 
 <style lang="scss" scoped>
 .token-balance {
-  @apply grid grid-cols-[35px_1fr_max-content] items-center gap-2.5 rounded-lg xs:grid-cols-[40px_1fr_max-content] xs:gap-4;
   &.is-zero-amount {
-    .token-balance-amount,
-    .send-button {
-      @apply opacity-50;
-    }
     .token-balance-amount {
-      @apply text-gray-secondary;
+      @apply opacity-30;
     }
   }
-
-  .token-balance-image-container {
-    @apply h-auto w-full;
-  }
-  .token-info,
-  .token-balances {
-    @apply flex flex-col justify-between whitespace-nowrap;
-
-    .token-symbol,
-    .token-balance-amount {
-      @apply leading-relaxed;
-    }
-    .token-address,
-    .token-balance-price {
-      @apply text-sm leading-tight text-gray-secondary;
-    }
-  }
-  .token-info {
-    @apply w-full;
-
-    .token-symbol {
-      @apply font-medium;
-    }
-  }
-  .token-balance-side {
-    @apply flex items-center;
-
-    .token-balances {
-      @apply w-max text-right;
-    }
-    .send-button {
-      @apply ml-4 hidden xs:flex;
-    }
+  .token-balance-amount {
+    @apply max-w-[100px] truncate xs:max-w-[175px];
   }
 }
 </style>

@@ -8,6 +8,9 @@ import ProgressPlane from "@/assets/lottie/progress-plane.json";
 
 <style lang="scss">
 .progress-plane-animation {
+  #plane path {
+    @apply fill-white dark:fill-neutral-950;
+  }
   .primary-colored path {
     @apply stroke-primary-400;
   }

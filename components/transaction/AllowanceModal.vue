@@ -17,8 +17,7 @@
         </CommonCardWithLineButtons>
         <TransactionItemIcon :icon="LockOpenIcon" />
         <CommonCardWithLineButtons>
-          <TokenBalance v-bind="transaction.token" as="div" :amount="transaction.amount" />
-          <div class="-mx-1 border-b border-dashed"></div>
+          <TokenBalance v-bind="transaction.token" as="div" :amount="transaction.amount" amount-display="full" />
           <DestinationItem v-bind="destination" as="div" description="Approving allowance for deposit" />
         </CommonCardWithLineButtons>
       </template>
@@ -34,8 +33,7 @@
         </a>
       </CommonAlert>
 
-      <div class="sticky bottom-0 z-[1] mt-auto w-full bg-gray bg-opacity-60 backdrop-blur-sm">
-        <div class="mx-4 mb-3 border-t border-dashed border-gray-300"></div>
+      <TransactionConfirmModalFooter>
         <div v-if="error" class="mx-4">
           <CommonErrorBlock :retry-button="false" class="mt-3">
             {{ error.message }}
@@ -52,13 +50,8 @@
             <span v-else>Approve allowance</span>
           </transition>
         </CommonButton>
-        <CommonHeightTransition :opened="status === 'waiting-for-signature'">
-          <div class="text-center text-sm font-medium text-gray-500">
-            <div class="pt-1"></div>
-            Confirm this transaction in your {{ walletName }} wallet
-          </div>
-        </CommonHeightTransition>
-      </div>
+        <TransactionButtonUnderlineConfirmTransaction :opened="status === 'waiting-for-signature'" />
+      </TransactionConfirmModalFooter>
     </div>
   </CommonModal>
 
@@ -83,17 +76,14 @@
       <CommonCardWithLineButtons v-if="transaction">
         <TransactionLineItem
           :icon="LockOpenIcon"
-          :transaction-url="`${blockExplorerUrl}/tx/${transactionReceipt?.hash}`"
+          :explorer-url="l1BlockExplorerUrl"
+          :transaction-hash="transactionHash"
         >
-          <template #top-left>
-            <div class="transaction-line-label">Allowance</div>
-          </template>
+          <template #top-left>Allowance</template>
           <template #top-right>
             <TokenAmount :token="transaction.token" :amount="transaction.amount" />
           </template>
-          <template #bottom-right>
-            <div class="transaction-line-item-price">Approved amount</div>
-          </template>
+          <template #bottom-right>Approved amount</template>
         </TransactionLineItem>
       </CommonCardWithLineButtons>
 
@@ -104,7 +94,12 @@
           <span class="font-medium">{{ destinations.ethereum.label }}</span
           >.
         </p>
-        <a :href="`${blockExplorerUrl}/tx/${transactionReceipt?.hash}`" target="_blank" class="alert-link">
+        <a
+          v-if="l1BlockExplorerUrl"
+          :href="`${l1BlockExplorerUrl}/tx/${transactionHash}`"
+          target="_blank"
+          class="alert-link"
+        >
           Track status
           <ArrowUpRightIcon class="ml-1 h-3 w-3" />
         </a>
@@ -116,18 +111,11 @@
         </p>
       </CommonAlert>
 
-      <div class="sticky bottom-0 z-[1] mt-auto flex w-full flex-col items-center">
-        <transition v-bind="TransitionAlertScaleInOutTransition">
-          <CommonButton
-            v-if="transactionCommitted"
-            class="mx-auto mt-8"
-            variant="primary-solid"
-            @click="emit('continue')"
-          >
-            Continue
-          </CommonButton>
-        </transition>
-      </div>
+      <transition v-bind="TransitionAlertScaleInOutTransition">
+        <TransactionConfirmModalFooter v-if="transactionCommitted">
+          <CommonButton class="mx-auto mt-4" variant="primary-solid" @click="emit('continue')">Continue</CommonButton>
+        </TransactionConfirmModalFooter>
+      </transition>
     </div>
   </CommonModal>
 </template>
@@ -136,6 +124,7 @@
 import { computed, ref } from "vue";
 
 import { ArrowUpRightIcon, InformationCircleIcon, LockOpenIcon } from "@heroicons/vue/24/outline";
+import { getPublicClient } from "@wagmi/core";
 import { storeToRefs } from "pinia";
 
 import TokenAmount from "@/components/transaction/transactionLineItem/TokenAmount.vue";
@@ -145,9 +134,8 @@ import usePromise from "@/composables/usePromise";
 import SuccessUnlock from "@/assets/lottie/success-unlock.json";
 
 import type { TransactionDestination } from "@/store/destinations";
-import type { Token } from "@/types";
-import type { TransactionResponse } from "@ethersproject/abstract-provider";
-import type { BigNumberish, ContractTransaction } from "ethers";
+import type { Hash, Token } from "@/types";
+import type { BigNumberish } from "ethers";
 import type { PropType } from "vue";
 
 import { useDestinationsStore } from "@/store/destinations";
@@ -158,7 +146,6 @@ import { formatError } from "@/utils/formatters";
 import { TransitionAlertScaleInOutTransition, TransitionPrimaryButtonText } from "@/utils/transitions";
 
 export type ConfirmationModalTransaction = {
-  to: string;
   token: Token;
   amount: BigNumberish;
 };
@@ -176,7 +163,7 @@ const props = defineProps({
     required: true,
   },
   setAllowance: {
-    type: Function as PropType<() => Promise<ContractTransaction>>,
+    type: Function as PropType<() => Promise<Hash>>,
     required: true,
   },
   fetchBalance: {
@@ -189,12 +176,12 @@ const emit = defineEmits<{
   (eventName: "continue"): void;
 }>();
 
-const { account, walletName } = storeToRefs(useOnboardStore());
+const { account } = storeToRefs(useOnboardStore());
 const { destinations } = storeToRefs(useDestinationsStore());
-const { blockExplorerUrl } = storeToRefs(useNetworkStore());
+const { l1BlockExplorerUrl } = storeToRefs(useNetworkStore());
 
 const status = ref<"not-started" | "waiting-for-signature" | "committing" | "processing" | "done">("not-started");
-const transactionReceipt = ref<TransactionResponse | undefined>();
+const transactionHash = ref<Hash | undefined>();
 const transactionCommitted = computed(() => status.value === "done");
 const transactionStarted = computed(() => status.value === "committing" || transactionCommitted.value);
 
@@ -202,11 +189,20 @@ const { execute: makeTransaction, error } = usePromise(
   async () => {
     try {
       status.value = "waiting-for-signature";
-      const tx = await props.setAllowance();
+      transactionHash.value = await props.setAllowance();
 
       status.value = "committing";
-      transactionReceipt.value = tx;
-      await tx.wait();
+
+      const publicClient = getPublicClient();
+      const receipt = await publicClient.waitForTransactionReceipt({
+        hash: transactionHash.value,
+        onReplaced: (replacement) => {
+          transactionHash.value = replacement.transaction.hash;
+        },
+      });
+      if (receipt.status !== "success") {
+        throw new Error("Transaction failed");
+      }
 
       await Promise.all([props.fetchBalance(), props.getAllowance()]);
       status.value = "done";
@@ -226,7 +222,7 @@ const checkAfterModalClose = () => {
 };
 const reset = () => {
   status.value = "not-started";
-  transactionReceipt.value = undefined;
+  transactionHash.value = undefined;
 };
 </script>
 

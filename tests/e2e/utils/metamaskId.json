@@ -1,0 +1,23 @@
+{
+  "zksyncGoerliNetwork": {
+    "networkName": "zkSync Era Testnet",
+    "newRpcUrl": "https://testnet.era.zksync.dev",
+    "chainId": "280",
+    "currencySymbol": "ETH",
+    "blockExplorerUrl": "https://goerli.explorer.zksync.io"
+  },
+  "goerliNetwork": {
+    "networkName": "Goerli test network",
+    "newRpcUrl": "https://goerli.infura.io/v3/",
+    "chainId": "5",
+    "currencySymbol": "GoerliETH",
+    "blockExplorerUrl": "https://goerli.etherscan.io"
+  },
+  "ethereumMainnetNetwork": {
+    "networkName": "Ethereum Mainnet",
+    "newRpcUrl": "https://mainnet.infura.io/v3/",
+    "chainId": "1",
+    "currencySymbol": "ETH",
+    "blockExplorerUrl": "https://etherscan.io"
+  }
+}

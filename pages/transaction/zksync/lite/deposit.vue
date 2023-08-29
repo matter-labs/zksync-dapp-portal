@@ -4,7 +4,7 @@
     v-if="step === 'address'"
     title="Where to add funds"
     :destination="destinations.zkSyncLite"
-    :destination-tooltip="`Add funds to ${destinations.zkSyncLite.label} (L2)`"
+    :destination-tooltip="`Add funds to ${destinations.zkSyncLite.label}`"
     own-address-displayed
     @selected="queryAddress = $event"
   />

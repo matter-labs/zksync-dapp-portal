@@ -1,0 +1,54 @@
+name: Deploy Package to Preview
+"on":
+  workflow_dispatch:
+    inputs:
+      version:
+        type: string
+        description: "A release version to deploy, e.g. v1.0.0"
+        required: true
+        default: "v1.0.0"
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    outputs:
+      dappUrl: ${{ steps.deploy.outputs.details_url }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Download Dist package
+        uses: dsaltares/fetch-gh-release-asset@master
+        with:
+          version: "tags/${{ github.event.inputs.version }}"
+          file: "dist.zip"
+          target: "dist.zip"
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Unzip Dist package
+        run: |
+          unzip dist.zip
+
+      - name: Deploy
+        id: deploy
+        uses: matter-labs/action-hosting-deploy@main
+        with:
+          repoToken: "${{ secrets.GITHUB_TOKEN }}"
+          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_DAPP_WALLET_V2 }}"
+          expires: 7d
+          projectId: zksync-dapp-wallet-v2
+          channelID: ${{ github.event.inputs.version }}
+
+  e2e:
+    needs: deploy
+    uses: ./.github/workflows/e2e.yml
+    name: E2E
+    secrets: inherit
+    with:
+      targetUrl: ${{ needs.deploy.outputs.dappUrl }}
+      network: Goerli
+      publish_to_allure: true
+      environmentTags: ""

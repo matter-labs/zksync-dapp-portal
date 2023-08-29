@@ -1,7 +1,7 @@
 <template>
   <div>
     <CommonContentBlock>
-      <CommonButtonsLineGroup class="mb-4">
+      <CommonButtonGroup class="mb-4">
         <CommonButton as="RouterLink" :to="{ name: 'transaction-zksync-lite' }">
           <template #icon>
             <PaperAirplaneIcon aria-hidden="true" />
@@ -17,20 +17,20 @@
         <CommonButton
           as="a"
           target="_blank"
-          :href="`https://zkexport.netlify.app/export/account/transactions?address=${account.address}&network=${selectedEthereumNetwork.network}`"
+          :href="`https://zkexport.netlify.app/export/account/transactions?address=${account.address}&network=${zkSyncLiteNetwork.network}`"
         >
           <template #icon>
             <DocumentArrowDownIcon aria-hidden="true" />
           </template>
           <template #default>Export history</template>
         </CommonButton>
-      </CommonButtonsLineGroup>
-      <div class="transactions-block-container">
+      </CommonButtonGroup>
+      <div>
         <div class="flex items-center justify-between py-4">
-          <h2 class="text-sm text-gray-secondary">Transactions</h2>
+          <TypographyCategoryLabel as="h2" :padded="false">Transactions</TypographyCategoryLabel>
           <CommonLabelButton as="RouterLink" :to="{ name: 'payments-all' }">View all</CommonLabelButton>
         </div>
-        <div class="transactions-container">
+        <div class="-mx-2 -mt-1 -mb-2">
           <template v-if="recentTransactionsRequestInProgress">
             <TokenBalanceLoader v-for="index in 5" :key="index" />
           </template>
@@ -50,7 +50,7 @@
           <template v-else>
             <CommonEmptyBlock class="mx-3 mb-3 mt-1">
               You currently don't have any transactions on
-              <span class="font-medium">{{ destinations.zkSyncLite.label }}</span> (L2)
+              <span class="font-medium">{{ destinations.zkSyncLite.label }}</span>
             </CommonEmptyBlock>
           </template>
         </div>
@@ -68,14 +68,14 @@ import { storeToRefs } from "pinia";
 import ZkSyncLiteTransactionLineItem from "@/components/transaction/zksync/lite/ZkSyncLiteTransactionLineItem.vue";
 
 import { useDestinationsStore } from "@/store/destinations";
-import { useNetworkStore } from "@/store/network";
 import { useOnboardStore } from "@/store/onboard";
+import { useLiteProviderStore } from "@/store/zksync/lite/provider";
 import { useLiteTransactionsHistoryStore } from "@/store/zksync/lite/transactionsHistory";
 
 const onboardStore = useOnboardStore();
 const liteTransactionsHistoryStore = useLiteTransactionsHistoryStore();
 const { account } = storeToRefs(onboardStore);
-const { selectedEthereumNetwork } = storeToRefs(useNetworkStore());
+const { zkSyncLiteNetwork } = storeToRefs(useLiteProviderStore());
 const { transactions, recentTransactionsRequestInProgress, recentTransactionsRequestError } =
   storeToRefs(liteTransactionsHistoryStore);
 const { destinations } = storeToRefs(useDestinationsStore());
@@ -97,10 +97,4 @@ onBeforeUnmount(() => {
 
 <style lang="scss" scoped></style>
 
-<style lang="scss" scoped>
-.transactions-block-container {
-  .transactions-container {
-    @apply -mx-2 -mt-1 -mb-3;
-  }
-}
-</style>
+<style lang="scss" scoped></style>

@@ -1,9 +1,11 @@
 <template>
+  <ModalTransactionWithdrawalUnavailable />
+
   <BackButton :fallback="{ name: 'transaction-zksync-era' }" />
   <SelectAddress
     v-if="step === 'address'"
     :destination="destinations.ethereum"
-    :destination-tooltip="`Withdraw to ${destinations.ethereum.label} (L1)`"
+    :destination-tooltip="`Withdraw to ${destinations.ethereum.label}`"
     own-address-displayed
     @selected="queryAddress = $event"
   />

@@ -3,7 +3,8 @@ import { computed } from "vue";
 import { defineStore, storeToRefs } from "pinia";
 
 import { useNetworkStore } from "@/store/network";
-import { capitalize } from "@/utils/formatters";
+import { useEraProviderStore } from "@/store/zksync/era/provider";
+import { useLiteProviderStore } from "@/store/zksync/lite/provider";
 
 export type TransactionDestination = {
   key?: string;
@@ -12,22 +13,24 @@ export type TransactionDestination = {
 };
 
 export const useDestinationsStore = defineStore("destinations", () => {
-  const { selectedEthereumNetwork } = storeToRefs(useNetworkStore());
+  const { l1Network } = storeToRefs(useNetworkStore());
+  const { eraNetwork } = storeToRefs(useEraProviderStore());
+  const { zkSyncLiteNetwork } = storeToRefs(useLiteProviderStore());
 
   const destinations = computed(() => ({
     zkSyncLite: {
       key: "zkSyncLite",
-      label: `zkSync Lite ${capitalize(selectedEthereumNetwork.value.network)}`,
+      label: zkSyncLiteNetwork.value.name,
       iconUrl: "/img/zksync-lite.svg",
     },
     era: {
       key: "era",
-      label: `zkSync Era∎ ${capitalize(selectedEthereumNetwork.value.network)}`,
+      label: eraNetwork.value.name,
       iconUrl: "/img/era.svg",
     },
     ethereum: {
       key: "ethereum",
-      label: `Ethereum ${capitalize(selectedEthereumNetwork.value.network)}`,
+      label: `Ethereum ${l1Network.value ? l1Network.value.name : ""}`,
       iconUrl: "/img/ethereum.svg",
     },
     layerswap: {
@@ -63,12 +66,12 @@ export const useDestinationsStore = defineStore("destinations", () => {
     zigzag: {
       key: "zigzag",
       label: "ZigZag",
-      iconUrl: "/img/zigzag.png",
+      iconUrl: "/img/zigzag.svg",
     },
-    syncswap: {
-      key: "syncswap",
-      label: "SyncSwap",
-      iconUrl: "/img/syncswap.svg",
+    rhino: {
+      key: "rhino",
+      label: "rhino.fi",
+      iconUrl: "/img/rhino.svg",
     },
   }));
 

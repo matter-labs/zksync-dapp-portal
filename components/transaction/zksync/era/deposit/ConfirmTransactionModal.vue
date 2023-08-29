@@ -13,65 +13,60 @@
           <AddressCardParsed
             :address="account.address!"
             :destination="destinations.ethereum"
-            :tooltip="`Add funds from ${destinations.ethereum.label} (L1)`"
+            :tooltip="`Add funds from ${destinations.ethereum.label}`"
           />
-          <div class="-mx-1 border-b border-dashed"></div>
-          <TokenBalance v-bind="transaction.token" as="div" :amount="transaction.amount" />
+          <TokenBalance v-bind="transaction.token" as="div" :amount="transaction.amount" amount-display="full" />
         </CommonCardWithLineButtons>
         <TransactionItemIcon :icon="ArrowDownIcon" />
         <CommonCardWithLineButtons>
           <AddressCardParsed
             :address="transaction.to"
             :destination="destinations.era"
-            :tooltip="`Add funds to ${destinations.era.label} (L2)`"
+            :tooltip="`Add funds to ${destinations.era.label}`"
           />
         </CommonCardWithLineButtons>
       </template>
 
       <TransactionFeeDetails class="my-2" label="Fee:" :fee-token="feeToken" :fee-amount="lastFee" />
 
-      <div class="sticky bottom-0 z-[1] mt-auto w-full bg-gray bg-opacity-60 backdrop-blur-sm">
-        <div class="mx-4 mb-3 border-t border-dashed border-gray-300"></div>
-        <TransactionFeeDetails
-          v-for="(item, index) in totalOfEachToken"
-          class="-my-0.5"
-          :key="item.token.address"
-          :label="index === 0 ? 'Total:' : ''"
-          :fee-token="item.token"
-          :fee-amount="item.amount"
-        />
-        <transition v-bind="TransitionAlertScaleInOutTransition">
-          <div v-if="!buttonDisabled && newFeeAlert" class="mx-4 mt-3">
-            <CommonAlert variant="warning" :icon="ExclamationCircleIcon">
-              <p>Fee has changed since you started the transaction. Please confirm the updated fee to proceed.</p>
-              <CommonButton @click="newFeeAlert = false">Confirm</CommonButton>
-            </CommonAlert>
-          </div>
-        </transition>
-        <div v-if="error" class="mx-4">
-          <CommonErrorBlock :retry-button="false" class="mt-3">
-            {{ error.message }}
-          </CommonErrorBlock>
-        </div>
-        <CommonButton
-          :disabled="buttonDisabled || newFeeAlert || status !== 'not-started'"
-          class="mx-auto mt-3"
-          variant="primary-solid"
-          @click="makeTransaction"
-        >
-          <transition v-bind="TransitionPrimaryButtonText" mode="out-in">
-            <span v-if="status === 'processing'">Processing...</span>
-            <span v-else-if="status === 'waiting-for-signature'">Waiting for confirmation</span>
-            <span v-else>Add funds to {{ destinations.era.label }}</span>
+      <TransactionConfirmModalFooter>
+        <template #alerts v-if="!newFeeAlert">
+          <slot name="alerts" />
+        </template>
+        <template #default>
+          <TransactionTotalByToken :total-by-token="totalOfEachToken" />
+          <transition v-bind="TransitionAlertScaleInOutTransition">
+            <div v-if="!buttonDisabled && newFeeAlert" class="mx-4 mt-3">
+              <CommonAlert variant="warning" :icon="ExclamationCircleIcon">
+                <p>Fee has changed since you started the transaction. Please confirm the updated fee to proceed.</p>
+                <CommonButton @click="newFeeAlert = false">Confirm</CommonButton>
+              </CommonAlert>
+            </div>
           </transition>
-        </CommonButton>
-        <CommonHeightTransition :opened="status === 'waiting-for-signature'">
-          <div class="text-center text-sm font-medium text-gray-500">
-            <div class="pt-1"></div>
-            Confirm this transaction in your {{ walletName }} wallet
+          <div v-if="error" class="mx-4">
+            <CommonErrorBlock :retry-button="false" class="mt-3">
+              {{ error.message }}
+            </CommonErrorBlock>
           </div>
-        </CommonHeightTransition>
-      </div>
+          <div class="mt-2">
+            <CommonButtonTopInfo v-if="!isCustomNode">Arriving in ~15 minutes</CommonButtonTopInfo>
+          </div>
+          <CommonButton
+            :disabled="buttonDisabled || newFeeAlert || status !== 'not-started'"
+            class="mx-auto"
+            variant="primary-solid"
+            autofocus
+            @click="makeTransaction"
+          >
+            <transition v-bind="TransitionPrimaryButtonText" mode="out-in">
+              <span v-if="status === 'processing'">Processing...</span>
+              <span v-else-if="status === 'waiting-for-signature'">Waiting for confirmation</span>
+              <span v-else>Add funds to {{ destinations.era.label }}</span>
+            </transition>
+          </CommonButton>
+          <TransactionButtonUnderlineConfirmTransaction :opened="status === 'waiting-for-signature'" />
+        </template>
+      </TransactionConfirmModalFooter>
     </div>
   </CommonModal>
 
@@ -85,11 +80,10 @@
       <CommonCardWithLineButtons v-if="transaction">
         <TransactionLineItem
           :icon="transactionReceiptIcon"
-          :transaction-url="`${blockExplorerUrl}/tx/${ethTransactionHash}`"
+          :explorer-url="l1BlockExplorerUrl"
+          :transaction-hash="ethTransactionHash"
         >
-          <template #top-left>
-            <div class="transaction-line-label">Deposit</div>
-          </template>
+          <template #top-left>Deposit</template>
           <template #top-right>
             <TokenAmount
               :token="transaction.token"
@@ -110,22 +104,51 @@
 
       <CommonAlert class="mt-3" variant="neutral" :icon="InformationCircleIcon">
         <p>
-          Your funds will be available on <span class="font-medium">{{ destinations.era.label }}</span> (L2) after the
-          transaction is committed on <span class="font-medium">{{ destinations.ethereum.label }}</span> (L1) and then
-          processed on <span class="font-medium">{{ destinations.era.label }}</span> (L2). You are free to close this
-          page.
+          Your funds will be available on <span class="font-medium">{{ destinations.era.label }}</span> after the
+          transaction is committed on <span class="font-medium">{{ destinations.ethereum.label }}</span> and then
+          processed on <span class="font-medium">{{ destinations.era.label }}</span
+          >. You are free to close this page.
         </p>
-        <a :href="`${blockExplorerUrl}/tx/${ethTransactionHash}`" target="_blank" class="alert-link">
+        <a
+          v-if="l1BlockExplorerUrl"
+          :href="`${l1BlockExplorerUrl}/tx/${ethTransactionHash}`"
+          target="_blank"
+          class="alert-link"
+        >
           Track status
           <ArrowUpRightIcon class="ml-1 h-3 w-3" />
         </a>
       </CommonAlert>
 
-      <div class="sticky bottom-0 z-[1] mt-auto flex w-full flex-col items-center">
-        <CommonButton as="RouterLink" :to="{ name: 'index' }" class="mx-auto mt-8" variant="primary-solid">
-          Go to Home page
-        </CommonButton>
-      </div>
+      <TransactionConfirmModalFooter>
+        <template v-if="layout === 'default'">
+          <CommonButton as="RouterLink" :to="{ name: 'index' }" class="mx-auto mt-4" variant="primary-solid">
+            Go to Assets page
+          </CommonButton>
+        </template>
+        <template v-else-if="layout === 'bridge'">
+          <CommonButtonTopLink v-if="!isCustomNode" @click="emit('newTransaction')">
+            Make another transaction
+          </CommonButtonTopLink>
+          <CommonButton v-if="refererName" class="mx-auto" variant="primary-solid" @click="closeWindow">
+            Go back to {{ refererName }}
+          </CommonButton>
+          <CommonButton
+            v-else-if="!isCustomNode"
+            as="a"
+            href="https://ecosystem.zksync.io"
+            target="_blank"
+            class="mx-auto"
+            variant="primary-solid"
+          >
+            Explore ecosystem
+            <ArrowUpRightIcon class="ml-1 mt-0.5 h-3.5 w-3.5" aria-hidden="true" />
+          </CommonButton>
+          <CommonButton v-else class="mx-auto" variant="primary-solid" @click="emit('newTransaction')">
+            Make another transaction
+          </CommonButton>
+        </template>
+      </TransactionConfirmModalFooter>
     </div>
   </CommonModal>
 </template>
@@ -141,16 +164,20 @@ import {
   InformationCircleIcon,
   PlusIcon,
 } from "@heroicons/vue/24/outline";
+import { useRouteQuery } from "@vueuse/router";
 import { BigNumber } from "ethers";
+import { Logger } from "ethers/lib/utils";
 import { storeToRefs } from "pinia";
 
 import TokenAmount from "@/components/transaction/transactionLineItem/TokenAmount.vue";
 import TotalPrice from "@/components/transaction/transactionLineItem/TotalPrice.vue";
 
+import useNetworks from "@/composables/useNetworks";
 import useTransaction from "@/composables/zksync/era/deposit/useTransaction";
 
 import type { DepositFeeValues } from "@/composables/zksync/era/deposit/useFee";
 import type { Token } from "@/types";
+import type { TransactionReceipt } from "@ethersproject/providers";
 import type { BigNumberish } from "ethers";
 import type { PropType } from "vue";
 
@@ -159,7 +186,7 @@ import { useNetworkStore } from "@/store/network";
 import { useOnboardStore } from "@/store/onboard";
 import { usePreferencesStore } from "@/store/preferences";
 import { useEraEthereumBalanceStore } from "@/store/zksync/era/ethereumBalance";
-import { useEraTransactionsHistoryStore } from "@/store/zksync/era/transactionsHistory";
+import { useEraTransfersHistoryStore } from "@/store/zksync/era/transfersHistory";
 import { useEraWalletStore } from "@/store/zksync/era/wallet";
 import { TransitionPrimaryButtonText } from "@/utils/transitions";
 
@@ -172,6 +199,10 @@ export type ConfirmationModalTransaction = {
 const props = defineProps({
   opened: {
     type: Boolean,
+  },
+  layout: {
+    type: String as PropType<"default" | "bridge">,
+    default: "default",
   },
   transaction: {
     type: Object as PropType<ConfirmationModalTransaction>,
@@ -197,16 +228,18 @@ const props = defineProps({
 
 const emit = defineEmits<{
   (eventName: "update:opened", value: boolean): void;
+  (eventName: "newTransaction"): void;
 }>();
 const closeModal = () => emit("update:opened", false);
 
-const eraTransactionsHistoryStore = useEraTransactionsHistoryStore();
+const eraTransfersHistoryStore = useEraTransfersHistoryStore();
 const walletEraStore = useEraWalletStore();
 const eraEthereumBalanceStore = useEraEthereumBalanceStore();
-const { account, walletName } = storeToRefs(useOnboardStore());
+const { account } = storeToRefs(useOnboardStore());
 const { destinations } = storeToRefs(useDestinationsStore());
-const { blockExplorerUrl } = storeToRefs(useNetworkStore());
+const { l1BlockExplorerUrl } = storeToRefs(useNetworkStore());
 const { previousTransactionAddress } = storeToRefs(usePreferencesStore());
+const { isCustomNode } = useNetworks();
 const { status, error, ethTransactionHash, commitTransaction } = useTransaction(walletEraStore.getL1Signer);
 
 const lastFee = ref(props.fee);
@@ -283,18 +316,38 @@ const makeTransaction = async () => {
   }
 
   if (tx) {
+    for (const tokenAddress in totalOfEachToken.value) {
+      const token = totalOfEachToken.value[tokenAddress];
+      if (!token?.token.l1Address) continue;
+      eraEthereumBalanceStore.deductBalance(token.token.l1Address, token.amount.toString());
+    }
     tx.waitL1Commit()
-      .then(() => {
-        eraTransactionsHistoryStore.reloadRecentTransactions();
-        walletEraStore.requestBalance({ force: true });
-        eraEthereumBalanceStore.requestBalance({ force: true });
-      })
-      .catch((err) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .catch((err: any) => {
+        if (err?.code === Logger.errors.TRANSACTION_REPLACED) {
+          if (err.cancelled) {
+            error.value = new Error("Transaction was cancelled by the user");
+            status.value = "not-started";
+          } else {
+            ethTransactionHash.value = (err.receipt as TransactionReceipt).transactionHash;
+          }
+          return;
+        }
         error.value = err as Error;
         status.value = "not-started";
+      })
+      .finally(() => {
+        setTimeout(() => {
+          eraTransfersHistoryStore.reloadRecentTransfers().catch(() => undefined);
+          walletEraStore.requestBalance({ force: true }).catch(() => undefined);
+          eraEthereumBalanceStore.requestBalance({ force: true }).catch(() => undefined);
+        }, 2000);
       });
   }
 };
+
+const refererName = useRouteQuery("refererName");
+const closeWindow = () => window.close();
 </script>
 
 <style lang="scss">

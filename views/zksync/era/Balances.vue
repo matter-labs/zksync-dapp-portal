@@ -18,7 +18,7 @@
             v-for="item in group.balances"
             as="div"
             :key="item.address"
-            send-route-name="transaction-zksync-era"
+            :send-route-name="eraNetwork.l1Network ? 'transaction-zksync-era' : 'transaction-zksync-era-send'"
             v-bind="item"
           />
         </CommonCardWithLineButtons>
@@ -36,12 +36,14 @@ import useInterval from "@/composables/useInterval";
 import useSingleLoading from "@/composables/useSingleLoading";
 
 import { useOnboardStore } from "@/store/onboard";
+import { useEraProviderStore } from "@/store/zksync/era/provider";
 import { useEraWalletStore } from "@/store/zksync/era/wallet";
 import { groupBalancesByAmount } from "@/utils/mappers";
 
 const onboardStore = useOnboardStore();
 const walletEraStore = useEraWalletStore();
 const { balance, balanceInProgress, balanceError, allBalancePricesLoaded } = storeToRefs(walletEraStore);
+const { eraNetwork } = storeToRefs(useEraProviderStore());
 
 const { loading, reset: resetSingleLoading } = useSingleLoading(
   computed(() => balanceInProgress.value || !allBalancePricesLoaded.value)

@@ -1,36 +1,26 @@
 <template>
-  <CommonModal v-model:opened="walletWarningModal" :close-on-background-click="false" title="Wallet warning">
+  <CommonModal :initialFocus="checkbox" v-model:opened="walletWarningModal" :closable="false" title="Wallet warning">
     <p class="leading-normal">
-      zkSync Plus is still in beta. For the best experience, we recommend using
-      <span class="font-medium">MetaMask</span>. Some features may not work properly with other wallets.
+      Make sure your wallet supports zkSync Era network before adding funds to your account. Otherwise, this can result
+      in <span class="font-medium text-red-600">loss of funds</span>. See the list of supported wallets on the
+      <a class="link" href="https://ecosystem.zksync.io/?filter=WALLET" target="_blank">Ecosystem</a> website.
     </p>
 
-    <div class="mt-3 flex items-start">
-      <label for="risc" class="flex cursor-pointer items-center">
-        <div class="relative">
-          <input type="checkbox" id="risc" v-model="doNotShowWarning" class="sr-only" tabindex="-1" />
-          <div
-            class="flex h-6 w-6 items-center justify-center rounded-md border-2 border-gray-300 bg-white outline-none ring-primary-400 ring-offset-2 focus:ring-2"
-            v-bind:class="{ 'bg-primary-600 border-primary-600': doNotShowWarning }"
-            tabindex="0"
-            @keyup.enter="doNotShowWarning = !doNotShowWarning"
-          >
-            <svg v-show="doNotShowWarning" class="h-5 w-5 text-white" viewBox="0 0 20 20" fill="currentColor">
-              <path
-                fill-rule="evenodd"
-                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 111.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                clip-rule="evenodd"
-              />
-            </svg>
-          </div>
-        </div>
-        <div id="risc-description" class="ml-3 text-sm font-medium leading-6">Do not show again</div>
-      </label>
-    </div>
+    <CommonCheckbox ref="checkbox" v-model="warningChecked" class="mt-3">I understand the risk</CommonCheckbox>
 
-    <CommonButton class="mx-auto mt-4" variant="primary-solid" @click="walletWarningModal = false">
-      Proceed
-    </CommonButton>
+    <div class="mt-4">
+      <CommonHeightTransition :opened="warningChecked">
+        <CommonButtonTopLink @click="doNotShowAgain">Do not show again</CommonButtonTopLink>
+      </CommonHeightTransition>
+      <CommonButton
+        class="mx-auto"
+        variant="primary-solid"
+        :disabled="!warningChecked"
+        @click="walletWarningModal = false"
+      >
+        Proceed
+      </CommonButton>
+    </div>
   </CommonModal>
 </template>
 
@@ -40,20 +30,31 @@ import { ref, watch } from "vue";
 import { useStorage } from "@vueuse/core";
 import { storeToRefs } from "pinia";
 
+import { useNetworkStore } from "@/store/network";
 import { useOnboardStore } from "@/store/onboard";
 
-const { walletName } = storeToRefs(useOnboardStore());
+const { walletNotSupported } = storeToRefs(useOnboardStore());
+const { version } = storeToRefs(useNetworkStore());
+const checkbox = ref<HTMLInputElement | undefined>();
 
 const doNotShowWarning = useStorage("wallet-warning-hidden", false);
+const warningChecked = ref(false);
 const walletWarningModal = ref(false);
 watch(
-  walletName,
-  (name) => {
+  [walletNotSupported, version],
+  ([notSupported, zkSyncVersion]) => {
     if (doNotShowWarning.value) return;
-    if (name && name !== "MetaMask") {
+    if (!notSupported) {
+      walletWarningModal.value = false;
+    } else if (zkSyncVersion === "era") {
       walletWarningModal.value = true;
     }
   },
   { immediate: true }
 );
+
+const doNotShowAgain = () => {
+  doNotShowWarning.value = true;
+  walletWarningModal.value = false;
+};
 </script>

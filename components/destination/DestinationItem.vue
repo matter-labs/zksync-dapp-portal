@@ -1,18 +1,18 @@
 <template>
-  <CommonButtonLineWithImg :as="as" class="destination-item">
+  <CommonButtonLineWithImg :as="as" :icon="icon" class="destination-item">
     <template #image>
       <slot name="image">
         <CommonImageLoader class="destination-item-icon" :src="iconUrl" />
       </slot>
     </template>
     <template #default>
-      <div class="destination-item-info">
-        <div class="destination-item-label">{{ label }}</div>
-        <div v-if="description" class="destination-item-description">{{ description }}</div>
-      </div>
+      <CommonButtonLineBodyInfo class="text-left">
+        <template #label v-if="label">{{ label }} </template>
+        <template #underline v-if="description">{{ description }}</template>
+      </CommonButtonLineBodyInfo>
     </template>
-    <template #right v-if="icon">
-      <component :is="icon" class="destination-icon" aria-hidden="true" />
+    <template #right v-if="$slots.right">
+      <slot name="right" />
     </template>
   </CommonButtonLineWithImg>
 </template>
@@ -42,24 +42,11 @@ defineProps({
 <style lang="scss">
 .destination-item {
   .destination-item-icon {
-    @apply aspect-square h-auto w-full rounded-full border bg-white transition-shadow;
-  }
-  .destination-item-info {
-    @apply flex w-full flex-col justify-between overflow-hidden whitespace-nowrap;
+    @apply aspect-square h-auto w-full rounded-full border border-neutral-950/10 dark:border-white/10;
 
-    .destination-item-label,
-    .destination-item-description {
-      @apply overflow-hidden overflow-ellipsis;
+    .image-loader-image {
+      @apply box-content;
     }
-    .destination-item-label {
-      @apply font-medium leading-relaxed;
-    }
-    .destination-item-description {
-      @apply text-sm leading-tight text-gray-secondary;
-    }
-  }
-  .destination-icon {
-    @apply mx-3 h-4 w-4 text-gray-secondary;
   }
 }
 </style>

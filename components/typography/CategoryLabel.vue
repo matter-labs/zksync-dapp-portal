@@ -1,11 +1,29 @@
 <template>
-  <div class="category-label">
+  <component :is="as" class="category-label" :class="{ 'has-padding': padded }">
     <slot />
-  </div>
+  </component>
 </template>
+
+<script lang="ts" setup>
+import type { Component, PropType } from "vue";
+
+defineProps({
+  as: {
+    type: [String, Object] as PropType<string | Component>,
+    default: "div",
+  },
+  padded: {
+    type: Boolean,
+    default: true,
+  },
+});
+</script>
 
 <style lang="scss" scoped>
 .category-label {
-  @apply py-4 text-sm font-medium text-gray-secondary;
+  @apply text-sm font-medium text-gray-secondary dark:text-neutral-200;
+  &.has-padding {
+    @apply py-4;
+  }
 }
 </style>

@@ -55,23 +55,32 @@
     </transition>
 
     <div v-if="buttonStep === 'network'" class="transaction-footer-row">
-      <div class="mb-2 text-center text-sm text-gray-secondary">
-        Incorrect network selected in your {{ walletName }} wallet
-      </div>
-      <CommonButton
-        :disabled="switchingNetworkInProgress"
-        variant="primary-solid"
-        @click="onboardStore.setCorrectNetwork"
-      >
-        Change wallet network to {{ selectedEthereumNetwork.name }}
-      </CommonButton>
+      <CommonButtonTopInfo>Incorrect network selected in your wallet</CommonButtonTopInfo>
+      <template v-if="zkSyncLiteNetwork.l1Network">
+        <CommonButton
+          v-if="connectorName !== 'WalletConnect'"
+          type="submit"
+          :disabled="switchingNetworkInProgress"
+          variant="primary-solid"
+          @click="onboardStore.setCorrectNetwork"
+        >
+          Change wallet network to {{ zkSyncLiteNetwork.l1Network.name }}
+        </CommonButton>
+        <CommonButton v-else disabled variant="primary-solid">
+          Change network manually to {{ zkSyncLiteNetwork.l1Network.name }} in your {{ walletName }} wallet
+        </CommonButton>
+      </template>
+      <template v-else>
+        <CommonButton disabled variant="primary-solid">
+          L1 network is not available on {{ zkSyncLiteNetwork.name }}
+        </CommonButton>
+      </template>
     </div>
     <div v-else-if="buttonStep === 'authorize'" class="transaction-footer-row">
-      <button class="link mb-2 text-sm underline-offset-2" @click="modalWalletAuthorizationOpened = true">
-        What is authorization?
-      </button>
+      <CommonButtonTopLink @click="modalWalletAuthorizationOpened = true">What is authorization?</CommonButtonTopLink>
       <CommonButton
         :disabled="authorizationInProgress || accountActivationCheckInProgress"
+        type="submit"
         variant="primary-solid"
         @click="authorizeWallet"
       >
@@ -79,11 +88,12 @@
       </CommonButton>
     </div>
     <div v-else-if="buttonStep === 'activate'" class="transaction-footer-row">
-      <button class="link mb-2 text-sm underline-offset-2" @click="modalAccountActivationOpened = true">
+      <CommonButtonTopLink @click="modalAccountActivationOpened = true">
         What is account activation?
-      </button>
+      </CommonButtonTopLink>
       <CommonButton
         :disabled="!canSignAccountActivation || accountActivationSigningInProgress"
+        type="submit"
         variant="primary-solid"
         @click="signAccountActivation"
       >
@@ -94,7 +104,7 @@
       <slot name="after-checks" />
     </div>
 
-    <TransactionContinueInWallet :opened="continueInWalletTipDisplayed" />
+    <TransactionButtonUnderlineContinueInWallet :opened="continueInWalletTipDisplayed" />
   </div>
 </template>
 
@@ -105,9 +115,9 @@ import { ExclamationTriangleIcon } from "@heroicons/vue/24/outline";
 import { storeToRefs } from "pinia";
 
 import { useDestinationsStore } from "@/store/destinations";
-import { useNetworkStore } from "@/store/network";
 import { useOnboardStore } from "@/store/onboard";
 import { useLiteAccountActivationStore } from "@/store/zksync/lite/accountActivation";
+import { useLiteProviderStore } from "@/store/zksync/lite/provider";
 import { useLiteWalletStore } from "@/store/zksync/lite/wallet";
 import { TransitionAlertScaleInOutTransition } from "@/utils/transitions";
 
@@ -126,10 +136,10 @@ const onboardStore = useOnboardStore();
 const walletLiteStore = useLiteWalletStore();
 const liteAccountActivationStore = useLiteAccountActivationStore();
 
-const { isCorrectNetworkSet, switchingNetworkInProgress, switchingNetworkError, walletName } =
+const { isCorrectNetworkSet, switchingNetworkInProgress, switchingNetworkError, connectorName, walletName } =
   storeToRefs(onboardStore);
-const { selectedEthereumNetwork } = storeToRefs(useNetworkStore());
 const { destinations } = storeToRefs(useDestinationsStore());
+const { zkSyncLiteNetwork } = storeToRefs(useLiteProviderStore());
 const { isAuthorized, authorizationInProgress, authorizationError } = storeToRefs(walletLiteStore);
 const {
   isAccountActivated,
@@ -179,7 +189,7 @@ const signAccountActivation = () => {
 
 <style lang="scss" scoped>
 .transaction-footer {
-  @apply sticky bottom-0 z-[2] mt-auto flex flex-col items-center bg-gray bg-opacity-60 pb-2 pt-4 backdrop-blur-sm;
+  @apply sticky bottom-0 z-10 mt-auto flex flex-col items-center bg-gray bg-opacity-60 pb-2 pt-4 backdrop-blur-sm dark:bg-neutral-950;
 
   .transaction-footer-row {
     @apply flex w-full flex-col items-center;

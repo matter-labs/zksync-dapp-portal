@@ -1,17 +1,20 @@
-import { Alchemy, Network, TokenBalanceType } from "alchemy-sdk";
+import { AnkrProvider } from "@ankr.com/ankr.js";
+import { BigNumber } from "ethers";
 import { defineStore, storeToRefs } from "pinia";
 
-import type { TokenBalance } from "alchemy-sdk";
+import type { TokenAmount } from "@/types";
+import type { Blockchain as AnkrSupportedChains } from "@ankr.com/ankr.js";
 
-import { useNetworkStore } from "@/store/network";
 import { useOnboardStore } from "@/store/onboard";
-import { ETH_ADDRESS } from "@/utils/constants";
+import { useEraProviderStore } from "@/store/zksync/era/provider";
+import { ETH_L1_ADDRESS } from "@/utils/constants";
 import { checksumAddress } from "@/utils/formatters";
 
 export const useEthereumBalanceStore = defineStore("ethereumBalance", () => {
+  const runtimeConfig = useRuntimeConfig();
   const onboardStore = useOnboardStore();
   const { account } = storeToRefs(onboardStore);
-  const { selectedEthereumNetwork } = storeToRefs(useNetworkStore());
+  const { eraNetwork } = storeToRefs(useEraProviderStore());
 
   const {
     result: balance,
@@ -19,38 +22,49 @@ export const useEthereumBalanceStore = defineStore("ethereumBalance", () => {
     error: balanceError,
     execute: requestBalance,
     reset: resetBalance,
-  } = usePromise(
+  } = usePromise<TokenAmount[]>(
     async () => {
       if (!account.value.address) throw new Error("Account is not available");
+      if (!eraNetwork.value.l1Network) throw new Error(`L1 network is not available on ${eraNetwork.value.name}`);
+      if (!runtimeConfig.public.ankrToken) throw new Error("Ankr token is not available");
 
-      const alchemy = new Alchemy({
-        network: selectedEthereumNetwork.value.id === 1 ? Network.ETH_MAINNET : Network.ETH_GOERLI,
+      const ankrProvider = new AnkrProvider(`https://rpc.ankr.com/multichain/${runtimeConfig.public.ankrToken}`);
+      const balances = await ankrProvider.getAccountBalance({
+        blockchain: [
+          eraNetwork.value.l1Network.network === "mainnet"
+            ? "eth"
+            : (`eth_${eraNetwork.value.l1Network.network}` as AnkrSupportedChains),
+        ],
+        walletAddress: account.value.address,
+        onlyWhitelisted: false,
       });
-      const balances: TokenBalance[] = [];
-      const fetchBalances = async (pageKey?: string) => {
-        const result = await alchemy.core.getTokenBalances(account.value.address!, {
-          type: TokenBalanceType.ERC20,
-          pageKey,
-        });
-        balances.push(
-          ...result.tokenBalances.map((token) => ({
-            ...token,
-            contractAddress: checksumAddress(token.contractAddress),
-          }))
-        );
-        if (result.pageKey) {
-          await fetchBalances(result.pageKey);
-        }
-      };
-      const [ethersBalance] = await Promise.all([alchemy.core.getBalance(account.value.address!), fetchBalances()]);
-      balances.push({
-        contractAddress: ETH_ADDRESS,
-        tokenBalance: ethersBalance.toString(),
-      } as TokenBalance);
-      return balances;
+      return [
+        ...balances.assets
+          .filter((e) => e.contractAddress || e.tokenType === "NATIVE")
+          .map(
+            (e) =>
+              ({
+                address: e.tokenType === "NATIVE" ? ETH_L1_ADDRESS : checksumAddress(e.contractAddress!),
+                symbol: e.tokenSymbol,
+                name: e.tokenName,
+                decimals: e.tokenDecimals,
+                iconUrl: e.thumbnail,
+                price: e.tokenPrice,
+                amount: e.balanceRawInteger,
+              } as TokenAmount)
+          ),
+      ];
     },
     { cache: false }
   );
+
+  const deductBalance = (tokenL1Address: string, amount: string) => {
+    if (!balance.value) return;
+    const tokenBalance = balance.value.find((balance) => balance.address === tokenL1Address);
+    if (!tokenBalance) return;
+    const newBalance = BigNumber.from(tokenBalance.amount).sub(amount);
+    tokenBalance.amount = newBalance.isNegative() ? "0" : newBalance.toString();
+  };
 
   onboardStore.subscribeOnAccountChange(() => {
     resetBalance();
@@ -61,5 +75,7 @@ export const useEthereumBalanceStore = defineStore("ethereumBalance", () => {
     balanceInProgress,
     balanceError,
     requestBalance,
+
+    deductBalance,
   };
 });

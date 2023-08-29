@@ -12,10 +12,6 @@ defineProps({
     type: String,
     required: true,
   },
-  address: {
-    type: String,
-    required: true,
-  },
   iconUrl: {
     type: String,
   },
@@ -27,10 +23,10 @@ defineProps({
   @apply aspect-square;
 
   .token-placeholder {
-    @apply h-full w-full rounded-full border border-dashed;
+    @apply h-full w-full rounded-full border border-dashed dark:border-neutral-600;
     &::before {
       content: "";
-      @apply absolute inset-0 m-[3px] rounded-full bg-gray-100;
+      @apply absolute inset-0 m-[3px] rounded-full bg-gray-100 dark:bg-neutral-700;
     }
   }
 }

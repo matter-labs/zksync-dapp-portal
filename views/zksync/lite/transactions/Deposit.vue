@@ -43,9 +43,9 @@
     />
 
     <CommonErrorBlock v-if="balanceError" @try-again="fetchBalances">
-      {{ balanceError.message }}
+      Getting balances error: {{ balanceError.message }}
     </CommonErrorBlock>
-    <form v-else class="transaction-form pb-2" @submit.prevent="">
+    <form v-else class="flex h-full flex-col" @submit.prevent="">
       <CommonAmountInput
         v-model.trim="amount"
         v-model:error="amountError"
@@ -60,7 +60,7 @@
       </CommonErrorBlock>
       <transition v-bind="TransitionOpacity()">
         <TransactionFeeDetails
-          v-if="fee || feeLoading"
+          v-if="!feeError && (fee || feeLoading)"
           class="mt-1"
           label="Fee:"
           :fee-token="feeToken"
@@ -73,7 +73,8 @@
       <transition v-bind="TransitionAlertScaleInOutTransition">
         <CommonAlert v-if="!enoughBalanceToCoverFee" class="mt-1" variant="error" :icon="ExclamationTriangleIcon">
           <p>
-            Insufficient <span class="font-medium">{{ feeToken?.symbol }}</span> balance to cover the fee
+            Insufficient <span class="font-medium">{{ feeToken?.symbol }}</span> balance on
+            {{ destinations.ethereum.label }} to cover the fee
           </p>
         </CommonAlert>
       </transition>
@@ -87,8 +88,11 @@
           <p>
             Your current allowance for <span class="font-medium">{{ selectedToken!.symbol }}</span> is
             <button type="button" class="link underline underline-offset-2" @click="setAmountToAllowance">
-              {{ parseTokenAmount(allowance!, selectedToken!.decimals) }}</button
-            >. Depositing more than that will require you to approve a new allowance.
+              {{ parseTokenAmount(allowance!, selectedToken!.decimals) }}
+            </button>
+            <span class="block wrap-balance">
+              Depositing more than that will require you to approve a new allowance.
+            </span>
           </p>
           <a :href="TOKEN_ALLOWANCE" target="_blank" class="alert-link">
             Learn more
@@ -99,15 +103,20 @@
       <CommonErrorBlock v-if="allowanceRequestError" class="mt-2" @try-again="requestAllowance">
         Checking allowance error: {{ allowanceRequestError.message }}
       </CommonErrorBlock>
-    </form>
 
-    <ZksyncLiteTransactionFooter :authorization="false" :account-activation="false">
-      <template #after-checks>
-        <CommonButton :disabled="continueButtonDisabled" variant="primary-solid" @click="openConfirmationModal">
-          Continue
-        </CommonButton>
-      </template>
-    </ZksyncLiteTransactionFooter>
+      <ZksyncLiteTransactionFooter :authorization="false" :account-activation="false">
+        <template #after-checks>
+          <CommonButton
+            type="submit"
+            :disabled="continueButtonDisabled"
+            variant="primary-solid"
+            @click="openConfirmationModal"
+          >
+            Continue
+          </CommonButton>
+        </template>
+      </ZksyncLiteTransactionFooter>
+    </form>
   </div>
 </template>
 
@@ -185,7 +194,8 @@ watch(
   (symbol) => {
     if (!symbol) return;
     liteTokensStore.requestTokenPrice(symbol);
-  }
+  },
+  { immediate: true }
 );
 watch(allBalancePricesLoaded, (loaded) => {
   if (loaded && !selectedToken.value) {
@@ -205,7 +215,8 @@ const {
   computed(() => account.value.address),
   computed(() => selectedToken.value?.address),
   async () => (await liteProviderStore.requestProvider())?.contractAddress.mainContract,
-  onboardStore.getEthereumProvider
+  onboardStore.getWallet,
+  onboardStore.getPublicClient
 );
 const enoughAllowance = computed(() => {
   if (!allowance.value || !selectedToken.value) {
@@ -251,13 +262,15 @@ const {
   feeToken,
   enoughBalanceToCoverFee,
   estimateFee,
-} = useFee(onboardStore.getEthereumProvider, walletLiteStore.getWalletInstance, tokens, balance);
+  resetFee,
+} = useFee(tokens, balance, walletLiteStore.getWalletInstance, onboardStore.getPublicClient);
 watch(
   () => feeToken?.value?.symbol,
   (symbol) => {
     if (!symbol) return;
     liteTokensStore.requestTokenPrice(symbol);
-  }
+  },
+  { immediate: true }
 );
 const gasLimitAndPrice = computed(() => {
   if (!gasLimit.value || !gasPrice.value) {
@@ -333,6 +346,7 @@ const feeAutoUpdateEstimate = async () => {
 watch(
   [() => props.address, () => selectedToken.value?.symbol, () => account.value.address],
   () => {
+    resetFee();
     estimate();
   },
   { immediate: true }

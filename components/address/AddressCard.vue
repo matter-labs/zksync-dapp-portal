@@ -8,17 +8,14 @@
       </AddressAvatar>
     </template>
     <template #default>
-      <div class="address-card-info">
-        <div v-if="name" class="address-card-name">{{ name }}</div>
-        <div class="address-card-address" :title="address">{{ shortenAddress(address) }}</div>
-      </div>
+      <CommonButtonLineBodyInfo class="text-left" data-testid="your-account">
+        <template #label v-if="name">{{ name }} </template>
+        <template #underline>
+          <span class="address-card-address" :title="address">{{ shortenAddress(address) }}</span>
+        </template>
+      </CommonButtonLineBodyInfo>
     </template>
-    <template #right v-if="$slots.icon">
-      <div class="icon-container">
-        <slot name="icon" />
-      </div>
-    </template>
-    <template #right v-else-if="$slots.right">
+    <template #right v-if="$slots.right">
       <slot name="right" />
     </template>
   </CommonButtonLineWithImg>
@@ -26,6 +23,8 @@
 
 <script lang="ts" setup>
 import type { Component, PropType } from "vue";
+
+import { shortenAddress } from "@/utils/formatters";
 
 defineProps({
   as: {
@@ -41,27 +40,10 @@ defineProps({
 });
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .address-card {
   .address-card-avatar {
     @apply aspect-square h-auto w-full;
-  }
-  .address-card-info {
-    @apply flex w-full flex-col justify-between whitespace-nowrap;
-
-    .address-card-name {
-      @apply overflow-hidden text-ellipsis font-medium leading-relaxed;
-    }
-    .address-card-address {
-      @apply text-sm leading-tight text-gray-secondary;
-    }
-  }
-  .icon-container {
-    @apply flex items-center justify-center;
-
-    svg {
-      @apply block h-6 w-6;
-    }
   }
 }
 </style>

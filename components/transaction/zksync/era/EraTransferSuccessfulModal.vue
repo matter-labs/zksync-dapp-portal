@@ -10,22 +10,29 @@
         {{ inProgress ? "Transaction submitted" : "Transaction completed" }}
       </div>
       <CommonCardWithLineButtons>
-        <EraTransactionLineItem :transaction="transaction" />
+        <EraTransferLineItem :transfer="transfer" />
       </CommonCardWithLineButtons>
 
       <CommonAlert v-if="inProgress" class="mt-3" variant="neutral" :icon="InformationCircleIcon">
         <p>
           Your funds will be available at the
           <a
-            :href="`${blockExplorerUrl}/address/${transaction.to}`"
+            v-if="blockExplorerUrl"
+            :href="`${blockExplorerUrl}/address/${transfer.to}`"
             target="_blank"
             class="font-medium underline underline-offset-2"
             >destination address</a
           >
+          <span v-else>destination address</span>
           after the transaction is committed on the <span class="font-medium">{{ destinations.era.label }}</span
           >. You are free to close this page.
         </p>
-        <a :href="`${blockExplorerUrl}/tx/${transaction.transactionHash}`" target="_blank" class="alert-link">
+        <a
+          v-if="blockExplorerUrl"
+          :href="`${blockExplorerUrl}/tx/${transfer.transactionHash}`"
+          target="_blank"
+          class="alert-link"
+        >
           Track status
           <ArrowUpRightIcon class="ml-1 h-3 w-3" />
         </a>
@@ -34,24 +41,24 @@
         <p>
           Your funds should now be available at the
           <a
-            :href="`${blockExplorerUrl}/address/${transaction.to}`"
+            v-if="blockExplorerUrl"
+            :href="`${blockExplorerUrl}/address/${transfer.to}`"
             target="_blank"
             class="font-medium underline underline-offset-2"
             >destination address</a
-          >.
+          >
+          <span v-else>destination address</span>.
         </p>
       </CommonAlert>
 
-      <div
-        class="sticky bottom-0 z-[1] mt-auto flex w-full flex-col items-center bg-gray bg-opacity-60 backdrop-blur-sm"
-      >
-        <NuxtLink :to="{ name: 'transaction-zksync-era' }" class="link mb-2 mt-2 text-sm underline-offset-2">
+      <TransactionConfirmModalFooter>
+        <CommonButtonTopLink as="RouterLink" :to="{ name: 'transaction-zksync-era' }">
           Make another transaction
-        </NuxtLink>
+        </CommonButtonTopLink>
         <CommonButton as="RouterLink" :to="{ name: 'index' }" class="mx-auto" variant="primary-solid">
-          Go to Home page
+          Go to Assets page
         </CommonButton>
-      </div>
+      </TransactionConfirmModalFooter>
     </div>
   </CommonModal>
 </template>
@@ -60,19 +67,19 @@
 import { ArrowUpRightIcon, InformationCircleIcon } from "@heroicons/vue/24/outline";
 import { storeToRefs } from "pinia";
 
-import EraTransactionLineItem from "@/components/transaction/zksync/era/EraTransactionLineItem.vue";
+import EraTransferLineItem from "@/components/transaction/zksync/era/EraTransferLineItem.vue";
 
 import SuccessConfetti from "@/assets/lottie/success-confetti.json";
 
-import type { EraTransaction } from "@/utils/zksync/era/mappers";
+import type { EraTransfer } from "@/utils/zksync/era/mappers";
 import type { PropType } from "vue";
 
 import { useDestinationsStore } from "@/store/destinations";
 import { useEraProviderStore } from "@/store/zksync/era/provider";
 
 defineProps({
-  transaction: {
-    type: Object as PropType<EraTransaction>,
+  transfer: {
+    type: Object as PropType<EraTransfer>,
     required: true,
   },
   inProgress: {

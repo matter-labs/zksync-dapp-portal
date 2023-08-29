@@ -24,54 +24,80 @@ defineProps({
 </script>
 
 <style lang="scss">
+.lite.dark {
+  .alert-container {
+    &.variant- {
+      &info {
+        @apply border-primary-300/50 bg-primary-300/10;
+      }
+    }
+  }
+}
 .alert-container {
-  @apply w-full rounded-lg p-4;
+  @apply w-full rounded-[1.24rem] p-4 wrap-balance;
   &.has-icon {
     @apply grid grid-cols-[1.25rem_1fr] gap-3;
   }
   &.variant- {
     &info {
-      @apply bg-primary-100 text-primary-700;
+      @apply border bg-primary-100 text-primary-700;
+      @apply dark:border-primary-200/50 dark:bg-primary-200/10 dark:text-white;
 
+      .alert-icon {
+        @apply dark:text-primary-300;
+      }
       .alert-body {
         .alert-link {
-          @apply hover:text-primary-600;
+          @apply hover:text-primary-600 dark:hover:text-primary-200;
         }
       }
     }
     &neutral {
-      @apply bg-gray-200 bg-opacity-70 text-gray-700 backdrop-blur-sm;
+      @apply border border-gray-200 bg-gray-200 bg-opacity-70 text-gray-700 backdrop-blur-sm;
+      @apply dark:border-white/50 dark:bg-white/10 dark:text-white;
 
       .alert-body {
         .alert-link {
-          @apply hover:text-gray-500;
+          @apply hover:text-gray-500 dark:hover:text-neutral-200;
         }
       }
     }
     &success {
-      @apply bg-green-200 text-green-700;
+      @apply border border-green-200 bg-green-200 text-green-700;
+      @apply dark:border-success-400/50 dark:bg-success-400/10 dark:text-white;
 
+      .alert-icon {
+        @apply dark:text-success-600;
+      }
       .alert-body {
         .alert-link {
-          @apply hover:text-green-600;
+          @apply hover:text-green-600 dark:hover:text-green-600;
         }
       }
     }
     &warning {
-      @apply bg-orange-100 text-orange-700;
+      @apply border border-orange-100 bg-orange-100 text-orange-700;
+      @apply dark:border-warning-400/50 dark:bg-warning-600/10 dark:text-white;
 
+      .alert-icon {
+        @apply dark:text-warning-400;
+      }
       .alert-body {
         .alert-link {
-          @apply hover:text-orange-600;
+          @apply hover:text-orange-600 dark:text-warning-400 dark:hover:text-warning-600;
         }
       }
     }
     &error {
-      @apply bg-red-100 text-red-700;
+      @apply border border-red-100 bg-red-100 text-red-700;
+      @apply dark:border-red-400/50 dark:bg-red-400/10 dark:text-white;
 
+      .alert-icon {
+        @apply dark:text-red-400;
+      }
       .alert-body {
         .alert-link {
-          @apply hover:text-red-600;
+          @apply hover:text-red-600 dark:text-red-400 dark:hover:text-red-500;
         }
       }
     }

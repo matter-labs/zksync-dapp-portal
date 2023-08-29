@@ -3,7 +3,7 @@
   <SelectAddress
     v-if="step === 'address'"
     :destination="destinations.zkSyncLite"
-    :destination-tooltip="`Send to ${destinations.zkSyncLite.label} (L2)`"
+    :destination-tooltip="`Send to ${destinations.zkSyncLite.label}`"
     @selected="queryAddress = $event"
   />
   <LiteTransferForm v-else-if="step === 'transaction-form'" type="Transfer" :address="address!" />

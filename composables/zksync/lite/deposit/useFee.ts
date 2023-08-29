@@ -6,20 +6,21 @@ import {
 } from "zksync/build/utils";
 
 import type { ZkSyncLiteToken, ZkSyncLiteTokenAmount } from "@/types";
-import type { Provider } from "@wagmi/core";
+import type { PublicClient } from "@wagmi/core";
 import type { BigNumberish } from "ethers";
 import type { Ref } from "vue";
 import type { Wallet } from "zksync";
 
+import { retry } from "@/utils/helpers";
 import { calculateFee } from "@/utils/helpers";
 
 export default (
-  getProvider: () => Provider,
-  getWalletInstance: () => Promise<Wallet | undefined>,
   tokens: Ref<{ [tokenSymbol: string]: ZkSyncLiteToken } | undefined>,
-  balances: Ref<ZkSyncLiteTokenAmount[]>
+  balances: Ref<ZkSyncLiteTokenAmount[]>,
+  getWalletInstance: () => Promise<Wallet | undefined>,
+  getPublicClient: () => PublicClient
 ) => {
-  const params = {
+  let params = {
     from: undefined as string | undefined,
     tokenAddress: undefined as string | undefined,
   };
@@ -51,42 +52,38 @@ export default (
     return BigNumber.from(ETH_RECOMMENDED_DEPOSIT_GAS_LIMIT);
   };
   const getERC20TransactionFee = async (gasPrice: BigNumberish) => {
-    const provider = getProvider();
+    const publicClient = getPublicClient();
     const wallet = await getWalletInstance();
     if (!wallet) throw new Error("Wallet is not available");
 
     const nonce = wallet.getNonce();
     const mainZkSyncContract = wallet.getZkSyncMainContract();
-    const gasEstimate = await mainZkSyncContract.estimateGas
-      .depositERC20(params.tokenAddress, "1000000000", params.from, {
-        nonce,
-        gasPrice: gasPrice,
-      })
-      .then(
-        (estimate) => estimate,
-        () => BigNumber.from("0")
-      );
+    const gasEstimate = await retry(() =>
+      mainZkSyncContract.estimateGas
+        .depositERC20(params.tokenAddress, "1000000000", params.from, {
+          nonce,
+          gasPrice: gasPrice,
+        })
+        .then(
+          (estimate) => estimate,
+          () => BigNumber.from("0")
+        )
+    );
     const recommendedGasLimit =
-      provider.network.chainId === 1 && ERC20_DEPOSIT_GAS_LIMIT[params.tokenAddress!]
+      publicClient.chain.id === 1 && ERC20_DEPOSIT_GAS_LIMIT[params.tokenAddress!]
         ? BigNumber.from(ERC20_DEPOSIT_GAS_LIMIT[params.tokenAddress!])
         : ERC20_RECOMMENDED_DEPOSIT_GAS_LIMIT;
     const gasLimit = gasEstimate.gte(recommendedGasLimit) ? gasEstimate : recommendedGasLimit;
     return BigNumber.from(gasLimit);
   };
-  const estimate = async (from: string, tokenAddress: string) => {
-    params.from = from;
-    params.tokenAddress = tokenAddress;
-
-    await estimateFee();
-  };
   const {
     inProgress,
     error,
-    execute: estimateFee,
+    execute: executeEstimateFee,
+    reset: resetEstimateFee,
   } = usePromise(
     async () => {
-      const provider = getProvider();
-      gasPrice.value = await provider.getGasPrice();
+      gasPrice.value = await getPublicClient().getGasPrice();
 
       if (!feeToken.value) throw new Error("Tokens are not available");
 
@@ -98,6 +95,10 @@ export default (
     },
     { cache: false }
   );
+  const cacheEstimateFee = useTimedCache<void, [typeof params]>(() => {
+    resetEstimateFee();
+    return executeEstimateFee();
+  }, 1000 * 8);
 
   return {
     gasLimit,
@@ -105,7 +106,17 @@ export default (
     result: totalFee,
     inProgress,
     error,
-    estimateFee: estimate,
+    estimateFee: async (from: string, tokenAddress: string) => {
+      params = {
+        from,
+        tokenAddress,
+      };
+      await cacheEstimateFee(params);
+    },
+    resetFee: () => {
+      gasLimit.value = undefined;
+      gasPrice.value = undefined;
+    },
 
     feeToken,
     enoughBalanceToCoverFee,

@@ -1,62 +1,107 @@
-## zkSync Plus is now fully maintained by Matter Labs as [zkSync Portal](https://github.com/matter-labs/dapp-portal). This repository is deprecated and will no longer be maintained.
+![zkSync Portal](https://portal.zksync.io/preview.jpg)
 
-![zkSync Plus](https://zkplus.io/preview.jpg)
+# zkSync Portal 🚀
 
-# zkSync Plus
-zkSync Plus is a unique wallet dapp that brings the best of zkSync Era∎ and zkSync Lite under one friendly user interface. Crafted with an emphasis on a seamless user experience, zkSync Plus allows you to easily manage your tokens. It's your go-to interface to interact with both versions of zkSync, ensuring a smooth and efficient process every step of the way.
+**zkSync Portal** is a state-of-the-art wallet dapp, merging the power of **zkSync Era∎** and **zkSync Lite** into one user-friendly interface. Designed with a stress on effortless user experience, it simplifies token management, making it your premier interface for interacting with both zkSync versions - every interaction smooth and efficient.
 
-## Try it out!
+## ✨ Features
 
-Visit [zkPlus.io](https://zkplus.io/) to experience the simplicity of zkSync Plus.
+- 🖥️ Intuitive interface for managing, sending, and bridging zkSync Era and zkSync Lite tokens.
+- 📇 Ability to add contacts for quick and easy access.
+- 🔧 Effortless setup and connection to local zkSync nodes or ZK Stack Hyperchains.
 
-Latest deployment - [![Netlify Status](https://api.netlify.com/api/v1/badges/999d85e2-8744-4b3f-b18e-21f37fca0381/deploy-status)](https://app.netlify.com/sites/zkplus/deploys)
+## 🎉 Try it out!
 
-## Contributing
-All contributions are welcome! Feel free to make the codebase better and submit your pull request [here](https://github.com/JackHamer09/zksync-plus/pulls).
-
-## Donations
-Loving the experience? Feel free to send a token of appreciation!
-
-ENS - `JackHamer.eth`
-
-Address - `0xa1cf087DB965Ab02Fb3CFaCe1f5c63935815f044`
+- 🌐 Dive in now at [portal.zksync.io](https://portal.zksync.io/).
+- 🌉 Also, explore the zkSync Era Bridge at [bridge.zksync.io](https://bridge.zksync.io).
 
 ---
-## Development
-### Setup
 
-Make sure to install the dependencies:
+## 🌍 Connecting to local node
 
+Harness the Portal's power to connect to your [local zkSync Era node](https://era.zksync.io/docs/tools/testing/).
+
+**Prerequisites:** Node.js version 16+, npm version 7+
+
+1. 📚 Follow the [documentation](https://era.zksync.io/docs/tools/testing/) for setting up either an **in-memory node** or **dockerized local setup**.
+2. 🔄 Clone the Portal repository and set it up:
+    ```bash
+    git clone https://github.com/matter-labs/dapp-portal.git
+    cd dapp-portal
+    npm install
+    ```
+3. 🛠️ Modify the default network settings in `data/networks.ts` if your network ID, RPC URL, or other info differs. Customize displayed tokens there if needed.
+    - Alternatively, use the [configuration form](./hyperchains/README.md#configure-automatically-with-form) for guided config setup.
+4. 🔥 Launch the dev server:
+    - For in-memory node:
+      ```bash
+      npm run dev:node:memory
+      ```
+    - For dockerized setup:
+      ```bash
+      npm run dev:node:docker
+      ```
+  Navigate to the displayed Portal URL (typically http://localhost:3000).
+
+---
+
+## 🔗 Connecting to Hyperchain
+
+To use Portal with your ZK Stack Hyperchain, see the guide [here](./hyperchains/README.md).
+
+---
+
+## 🛠 Development
+
+### Advanced configuration
+
+#### L1 Balances:
+By default, L1 balances are fetched via a public RPC. For faster loading speeds and reduced load on your L1 RPC provider, consider using [Ankr's RPC service](https://www.ankr.com/rpc/). Obtain an Ankr token and update the `.env` file:
 ```bash
-# npm
-npm install
-
-# yarn
-yarn install
-
-# pnpm
-pnpm install
+ANKR_TOKEN=your_ankr_token_here
 ```
 
-### Development Server
+#### Wallet Connect Project Setup:
+Before deploying your own version of the Portal, ensure you create your own Wallet Connect project on [walletconnect.com](https://walletconnect.com). After creating the project, update the project ID in the `.env` file:
+```bash
+WALLET_CONNECT_PROJECT_ID=your_project_id_here
+```
 
-Start the development server on http://localhost:3000
+
+### 🔧 Setup
+
+Ensure you've installed the necessary dependencies:
+
+```bash
+npm install
+```
+
+### 🌐 Development Server
+
+Activate the dev server at http://localhost:3000:
 
 ```bash
 npm run dev
 ```
 
-### Production
+### 🏭 Production
 
-Build the application for production:
+Compile for production:
 
 ```bash
-npm run build
+npm run generate
 ```
 
-Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+📘 Familiarize yourself with the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) for a deeper dive.
 
 ---
 
-## License
-Released under the [MIT License](https://github.com/JackHamer09/zksync-plus/blob/main/LICENSE).
+## 🤝 Contributing
+
+Open arms for contributions! Enhance our code and send your pull request [here](https://github.com/matter-labs/dapp-portal/pulls).
+
+---
+
+## 📜 License
+
+Proudly under the [MIT License](https://github.com/matter-labs/dapp-portal/blob/main/LICENSE).

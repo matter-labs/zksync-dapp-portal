@@ -15,7 +15,7 @@
       </CommonInfoContent>
 
       <TypographyCategoryLabel>Actions</TypographyCategoryLabel>
-      <CommonButtonsLineGroup>
+      <CommonButtonGroup>
         <CommonButton as="RouterLink" :to="{ name: 'transaction-send', query: { address: contact.address } }">
           <template #icon>
             <PaperAirplaneIcon aria-hidden="true" />
@@ -34,7 +34,7 @@
           </template>
           <template #default>{{ !confirmRemove ? "Remove" : "Are you sure?" }}</template>
         </CommonButton>
-      </CommonButtonsLineGroup>
+      </CommonButtonGroup>
     </template>
   </CommonModal>
 </template>

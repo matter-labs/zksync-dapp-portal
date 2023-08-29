@@ -112,6 +112,10 @@ export default (
     inProgress,
     error,
     estimateFee: estimate,
+    resetFee: () => {
+      result.value = undefined;
+      error.value = undefined;
+    },
 
     feeToken,
     tokensAvailableForFee,

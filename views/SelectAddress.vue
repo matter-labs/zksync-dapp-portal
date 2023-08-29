@@ -6,12 +6,7 @@
         <MagnifyingGlassIcon aria-hidden="true" />
       </template>
       <template #right>
-        <label
-          class="aspect-square h-full w-auto scale-125 cursor-pointer rounded p-0.5 transition-colors hover:bg-gray-300"
-        >
-          <QrCodeIcon class="aspect-square h-full w-auto" aria-hidden="true" />
-          <CommonQrAddressInput id="qr-code-input" @selected="emit('selected', $event)" />
-        </label>
+        <CommonQrUploadIconButton class="md:hidden" id="qr-code-input" @selected="emit('selected', $event)" />
       </template>
     </CommonSmallInput>
     <div v-if="displayedAddresses.length">
@@ -24,26 +19,28 @@
             v-for="item in group.addresses"
             :name="item.name"
             :address="item.address"
+            :icon="item.icon"
             :key="item.address"
             @click="emit('selected', item.address)"
           >
-            <template #icon v-if="item.icon">
-              <component :is="item.icon" class="mr-3 text-gray-secondary" aria-hidden="true" />
-            </template>
             <template #address-icon v-if="destination">
               <img v-tooltip="destinationTooltip" :src="destination!.iconUrl" :alt="destination!.label" />
             </template>
           </AddressCard>
         </CommonCardWithLineButtons>
       </template>
+
+      <slot name="after-address" />
     </div>
     <div v-else-if="!search">
       <CommonEmptyBlock class="search-empty-block">
         Enter address in the search bar
-        <br />
-        <span class="mt-1.5 inline-block">
-          Or <NuxtLink class="link" :to="{ name: 'contacts' }">create a contact</NuxtLink>
-        </span>
+        <template v-if="account.address">
+          <br />
+          <span class="mt-1.5 inline-block">
+            Or <NuxtLink class="link" :to="{ name: 'contacts' }">create a contact</NuxtLink>
+          </span>
+        </template>
       </CommonEmptyBlock>
     </div>
     <div v-else-if="ensParseInProgress">
@@ -60,7 +57,7 @@
       <CommonEmptyBlock class="search-empty-block">
         Nothing was found for "{{ search }}"
         <br />
-        <span class="mt-1.5 inline-block">Please enter a valid ethereum address</span>
+        <span class="mt-1.5 inline-block">Please enter a valid Ethereum address</span>
       </CommonEmptyBlock>
     </div>
   </div>
@@ -69,7 +66,7 @@
 <script lang="ts" setup>
 import { computed, ref } from "vue";
 
-import { ClockIcon, MagnifyingGlassIcon, QrCodeIcon, UserIcon } from "@heroicons/vue/24/outline";
+import { ClockIcon, MagnifyingGlassIcon, UserIcon } from "@heroicons/vue/24/outline";
 import { isAddress } from "ethers/lib/utils";
 import { storeToRefs } from "pinia";
 
@@ -134,17 +131,21 @@ const inputtedAddressAccount = computed<ContactWithIcon | null>(() => {
     };
   } else if (isAddressValid.value) {
     return {
-      name: search.value,
+      name: "",
       address: checksumAddress(search.value),
     };
   }
   return null;
 });
-const ownAccount = computed<ContactWithIcon>(() => ({
-  name: "Your account",
-  address: account.value.address!,
-  icon: UserIcon,
-}));
+const ownAccount = computed<ContactWithIcon | undefined>(() =>
+  account.value.address
+    ? {
+        name: "Your account",
+        address: account.value.address!,
+        icon: UserIcon,
+      }
+    : undefined
+);
 const lastAddressAccount = computed<ContactWithIcon | null>(() => {
   if (!previousTransactionAddress.value) {
     return null;
@@ -172,7 +173,7 @@ const displayedAddresses = computed<AddressesGroup[]>(() => {
     },
   };
 
-  if (props.ownAddressDisplayed) {
+  if (props.ownAddressDisplayed && ownAccount.value) {
     groups.default.addresses.push(ownAccount.value);
   }
 
@@ -187,7 +188,15 @@ const displayedAddresses = computed<AddressesGroup[]>(() => {
     };
   }
 
-  const result = Object.values(groups);
+  const result = Object.values(groups).sort((a, b) => {
+    if (a.title === null) {
+      return -1;
+    }
+    if (b.title === null) {
+      return 1;
+    }
+    return 0;
+  });
   if (search.value.length) {
     const filtered = result
       .map((group) => {

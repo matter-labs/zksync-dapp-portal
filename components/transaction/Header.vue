@@ -19,6 +19,8 @@
 import type { TransactionDestination } from "@/store/destinations";
 import type { PropType } from "vue";
 
+import { shortenAddress } from "@/utils/formatters";
+
 defineProps({
   title: {
     type: String,
@@ -40,6 +42,15 @@ defineProps({
 </script>
 
 <style lang="scss" scoped>
+.lite.dark {
+  .transaction-header {
+    .transaction-header-info {
+      .transaction-header-address {
+        @apply text-primary-300;
+      }
+    }
+  }
+}
 .transaction-header {
   @apply flex items-center justify-between pb-6;
 
@@ -48,7 +59,7 @@ defineProps({
       @apply pb-1;
     }
     .transaction-header-address {
-      @apply text-sm font-semibold text-primary-400;
+      @apply text-sm font-semibold text-primary-400 dark:text-primary-200;
     }
   }
   .transaction-header-avatar {

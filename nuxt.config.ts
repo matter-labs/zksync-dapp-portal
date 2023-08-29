@@ -1,3 +1,5 @@
+import { portal as portalMeta } from "./data/meta";
+
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   app: {
@@ -14,7 +16,11 @@ export default defineNuxtConfig({
       meta: [
         {
           property: "og:image",
-          content: "https://zkplus.io/preview.jpg",
+          content: portalMeta.previewImg.src,
+        },
+        {
+          property: "og:image:alt",
+          content: portalMeta.previewImg.alt,
         },
         {
           property: "og:image:type",
@@ -28,9 +34,10 @@ export default defineNuxtConfig({
           property: "og:image:height",
           content: "630",
         },
+      ],
+      script: [
         {
-          property: "og:image:alt",
-          content: "zkSync Plus",
+          src: "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit",
         },
       ],
     },
@@ -40,15 +47,15 @@ export default defineNuxtConfig({
   ssr: false,
   pwa: {
     meta: {
-      name: "zkSync Plus",
-      description: "All in one wallet for zkSync Era∎ and zkSync Lite",
+      name: portalMeta.title,
+      description: portalMeta.description,
     },
     manifest: {
-      name: "zkSync Plus",
-      short_name: "zkPlus",
+      name: portalMeta.title,
+      short_name: "Portal",
     },
   },
-  css: ["@/assets/css/tailwind.css", "web3-avatar-vue/dist/style.css"],
+  css: ["@/assets/css/tailwind.css", "@/assets/css/style.scss", "web3-avatar-vue/dist/style.css"],
   postcss: {
     plugins: {
       tailwindcss: {},
@@ -58,6 +65,19 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       walletConnectProjectID: process.env.WALLET_CONNECT_PROJECT_ID,
+      turnstileKey: process.env.TURNSTILE_KEY,
+      nodeType: process.env.NODE_TYPE as undefined | "memory" | "dockerized" | "hyperchain",
+      ankrToken: process.env.ANKR_TOKEN,
+    },
+  },
+  vite: {
+    build: {
+      target: "es2020",
+    },
+    optimizeDeps: {
+      esbuildOptions: {
+        target: "es2020",
+      },
     },
   },
 });
