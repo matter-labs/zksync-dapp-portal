@@ -235,7 +235,7 @@ Feature: Withdraw
       Then Element with "text" "zkSync Era Testnet address" should be "visible"
       Then Element with "text" "0x52B6...f46" should be "visible"
 
-    @id1605:I
+    @id1605:I @testnet
     Scenario Outline: Check redirection for the Bridge "View on Explorer" links (Testnet)
       Given I go to page "/bridge?network=era-goerli"
       When I click by partial text "..."
@@ -252,7 +252,7 @@ Feature: Withdraw
       | zkSync Lite Goerli      | https://goerli.zkscan.io/explorer/accounts/0x2cf4f78917a16c9584aeb5d4c5bd2713d724c75d |
 
 
-    @id1605:II
+    @id1605:II @mainnet
     Scenario Outline: Check redirection for the Bridge "View on Explorer" links (Mainnet)
       Given I go to page "/bridge?network=era-mainnet"
       When I click by partial text "..."
