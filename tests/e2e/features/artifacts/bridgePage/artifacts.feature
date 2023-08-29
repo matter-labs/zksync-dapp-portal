@@ -102,6 +102,9 @@ Feature: Withdraw
     Given I go to page "/bridge?network=era-goerli"
     When I click by text "Withdraw"
     Then Element with "text" "Bridge" should be "visible"
+    Then Element with "partial text" "Recent withdrawals" should be "visible"
+    #Recent withdrawals dropdown
+    Then Element with "partial class" "transition-transform" should be "visible"
     Then Element with "text" "From" should be "visible"
     Then Element with "text" "zkSync Era Testnet" should be "visible"
     Then Element with "testId" "token-dropDown" should be "visible"

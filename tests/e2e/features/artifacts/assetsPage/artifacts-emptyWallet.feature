@@ -46,3 +46,15 @@ Feature: Artifacts - UI
     #Error state
     Then Element with "partial class" "has-error" should be "visible"
     Then Element with "partial class" "amount-input-error" should be "visible"
+
+  @id1674
+  Scenario: Check "Insufficient balance" warning message (Zero token balance) (Withdraw)
+    Then A wallet should be "empty"
+    When I go to page "/transaction/zksync/era/withdraw"
+    When I click by "text" with "Your account" value
+    When I choose "ETH" as token and insert "1000" as amount
+    Then Message " Insufficient balance " should be visible
+    #Error state
+    Then Element with "partial class" "has-error" should be "visible"
+    Then Element with "partial class" "amount-input-error" should be "visible"
+    
