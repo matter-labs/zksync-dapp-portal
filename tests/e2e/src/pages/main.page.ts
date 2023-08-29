@@ -34,6 +34,18 @@ export class MainPage extends BasePage {
     return '//*[contains(@class, "radial-progress")]';
   }
 
+  get submittedTransactionAnimation() {
+    return '//*[contains(@class, "progress-plane-animation")]';
+  }
+
+  get greenSuccessMark() {
+    return '//*[contains(@class, "lottie-animation-container")]';
+  }
+
+  get faucetTokensAnimation() {
+    return '//*[contains(@class, "idle-faucet-animation")]';
+  }
+
   get menuElement() {
     return "//*[@class='menu-options']";
   }
@@ -200,6 +212,8 @@ export class MainPage extends BasePage {
       link = "https://www.orbiter.finance/?source=zkSync%20Era";
     } else if (externalLinkName === "Transfer" || externalLinkName === "Withdraw") {
       link = "https://goerli.explorer.zksync.io/tx";
+    } else if (externalLinkName === "Deposit") {
+      link = "https://goerli.etherscan.io/tx/";
     } else {
       return console.error("An incorrect link name has been provided");
     }

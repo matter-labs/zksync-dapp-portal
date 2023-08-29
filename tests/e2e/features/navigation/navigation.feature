@@ -87,3 +87,16 @@ Feature: Navigation
     When I click on the "Proceed" button
     Then Current page have "/transaction/zksync/era/withdraw" address
 
+  @id1638
+  Scenario Outline: Check Redirection for the "Out of funds" Faucet links
+    Given I go to page "/transaction/zksync/era/faucet/?network=era-goerli"
+    When I click by text "<Button name>"
+    Then New page has "<url>" address
+
+    Examples:
+      | Button name                                   | url                                              |
+      | following the instructions from our docs      | https://era.zksync.io/docs/tools/testing/        |
+      | Chainstack faucet                             | https://faucet.chainstack.com/goerli-faucet      |
+      | QuickNode faucet                              | https://faucet.quicknode.com/ethereum/goerli     |
+      | PoW faucet                                    | https://goerli-faucet.pk910.de/                  |
+

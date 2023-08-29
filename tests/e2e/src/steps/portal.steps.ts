@@ -370,6 +370,27 @@ Then(
   }
 );
 
+Then("The Green success mark should be visible", config.stepTimeout, async function (this: ICustomWorld) {
+  mainPage = new MainPage(this);
+  element = mainPage.greenSuccessMark;
+  result = await this.page?.locator(element);
+  await expect(result).toBeVisible();
+});
+
+Then("Submitted transaction animation should be visible", config.stepTimeout, async function (this: ICustomWorld) {
+  mainPage = new MainPage(this);
+  element = mainPage.submittedTransactionAnimation;
+  result = await this.page?.locator(element);
+  await expect(result).toBeVisible();
+});
+
+Then("Faucet tokens animation should be visible", config.stepTimeout, async function (this: ICustomWorld) {
+  mainPage = new MainPage(this);
+  element = mainPage.faucetTokensAnimation;
+  result = await this.page?.locator(element);
+  await expect(result).toBeVisible();
+});
+
 Given("I reset allowance", config.stepExtraTimeout, async function (this: ICustomWorld) {
   revokePage = new RevokePage(this);
   await revokePage.login();
