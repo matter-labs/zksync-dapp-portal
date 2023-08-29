@@ -18,18 +18,17 @@ Feature: Deposit
     Then Element with "text" " Learn more " should be "clickable"
     When I click by "text" with " Learn more " value
     Then New page has "https://cryptotesters.com/blog/token-allowances" address
-    # id1495
+    # id1495 modal card approving allovance links
     When I "continue" transaction after clicking "Approve allowance" button
     Then Modal card element with the "//*[text()='Approving allowance']" xpath should be "visible"
-    # modal card approving allovance links
     Then Element with "class" "line-button-with-img-icon" should be "clickable"
     When I click by "class" with "line-button-with-img-icon" value
     Then New page has "https://goerli.etherscan.io/tx" partial address
     Then Element with "partial text" "Track status" should be "clickable"
     When I click by "partial text" with "Track status" value
     Then New page has "https://goerli.etherscan.io/tx" partial address
+    # id1496 modal card approved allovance links
     Then Modal card element with the "//*[text()='Allowance approved']" xpath should be "visible"
     Then Element with "class" "line-button-with-img-icon" should be "clickable"
     When I click by "class" with "line-button-with-img-icon" value
     Then New page has "https://goerli.etherscan.io/tx" partial address
-    
