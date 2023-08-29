@@ -172,7 +172,9 @@ export class MainPage extends BasePage {
   async makeTransaction(actionType: string, transactionType: string) {
     metamaskPage = await new MetamaskPage(this.world);
     const selector = await this.getTransactionSelector(transactionType);
-    await metamaskPage.callTransactionInterface();
+    if (actionType != "continue") {
+      await metamaskPage.callTransactionInterface();
+    }
     await metamaskPage.operateTransaction(selector, actionType);
   }
 
