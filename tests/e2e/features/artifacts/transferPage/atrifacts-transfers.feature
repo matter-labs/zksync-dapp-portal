@@ -207,7 +207,7 @@ Feature: Artifacts - UI
   Scenario: Check max button functionality
     When I go to page "/transaction/zksync/era/send/?address=0x2CF4F78917A16C9584AeB5d4c5bD2713d724C75d&network=era-goerli"
     Then I confirm the network switching
-      #Get the Max input value
+      #Get the Max input value (Step to receive max value for comparison)
     When I choose "ETH" as token and insert "100000000" as amount
     When I save Max Balance Error Value
     Then Max amount is set to the input field
