@@ -50,7 +50,7 @@ Feature: Artifacts - UI
   @1489:I
   Scenario Outline: Check navigation from networks dropdown
     When I go to page "/?network=era-mainnet"
-    When I click by "testId" with "network-switcher" value
+    When I click by "text" with "Era Mainnet" value
     # Check visual presence of the network options
     Then Element with "text" "<Network name>" should be "visible"
     # Check URL changes
@@ -64,7 +64,7 @@ Feature: Artifacts - UI
   @1489:II
   Scenario Outline: Check navigation from networks dropdown
     When I go to page "/?network=era-goerli"
-    When I click by "testId" with "network-switcher" value
+    When I click by "text" with "Era Testnet" value
     # Check visual presence of the network options
     Then Element with "text" "<Network name>" should be "visible"
     # Check URL changes
