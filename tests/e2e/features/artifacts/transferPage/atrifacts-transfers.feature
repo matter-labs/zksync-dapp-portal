@@ -207,16 +207,16 @@ Feature: Artifacts - UI
   Scenario: Check max button functionality
     When I go to page "/transaction/zksync/era/send/?address=0x2CF4F78917A16C9584AeB5d4c5bD2713d724C75d&network=era-goerli"
     Then I confirm the network switching
-      #Get the Max input value (Step to receive max value for comparison)
-    When I choose "ETH" as token and insert "100000000" as amount
-    When I save Max Balance Error Value
-    Then Max amount is set to the input field
       #Max button is displayed
     Then Element with "partial text" "Max" should be "visible"
     Then Element with "partial text" "Max" should be "clickable"
-      #Hover tooltip check
+       # Check hover tooltip
     Then Element with "partial title" "Your max amount is" should be "visible"
-      #Verify "Max" button is highlighted after clicking on it
+       #Get the Max input value (Step to receive max value for comparison)
+    When I choose "ETH" as token and insert "100000000" as amount
+    When I save Max Balance Error Value
+    Then Max amount is set to the input field
+        # Verify "Max" button is highlighted after clicking on it
     Then I click by "text" with " Max " value
     Then Element with "partial class" "is-max" should be "visible"
 
