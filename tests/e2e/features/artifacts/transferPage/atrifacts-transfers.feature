@@ -217,8 +217,8 @@ Feature: Artifacts - UI
     Then Element with "partial class" "is-max" should be "visible"
     Then Max amount is set to the input field
       #Check Continue button is clickable
-    Then Element with "text" " Continue " should be "visible"
-    Then Element with "text" " Continue " should be "clickable"
+    Then Element with "type" "submit" should be "visible"
+    Then Element with "type" "submit" should be "clickable"
 
   @id1538 @Transfer
   Scenario: Check Transaction submitted window redirection links
