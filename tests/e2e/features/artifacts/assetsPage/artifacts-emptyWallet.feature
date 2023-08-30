@@ -58,7 +58,7 @@ Feature: Artifacts - UI
       Then Message " on Goerli Testnet for deposit. " should be visible
       Then Element with "text" "Fee:" should be "invisible"
       #Fee component
-      Then Element with "data-testid" "fee-amount" should be "invisible"
+      Then Element with "testId" "fee-amount" should be "invisible"
 
     @id1677
     Scenario: Check "Insufficient balance" warning message (Zero token balance) (Bridge)
