@@ -5,7 +5,7 @@ Feature: Deposit
     Given Connect Metamask extension with login action
 
 
-  @id1493 @id1495 @id1496
+  @deposit @id1493 @id1495 @id1496
   Scenario: Redirection - approving allowance modal
     Given I reset allowance
     Given I go to the main page
