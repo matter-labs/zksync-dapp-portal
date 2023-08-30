@@ -53,25 +53,25 @@ jobs:
       matrix:
         command: ["xvfb-run --auto-servernum --server-args '-screen 0 1920x1080x24' npx cucumber-js --tags "]
         tags: [
-                #"@artifacts and @bridge",
-                #"@artifacts and @contactsPage",
+                "@artifacts and @bridge",
+                "@artifacts and @contactsPage",
                 "@artifacts and @depositPage",
-                #"@artifacts and @transferPage",
-                #"@artifacts and @header",
-                #"@artifacts and @menuItems",
-                #"@artifacts and @upperNavigationMenu",
-                #"@artifacts and @contactsPage",
-                #"@artifacts and @withdraw",
-                #"@navigation and not @emptyWallet",
-                #"@artifacts and @various",
-                #"@artifacts and @transactionsItems",
-                #"@transactions and @deposit and @blockchain",
-                #"@transactions and @deposit and @noblockchain",
-                #"@transactions and @deposit and @emptyWallet",
-                #"@transactions and @deposit and @resetAllowance",
+                "@artifacts and @transferPage",
+                "@artifacts and @header",
+                "@artifacts and @menuItems",
+                "@artifacts and @upperNavigationMenu",
+                "@artifacts and @contactsPage",
+                "@artifacts and @withdraw",
+                "@navigation and not @emptyWallet",
+                "@artifacts and @various",
+                "@artifacts and @transactionsItems",
+                "@transactions and @deposit and @blockchain",
+                "@transactions and @deposit and @noblockchain",
+                "@transactions and @deposit and @emptyWallet",
+                "@transactions and @deposit and @resetAllowance",
                 "@transactions and @withdraw",
                 "@various and @emptyWallet",
-                #"@actions and @contacts"
+                "@actions and @contacts"
         ]
 
     name: '${{ matrix.tags }}'
