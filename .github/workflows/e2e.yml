@@ -55,7 +55,7 @@ jobs:
         tags: [
                 #"@artifacts and @bridge",
                 #"@artifacts and @contactsPage",
-                #"@artifacts and @depositPage",
+                "@artifacts and @depositPage",
                 #"@artifacts and @transferPage",
                 #"@artifacts and @header",
                 #"@artifacts and @menuItems",
