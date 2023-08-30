@@ -1,4 +1,4 @@
-@artifacts @regression @assetsPage @richWallet @various
+@artifacts @regression @assetsPage @richWallet
 Feature: Artifacts - UI
 
   Background:
