@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { expect } from "@playwright/test";
 
+import { NetworkSwitcher } from "../data/data";
 import { Helper } from "../helpers/helper";
 import { config } from "../support/config";
 
@@ -45,6 +46,17 @@ export class BasePage {
     await this.world.page?.waitForSelector(selector, config.increasedTimeout);
     await this.world.page?.locator(selector).isEnabled(config.increasedTimeout);
     await this.world.page?.fill(selector, text, config.increasedTimeout);
+  }
+
+  async isImOnTheMainPage() {
+    const expectedURL = this.world.page?.url();
+    const mainPageWithNetworkName = `${config.BASE_URL}${NetworkSwitcher.zkSyncEraGoerli}`;
+    const mainPageDefault = `${config.BASE_URL}/`;
+    if (expectedURL == mainPageWithNetworkName || expectedURL == mainPageDefault) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   async fillSpecificField(selectorType: string, selectorValue: string, text: string) {
@@ -264,7 +276,12 @@ export class BasePage {
     } else if (elementType === "partial string") {
       element = await this.getElementByPartialString(value);
     }
-    return element;
+    if (element != undefined) {
+      return element;
+    } else {
+      console.error("Error: '" + elementType + "' not found, returnElementByType is '" + element + "'");
+      process.exit(1);
+    }
   }
 
   public async goTo(address: string) {
@@ -277,9 +294,14 @@ export class BasePage {
     }
   }
 
+  /**
+   * verifyContent checks if we have a value or text in an arbitrary elementType with an arbitrary elementValue
+   * @param elementType - f.e. class/alt/id/text
+   * @param elementValue - value of elementType
+   * @param content - what we are going to verify
+   * @param contentType - value or text
+   */
   async verifyContent(elementType: string, elementValue: string, content: string, contentType: string) {
-    // elementType - f.e. class/text, elementValue - value of class/text
-    // content - what we are going to verify, contentType - value or text
     element = await this.returnElementByType(elementType, elementValue);
     if (contentType === "value") {
       await expect(element).toHaveValue(content);

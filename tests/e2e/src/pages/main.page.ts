@@ -118,6 +118,27 @@ export class MainPage extends BasePage {
     return `${this.modalCard}//button[text()='${buttonText}']`;
   }
 
+  async feeValueIs(flag: string, value: string) {
+    const helperPage = await new Helper(this.world);
+    const element = this.feeValue;
+    await this.world.page?.waitForTimeout(5000); // required
+    await helperPage.checkElementVisible(element);
+    result = await this.world.page?.locator(element);
+    if (flag == "should") {
+      return await expect(result).toContainText(value);
+    } else if (flag == "should not") {
+      return await expect(result).not.toContainText(value);
+    }
+  }
+
+  async isElementDissapeared(selecterValue: string, seconds: number) {
+    const helper = new Helper(this.world);
+    const basePage = new BasePage(this.world);
+    const selector = `//*[@${basePage.byTestId}'fee-amount']//*[@alt='${selecterValue}']`;
+    const timeout = (seconds + 5) * 1000; // plus extra 5 seconds to avoid false positive timeout issues
+    return await helper.checkSelectorHidden(selector, timeout);
+  }
+
   async selectTransaction(transactionType: string) {
     try {
       let route: string;
@@ -151,7 +172,9 @@ export class MainPage extends BasePage {
   async makeTransaction(actionType: string, transactionType: string) {
     metamaskPage = await new MetamaskPage(this.world);
     const selector = await this.getTransactionSelector(transactionType);
-    await metamaskPage.callTransactionInterface();
+    if (actionType != "continue") {
+      await metamaskPage.callTransactionInterface();
+    }
     await metamaskPage.operateTransaction(selector, actionType);
   }
 
@@ -289,6 +312,9 @@ export class MainPage extends BasePage {
 
   async maxAmountIsSet() {
     const basePage = new BasePage(this.world);
-    basePage.verifyContent("class", "amount-input-field", maxBalanceErrorValue, "value");
+    const elementType = "class";
+    const elementValue = "amount-input-field";
+    const contentType = "value";
+    basePage.verifyContent(elementType, elementValue, maxBalanceErrorValue, contentType);
   }
 }
