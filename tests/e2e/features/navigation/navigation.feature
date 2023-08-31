@@ -94,9 +94,9 @@ Feature: Navigation
     Then New page has "<url>" address
 
     Examples:
-      | Button name                                   | url                                              |
-      | following the instructions from our docs      | https://era.zksync.io/docs/tools/testing/        |
-      | Chainstack faucet                             | https://faucet.chainstack.com/goerli-faucet      |
-      | QuickNode faucet                              | https://faucet.quicknode.com/ethereum/goerli     |
-      | PoW faucet                                    | https://goerli-faucet.pk910.de/                  |
+      | Button name                                   | url                                                   |
+      | following the instructions from our docs      | https://era.zksync.io/docs/tools/testing/             |
+      | Chainstack faucet                             | https://faucet.chainstack.com/zksync-testnet-faucet   |
+      | QuickNode faucet                              | https://faucet.quicknode.com/ethereum/goerli          |
+      | PoW faucet                                    | https://goerli-faucet.pk910.de/                       |
 
