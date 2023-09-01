@@ -221,6 +221,12 @@ export class BasePage {
     return await element;
   }
 
+  async getElementByPartialTitle(partialTitle: string) {
+    element = await this.world.page?.locator(`//*[contains(@title, '${partialTitle}')]`);
+    await element.scrollIntoViewIfNeeded();
+    return await element;
+  }
+
   async getElementByType(type: string) {
     element = await this.world.page?.locator(`//*[@type='${type}']`);
     await element.scrollIntoViewIfNeeded();
@@ -261,6 +267,8 @@ export class BasePage {
       element = await this.getElementByPartialTestId(value);
     } else if (elementType === "title") {
       element = await this.getElementByTitle(value);
+    } else if (elementType === "partial title") {
+      element = await this.getElementByPartialTitle(value);
     } else if (elementType === "type") {
       element = await this.getElementByType(value);
     } else if (elementType === "placeholder") {

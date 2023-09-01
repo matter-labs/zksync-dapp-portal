@@ -74,3 +74,15 @@ Feature: Artifacts - UI
       Then Element with "partial class" "amount-input-error" should be "visible"
       When I confirm the network switching
       Then Element with "text" " Continue " should be "disabled"      
+
+  @id1676 @transfer
+  Scenario: Check "Insufficient balance" warning message (Zero token balance) (Transfer)
+    Then A wallet should be "empty"
+    When I go to page "/transaction/zksync/era/send/?address=0x2CF4F78917A16C9584AeB5d4c5bD2713d724C75d"
+    Then I choose "ETH" as token and insert "123123" as amount
+    Then Element with "text" " Insufficient balance " should be "visible"
+    Then Element with "partial class" "has-error" should be "visible"
+    Then Element with "partial class" "amount-input-error" should be "visible"
+          # Technical step to see Continue button
+    Then I confirm the network switching
+    Then Element with "text" " Continue " should be "disabled"

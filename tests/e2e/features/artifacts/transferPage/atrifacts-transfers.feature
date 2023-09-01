@@ -177,7 +177,7 @@ Feature: Artifacts - UI
     Then Element with "text" " Make another transaction " should be "visible"
     Then Element with "text" " Go to Assets page " should be "visible"
 
-  @id1364 @Transfer
+  @id1364 @id1343  @transfer
   Scenario: Check artifacts on the Send to page - Transfer
     Given I am on the Main page
     When I go to page "/transaction/zksync/era/send/?address=0x2CF4F78917A16C9584AeB5d4c5bD2713d724C75d"
@@ -231,4 +231,43 @@ Feature: Artifacts - UI
     Then Modal card element with the "//*[contains(@class, '-my-0.5')]//button[contains(., 'ETH')]" xpath should be "visible"
     Then Element with "text" "Send to zkSync Era Testnet" should be "visible"
     Then Element with "text" "Send to zkSync Era Testnet" should be "clickable"
-    
+
+  @id1286 @transfer
+  Scenario: Check max button functionality
+    When I go to page "/transaction/zksync/era/send/?address=0x2CF4F78917A16C9584AeB5d4c5bD2713d724C75d&network=era-goerli"
+    Then I confirm the network switching
+      #Max button is displayed
+    Then Element with "partial text" "Max" should be "visible"
+    Then Element with "partial text" "Max" should be "clickable"
+       # Check hover tooltip
+    Then Element with "partial title" "Your max amount is" should be "visible"
+       #Get the Max input value (Step to receive max value for comparison)
+    When I choose "ETH" as token and insert "100000000" as amount
+    When I save Max Balance Error Value
+    Then Max amount is set to the input field
+        # Verify "Max" button is highlighted after clicking on it
+    Then I click by "text" with " Max " value
+    Then Element with "partial class" "is-max" should be "visible"
+
+  @id1538 @transfer
+  Scenario: Check Transaction submitted window redirection links
+    When I go to page "/transaction/zksync/era/send/?address=0x2CF4F78917A16C9584AeB5d4c5bD2713d724C75d"
+    # Fill all the required fields for tx and to see Submitted window
+    Then I choose "ETH" as token and insert "0.00000001" as amount
+    When I "confirm" transaction after clicking "Send to zkSync Era Testnet" button
+    #Links check
+    Then Element with "href" "https://goerli.explorer.zksync.io/address/0x2CF4F78917A16C9584AeB5d4c5bD2713d724C75d" should be "clickable"
+    Then I click by "href" with "https://goerli.explorer.zksync.io/address/0x2CF4F78917A16C9584AeB5d4c5bD2713d724C75d" value
+    Then New page has "goerli.explorer.zksync.io/address/0x2CF4F78917A16C9584AeB5d4c5bD2713d724C75d" partial address
+    # Check Block Explorer link
+    Then Element with "partial href" "https://goerli.explorer.zksync.io/tx/" should be "clickable"
+    Then I click by "partial href" with "https://goerli.explorer.zksync.io/tx/" value
+    Then New page has "https://goerli.explorer.zksync.io/tx/" partial address
+    # Check Make another transaction
+    Then Element with "partial href" "/transaction/zksync/era" should be "clickable"
+    Then I click by "partial href" with "/transaction/zksync/era" value
+    Then New page has "/transaction/zksync/era" partial address
+    # Check Go to Assets page
+    Then Element with "href" "/" should be "clickable"
+    Then I click by "href" with "/" value
+    Then New page has "/" partial address
