@@ -2,7 +2,6 @@
 import { Given, Then, When } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
 
-import { NetworkSwitcher } from "../data/data";
 import { Helper } from "../helpers/helper";
 import { BasePage } from "../pages/base.page";
 import { ContactsPage } from "../pages/contacts.page";
@@ -232,9 +231,11 @@ Given("I go to the main page", config.stepTimeout, async function (this: ICustom
 
 Given("I am on the Main page", async function (this: ICustomWorld) {
   const basePage = new BasePage(this);
+  await this.page?.waitForTimeout(config.minimalTimeout.timeout);
   element = await basePage.returnElementByType("text", "Assets");
   await expect(element).toBeVisible(config.increasedTimeout);
-  await expect(this.page?.url()).toBe(config.BASE_URL + NetworkSwitcher.zkSyncEraGoerli);
+  result = await basePage.isImOnTheMainPage();
+  await expect(result).toBe(true);
 });
 
 Then("Current page have {string} address", config.stepTimeout, async function (this: ICustomWorld, route: string) {
@@ -286,15 +287,14 @@ Given(
   }
 );
 
-Then("Fee should have {string} value", config.stepTimeout, async function (this: ICustomWorld, fee: string) {
-  mainPage = new MainPage(this);
-  basePage = new BasePage(this);
-  element = mainPage.feeValue;
-  await this.page?.waitForTimeout(5000); // required
-  await this.page?.waitForSelector(element);
-  result = await this.page?.locator(element);
-  await expect(result).toContainText(fee);
-});
+Then(
+  "Fee {string} have {string} value",
+  config.stepTimeout,
+  async function (this: ICustomWorld, flag: string, value: string) {
+    mainPage = new MainPage(this);
+    await mainPage.feeValueIs(flag, value);
+  }
+);
 
 Then(
   "Modal card element with the {string} xpath should be {string}",
@@ -320,6 +320,16 @@ When(
   async function (this: ICustomWorld, textElement: string) {
     mainPage = new MainPage(this);
     await mainPage.clickModalCardElement(textElement);
+  }
+);
+
+When(
+  "Element {string} should dissapear in {int} seconds",
+  config.stepExtraTimeout,
+  async function (this: ICustomWorld, selecterValue: string, seconds: number) {
+    mainPage = new MainPage(this);
+    result = await mainPage.isElementDissapeared(selecterValue, seconds);
+    await expect(result).toBe(true);
   }
 );
 

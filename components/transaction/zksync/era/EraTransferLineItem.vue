@@ -2,7 +2,7 @@
   <TransactionLineItem :icon="icon" :explorer-url="blockExplorerUrl" :transaction-hash="transfer.transactionHash!">
     <template #top-left>{{ label }}</template>
     <template #bottom-left>
-      <span>{{ time }}</span>
+      <span data-testid="withdraw-date">{{ time }}</span>
       <slot name="bottom-left"></slot>
     </template>
     <template #top-right>

@@ -24,7 +24,7 @@
         You can also request Goerli ETH from one of the following third party faucets:
         <ul class="mt-4 space-y-3">
           <li>
-            <a class="link hover:underline" href="https://faucet.chainstack.com/goerli-faucet" target="_blank"
+            <a class="link hover:underline" href="https://faucet.chainstack.com/zksync-testnet-faucet" target="_blank"
               >Chainstack faucet</a
             >
           </li>
