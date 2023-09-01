@@ -58,8 +58,8 @@ Feature: Artifacts - UI
     Then Element with "testId" "token-dropDown" should be "visible"
     Then Element with "testId" "token-dropDown" should be "clickable"
     Then Element with "testId" "fee-amount" should be "visible"
-    Then Fee should have "$" value
-    Then Fee should have "ETH" value
+    Then Fee "should" have "$" value
+    Then Fee "should" have "ETH" value
     Then Element with "text" " Continue " should be "visible"
 
   @id1647 @tokens
