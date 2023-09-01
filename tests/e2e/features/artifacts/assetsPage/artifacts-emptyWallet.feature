@@ -69,4 +69,6 @@ Feature: Artifacts - UI
     #Error state
     Then Element with "partial class" "has-error" should be "visible"
     Then Element with "partial class" "amount-input-error" should be "visible"
+    Then I confirm the network switching
+    Then Element with "text" " Continue " should be "disabled"
     
