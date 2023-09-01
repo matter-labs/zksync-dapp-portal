@@ -232,7 +232,7 @@ Feature: Artifacts - UI
     Then Element with "text" "Send to zkSync Era Testnet" should be "visible"
     Then Element with "text" "Send to zkSync Era Testnet" should be "clickable"
 
-  @id1286 @Transfer
+  @id1286 @transfer
   Scenario: Check max button functionality
     When I go to page "/transaction/zksync/era/send/?address=0x2CF4F78917A16C9584AeB5d4c5bD2713d724C75d&network=era-goerli"
     Then I confirm the network switching
@@ -249,7 +249,7 @@ Feature: Artifacts - UI
     Then I click by "text" with " Max " value
     Then Element with "partial class" "is-max" should be "visible"
 
-  @id1538 @Transfer
+  @id1538 @transfer
   Scenario: Check Transaction submitted window redirection links
     When I go to page "/transaction/zksync/era/send/?address=0x2CF4F78917A16C9584AeB5d4c5bD2713d724C75d"
     # Fill all the required fields for tx and to see Submitted window
