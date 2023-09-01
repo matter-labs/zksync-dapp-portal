@@ -237,3 +237,21 @@ Feature: Artifacts - UI
     Then Element with "text" "0x1ab721...184" should be "visible"
     Then Element with "partial src" "zz.png" should be "visible"
 
+  @id1399
+  Scenario: Check max button functionality - Deposit
+    Given I go to page "/transaction/zksync/era/deposit/?network=era-goerli"
+    Then Element with "text" "MAX" should be "invisible"
+    When I click by "testId" with "your-account" value
+    Then I confirm the network switching
+      #Max button is displayed
+    Then Element with "partial text" "Max" should be "visible"
+    Then Element with "partial text" "Max" should be "clickable"
+       # Check hover tooltip
+    Then Element with "partial title" "Your max amount is" should be "visible"
+       #Get the Max input value (Step to receive max value for comparison)
+    When I choose "ETH" as token and insert "100000000" as amount
+    When I save Max Balance Error Value
+    Then Max amount is set to the input field
+        # Verify "Max" button is highlighted after clicking on it
+    Then I click by "text" with " Max " value
+    Then Element with "partial class" "is-max" should be "visible"

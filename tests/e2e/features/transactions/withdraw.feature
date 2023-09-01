@@ -62,7 +62,7 @@ Feature: Withdraw
     Then Element with "class" "amount-input-token" should be "visible"
     Then Element with "class" "amount-input-token" should be "clickable"
 
-  @id1601 @id1608
+  @id1601 @id1608 @id1694
   Scenario: make a Withdraw (Bridge)
     Given I go to page "/bridge?network=era-goerli"
     When I click by text "Withdraw"
@@ -91,3 +91,26 @@ Feature: Withdraw
     Then Element with "text" " Learn more " should be "clickable"
     Then Element with "text" " Make another transaction " should be "visible"
     Then Element with "text" " Explore ecosystem " should be "visible"
+    #id1694
+    #Techincal step
+    Then I click by text " Make another transaction "
+    When I click by text "Withdraw"
+    # Recent withdrawal section contains:
+    Then Element with "text" "Recent withdrawals " should be "visible"
+    Then Element with "text" "Recent withdrawals " should be "clickable"
+    Then Element with "testId" "withdraw-amount" should be "visible"
+    # Click on "Recent withdrawals" section
+    Then I click by text "Recent withdrawals"
+    #Each record has next information:
+    Then Element with "text" "Withdraw" should be "visible"
+    Then Element with "class" "transaction-line-item-icon-container" should be "visible"
+    Then Element with "testId" "withdraw-date" should be "visible"
+    Then Element with "text" "Status: " should be "visible"
+    Then Element with "text" " In Progress." should be "visible"
+    Then Element with "testId" "withdraw-timer" should be "visible"
+    # Amount information:
+    Then Element with "text" "0.0000000001" should be "visible"
+    Then Element with "partial src" "eth.svg" should be "visible"
+    Then Element with "text" "ETH" should be "visible"
+    Then Element with "text" "<$0.01" should be "visible"
+    
