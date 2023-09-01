@@ -58,4 +58,4 @@ Feature: Artifacts - UI
           # Technical step to see Continue button
     Then I confirm the network switching
     Then Element with "text" " Continue " should be "disabled"
-    
+  
