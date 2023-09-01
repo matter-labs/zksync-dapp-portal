@@ -7,6 +7,7 @@
           <transition v-bind="TransitionAlertScaleInOutTransition">
             <span
               v-if="activeTransactions"
+              data-testid="withdraw-amount"
               class="-my-1 inline-block h-max w-auto rounded-full bg-primary-300 p-0.5 px-2 text-sm"
             >
               {{ activeTransactions }}
