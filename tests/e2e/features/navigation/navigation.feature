@@ -64,7 +64,7 @@ Feature: Navigation
     Examples:
       | Selector type | Selector value              | url                                     |
       | class         | line-button-with-img-icon   | https://goerli.explorer.zksync.io/tx    |
-      
+
   @id1430:I
   Scenario Outline: Check Navigation for the "Send" page links
     Given I am on the Main page
@@ -100,3 +100,30 @@ Feature: Navigation
       | QuickNode faucet                              | https://faucet.quicknode.com/ethereum/goerli          |
       | PoW faucet                                    | https://goerli-faucet.pk910.de/                       |
 
+  @1489:I @mainnet
+  Scenario Outline: Check navigation from networks dropdown
+    When I go to page "/?network=era-mainnet"
+    When I click by "text" with "Era Mainnet" value
+    # Check visual presence of the network options
+    Then Element with "text" "<Network name>" should be "visible"
+    # Check URL changes
+    Then I click by text "<Network name>"
+    Then Current page have "<Network URL>" address
+    Examples:
+      | Network name        | Network URL            |
+      | zkSync Era Testnet  | /?network=era-goerli   |
+      | zkSync Lite Goerli  | /?network=lite-goerli  |
+
+  @1489:II @testnet
+  Scenario Outline: Check navigation from networks dropdown
+    When I go to page "/?network=era-goerli"
+    When I click by "text" with "Era Testnet" value
+    # Check visual presence of the network options
+    Then Element with "text" "<Network name>" should be "visible"
+    # Check URL changes
+    Then I click by text "<Network name>"
+    Then Current page have "<Network URL>" address
+    Examples:
+      | Network name        | Network URL            |
+      | zkSync Era Mainnet  | /?network=era-mainnet  |
+      | zkSync Lite Mainnet | /?network=lite-mainnet |

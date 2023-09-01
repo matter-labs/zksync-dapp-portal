@@ -62,7 +62,7 @@ Feature: Withdraw
     Then Element with "class" "amount-input-token" should be "visible"
     Then Element with "class" "amount-input-token" should be "clickable"
 
-  @id1601 @id1608
+  @id1601 @id1608 @id1694
   Scenario: make a Withdraw (Bridge)
     Given I go to page "/bridge?network=era-goerli"
     When I click by text "Withdraw"
@@ -97,7 +97,7 @@ Feature: Withdraw
     Then Element with "text" "Recent withdrawals " should be "visible"
     Then Element with "text" "Recent withdrawals " should be "clickable"
     Then Element with "testId" "withdraw-amount" should be "visible"
-    # Open the list of recent withdrawals 
+    # Open the list of recent withdrawals
     Then I click by text "Recent withdrawals"
     Then Element with "class" "transaction-line-item-icon-container" should be "visible"
     Then Element with "text" "Recent withdrawals " should be "visible"

@@ -47,30 +47,3 @@ Feature: Artifacts - UI
     Then Element with "partial class" "has-error" should be "visible"
     Then Element with "partial class" "amount-input-error" should be "visible"
 
-  @1489:I
-  Scenario Outline: Check navigation from networks dropdown
-    When I go to page "/?network=era-mainnet"
-    When I click by "text" with "Era Mainnet" value
-    # Check visual presence of the network options
-    Then Element with "text" "<Network name>" should be "visible"
-    # Check URL changes
-    Then I click by text "<Network name>"
-    Then Current page have "<Network URL>" address
-    Examples:
-      | Network name        | Network URL            |
-      | zkSync Era Testnet  | /?network=era-goerli   |
-      | zkSync Lite Goerli  | /?network=lite-goerli  |
-
-  @1489:II
-  Scenario Outline: Check navigation from networks dropdown
-    When I go to page "/?network=era-goerli"
-    When I click by "text" with "Era Testnet" value
-    # Check visual presence of the network options
-    Then Element with "text" "<Network name>" should be "visible"
-    # Check URL changes
-    Then I click by text "<Network name>"
-    Then Current page have "<Network URL>" address
-    Examples:
-      | Network name        | Network URL            |
-      | zkSync Era Mainnet  | /?network=era-mainnet  |
-      | zkSync Lite Mainnet | /?network=lite-mainnet |
