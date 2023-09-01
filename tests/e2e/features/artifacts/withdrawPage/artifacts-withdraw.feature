@@ -17,8 +17,8 @@ Feature: Withdraw
     Then Element with "partial src" "eth.svg" should be "visible"
     Then Element with "placeholder" "0" should be "visible"
     Then Element with "class" "break-all" should be "visible"
-    Then Element with "data-testid" "token-dropDown" should be "visible"
-    Then Element with "data-testid" "token-dropDown" should be "clickable"
+    Then Element with "testId" "token-dropDown" should be "visible"
+    Then Element with "testId" "token-dropDown" should be "clickable"
     Then Element with "class" "amount-input-max-button" should be "visible"
     Then Element with "class" "amount-input-max-button" should be "clickable"
     # Fee block tc1432

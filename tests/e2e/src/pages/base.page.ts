@@ -206,7 +206,6 @@ export class BasePage {
 
   async getElementByTestId(testid: string) {
     element = await this.world.page?.locator(`${this.byTestId}${testid}`).first();
-    await element.scrollIntoViewIfNeeded();
     return await element;
   }
 
@@ -241,6 +240,7 @@ export class BasePage {
   }
 
   async returnElementByType(elementType: string, value: string) {
+    element = undefined;
     if (elementType === "alt") {
       element = await this.getElementByAlt(value);
     } else if (elementType === "class") {
