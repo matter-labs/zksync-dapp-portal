@@ -234,6 +234,7 @@ export class BasePage {
   }
 
   async returnElementByType(elementType: string, value: string) {
+    element = undefined;
     if (elementType === "alt") {
       element = await this.getElementByAlt(value);
     } else if (elementType === "class") {
