@@ -275,7 +275,7 @@ Feature: Artifacts - UI
     Then Element with "partial text" "Max" should be "visible"
     Then Element with "partial text" "Max" should be "clickable"
        # Check hover tooltip
-    Then Element with "partial title" "Your max amount is" should be "visible"
+    Then Element with "class" "amount-input-max-button" should be "visible"
        #Get the Max input value (Step to receive max value for comparison)
     When I choose "ETH" as token and insert "100000000" as amount
     When I save Max Balance Error Value
