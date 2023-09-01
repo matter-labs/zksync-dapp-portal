@@ -63,6 +63,7 @@ jobs:
                 "@artifacts and @contactsPage",
                 "@artifacts and @withdraw",
                 "@navigation and not @emptyWallet",
+                "@redirection and @resetAllowance",
                 "@artifacts and @various",
                 "@artifacts and @transactionsItems",
                 "@transactions and @deposit and @blockchain",

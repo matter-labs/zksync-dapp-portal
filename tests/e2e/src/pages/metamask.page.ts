@@ -235,7 +235,7 @@ export class MetamaskPage extends BasePage {
     const popUpContext = await this.catchPopUpByClick(selector);
     await setTimeout(config.minimalTimeout.timeout);
     await popUpContext?.setViewportSize(config.popUpWindowSize);
-    if (argument == "confirm") {
+    if (argument == "confirm" || argument == "continue") {
       await popUpContext?.click(this.confirmTransaction);
     } else if (argument == "next and confirm") {
       await popUpContext?.click(this.nextButton);

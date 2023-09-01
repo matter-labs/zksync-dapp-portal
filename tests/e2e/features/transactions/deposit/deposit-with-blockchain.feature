@@ -22,7 +22,6 @@ Feature: Deposit
     When I click by "text" with " Go to Assets page " value
     Then I am on the Main page 
     
-
   @id1280
   Scenario: Deposit - Track status Link redirection
     Given I am on the Main page
@@ -35,7 +34,6 @@ Feature: Deposit
     Then Modal card element with the "//*[contains(text(),'Track status')]" xpath should be "clickable"
     When I click by the "//*[text()=' Track status ']" text element on the Modal card
     Then New page has "https://goerli.etherscan.io/tx/" partial address
-
 
   @id1394
   Scenario: Reject Deposit transaction
