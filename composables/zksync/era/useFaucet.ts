@@ -1,7 +1,7 @@
 import { computed, ref } from "vue";
 
 import { useStorage } from "@vueuse/core";
-import { $fetch, FetchError } from "ohmyfetch";
+import { $fetch, FetchError } from "ofetch";
 
 import type { EraNetwork } from "@/data/networks";
 import type { ComputedRef } from "vue";

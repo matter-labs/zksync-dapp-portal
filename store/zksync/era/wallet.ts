@@ -1,7 +1,7 @@
 import { watch } from "vue";
 
 import { BigNumber, ethers, VoidSigner } from "ethers";
-import { $fetch } from "ohmyfetch";
+import { $fetch } from "ofetch";
 import { defineStore, storeToRefs } from "pinia";
 import { L1Signer, L1VoidSigner, Web3Provider } from "zksync-web3";
 
