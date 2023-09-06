@@ -29,11 +29,11 @@
           <TypographyCategoryLabel as="h2" :padded="false">Balances</TypographyCategoryLabel>
           <CommonLabelButton as="RouterLink" :to="{ name: 'balances' }">View all</CommonLabelButton>
         </div>
-        <div class="-mx-2 -mt-1 -mb-2">
+        <div class="-mx-2 -mb-2 -mt-1">
           <template v-if="loading">
             <TokenBalanceLoader v-for="index in 2" :key="index" send-route-name />
           </template>
-          <div v-else-if="balanceError" class="m-3 mb-2.5 -mt-1">
+          <div v-else-if="balanceError" class="m-3 -mt-1 mb-2.5">
             <CommonErrorBlock @try-again="fetch">
               {{ balanceError.message }}
             </CommonErrorBlock>

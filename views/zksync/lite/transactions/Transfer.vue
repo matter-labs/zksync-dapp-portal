@@ -409,7 +409,7 @@ onBeforeUnmount(() => {
   }
 }
 .change-fee-token-button {
-  @apply ml-2 mt-1 flex w-max cursor-pointer items-center rounded bg-primary-100/50 py-1 px-1.5 text-xs font-medium text-primary-400 transition-colors hover:bg-primary-100 xs:-mr-4 xs:mt-0;
+  @apply ml-2 mt-1 flex w-max cursor-pointer items-center rounded bg-primary-100/50 px-1.5 py-1 text-xs font-medium text-primary-400 transition-colors hover:bg-primary-100 xs:-mr-4 xs:mt-0;
   @apply dark:bg-primary-300 dark:text-white dark:hover:bg-primary-200;
 
   .change-fee-token-icon {

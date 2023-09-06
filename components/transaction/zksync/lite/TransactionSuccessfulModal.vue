@@ -1,6 +1,6 @@
 <template>
   <CommonModal v-bind="$attrs" :closable="false" class="transaction-successful-modal" title="">
-    <Vue3Lottie class="mx-auto -mt-14 -mb-16 w-72" :animation-data="SuccessConfetti" :loop="false" />
+    <Vue3Lottie class="mx-auto -mb-16 -mt-14 w-72" :animation-data="SuccessConfetti" :loop="false" />
 
     <div class="flex h-full flex-col overflow-auto">
       <div class="h2 text-center sm:h1">Transaction completed</div>

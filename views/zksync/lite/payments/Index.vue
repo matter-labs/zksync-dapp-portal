@@ -30,11 +30,11 @@
           <TypographyCategoryLabel as="h2" :padded="false">Transactions</TypographyCategoryLabel>
           <CommonLabelButton as="RouterLink" :to="{ name: 'payments-all' }">View all</CommonLabelButton>
         </div>
-        <div class="-mx-2 -mt-1 -mb-2">
+        <div class="-mx-2 -mb-2 -mt-1">
           <template v-if="recentTransactionsRequestInProgress">
             <TokenBalanceLoader v-for="index in 5" :key="index" />
           </template>
-          <div v-else-if="recentTransactionsRequestError" class="m-3 mb-2.5 -mt-1">
+          <div v-else-if="recentTransactionsRequestError" class="m-3 -mt-1 mb-2.5">
             <CommonErrorBlock @try-again="fetch">
               {{ recentTransactionsRequestError.message }}
             </CommonErrorBlock>

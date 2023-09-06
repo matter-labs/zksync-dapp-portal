@@ -98,7 +98,7 @@ onBeforeUnmount(() => {
     }
   }
   .inset {
-    @apply absolute top-1/2 left-1/2 aspect-square w-9/12 -translate-x-1/2 -translate-y-1/2 rounded-full bg-gray dark:bg-neutral-900;
+    @apply absolute left-1/2 top-1/2 aspect-square w-9/12 -translate-x-1/2 -translate-y-1/2 rounded-full bg-gray dark:bg-neutral-900;
   }
 
   @keyframes animateCircle {

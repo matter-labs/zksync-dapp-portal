@@ -27,7 +27,7 @@
               </div>
               <div class="flex items-center justify-between">
                 <span>{{ selectedNetwork.shortName }}</span>
-                <ChevronDownIcon class="mr-1 ml-2 h-4 w-4 transition-transform" aria-hidden="true" />
+                <ChevronDownIcon class="ml-2 mr-1 h-4 w-4 transition-transform" aria-hidden="true" />
               </div>
             </button>
           </MenuItem>
@@ -99,7 +99,7 @@ const viewOnExplorerModalOpened = ref(false);
     @apply transition-colors hover:bg-gray-200 dark:hover:bg-neutral-900;
   }
   .menu-panel {
-    @apply absolute left-0 bottom-0 z-10 grid h-max w-56 rounded-lg bg-white shadow-lg ring-1 ring-gray-900/5 focus:outline-none dark:bg-neutral-900 md:-left-px md:-top-px md:p-px;
+    @apply absolute bottom-0 left-0 z-10 grid h-max w-56 rounded-lg bg-white shadow-lg ring-1 ring-gray-900/5 focus:outline-none dark:bg-neutral-900 md:-left-px md:-top-px md:p-px;
     grid-template-areas:
       "menu-options"
       "account-button";

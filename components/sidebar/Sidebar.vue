@@ -74,7 +74,7 @@ const networkChangeModalOpened = ref(false);
   grid-area: menu / menu / menu / menu;
 
   @media screen and (min-width: 720px) {
-    @apply top-0 bottom-auto max-h-[calc(100vh_-_72px)] px-4 py-8 lg:max-h-[calc(100vh_-_72px_-_12px)];
+    @apply bottom-auto top-0 max-h-[calc(100vh_-_72px)] px-4 py-8 lg:max-h-[calc(100vh_-_72px_-_12px)];
   }
   @media screen and (min-width: 1024px) {
     @apply px-6;
@@ -87,7 +87,7 @@ const networkChangeModalOpened = ref(false);
       @apply flex justify-around space-y-1 pr-3 md:mt-6 md:flex-col md:pr-0;
     }
     .navbar-link {
-      @apply flex items-center rounded-2xl bg-transparent text-gray-secondary no-underline transition-colors md:w-full md:py-3 md:px-4 md:hover:bg-gray-200/60 dark:md:hover:bg-neutral-800;
+      @apply flex items-center rounded-2xl bg-transparent text-gray-secondary no-underline transition-colors md:w-full md:px-4 md:py-3 md:hover:bg-gray-200/60 dark:md:hover:bg-neutral-800;
       @apply dark:text-white;
       &.router-link-exact-active {
         @apply bg-white text-primary-400 dark:bg-neutral-900 dark:text-white;
@@ -100,7 +100,7 @@ const networkChangeModalOpened = ref(false);
         @apply h-6 w-6 text-inherit;
       }
       .navbar-link-label {
-        @apply mr-auto ml-4 hidden text-left font-medium leading-4 tracking-[-0.1px] xl:block;
+        @apply ml-4 mr-auto hidden text-left font-medium leading-4 tracking-[-0.1px] xl:block;
       }
     }
     .navbar-bottom {

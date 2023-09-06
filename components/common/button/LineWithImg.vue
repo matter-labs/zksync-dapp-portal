@@ -45,7 +45,7 @@ defineProps({
     @apply w-max;
   }
   .line-button-with-img-icon {
-    @apply mr-2 ml-1 h-5 w-5 flex-none text-gray-secondary dark:text-neutral-400;
+    @apply ml-1 mr-2 h-5 w-5 flex-none text-gray-secondary dark:text-neutral-400;
   }
   .line-button-with-img-icon-loading {
     @apply mx-1 h-7 w-7 flex-none rounded-full;

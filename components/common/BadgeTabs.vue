@@ -10,7 +10,7 @@
   @apply grid w-full grid-flow-col-dense grid-cols-[max-content] gap-2;
 
   .badge-tab {
-    @apply w-max cursor-pointer whitespace-nowrap rounded-xl py-1 px-4 text-sm font-medium leading-loose text-gray-secondary transition-colors;
+    @apply w-max cursor-pointer whitespace-nowrap rounded-xl px-4 py-1 text-sm font-medium leading-loose text-gray-secondary transition-colors;
     &:hover,
     &.active {
       @apply text-black;

@@ -97,6 +97,6 @@ const totalPrice = computed(() => {
 
 <style lang="scss" scoped>
 .fee-details-container {
-  @apply flex items-center justify-between rounded-lg py-1.5 px-4 text-sm text-gray-secondary dark:text-neutral-400;
+  @apply flex items-center justify-between rounded-lg px-4 py-1.5 text-sm text-gray-secondary dark:text-neutral-400;
 }
 </style>

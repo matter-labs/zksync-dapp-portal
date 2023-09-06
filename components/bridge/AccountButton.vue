@@ -93,7 +93,7 @@ const logout = () => {
 
 <style lang="scss" scoped>
 .account-button {
-  @apply flex w-full items-center rounded-3xl bg-transparent bg-gray py-1 px-2 transition-colors hover:bg-gray-200 dark:bg-neutral-900 dark:hover:bg-neutral-800;
+  @apply flex w-full items-center rounded-3xl bg-gray bg-transparent px-2 py-1 transition-colors hover:bg-gray-200 dark:bg-neutral-900 dark:hover:bg-neutral-800;
 
   .account-icon {
     @apply -ml-1 aspect-square h-8 w-8;

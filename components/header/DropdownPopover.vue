@@ -53,7 +53,7 @@ function toggleMenu(isOpened: boolean, open: boolean) {
     @apply text-base outline-none ring-0;
   }
   .popover-panel {
-    @apply absolute top-[4.5rem] left-1/2 z-20 w-[700px] -translate-x-1/2 transform cursor-default rounded-lg bg-gray/10 text-left shadow-lg backdrop-blur-xl dark:bg-neutral-950/60;
+    @apply absolute left-1/2 top-[4.5rem] z-20 w-[700px] -translate-x-1/2 transform cursor-default rounded-lg bg-gray/10 text-left shadow-lg backdrop-blur-xl dark:bg-neutral-950/60;
 
     > * {
       @apply block px-6 py-4 text-base;

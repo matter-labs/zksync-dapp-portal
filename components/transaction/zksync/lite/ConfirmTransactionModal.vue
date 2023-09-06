@@ -63,7 +63,7 @@
           </div>
           <a
             v-if="destination.key === 'ethereum'"
-            class="link mx-auto mt-2 -mb-1 flex items-center justify-center text-center text-sm"
+            class="link mx-auto -mb-1 mt-2 flex items-center justify-center text-center text-sm"
             :href="LITE_WITHDRAWAL_TIMES"
             target="_blank"
           >

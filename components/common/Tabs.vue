@@ -108,7 +108,7 @@ watch(
   .badge-tab {
     @apply w-max;
     :slotted(*) {
-      @apply block w-max cursor-pointer whitespace-nowrap py-1 px-4 font-medium leading-loose text-gray-secondary transition-colors dark:text-neutral-400;
+      @apply block w-max cursor-pointer whitespace-nowrap px-4 py-1 font-medium leading-loose text-gray-secondary transition-colors dark:text-neutral-400;
     }
     :slotted(*):hover,
     &.active :slotted(*) {

@@ -154,7 +154,7 @@ const networkChangeModalOpened = ref(false);
     }
   }
   .login-footer {
-    @apply absolute left-0 bottom-0 grid w-full items-center justify-items-center gap-3 px-6 pb-5 sm:grid-cols-[max-content_1fr_1.75rem];
+    @apply absolute bottom-0 left-0 grid w-full items-center justify-items-center gap-3 px-6 pb-5 sm:grid-cols-[max-content_1fr_1.75rem];
     @media screen and (max-height: 480px) {
       @apply static mt-8 px-0;
     }
@@ -167,10 +167,10 @@ const networkChangeModalOpened = ref(false);
         @apply -ml-0.5 h-6 w-6 flex-none text-black dark:text-white;
       }
       .dropdown-icon {
-        @apply ml-3 -mr-0.5 h-4 w-4 flex-none text-inherit;
+        @apply -mr-0.5 ml-3 h-4 w-4 flex-none text-inherit;
       }
       .navbar-link-label {
-        @apply mr-auto ml-4 text-left text-sm font-medium leading-4 tracking-[-0.1px];
+        @apply ml-4 mr-auto text-left text-sm font-medium leading-4 tracking-[-0.1px];
       }
     }
   }

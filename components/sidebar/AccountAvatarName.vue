@@ -43,7 +43,7 @@ const { copy, copied } = useCopy(accountAddress, 700);
 
 <style lang="scss" scoped>
 .account-button {
-  @apply flex w-full items-center rounded-xl bg-transparent py-3 px-3;
+  @apply flex w-full items-center rounded-xl bg-transparent px-3 py-3;
   &.is-button {
     .copy-button {
       @apply hidden;

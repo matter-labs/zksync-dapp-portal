@@ -76,7 +76,7 @@ const inputted = computed({
 
 <style lang="scss">
 .small-input-container {
-  @apply flex h-12 w-full items-center rounded-3xl bg-gray-input py-3 px-4 transition-colors dark:bg-neutral-900;
+  @apply flex h-12 w-full items-center rounded-3xl bg-gray-input px-4 py-3 transition-colors dark:bg-neutral-900;
   &.focused,
   &:hover {
     @apply bg-gray-input-focus dark:bg-neutral-800;
