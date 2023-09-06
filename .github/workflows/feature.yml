@@ -22,7 +22,6 @@ jobs:
 
       - name: Install dependencies
         run: |
-          npm set-script prepare ""
           npm ci --force
 
       - name: Lint
