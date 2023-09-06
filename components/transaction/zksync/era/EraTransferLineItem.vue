@@ -28,8 +28,8 @@ import {
 import { BigNumber } from "ethers";
 import { storeToRefs } from "pinia";
 
-import TokenAmount from "@/components/transaction/transactionLineItem/TokenAmount.vue";
-import TotalPrice from "@/components/transaction/transactionLineItem/TotalPrice.vue";
+import TokenAmount from "@/components/transaction/lineItem/TokenAmount.vue";
+import TotalPrice from "@/components/transaction/lineItem/TotalPrice.vue";
 
 import type { EraTransfer } from "@/utils/zksync/era/mappers";
 import type { Component, PropType } from "vue";

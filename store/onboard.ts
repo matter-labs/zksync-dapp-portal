@@ -16,49 +16,49 @@ import { useRuntimeConfig } from "#imports";
 import { confirmedSupportedWallets, disabledWallets } from "@/data/wallets";
 import { useNetworkStore } from "@/store/network";
 
-const { eraNetworks, zkSyncLiteNetworks } = useNetworks();
-const useExistingEraChain = (network: EraNetwork) => {
-  const existingNetworks = [zkSync, zkSyncTestnet];
-  return existingNetworks.find((existingNetwork) => existingNetwork.id === network.id);
-};
-const createEraChain = (network: EraNetwork) => {
-  return {
-    id: network.id,
-    name: network.name,
-    network: network.key,
-    nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 },
-    rpcUrls: {
-      default: { http: [network.rpcUrl] },
-      public: { http: [network.rpcUrl] },
-    },
-  };
-};
-const getAllChains = () => {
-  const chains: Chain[] = [];
-  const addUniqueChain = (chain: Chain) => {
-    if (!chains.find((existingChain) => existingChain.id === chain.id)) {
-      chains.push(chain);
-    }
-  };
-  for (const network of zkSyncLiteNetworks) {
-    if (network.l1Network) {
-      addUniqueChain(network.l1Network);
-    }
-  }
-  for (const network of eraNetworks) {
-    if (network.l1Network) {
-      addUniqueChain(network.l1Network);
-    }
-    addUniqueChain(useExistingEraChain(network) ?? createEraChain(network));
-  }
-
-  return chains;
-};
-
-const extendedChains = [...getAllChains()];
-const { public: env } = useRuntimeConfig();
-
 export const useOnboardStore = defineStore("onboard", () => {
+  const { eraNetworks, zkSyncLiteNetworks } = useNetworks();
+  const useExistingEraChain = (network: EraNetwork) => {
+    const existingNetworks = [zkSync, zkSyncTestnet];
+    return existingNetworks.find((existingNetwork) => existingNetwork.id === network.id);
+  };
+  const createEraChain = (network: EraNetwork) => {
+    return {
+      id: network.id,
+      name: network.name,
+      network: network.key,
+      nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 },
+      rpcUrls: {
+        default: { http: [network.rpcUrl] },
+        public: { http: [network.rpcUrl] },
+      },
+    };
+  };
+  const getAllChains = () => {
+    const chains: Chain[] = [];
+    const addUniqueChain = (chain: Chain) => {
+      if (!chains.find((existingChain) => existingChain.id === chain.id)) {
+        chains.push(chain);
+      }
+    };
+    for (const network of zkSyncLiteNetworks) {
+      if (network.l1Network) {
+        addUniqueChain(network.l1Network);
+      }
+    }
+    for (const network of eraNetworks) {
+      if (network.l1Network) {
+        addUniqueChain(network.l1Network);
+      }
+      addUniqueChain(useExistingEraChain(network) ?? createEraChain(network));
+    }
+
+    return chains;
+  };
+
+  const extendedChains = [...getAllChains()];
+
+  const { public: env } = useRuntimeConfig();
   const { selectedColorMode } = useColorMode();
   const { selectedNetwork, l1Network } = storeToRefs(useNetworkStore());
 

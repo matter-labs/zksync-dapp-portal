@@ -77,7 +77,7 @@
         <TransactionLineItem
           :icon="LockOpenIcon"
           :explorer-url="l1BlockExplorerUrl"
-          :transaction-hash="transactionHash"
+          :transaction-hash="(transactionHash as string)"
         >
           <template #top-left>Allowance</template>
           <template #top-right>
@@ -127,7 +127,7 @@ import { ArrowUpRightIcon, InformationCircleIcon, LockOpenIcon } from "@heroicon
 import { getPublicClient } from "@wagmi/core";
 import { storeToRefs } from "pinia";
 
-import TokenAmount from "@/components/transaction/transactionLineItem/TokenAmount.vue";
+import TokenAmount from "@/components/transaction/lineItem/TokenAmount.vue";
 
 import usePromise from "@/composables/usePromise";
 

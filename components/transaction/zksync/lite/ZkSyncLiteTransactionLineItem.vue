@@ -49,9 +49,9 @@ import {
 import { BigNumber } from "ethers";
 import { storeToRefs } from "pinia";
 
-import TokenAmount from "@/components/transaction/transactionLineItem/TokenAmount.vue";
-import TokenNft from "@/components/transaction/transactionLineItem/TokenNft.vue";
-import TotalPrice from "@/components/transaction/transactionLineItem/TotalPrice.vue";
+import TokenAmount from "@/components/transaction/lineItem/TokenAmount.vue";
+import TokenNft from "@/components/transaction/lineItem/TokenNft.vue";
+import TotalPrice from "@/components/transaction/lineItem/TotalPrice.vue";
 
 import type { ZkSyncLiteTransaction } from "@/utils/zksync/lite/mappers";
 import type { Component, PropType } from "vue";

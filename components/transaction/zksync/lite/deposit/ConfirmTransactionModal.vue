@@ -77,7 +77,7 @@
         <TransactionLineItem
           :icon="transactionReceiptIcon"
           :explorer-url="l1BlockExplorerUrl"
-          :transaction-hash="ethTransactionHash"
+          :transaction-hash="(ethTransactionHash as string)"
         >
           <template #top-left>Deposit</template>
           <template #top-right>
@@ -140,8 +140,8 @@ import { BigNumber } from "ethers";
 import { Logger } from "ethers/lib/utils";
 import { storeToRefs } from "pinia";
 
-import TokenAmount from "@/components/transaction/transactionLineItem/TokenAmount.vue";
-import TotalPrice from "@/components/transaction/transactionLineItem/TotalPrice.vue";
+import TokenAmount from "@/components/transaction/lineItem/TokenAmount.vue";
+import TotalPrice from "@/components/transaction/lineItem/TotalPrice.vue";
 
 import useTransaction from "@/composables/zksync/lite/deposit/useTransaction";
 

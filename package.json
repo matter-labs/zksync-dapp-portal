@@ -25,7 +25,7 @@
   "devDependencies": {
     "@commitlint/cli": "^17.4.2",
     "@commitlint/config-conventional": "^17.4.2",
-    "@cucumber/cucumber": "^8.6.0",
+    "@cucumber/cucumber": "^9.5.1",
     "@cucumber/html-formatter": "^19.2.0",
     "@cucumber/messages": "^19.0.0",
     "@cucumber/pretty-formatter": "^1.0.0-alpha.2",
@@ -72,9 +72,8 @@
     "@semantic-release/commit-analyzer": "^9.0.2",
     "@semantic-release/exec": "^6.0.3",
     "@semantic-release/github": "^8.1.0",
-    "@semantic-release/npm": "^9.0.2",
+    "@semantic-release/npm": "^10.0.5",
     "@semantic-release/release-notes-generator": "^10.0.3",
-    "@tailwindcss/line-clamp": "^0.4.4",
     "@vitejs/plugin-vue": "^3.2.0",
     "@vueuse/core": "^10.2.0",
     "@vueuse/router": "^10.1.2",
@@ -95,7 +94,7 @@
     "qrcode": "^1.5.3",
     "rxjs": "^7.8.0",
     "sass": "^1.57.1",
-    "semantic-release": "^19.0.5",
+    "semantic-release": "^21.1.1",
     "slugify": "^1.6.6",
     "viem": "^1.2.6",
     "vite": "^3.0.0",
@@ -108,5 +107,8 @@
   },
   "overrides": {
     "vue": "latest"
+  },
+  "engines": {
+    "node": ">=18.0.0"
   }
 }
