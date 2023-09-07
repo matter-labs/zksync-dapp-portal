@@ -119,7 +119,7 @@ export class BasePage {
 
   async getElementByPartialHref(partialHref: string) {
     element = await this.world.page?.locator(`//*[contains(@href,'${partialHref}')]`).first();
-    await element.scrollIntoViewIfNeeded();
+    // await element.scrollIntoViewIfNeeded();
     return await element;
   }
 
