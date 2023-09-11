@@ -80,12 +80,12 @@ watch(
 );
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .badge-tabs-container {
   @apply relative isolate w-full;
 
   &.active-tab-bg-inited {
-    .badge-tab.active :slotted(*) {
+    .badge-tab.active > * {
       @apply bg-transparent;
     }
     .active-tab-bg {
@@ -93,7 +93,7 @@ watch(
     }
   }
   &:not(.active-tab-bg-inited) {
-    .badge-tab.active :slotted(*) {
+    .badge-tab.active > * {
       @apply bg-white dark:bg-neutral-800;
     }
   }
@@ -101,17 +101,17 @@ watch(
   .badge-tabs-list {
     @apply grid w-full grid-flow-col-dense grid-cols-[max-content] gap-2;
   }
-  .badge-tab :slotted(*),
+  .badge-tab > *,
   .active-tab-bg {
     @apply rounded-2xl;
   }
   .badge-tab {
     @apply w-max;
-    :slotted(*) {
+    & > * {
       @apply block w-max cursor-pointer whitespace-nowrap px-4 py-1 font-medium leading-loose text-gray-secondary transition-colors dark:text-neutral-400;
     }
-    :slotted(*):hover,
-    &.active :slotted(*) {
+    & > * :hover,
+    &.active > * {
       @apply text-black dark:text-white;
     }
   }
