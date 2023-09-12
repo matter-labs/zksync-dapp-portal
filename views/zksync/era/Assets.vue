@@ -111,7 +111,6 @@ import { ArrowDownIcon, ArrowsRightLeftIcon, PaperAirplaneIcon } from "@heroicon
 import { storeToRefs } from "pinia";
 
 import useInterval from "@/composables/useInterval";
-import useSingleLoading from "@/composables/useSingleLoading";
 
 import { useDestinationsStore } from "@/store/destinations";
 import { useOnboardStore } from "@/store/onboard";
@@ -138,9 +137,7 @@ const displayedBalances = computed(() => {
   });
 });
 
-const { loading, reset: resetSingleLoading } = useSingleLoading(
-  computed(() => balanceInProgress.value || !allBalancePricesLoaded.value)
-);
+const loading = computed(() => balanceInProgress.value || !allBalancePricesLoaded.value);
 const isFaucetDisplayed = computed(() => {
   if (loading.value) return false;
   if (eraNetwork.value.faucetUrl) {
@@ -160,7 +157,6 @@ const { reset: resetAutoUpdate, stop: stopAutoUpdate } = useInterval(() => {
 
 const unsubscribe = onboardStore.subscribeOnAccountChange((newAddress) => {
   if (!newAddress) return;
-  resetSingleLoading();
   resetAutoUpdate();
   fetch();
 });
