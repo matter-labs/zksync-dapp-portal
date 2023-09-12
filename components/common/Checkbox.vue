@@ -7,8 +7,8 @@
     <div class="relative">
       <input type="checkbox" v-model="checked" class="sr-only" tabindex="-1" />
       <div
-        class="flex h-6 w-6 items-center justify-center rounded-md border-2 border-gray-300 bg-white"
-        v-bind:class="{ 'bg-primary-600 border-primary-600': checked }"
+        class="flex h-6 w-6 items-center justify-center rounded-md border-2"
+        :class="checked ? 'border-primary-600 bg-primary-600' : 'border-gray-300 bg-white'"
       >
         <svg v-if="checked" class="h-5 w-5 text-white" viewBox="0 0 20 20" fill="currentColor">
           <path
