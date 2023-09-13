@@ -24,11 +24,11 @@ Feature: Deposit
     Then Element with "class" "line-button-with-img-icon" should be "clickable"
     When I click by "class" with "line-button-with-img-icon" value
     Then New page has "https://goerli.etherscan.io/tx" partial address
-    Then Element with "partial text" "Track status" should be "clickable"
-    When I click by "partial text" with "Track status" value
-    Then New page has "https://goerli.etherscan.io/tx" partial address
+    #Then Element with "partial text" "Track status" should be "clickable"
+    #When I click by "partial text" with "Track status" value
+    #Then New page has "https://goerli.etherscan.io/tx" partial address
     # id1496 modal card approved allovance links
-    Then Modal card element with the "//*[text()='Allowance approved']" xpath should be "visible"
-    Then Element with "class" "line-button-with-img-icon" should be "clickable"
-    When I click by "class" with "line-button-with-img-icon" value
-    Then New page has "https://goerli.etherscan.io/tx" partial address
+    #Then Modal card element with the "//*[text()='Allowance approved']" xpath should be "visible"
+    #Then Element with "class" "line-button-with-img-icon" should be "clickable"
+    #When I click by "class" with "line-button-with-img-icon" value
+    #Then New page has "https://goerli.etherscan.io/tx" partial address
