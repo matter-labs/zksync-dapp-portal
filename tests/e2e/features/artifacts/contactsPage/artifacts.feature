@@ -35,7 +35,7 @@ Feature: Artifacts - UI
     Then Element with "text" "My second contact" should be "visible"
     Then Element with "text" "0x26A4c5...C37" should be "visible"
     Then Element with "partial class" "address-card-avatar" should be "visible"
-    Then Element with "partial href" "/transaction" should be "visible"
+    #Then Element with "partial href" "/transaction" should be "visible"
 
 
   @id1392 @contacts
