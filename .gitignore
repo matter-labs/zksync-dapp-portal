@@ -6,6 +6,8 @@ node_modules
 .cache
 .output
 dist
+dist-node-memory
+dist-node-docker
 .DS_Store
 tests/e2e/src/support/extension
 tests/e2e/reports

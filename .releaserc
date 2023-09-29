@@ -26,8 +26,8 @@
     [
       "@semantic-release/exec",
       {
-        "prepareCmd": "VITE_VERSION=${nextRelease.version} npm run generate",
-        "publishCmd": "zip -r dist.zip dist",
+        "prepareCmd": "VITE_VERSION=${nextRelease.version} sh scripts/create-release-assets.sh",
+        "publishCmd": "zip -r dist.zip dist && zip -r dist-node-memory.zip dist-node-memory && zip -r dist-node-docker.zip dist-node-docker",
         "successCmd": "echo '::set-output name=releaseVersion::${nextRelease.version}'"
       }
     ],
@@ -38,6 +38,14 @@
           {
             "path": "dist.zip",
             "label": "Dist package"
+          },
+          {
+            "path": "dist-node-memory.zip",
+            "label": "In-memory node dist package"
+          },
+          {
+            "path": "dist-node-docker.zip",
+            "label": "Dockerized node dist package"
           }
         ]
       }
