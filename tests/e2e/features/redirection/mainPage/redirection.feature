@@ -295,7 +295,6 @@ Feature: External Redirection on the Main Page
     Examples:
       | Service name    | url                                                                   |
       | Layerswap       | https://www.layerswap.io/app?sourceExchangeName=ZKSYNCERA_MAINNET     |
-      | Orbiter         | https://www.orbiter.finance/?source=zkSync%20Era&dest=Ethereum        |
    
   @id1610
   Scenario: Check redirection for the "Explore ecosystem" button (Withdraw Bridge)

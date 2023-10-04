@@ -24,12 +24,6 @@
         :to="{ name: 'transaction-zksync-lite-withdraw', query: $route.query }"
         :description="`Withdraw to ${destinations.ethereum.label}`"
       />
-      <DestinationItem
-        v-bind="destinations.era"
-        as="RouterLink"
-        :to="{ name: 'transaction-zksync-lite-send-era', query: $route.query }"
-        description="Send to zkSync Era∎ network"
-      />
     </CommonCardWithLineButtons>
 
     <template v-if="zkSyncLiteNetwork.l1Network">
@@ -43,35 +37,12 @@
         />
       </CommonCardWithLineButtons>
     </template>
-
-    <TypographyCategoryLabel>Send to another network</TypographyCategoryLabel>
-    <CommonCardWithLineButtons>
-      <DestinationItem
-        v-bind="destinations.orbiter"
-        :icon="ArrowUpRightIcon"
-        as="a"
-        target="_blank"
-        href="https://www.orbiter.finance/?source=zkSync%20Lite"
-      />
-    </CommonCardWithLineButtons>
-
-    <TypographyCategoryLabel>Sell tokens for cash</TypographyCategoryLabel>
-    <CommonCardWithLineButtons>
-      <DestinationItem
-        v-bind="destinations.banxa"
-        :icon="ArrowUpRightIcon"
-        as="a"
-        target="_blank"
-        href="https://zksync.banxa.com/"
-      />
-    </CommonCardWithLineButtons>
   </div>
 </template>
 
 <script lang="ts" setup>
 import { ref } from "vue";
 
-import { ArrowUpRightIcon } from "@heroicons/vue/24/outline";
 import { storeToRefs } from "pinia";
 
 import { useDestinationsStore } from "@/store/destinations";

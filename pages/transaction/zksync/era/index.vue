@@ -61,13 +61,6 @@
           href="https://www.layerswap.io/?sourceExchangeName=ZKSYNCERA_MAINNET"
         />
         <DestinationItem
-          v-bind="destinations.orbiter"
-          :icon="ArrowUpRightIcon"
-          as="a"
-          target="_blank"
-          href="https://www.orbiter.finance/?source=zkSync%20Era"
-        />
-        <DestinationItem
           v-bind="destinations.rhino"
           :icon="ArrowUpRightIcon"
           as="a"

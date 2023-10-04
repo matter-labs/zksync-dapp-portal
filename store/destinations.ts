@@ -38,16 +38,6 @@ export const useDestinationsStore = defineStore("destinations", () => {
       label: "Layerswap",
       iconUrl: "/img/layerswap.svg",
     },
-    orbiter: {
-      key: "orbiter",
-      label: "Orbiter",
-      iconUrl: "/img/orbiter.svg",
-    },
-    banxa: {
-      key: "banxa",
-      label: "Banxa",
-      iconUrl: "/img/banxa.svg",
-    },
     ramp: {
       key: "ramp",
       label: "Ramp",

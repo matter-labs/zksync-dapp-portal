@@ -44,8 +44,6 @@ Feature: Artifacts - UI
     Then Element with "text" "Top-up from another network" should be "visible"
     Then Element with "text" "Layerswap" should be "visible"
     Then Element with "href" "https://www.layerswap.io/?destNetwork=ZKSYNCERA_MAINNET" should be "visible"
-    Then Element with "text" "Orbiter" should be "visible"
-    Then Element with "href" "https://www.orbiter.finance/?dest=zkSync%20Era" should be "clickable"
 
   @id1352
   Scenario: Check artifacts on the Receive Address (QR) page

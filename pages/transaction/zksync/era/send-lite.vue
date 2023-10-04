@@ -11,13 +11,6 @@
         target="_blank"
         href="https://www.layerswap.io/?sourceExchangeName=ZKSYNCERA_MAINNET&destNetwork=ZKSYNC_MAINNET"
       />
-      <DestinationItem
-        v-bind="destinations.orbiter"
-        :icon="ArrowUpRightIcon"
-        as="a"
-        target="_blank"
-        href="https://www.orbiter.finance/?source=zkSync%20Era&dest=zkSync%20Lite"
-      />
     </CommonCardWithLineButtons>
   </div>
 </template>

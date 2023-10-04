@@ -232,10 +232,6 @@ export class MainPage extends BasePage {
       link = "https://www.layerswap.io/?sourceExchangeName=ZKSYNCERA_MAINNET";
       const selector = `//*[contains(@href,'${link}')]` + this.externalLinkArrow;
       await this.verifyElement("xpath", selector, checkType);
-    } else if (externalLinkName === "Orbiter") {
-      link = "https://www.orbiter.finance/?source=zkSync%20Era";
-      const selector = `//*[contains(@href,'${link}')]` + this.externalLinkArrow;
-      await this.verifyElement("xpath", selector, checkType);
     } else if (externalLinkName === "Transfer" || externalLinkName === "Withdraw") {
       link = "https://goerli.explorer.zksync.io/tx";
       const selector = this.modalCard + `//*[contains(@href,'${link}')]` + this.externalLinkArrow;

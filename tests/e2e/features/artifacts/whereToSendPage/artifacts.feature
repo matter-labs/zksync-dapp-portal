@@ -37,11 +37,6 @@ Feature: Artifacts - UI
     Then Element with "text" "Layerswap" should be "clickable"
     Then Element with "partial src" "/img/layerswap.svg" should be "visible"
     Then Element with "partial src" "/img/layerswap.svg" should be "clickable"
-    #Orbiter item
-    Then Element with "text" "Orbiter" should be "visible"
-    Then Element with "text" "Orbiter" should be "clickable"
-    Then Element with "partial src" "/img/orbiter.svg" should be "visible"
-    Then Element with "partial src" "/img/orbiter.svg" should be "clickable"
 
   @id1560:II @testnet
   Scenario Outline: Check artifacts for an "Where to send" page (Testnet)
@@ -87,11 +82,6 @@ Feature: Artifacts - UI
     Then Element with "text" "Layerswap" should be "clickable"
     Then Element with "partial src" "/img/layerswap.svg" should be "visible"
     Then Element with "partial src" "/img/layerswap.svg" should be "clickable"
-    #Orbiter item
-    Then Element with "text" "Orbiter" should be "visible"
-    Then Element with "text" "Orbiter" should be "clickable"
-    Then Element with "partial src" "/img/orbiter.svg" should be "visible"
-    Then Element with "partial src" "/img/orbiter.svg" should be "clickable"         
 
  @id1411:II @mainnet
  Scenario Outline: Check artifacts for an "Where to send" page (Mainnet)

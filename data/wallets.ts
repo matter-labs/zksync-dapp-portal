@@ -1,6 +1,8 @@
-type WalletEntry = { walletName: string; type: "injected" | "walletConnect" };
+type WalletEntry = { walletName: string; type: "injected" | "metaMask" | "walletConnect" };
 
 export const confirmedSupportedWallets: WalletEntry[] = [
+  { walletName: "MetaMask", type: "metaMask" },
+
   { walletName: "MetaMask", type: "injected" },
   { walletName: "BitKeep", type: "injected" },
   { walletName: "BlockWallet", type: "injected" },
