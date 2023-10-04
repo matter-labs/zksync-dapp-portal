@@ -7,29 +7,39 @@ name: Deploy Package to Production
         description: "A release version to deploy, e.g. v1.0.0"
         required: true
         default: "v1.0.0"
+
 jobs:
-  deploy:
-    name: Deploy
+  build_and_deploy:
+    name: Build and Deploy
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
+          ref: refs/tags/${{ github.event.inputs.version }}
 
-      - name: Download Dist package
-        uses: dsaltares/fetch-gh-release-asset@master
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
         with:
-          version: "tags/${{ github.event.inputs.version }}"
-          file: "dist.zip"
-          target: "dist.zip"
-          token: ${{ secrets.GITHUB_TOKEN }}
+          node-version: '18'
+          cache: 'npm'
 
-      - name: Unzip Dist package
+      - name: Install dependencies
         run: |
-          unzip dist.zip
+          npm ci --force
 
-      - uses: matter-labs/action-hosting-deploy@main
+      - name: Setup .env
+        run: |
+          echo "WALLET_CONNECT_PROJECT_ID=${{ secrets.WALLET_CONNECT_PROJECT_ID }}" > .env
+          echo "ANKR_TOKEN=${{ secrets.ANKR_TOKEN }}" >> .env
+
+      - name: Build
+        run: |
+          npm run generate
+
+      - name: Deploy to Production
+        uses: matter-labs/action-hosting-deploy@main
         with:
           repoToken: "${{ secrets.GITHUB_TOKEN }}"
           firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_DAPP_WALLET_V2 }}"
