@@ -33,7 +33,7 @@ export class LoginPage extends BasePage {
       await this.world.page?.waitForSelector(this.loginBtn);
       await this.world.page?.locator(this.loginBtn).click(config.increasedTimeout); //click a login button
 
-      const popUp = await new MetamaskPage(this.world).catchPopUpByClick("w3m-wallet-image");
+      const popUp = await new MetamaskPage(this.world).catchPopUpByClick(":text('Browser Wallet')");
       await popUp?.locator(metamaskPage.unlockPasswordField).isVisible(config.defaultTimeout);
       await popUp?.setViewportSize(config.popUpWindowSize);
       const passwordFieldVisible = await popUp
