@@ -14,6 +14,12 @@
           </template>
           <template #default>Swap</template>
         </CommonButton>
+        <CommonButton v-if="zkExportLink" as="a" target="_blank" :href="zkExportLink">
+          <template #icon>
+            <DocumentArrowDownIcon aria-hidden="true" />
+          </template>
+          <template #default>Export history</template>
+        </CommonButton>
       </CommonButtonGroup>
       <div>
         <div class="flex items-center justify-between py-4">
@@ -50,9 +56,9 @@
 </template>
 
 <script lang="ts" setup>
-import { onBeforeUnmount } from "vue";
+import { computed, onBeforeUnmount } from "vue";
 
-import { ArrowsRightLeftIcon, PaperAirplaneIcon } from "@heroicons/vue/24/outline";
+import { ArrowsRightLeftIcon, DocumentArrowDownIcon, PaperAirplaneIcon } from "@heroicons/vue/24/outline";
 import { storeToRefs } from "pinia";
 
 import EraTransferLineItem from "@/components/transaction/zksync/era/EraTransferLineItem.vue";
@@ -66,8 +72,18 @@ const onboardStore = useOnboardStore();
 const eraTransfersHistoryStore = useEraTransfersHistoryStore();
 const { transfers, recentTransfersRequestInProgress, recentTransfersRequestError } =
   storeToRefs(eraTransfersHistoryStore);
+const { account } = storeToRefs(onboardStore);
 const { destinations } = storeToRefs(useDestinationsStore());
 const { eraNetwork } = storeToRefs(useEraProviderStore());
+
+const zkExportLink = computed(() => {
+  if (eraNetwork.value.key === "era-mainnet" || eraNetwork.value.key === "era-goerli") {
+    return `https://zkexport.netlify.app/?address=${account.value.address}&network=${eraNetwork.value.key.substring(
+      4
+    )}`;
+  }
+  return undefined;
+});
 
 const fetch = () => {
   eraTransfersHistoryStore.requestRecentTransfers();
