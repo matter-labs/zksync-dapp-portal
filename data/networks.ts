@@ -56,8 +56,8 @@ export type EraNetwork = L2Network & {
 export const eraInMemoryNode: EraNetwork = {
   id: 260,
   key: "era-local-memory",
-  name: "Hyperchain Local",
-  shortName: "Hyperchain Local",
+  name: "In-memory node",
+  shortName: "In-memory local node",
   rpcUrl: "http://localhost:8011",
   getTokens: () => [
     {
@@ -74,8 +74,8 @@ export const eraInMemoryNode: EraNetwork = {
 export const eraDockerizedNode: EraNetwork = {
   id: 270,
   key: "era-local-dockerized",
-  name: "Hyperchain Local",
-  shortName: "Hyperchain Local",
+  name: "Dockerized local node",
+  shortName: "Dockerized node",
   rpcUrl: "http://localhost:3050",
   getTokens: () => [
     {

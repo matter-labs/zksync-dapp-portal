@@ -18,7 +18,7 @@ There are a few different ways to configure the application:
     ```
 2. 🔄 Pull your hyperchain config files by running:
     ```bash
-    npm run hyperchain:migrate <path_to_your_zksync-era_repo>
+    npm run hyperchain:configure <path_to_your_zksync-era_repo>
     ```
     This will regenerate `/hyperchains/config.json` file. You can edit this file manually if needed.
 3. 🚀 Now you can start or build the application. See [Development](#development-server) or [Production](#production) section below for more details.

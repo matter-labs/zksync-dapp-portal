@@ -12,20 +12,16 @@ import { generateNetworkConfig, logUserInfo, promptNetworkReplacement } from "./
 import type { Network } from "./utils";
 import type { Token } from "../../types";
 
-const args = process.argv;
-const rootPath = args[2];
+const rootPath = process.env.ZKSYNC_HOME;
 if (!rootPath) {
-  console.error(
-    `Please provide the path to your zksync-era repo:
-    npm run hyperchain:migrate <path_to_your_zksync-era_repo>`
-  );
+  console.error("Please set ZKSYNC_HOME environment variable to contain path to your zksync-era repo.");
   process.exit(1);
 }
 
 const envsDirectory = pathJoin(rootPath, "/etc/env");
 const tokensDirectory = pathJoin(rootPath, "/etc/tokens");
 
-const migrateHyperchainInfo = async () => {
+const configureHyperchainInfo = async () => {
   console.log("Starting Hyperchain configuration setup...\n");
 
   const network = await promptNetworkEnv();
@@ -74,7 +70,7 @@ const getTokensFromDirectory = (directoryPath: string): Token[] => {
 const promptNetworkEnv = async () => {
   const getEnvsFromDirectory = (directoryPath: string): string[] => {
     if (existsSync(directoryPath)) {
-      return readdirSync(directoryPath)
+      const envs = readdirSync(directoryPath)
         .map((fullFileName) => pathParse(fullFileName))
         .filter((file) => {
           if (!file.ext.endsWith(".env")) return false;
@@ -83,8 +79,14 @@ const promptNetworkEnv = async () => {
           return true;
         })
         .map((file) => file.name);
+      if (!envs.length) {
+        console.error("No environment files found in your zksync-era repo. Please set up your hyperchain first.");
+        process.exit(1);
+      }
+      return envs;
     } else {
       console.error("No .env files available for provided directory");
+      process.exit(1);
     }
   };
 
@@ -129,4 +131,4 @@ const promptNetworkInfo = async (network: Network) => {
   network.l1Network.name = l1NetworkName;
 };
 
-migrateHyperchainInfo();
+configureHyperchainInfo();
