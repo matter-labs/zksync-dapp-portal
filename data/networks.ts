@@ -132,6 +132,30 @@ export const eraNetworks: EraNetwork[] = [
     l1Network: l1Networks.goerli,
   },
   {
+    id: 300,
+    key: "era-sepolia",
+    name: "zkSync Sepolia Testnet",
+    shortName: "zkSync Sepolia",
+    rpcUrl: "https://sepolia.era.zksync.dev",
+    blockExplorerUrl: "https://sepolia.explorer.zksync.io",
+    blockExplorerApi: "https://block-explorer-api.sepolia.zksync.dev",
+    displaySettings: {
+      showPartnerLinks: true,
+      showZkSyncLiteNetworks: true,
+    },
+    getTokens: () => [
+      {
+        address: "0x000000000000000000000000000000000000800A",
+        l1Address: "0x0000000000000000000000000000000000000000",
+        symbol: "ETH",
+        decimals: 18,
+        iconUrl: "/img/eth.svg",
+        enabledForFees: true,
+      },
+    ],
+    l1Network: l1Networks.sepolia,
+  },
+  {
     id: 270,
     key: "era-stage",
     name: "zkSync Era Stage",
