@@ -66,7 +66,6 @@
     "@chenfengyuan/vue-qrcode": "^2.0.0",
     "@headlessui/vue": "^1.7.7",
     "@heroicons/vue": "^2.0.14",
-    "@matterlabs/token-library": "^2.9.1",
     "@metamask/logo": "^3.1.1",
     "@pinia/nuxt": "^0.4.7",
     "@semantic-release/changelog": "^6.0.3",
