@@ -96,7 +96,6 @@
               :token="transaction.token"
               :amount="transaction.amount"
               :direction="transactionReceiptDirection"
-              :loading="transaction.token.price === 'loading'"
             />
           </template>
         </TransactionLineItem>
@@ -318,8 +317,7 @@ const makeTransaction = async () => {
   if (tx) {
     for (const tokenAddress in totalOfEachToken.value) {
       const token = totalOfEachToken.value[tokenAddress];
-      if (!token?.token.l1Address) continue;
-      eraEthereumBalanceStore.deductBalance(token.token.l1Address, token.amount.toString());
+      eraEthereumBalanceStore.deductBalance(token.token.address, token.amount.toString());
     }
     tx.waitL1Commit()
       // eslint-disable-next-line @typescript-eslint/no-explicit-any

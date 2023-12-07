@@ -4,9 +4,6 @@ import type { Token } from "@/types";
 import type { Chain } from "@wagmi/core/chains";
 import type { Network } from "zksync/build/types";
 
-import { ETH_L1_ADDRESS, ETH_L2_ADDRESS } from "@/utils/constants";
-import { getTokensByNetworkId } from "@/utils/zksync/era/token-library";
-
 export type L2Network = {
   key: string;
   name: string;
@@ -30,8 +27,8 @@ export const l1Networks = {
     ...sepolia,
     name: "Sepolia Testnet",
     rpcUrls: {
-      public: { http: ["https://ethereum-sepolia.publicnode.com"] },
-      default: { http: ["https://ethereum-sepolia.publicnode.com"] },
+      public: { http: ["https://rpc.ankr.com/eth_sepolia"] },
+      default: { http: ["https://rpc.ankr.com/eth_sepolia"] },
     },
   },
 } as const;
@@ -46,7 +43,7 @@ export type EraNetwork = L2Network & {
     showPartnerLinks?: boolean;
     showZkSyncLiteNetworks?: boolean;
   };
-  getTokens: () => Token[] | Promise<Token[]>;
+  getTokens?: () => Token[] | Promise<Token[]>; // If blockExplorerApi is specified, tokens will be fetched from there. Otherwise, this function will be used.
 };
 
 // See the official documentation on running a local zkSync node: https://era.zksync.io/docs/tools/testing/
@@ -59,15 +56,6 @@ export const eraInMemoryNode: EraNetwork = {
   name: "In-memory node",
   shortName: "In-memory local node",
   rpcUrl: "http://localhost:8011",
-  getTokens: () => [
-    {
-      address: ETH_L2_ADDRESS,
-      symbol: "ETH",
-      decimals: 18,
-      iconUrl: "/img/eth.svg", // optional
-      enabledForFees: true, // optional
-    },
-  ],
 };
 
 // Dockerized local setup default config. Docs: https://era.zksync.io/docs/tools/testing/dockerized-testing.html
@@ -77,16 +65,6 @@ export const eraDockerizedNode: EraNetwork = {
   name: "Dockerized local node",
   shortName: "Dockerized node",
   rpcUrl: "http://localhost:3050",
-  getTokens: () => [
-    {
-      address: ETH_L2_ADDRESS,
-      l1Address: ETH_L1_ADDRESS, // optional
-      symbol: "ETH",
-      decimals: 18,
-      iconUrl: "/img/eth.svg", // optional
-      enabledForFees: true, // optional
-    },
-  ],
   l1Network: {
     id: 9,
     name: "L1 Local",
@@ -103,8 +81,8 @@ export const eraNetworks: EraNetwork[] = [
   {
     id: 324,
     key: "era-mainnet",
-    name: "zkSync Era Mainnet",
-    shortName: "Era Mainnet",
+    name: "zkSync Mainnet",
+    shortName: "zkSync",
     rpcUrl: "https://mainnet.era.zksync.io",
     blockExplorerUrl: "https://explorer.zksync.io",
     blockExplorerApi: "https://block-explorer-api.mainnet.zksync.io",
@@ -112,24 +90,7 @@ export const eraNetworks: EraNetwork[] = [
       showPartnerLinks: true,
       showZkSyncLiteNetworks: true,
     },
-    getTokens: () => getTokensByNetworkId(324),
     l1Network: l1Networks.mainnet,
-  },
-  {
-    id: 280,
-    key: "era-goerli",
-    name: "zkSync Era Testnet",
-    shortName: "Era Testnet",
-    rpcUrl: "https://testnet.era.zksync.dev",
-    blockExplorerUrl: "https://goerli.explorer.zksync.io",
-    blockExplorerApi: "https://block-explorer-api.testnets.zksync.dev",
-    faucetUrl: "https://testnet2-faucet.zksync.dev/ask_money",
-    displaySettings: {
-      showPartnerLinks: true,
-      showZkSyncLiteNetworks: true,
-    },
-    getTokens: () => getTokensByNetworkId(280),
-    l1Network: l1Networks.goerli,
   },
   {
     id: 300,
@@ -143,38 +104,32 @@ export const eraNetworks: EraNetwork[] = [
       showPartnerLinks: true,
       showZkSyncLiteNetworks: true,
     },
-    getTokens: () => [
-      {
-        address: "0x000000000000000000000000000000000000800A",
-        l1Address: "0x0000000000000000000000000000000000000000",
-        symbol: "ETH",
-        decimals: 18,
-        iconUrl: "/img/eth.svg",
-        enabledForFees: true,
-      },
-    ],
     l1Network: l1Networks.sepolia,
+  },
+  {
+    id: 280,
+    key: "era-goerli",
+    name: "zkSync Goerli Testnet",
+    shortName: "zkSync Goerli",
+    rpcUrl: "https://testnet.era.zksync.dev",
+    blockExplorerUrl: "https://goerli.explorer.zksync.io",
+    blockExplorerApi: "https://block-explorer-api.testnets.zksync.dev",
+    faucetUrl: "https://testnet2-faucet.zksync.dev/ask_money",
+    displaySettings: {
+      showPartnerLinks: true,
+      showZkSyncLiteNetworks: true,
+    },
+    l1Network: l1Networks.goerli,
   },
   {
     id: 270,
     key: "era-stage",
-    name: "zkSync Era Stage",
-    shortName: "Era Stage",
+    name: "zkSync Stage",
+    shortName: "zkSync Stage",
     rpcUrl: "https://z2-dev-api.zksync.dev",
     blockExplorerUrl: "https://goerli-beta.staging-scan-v2.zksync.dev",
     blockExplorerApi: "https://block-explorer-api.stage.zksync.dev",
     faucetUrl: "https://stage2-faucet.zksync.dev/ask_money",
-    getTokens: () => getTokensByNetworkId(270),
-    l1Network: l1Networks.sepolia,
-    hidden: true,
-  },
-  {
-    id: 300,
-    key: "era-boojnet",
-    name: "zkSync Era Boojnet",
-    shortName: "Era Boojnet",
-    rpcUrl: "https://sepolia.era.zksync.dev",
-    getTokens: () => getTokensByNetworkId(300),
     l1Network: l1Networks.sepolia,
     hidden: true,
   },

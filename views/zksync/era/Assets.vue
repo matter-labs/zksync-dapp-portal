@@ -122,7 +122,7 @@ import { TransitionAlertScaleInOutTransition } from "@/utils/transitions";
 
 const onboardStore = useOnboardStore();
 const walletEraStore = useEraWalletStore();
-const { balance, balanceInProgress, balanceError, allBalancePricesLoaded } = storeToRefs(walletEraStore);
+const { balance, balanceInProgress, balanceError } = storeToRefs(walletEraStore);
 const { destinations } = storeToRefs(useDestinationsStore());
 const { eraNetwork } = storeToRefs(useEraProviderStore());
 
@@ -137,7 +137,7 @@ const displayedBalances = computed(() => {
   });
 });
 
-const loading = computed(() => balanceInProgress.value || !allBalancePricesLoaded.value);
+const loading = computed(() => balanceInProgress.value);
 const isFaucetDisplayed = computed(() => {
   if (loading.value) return false;
   if (eraNetwork.value.faucetUrl) {

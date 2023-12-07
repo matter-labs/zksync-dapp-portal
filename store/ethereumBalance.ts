@@ -5,6 +5,7 @@ import { defineStore, storeToRefs } from "pinia";
 import type { TokenAmount } from "@/types";
 import type { Blockchain as AnkrSupportedChains } from "@ankr.com/ankr.js";
 
+import { l1Networks } from "@/data/networks";
 import { useOnboardStore } from "@/store/onboard";
 import { useEraProviderStore } from "@/store/zksync/era/provider";
 import { ETH_L1_ADDRESS } from "@/utils/constants";
@@ -29,31 +30,31 @@ export const useEthereumBalanceStore = defineStore("ethereumBalance", () => {
       if (!runtimeConfig.public.ankrToken) throw new Error("Ankr token is not available");
 
       const ankrProvider = new AnkrProvider(`https://rpc.ankr.com/multichain/${runtimeConfig.public.ankrToken}`);
+      const networkIdToAnkr = new Map<number, AnkrSupportedChains>([
+        [l1Networks.mainnet.id, "eth"],
+        [l1Networks.goerli.id, "eth_goerli"],
+      ]);
+      if (!networkIdToAnkr.has(eraNetwork.value.l1Network.id)) {
+        throw new Error(`Ankr does not support ${eraNetwork.value.l1Network.name}`);
+      }
       const balances = await ankrProvider.getAccountBalance({
-        blockchain: [
-          eraNetwork.value.l1Network.network === "mainnet"
-            ? "eth"
-            : (`eth_${eraNetwork.value.l1Network.network}` as AnkrSupportedChains),
-        ],
+        blockchain: [networkIdToAnkr.get(eraNetwork.value.l1Network.id)!],
         walletAddress: account.value.address,
         onlyWhitelisted: false,
       });
-      return [
-        ...balances.assets
-          .filter((e) => e.contractAddress || e.tokenType === "NATIVE")
-          .map(
-            (e) =>
-              ({
-                address: e.tokenType === "NATIVE" ? ETH_L1_ADDRESS : checksumAddress(e.contractAddress!),
-                symbol: e.tokenSymbol,
-                name: e.tokenName,
-                decimals: e.tokenDecimals,
-                iconUrl: e.thumbnail,
-                price: e.tokenPrice,
-                amount: e.balanceRawInteger,
-              } as TokenAmount)
-          ),
-      ];
+      return balances.assets
+        .filter((e) => e.contractAddress || e.tokenType === "NATIVE")
+        .map((e) => {
+          return {
+            address: e.tokenType === "NATIVE" ? ETH_L1_ADDRESS : checksumAddress(e.contractAddress!),
+            symbol: e.tokenSymbol,
+            name: e.tokenName,
+            decimals: e.tokenDecimals,
+            iconUrl: e.thumbnail,
+            price: e.tokenPrice === "0" ? undefined : parseFloat(e.tokenPrice),
+            amount: e.balanceRawInteger,
+          } as TokenAmount;
+        });
     },
     { cache: false }
   );

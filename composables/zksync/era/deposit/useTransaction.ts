@@ -13,8 +13,6 @@ export default (getL1Signer: () => Promise<L1Signer | undefined>) => {
     try {
       error.value = undefined;
 
-      if (!transaction.token.l1Address) throw new Error("Token L1 address is not available");
-
       status.value = "processing";
       const wallet = await getL1Signer();
       if (!wallet) throw new Error("Wallet is not available");
@@ -31,7 +29,7 @@ export default (getL1Signer: () => Promise<L1Signer | undefined>) => {
       }
       const depositResponse = await wallet.deposit({
         to: transaction.to,
-        token: transaction.token.l1Address,
+        token: transaction.token.address,
         amount: transaction.amount,
         l2GasLimit: fee.l2GasLimit,
         overrides,

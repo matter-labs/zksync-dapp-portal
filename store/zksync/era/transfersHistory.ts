@@ -70,14 +70,6 @@ export const useEraTransfersHistoryStore = defineStore("eraTransfersHistory", ()
   });
   const transfers = ref<EraTransfer[]>([]);
 
-  const getTransferTokenPrices = (transfers: EraTransfer[]) => {
-    transfers.forEach((transfer) => {
-      if (transfer.token && tokens.value?.[transfer.token.address]) {
-        eraTokensStore.requestTokenPrice(transfer.token.address);
-      }
-    });
-  };
-
   const {
     inProgress: recentTransfersRequestInProgress,
     error: recentTransfersRequestError,
@@ -92,7 +84,6 @@ export const useEraTransfersHistoryStore = defineStore("eraTransfersHistory", ()
       const [response] = await Promise.all([loadNext(), eraTokensStore.requestTokens()]);
       const mappedTransfers = response.items.map((e) => mapApiTransfer(e));
       transfers.value = filterOutDuplicateTransfers(mappedTransfers);
-      getTransferTokenPrices(mappedTransfers);
     },
     { cache: 30000 }
   );
@@ -111,7 +102,6 @@ export const useEraTransfersHistoryStore = defineStore("eraTransfersHistory", ()
       const [response] = await Promise.all([loadNext(), eraTokensStore.requestTokens()]);
       const mappedTransfers = response.items.map((e) => mapApiTransfer(e));
       transfers.value = filterOutDuplicateTransfers([...transfers.value, ...mappedTransfers]);
-      getTransferTokenPrices(mappedTransfers);
     },
     { cache: false }
   );

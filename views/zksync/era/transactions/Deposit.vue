@@ -68,7 +68,7 @@
         :tokens="availableTokens"
         :balances="availableBalances"
         :max-amount="maxAmount"
-        :loading="tokensRequestInProgress || balancesLoading"
+        :loading="tokensRequestInProgress || balanceInProgress"
         autofocus
       />
 
@@ -166,7 +166,7 @@ import useNetworks from "@/composables/useNetworks";
 import useFee from "@/composables/zksync/era/deposit/useFee";
 
 import type { ConfirmationModalTransaction } from "@/components/transaction/zksync/era/deposit/ConfirmTransactionModal.vue";
-import type { Token } from "@/types";
+import type { Token, TokenAmount } from "@/types";
 import type { BigNumberish } from "ethers";
 import type { PropType } from "vue";
 
@@ -201,20 +201,18 @@ const eraWalletStore = useEraWalletStore();
 const { account } = storeToRefs(onboardStore);
 const { eraNetwork } = storeToRefs(eraProviderStore);
 const { destinations } = storeToRefs(useDestinationsStore());
-const { tokens, tokensRequestInProgress, tokensRequestError } = storeToRefs(eraTokensStore);
-const { balance, balanceInProgress, allBalancePricesLoaded, balanceError } = storeToRefs(eraEthereumBalance);
+const { l1Tokens, tokensRequestInProgress, tokensRequestError } = storeToRefs(eraTokensStore);
+const { balance, balanceInProgress, balanceError } = storeToRefs(eraEthereumBalance);
 const { isCustomNode } = useNetworks();
 
 const destination = computed(() => destinations.value.era);
 
-const availableTokens = computed(() => {
-  if (!tokens.value) return [];
-  return Object.values(tokens.value).filter((e) => e.l1Address);
+const availableTokens = computed<Token[]>(() => {
+  if (balance.value) return balance.value;
+  return Object.values(l1Tokens.value ?? []);
 });
-const availableBalances = computed(() => {
-  if (!tokens.value) return [];
-  // return balance.value.filter((e) => e.l1Address); <-- Uncomment once Era Withdrawal Finalizer is live on mainnet
-  return balance.value.filter((e) => e.l1Address && tokens.value![e.address]);
+const availableBalances = computed<TokenAmount[]>(() => {
+  return balance.value ?? [];
 });
 const routeTokenAddress = computed(() => {
   if (!route.query.token || Array.isArray(route.query.token) || !isAddress(route.query.token)) {
@@ -230,19 +228,19 @@ const tokenWithHighestBalancePrice = computed(() => {
   });
   return tokenWithHighestBalancePrice[0] ? tokenWithHighestBalancePrice[0] : undefined;
 });
-const defaultToken = computed(() => availableTokens.value?.[0] ?? undefined);
+const defaultToken = computed(() => availableTokens.value[0] ?? undefined);
 const selectedTokenAddress = ref<string | undefined>(
   routeTokenAddress.value ?? tokenWithHighestBalancePrice.value?.address ?? defaultToken.value?.address
 );
 const selectedToken = computed<Token | undefined>(() => {
-  if (!tokens.value) {
-    return undefined;
+  if (!selectedTokenAddress.value) {
+    return defaultToken.value;
   }
-  return selectedTokenAddress.value
-    ? availableTokens.value.find((e) => e.address === selectedTokenAddress.value) ||
-        availableBalances.value.find((e) => e.address === selectedTokenAddress.value) ||
-        defaultToken.value
-    : defaultToken.value;
+  return (
+    availableTokens.value.find((e) => e.address === selectedTokenAddress.value) ||
+    availableBalances.value.find((e) => e.address === selectedTokenAddress.value) ||
+    defaultToken.value
+  );
 });
 const amountInputTokenAddress = computed({
   get: () => selectedToken.value?.address,
@@ -251,24 +249,7 @@ const amountInputTokenAddress = computed({
   },
 });
 const tokenBalance = computed<BigNumberish | undefined>(() => {
-  return balance.value.find((e) => e.address === selectedToken.value?.address)?.amount;
-});
-watch(
-  () => selectedToken?.value?.address,
-  (address) => {
-    if (!address) return;
-    eraTokensStore.requestTokenPrice(address);
-  },
-  { immediate: true }
-);
-watch(allBalancePricesLoaded, (loaded) => {
-  if (loaded && !selectedTokenAddress.value) {
-    if (totalComputeAmount.value.isZero()) {
-      selectedTokenAddress.value = tokenWithHighestBalancePrice.value?.address;
-    } else {
-      selectedTokenAddress.value = selectedToken.value?.address;
-    }
-  }
+  return balance.value?.find((e) => e.address === selectedToken.value?.address)?.amount;
 });
 
 const transactionKey = ref(0);
@@ -282,7 +263,7 @@ const {
   setAllowance,
 } = useAllowance(
   computed(() => account.value.address),
-  computed(() => selectedToken.value?.l1Address),
+  computed(() => selectedToken.value?.address),
   async () => (await eraProviderStore.requestProvider().getDefaultBridgeAddresses()).erc20L1,
   onboardStore.getWallet,
   onboardStore.getPublicClient
@@ -332,7 +313,7 @@ const {
   enoughBalanceToCoverFee,
   estimateFee,
   resetFee,
-} = useFee(tokens, balance, eraWalletStore.getL1VoidSigner, onboardStore.getPublicClient);
+} = useFee(availableTokens, balance, eraWalletStore.getL1VoidSigner, onboardStore.getPublicClient);
 watch(enoughBalanceToCoverFee, (isEnough) => {
   if (!isEnough && transactionConfirmModalOpened.value) {
     transactionConfirmModalOpened.value = false;
@@ -404,11 +385,7 @@ watch(
   { immediate: true }
 );
 
-const feeLoading = computed(() => feeInProgress.value || (!fee.value && balancesLoading.value));
-
-const balancesLoading = computed(() => {
-  return balanceInProgress.value || (!selectedTokenAddress.value && !allBalancePricesLoaded.value);
-});
+const feeLoading = computed(() => feeInProgress.value || (!fee.value && balanceInProgress.value));
 
 const continueButtonDisabled = computed(() => {
   if (
@@ -435,7 +412,7 @@ const fetchBalances = async (force = false) => {
   if (!account.value.address) return;
 
   await eraEthereumBalance.requestBalance({ force }).then(() => {
-    if (allBalancePricesLoaded.value && !selectedToken.value) {
+    if (!selectedToken.value) {
       selectedTokenAddress.value = tokenWithHighestBalancePrice.value?.address;
     }
   });

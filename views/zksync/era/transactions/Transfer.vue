@@ -51,7 +51,7 @@
         :tokens="availableTokens"
         :balances="availableBalances"
         :max-amount="maxAmount"
-        :loading="tokensRequestInProgress || balancesLoading"
+        :loading="tokensRequestInProgress || balanceInProgress"
         autofocus
       >
         <template #token-dropdown-bottom v-if="type === 'withdrawal' && account.address">
@@ -166,7 +166,7 @@ const eraProviderStore = useEraProviderStore();
 const { account } = storeToRefs(onboardStore);
 const { destinations } = storeToRefs(useDestinationsStore());
 const { tokens, tokensRequestInProgress, tokensRequestError } = storeToRefs(eraTokensStore);
-const { balance, balanceInProgress, allBalancePricesLoaded, balanceError } = storeToRefs(walletEraStore);
+const { balance, balanceInProgress, balanceError } = storeToRefs(walletEraStore);
 const { isCustomNode } = useNetworks();
 
 const destination = computed(() => (props.type === "transfer" ? destinations.value.era : destinations.value.ethereum));
@@ -227,23 +227,6 @@ const selectedTokenZeroBalance = computed(() => {
     return true;
   }
   return BigNumber.from(tokenBalance.value).isZero();
-});
-watch(
-  () => selectedToken?.value?.address,
-  (address) => {
-    if (!address) return;
-    eraTokensStore.requestTokenPrice(address);
-  },
-  { immediate: true }
-);
-watch(allBalancePricesLoaded, (loaded) => {
-  if (loaded && !selectedTokenAddress.value) {
-    if (totalComputeAmount.value.isZero()) {
-      selectedTokenAddress.value = tokenWithHighestBalancePrice.value?.address;
-    } else {
-      selectedTokenAddress.value = selectedToken.value?.address;
-    }
-  }
 });
 
 const transactionKey = ref(0);
@@ -369,11 +352,7 @@ watch(
   { immediate: true }
 );
 
-const feeLoading = computed(() => feeInProgress.value || (!fee.value && balancesLoading.value));
-
-const balancesLoading = computed(() => {
-  return balanceInProgress.value || (!selectedTokenAddress.value && !allBalancePricesLoaded.value);
-});
+const feeLoading = computed(() => feeInProgress.value || (!fee.value && balanceInProgress.value));
 
 const continueButtonDisabled = computed(() => {
   if (
@@ -398,7 +377,7 @@ const fetchBalances = async (force = false) => {
   if (!account.value.address) return;
 
   await walletEraStore.requestBalance({ force }).then(() => {
-    if (allBalancePricesLoaded.value && !selectedToken.value) {
+    if (!selectedToken.value) {
       selectedTokenAddress.value = tokenWithHighestBalancePrice.value?.address;
     }
   });

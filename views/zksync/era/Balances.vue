@@ -42,12 +42,10 @@ import { groupBalancesByAmount } from "@/utils/mappers";
 
 const onboardStore = useOnboardStore();
 const walletEraStore = useEraWalletStore();
-const { balance, balanceInProgress, balanceError, allBalancePricesLoaded } = storeToRefs(walletEraStore);
+const { balance, balanceInProgress, balanceError } = storeToRefs(walletEraStore);
 const { eraNetwork } = storeToRefs(useEraProviderStore());
 
-const { loading, reset: resetSingleLoading } = useSingleLoading(
-  computed(() => balanceInProgress.value || !allBalancePricesLoaded.value)
-);
+const { loading, reset: resetSingleLoading } = useSingleLoading(computed(() => balanceInProgress.value));
 
 const balanceGroups = groupBalancesByAmount(balance);
 

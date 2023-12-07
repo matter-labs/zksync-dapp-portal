@@ -10,7 +10,7 @@ import type { PublicClient } from "@wagmi/core";
 import type { Ref } from "vue";
 import type { L1Signer } from "zksync-web3";
 
-import { ETH_L2_ADDRESS } from "@/utils/constants";
+import { ETH_L1_ADDRESS } from "@/utils/constants";
 import { retry } from "@/utils/helpers";
 import { calculateFee } from "@/utils/helpers";
 
@@ -24,8 +24,8 @@ export type DepositFeeValues = {
 };
 
 export default (
-  tokens: Ref<{ [tokenSymbol: string]: Token } | undefined>,
-  balances: Ref<TokenAmount[]>,
+  tokens: Ref<Token[]>,
+  balances: Ref<TokenAmount[] | undefined>,
   getL1VoidSigner: () => L1Signer,
   getPublicClient: () => PublicClient
 ) => {
@@ -52,10 +52,10 @@ export default (
   });
 
   const feeToken = computed(() => {
-    return tokens.value?.[ETH_L2_ADDRESS];
+    return tokens.value.find((e) => e.address === ETH_L1_ADDRESS);
   });
   const enoughBalanceToCoverFee = computed(() => {
-    if (!feeToken.value || inProgress.value) {
+    if (!feeToken.value || !balances.value || inProgress.value) {
       return true;
     }
     const feeTokenBalance = balances.value.find((e) => e.address === feeToken.value!.address);

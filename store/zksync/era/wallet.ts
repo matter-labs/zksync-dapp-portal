@@ -1,5 +1,3 @@
-import { watch } from "vue";
-
 import { BigNumber, ethers, VoidSigner } from "ethers";
 import { $fetch } from "ofetch";
 import { defineStore, storeToRefs } from "pinia";
@@ -137,19 +135,6 @@ export const useEraWalletStore = defineStore("eraWallet", () => {
     return [...knownTokens, ...otherTokens];
   });
 
-  watch(
-    balance,
-    (balances) => {
-      balances.map((e) => {
-        if (BigNumber.from(e.amount).isZero()) return;
-        eraTokensStore.requestTokenPrice(e.address);
-      });
-    },
-    { immediate: true }
-  );
-  const allBalancePricesLoaded = computed(
-    () => !balance.value.some((e) => e.price === "loading") && !balanceInProgress.value
-  );
   const deductBalance = (tokenAddress: string, amount: string) => {
     if (!balance.value) return;
     const tokenBalance = balance.value.find((balance) => balance.address === tokenAddress);
@@ -191,7 +176,6 @@ export const useEraWalletStore = defineStore("eraWallet", () => {
     balance,
     balanceInProgress: computed(() => balanceInProgress.value),
     balanceError: computed(() => balanceError.value),
-    allBalancePricesLoaded,
     requestBalance,
     deductBalance,
 
