@@ -180,7 +180,7 @@ const networkNav: Navigation[] = reactive([
     @apply h-full text-neutral-950 dark:text-white;
   }
   .panel-container-desktop {
-    @apply relative z-20 mx-auto flex h-full items-center justify-between px-5;
+    @apply relative z-20 mx-auto flex h-full items-center justify-between px-2;
     @media screen and (min-width: 720px) {
       @apply px-6;
     }
@@ -201,7 +201,7 @@ const networkNav: Navigation[] = reactive([
       @apply hidden lg:block;
     }
     .popover-button {
-      @apply z-10 -mr-4 p-4 focus:outline-none focus-visible:outline-none lg:hidden;
+      @apply z-10 -mr-2 p-4 focus:outline-none focus-visible:outline-none lg:hidden;
       .menu-icon {
         @apply w-6 focus:outline-none;
       }

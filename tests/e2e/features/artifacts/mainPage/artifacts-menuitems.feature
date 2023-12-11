@@ -20,8 +20,8 @@ Feature: Artifacts - UI
   Scenario: Check artifacts on a Menu items
     Then Element with "href" "/" should be "visible"
     Then Element with "href" "/" should be "clickable"
-    Then Element with "href" "/payments" should be "visible"
-    Then Element with "href" "/payments" should be "clickable"
+    Then Element with "href" "/transactions" should be "visible"
+    Then Element with "href" "/transactions" should be "clickable"
     Then Element with "text" "Transactions" should be "clickable"
     Then Element with "href" "/contacts" should be "visible"
     Then Element with "href" "/contacts" should be "clickable"

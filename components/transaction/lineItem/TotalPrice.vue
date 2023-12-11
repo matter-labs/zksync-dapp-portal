@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="whitespace-nowrap">
     <template v-if="loading">
       <CommonContentLoader :length="12" />
     </template>

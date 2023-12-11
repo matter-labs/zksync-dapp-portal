@@ -2,7 +2,19 @@
   <TransactionLineItem :icon="icon" :explorer-url="blockExplorerUrl" :transaction-hash="transfer.transactionHash!">
     <template #top-left>{{ label }}</template>
     <template #bottom-left>
-      <span data-testid="withdraw-date">{{ time }}</span>
+      <template v-if="chainsLabel">
+        <template v-if="chainsLabel.from !== chainsLabel.to">
+          <span>{{ chainsLabel.from }}</span>
+          <ArrowRightIcon class="relative -top-px mx-1 inline h-4 w-4" aria-hidden="true" />
+          <span>{{ chainsLabel.to }}</span
+          >.
+        </template>
+        <template v-else>
+          <span>{{ chainsLabel.from }}</span
+          >.
+        </template>
+      </template>
+      <span>{{ timeAgo }}</span>
       <slot name="bottom-left"></slot>
     </template>
     <template #top-right>
@@ -20,22 +32,24 @@ import { computed } from "vue";
 import {
   ArrowDownLeftIcon,
   ArrowRightIcon,
+  ArrowUpRightIcon,
   BanknotesIcon,
   MinusIcon,
-  PaperAirplaneIcon,
   PlusIcon,
 } from "@heroicons/vue/24/outline";
+import { useTimeAgo } from "@vueuse/core";
 import { BigNumber } from "ethers";
 import { storeToRefs } from "pinia";
 
 import TokenAmount from "@/components/transaction/lineItem/TokenAmount.vue";
 import TotalPrice from "@/components/transaction/lineItem/TotalPrice.vue";
 
-import type { EraTransfer } from "@/utils/zksync/era/mappers";
+import type { EraTransfer, NetworkLayer } from "@/utils/zksync/era/mappers";
 import type { Component, PropType } from "vue";
 
 import { useOnboardStore } from "@/store/onboard";
 import { useEraProviderStore } from "@/store/zksync/era/provider";
+import { shortenAddress } from "@/utils/formatters";
 
 const props = defineProps({
   as: {
@@ -46,14 +60,10 @@ const props = defineProps({
     type: Object as PropType<EraTransfer>,
     required: true,
   },
-  displayDate: {
-    type: Boolean,
-    required: false,
-  },
 });
 
 const { account } = storeToRefs(useOnboardStore());
-const { blockExplorerUrl } = storeToRefs(useEraProviderStore());
+const { eraNetwork, blockExplorerUrl } = storeToRefs(useEraProviderStore());
 
 const direction = computed(() => {
   if (props.transfer.to === props.transfer.from && props.transfer.toNetwork === props.transfer.fromNetwork) {
@@ -65,22 +75,55 @@ const direction = computed(() => {
     return "out";
   }
 });
+
+const formatAddress = (address: string) => {
+  if (address === account.value.address) {
+    return "your account";
+  }
+  return shortenAddress(address);
+};
 const label = computed(() => {
   if (props.transfer.type === "transfer") {
     if (direction.value === "in") {
-      return "Receive";
+      return `Received from ${formatAddress(props.transfer.from)}`;
     }
-    return "Send";
+    return `Sent to ${formatAddress(props.transfer.to)}`;
   } else if (props.transfer.type === "withdrawal") {
-    return "Withdraw";
+    if (props.transfer.to === account.value.address) {
+      return "Withdrawal";
+    }
+    return `Withdrawal to ${formatAddress(props.transfer.to)}`;
   } else if (props.transfer.type === "deposit") {
-    return direction.value === "in" ? "Deposit" : "Send";
+    if (direction.value === "in") {
+      if (props.transfer.from === account.value.address) {
+        return "Deposit";
+      }
+      return `Deposit from ${formatAddress(props.transfer.from)}`;
+    } else {
+      return `Sent to ${formatAddress(props.transfer.to)}`;
+    }
   } else if (props.transfer.type === "fee") {
-    return "Contract execution";
+    return "Fee payment";
   } else if (props.transfer.type === "mint") {
-    return "Mint";
+    return "Minted";
   }
   return props.transfer.type || "Unknown";
+});
+
+const getLayerName = (layer: NetworkLayer) => {
+  if (layer === "L1") {
+    return eraNetwork.value.l1Network?.name;
+  }
+  return eraNetwork.value.name;
+};
+const chainsLabel = computed(() => {
+  if (!eraNetwork.value.l1Network) {
+    return;
+  }
+  return {
+    from: getLayerName(props.transfer.fromNetwork),
+    to: getLayerName(props.transfer.toNetwork),
+  };
 });
 const computeAmount = computed(() => {
   return BigNumber.from(props.transfer.amount || "0").toString();
@@ -94,11 +137,11 @@ const priceLoading = computed(() => {
 const icon = computed(() => {
   switch (props.transfer.type) {
     case "transfer":
-      return direction.value === "in" ? ArrowDownLeftIcon : PaperAirplaneIcon;
+      return direction.value === "in" ? ArrowDownLeftIcon : ArrowUpRightIcon;
     case "withdrawal":
       return MinusIcon;
     case "deposit":
-      return direction.value === "in" ? PlusIcon : PaperAirplaneIcon;
+      return direction.value === "in" ? PlusIcon : ArrowUpRightIcon;
     case "mint":
       return PlusIcon;
     case "fee":
@@ -112,11 +155,6 @@ const icon = computed(() => {
       return undefined;
   }
 });
-const time = computed(() => {
-  const date = new Date(props.transfer.timestamp);
-  return `
-    ${props.displayDate ? date.toLocaleDateString("en-US", { day: "numeric", month: "long" }) + " ∙" : ""}
-    ${date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
-  `;
-});
+
+const timeAgo = useTimeAgo(props.transfer.timestamp);
 </script>

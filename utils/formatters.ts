@@ -38,7 +38,7 @@ export function removeSmallAmount(
   amount: BigNumberish,
   decimals: number,
   price: number,
-  minTokenValue = 0.0001,
+  minTokenValue = 0.001,
   maxChars = 6
 ): string {
   const tokenAmount = parseTokenAmount(amount, decimals);

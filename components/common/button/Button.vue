@@ -47,7 +47,7 @@ defineProps({
   }
 }
 .default-button {
-  @apply flex h-[3rem] w-max items-center justify-center rounded-3xl px-4 text-center text-sm font-medium backdrop-blur-sm transition-colors wrap-balance;
+  @apply flex h-14 w-max items-center justify-center rounded-3xl px-6 text-center text-sm font-medium backdrop-blur-sm transition-colors wrap-balance;
   &:is(label) {
     @apply cursor-pointer;
   }

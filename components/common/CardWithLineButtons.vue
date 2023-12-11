@@ -1,6 +1,6 @@
 <template>
   <CommonContentBlock>
-    <div class="-mx-3 -my-3">
+    <div class="-mx-block-padding-1/4 -my-block-padding-1/2 sm:-mx-block-padding-1/2">
       <slot />
     </div>
   </CommonContentBlock>

@@ -16,16 +16,16 @@ export type L2Network = {
 export const l1Networks = {
   mainnet: {
     ...mainnet,
-    name: "Mainnet",
+    name: "Ethereum",
     network: "mainnet",
   },
   goerli: {
     ...goerli,
-    name: "Goerli Testnet",
+    name: "Ethereum Goerli Testnet",
   },
   sepolia: {
     ...sepolia,
-    name: "Sepolia Testnet",
+    name: "Ethereum Sepolia Testnet",
     rpcUrls: {
       public: { http: ["https://rpc.ankr.com/eth_sepolia"] },
       default: { http: ["https://rpc.ankr.com/eth_sepolia"] },
@@ -81,7 +81,7 @@ export const eraNetworks: EraNetwork[] = [
   {
     id: 324,
     key: "era-mainnet",
-    name: "zkSync Mainnet",
+    name: "zkSync",
     shortName: "zkSync",
     rpcUrl: "https://mainnet.era.zksync.io",
     blockExplorerUrl: "https://explorer.zksync.io",

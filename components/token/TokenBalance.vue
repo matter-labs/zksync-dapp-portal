@@ -91,8 +91,8 @@ const displayedAmount = computed(() => {
   if (typeof props.price !== "number") {
     return fullAmount.value;
   }
-  const withoutSmallAmount = removeSmallAmount(props.amount, props.decimals, props.price);
   if (props.amountDisplay === "remove-small") {
+    const withoutSmallAmount = removeSmallAmount(props.amount, props.decimals, props.price);
     if (isZeroAmount.value) {
       return "0";
     } else if (!isOnlyZeroes(withoutSmallAmount)) {

@@ -1,23 +1,9 @@
 html.dark {
   @apply bg-neutral-950;
 }
-.lite.dark {
-  html,
-  body {
-    .link {
-      @apply text-primary-300;
-      &:enabled,
-      &:is(a) {
-        &:not([aria-disabled="true"]) {
-          @apply hover:text-primary-200;
-        }
-      }
-    }
-  }
-}
 html,
 body {
-  @apply min-h-full w-full bg-gray font-sans leading-[1.15] antialiased dark:bg-neutral-950 dark:text-white;
+  @apply min-h-full w-full bg-gray font-sans antialiased dark:bg-black dark:text-white;
   -webkit-text-size-adjust: 100%;
 
   .link {

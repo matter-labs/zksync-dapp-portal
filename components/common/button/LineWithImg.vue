@@ -36,7 +36,7 @@ defineProps({
   @apply flex items-center gap-4;
 
   .line-button-with-img-image {
-    @apply my-[1.5px] aspect-square h-auto w-[40px] flex-none self-start;
+    @apply my-[1.5px] aspect-square h-auto w-12 flex-none self-start;
   }
   .line-button-with-img-body {
     @apply w-full overflow-hidden;

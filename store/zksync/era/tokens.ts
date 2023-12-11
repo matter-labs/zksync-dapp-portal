@@ -5,7 +5,8 @@ import type { Api } from "@/types";
 import type { Token } from "@/types";
 
 import { useEraProviderStore } from "@/store/zksync/era/provider";
-import { ETH_L2_ADDRESS, ETH_TOKEN } from "@/utils/constants";
+import { ETH_TOKEN } from "@/utils/constants";
+import { mapApiToken } from "@/utils/zksync/era/mappers";
 
 export const useEraTokensStore = defineStore("eraTokens", () => {
   const eraProviderStore = useEraProviderStore();
@@ -22,28 +23,10 @@ export const useEraTokensStore = defineStore("eraTokens", () => {
       const response: Api.Response.Collection<Api.Response.Token> = await $fetch(
         `${eraNetwork.value.blockExplorerApi}/tokens?limit=100`
       );
-      const explorerTokens = response.items.map((token) => ({
-        address: token.l2Address,
-        l1Address: token.l1Address || undefined,
-        name: token.name || "Unknown token",
-        symbol: token.symbol || "unknown",
-        decimals: token.decimals,
-        iconUrl: token.iconURL || undefined,
-        price: token.usdPrice || undefined,
-      }));
-      const etherExplorerToken = explorerTokens.find((token) => token.address === ETH_L2_ADDRESS);
-      const tokensWithoutEther = explorerTokens.filter((token) => token.address !== ETH_L2_ADDRESS);
-      if (!etherExplorerToken) {
-        return [ETH_TOKEN, ...tokensWithoutEther];
-      } else {
-        return [
-          {
-            ...etherExplorerToken,
-            iconUrl: ETH_TOKEN.iconUrl,
-          },
-          ...tokensWithoutEther,
-        ] as Token[];
-      }
+      const explorerTokens = response.items.map(mapApiToken);
+      const etherExplorerToken = explorerTokens.find((token) => token.address === ETH_TOKEN.address);
+      const tokensWithoutEther = explorerTokens.filter((token) => token.address !== ETH_TOKEN.address);
+      return [etherExplorerToken || ETH_TOKEN, ...tokensWithoutEther] as Token[];
     }
     if (eraNetwork.value.getTokens) {
       return await eraNetwork.value.getTokens();

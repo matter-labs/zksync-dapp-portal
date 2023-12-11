@@ -1,9 +1,22 @@
 <template>
   <div>
-    <div v-if="recentTransfersRequestInProgress">
-      <TypographyCategoryLabel>
-        <CommonContentLoader :length="22" />
-      </TypographyCategoryLabel>
+    <h1 class="h1">Transactions</h1>
+
+    <template v-if="recentWithdrawals.length">
+      <TypographyCategoryLabel>Recent withdrawals</TypographyCategoryLabel>
+      <CommonCardWithLineButtons>
+        <WithdrawalLineWithStatus
+          v-for="(item, index) in recentWithdrawals"
+          :key="index"
+          :transfer="item"
+          @timer-finished="() => updateSingleWithdrawal(item.transactionHash!)"
+        />
+      </CommonCardWithLineButtons>
+
+      <TypographyCategoryLabel>Completed transactions</TypographyCategoryLabel>
+    </template>
+
+    <div v-if="loading">
       <CommonCardWithLineButtons>
         <TokenBalanceLoader v-for="index in 5" :key="index" />
       </CommonCardWithLineButtons>
@@ -13,22 +26,14 @@
         Loading transactions error: {{ recentTransfersRequestError.message }}
       </CommonErrorBlock>
     </CommonCardWithLineButtons>
-    <div v-else-if="transfers.length">
-      <div v-for="(group, index) in transactionsGroups" :key="index">
-        <TypographyCategoryLabel>
-          {{ group.title }}
-        </TypographyCategoryLabel>
-        <CommonCardWithLineButtons>
-          <EraTransferLineItem v-for="(item, index) in group.transactions" :key="index" :transfer="item" />
-        </CommonCardWithLineButtons>
-      </div>
+    <div v-else-if="displayedTransfers.length">
+      <CommonCardWithLineButtons>
+        <EraTransferLineItem v-for="(item, index) in displayedTransfers" :key="index" :transfer="item" />
+      </CommonCardWithLineButtons>
 
       <!-- Load more -->
       <template v-if="canLoadMore">
-        <div v-if="previousTransfersRequestInProgress">
-          <TypographyCategoryLabel>
-            <CommonContentLoader :length="22" />
-          </TypographyCategoryLabel>
+        <div v-if="previousTransfersRequestInProgress" class="mt-block-gap">
           <CommonCardWithLineButtons>
             <TokenBalanceLoader v-for="index in 5" :key="index" />
           </CommonCardWithLineButtons>
@@ -51,19 +56,25 @@
 </template>
 
 <script lang="ts" setup>
-import { onBeforeUnmount, ref } from "vue";
+import { computed, onBeforeUnmount, ref } from "vue";
 
 import { useIntersectionObserver } from "@vueuse/core";
 import { storeToRefs } from "pinia";
 
 import EraTransferLineItem from "@/components/transaction/zksync/era/EraTransferLineItem.vue";
+import WithdrawalLineWithStatus from "@/components/transaction/zksync/era/bridge/WithdrawalLineWithStatus.vue";
+
+import useInterval from "@/composables/useInterval";
+import useSingleLoading from "@/composables/useSingleLoading";
+import useWithdrawalStatuses from "@/composables/zksync/era/bridge/withdrawalStatuses";
 
 import { useDestinationsStore } from "@/store/destinations";
 import { useOnboardStore } from "@/store/onboard";
+import { useEraProviderStore } from "@/store/zksync/era/provider";
 import { useEraTransfersHistoryStore } from "@/store/zksync/era/transfersHistory";
-import { groupTransactionsByDate } from "@/utils/mappers";
 
 const onboardStore = useOnboardStore();
+const { eraNetwork } = storeToRefs(useEraProviderStore());
 const eraTransfersHistoryStore = useEraTransfersHistoryStore();
 const {
   transfers,
@@ -74,17 +85,41 @@ const {
   previousTransfersRequestError,
 } = storeToRefs(eraTransfersHistoryStore);
 const { destinations } = storeToRefs(useDestinationsStore());
+const { recentWithdrawals, updateAllWithdrawalStatuses, updateWithdrawalStatus } = useWithdrawalStatuses();
 
-const transactionsGroups = groupTransactionsByDate(transfers, (transaction) => new Date(transaction.timestamp));
+const displayedTransfers = computed(() => {
+  return transfers.value.filter(
+    (transfer) => !recentWithdrawals.value.find((w) => w.transactionHash === transfer.transactionHash)
+  );
+});
+const { loading, reset: resetSingleLoading } = useSingleLoading(recentTransfersRequestInProgress);
+
+const updateSingleWithdrawal = (transactionHash: string) => {
+  if (!eraNetwork.value.blockExplorerApi) return;
+  updateWithdrawalStatus(transactionHash, true);
+};
 
 const fetch = () => {
   eraTransfersHistoryStore.requestRecentTransfers();
 };
 fetch();
+const fetchWithdrawalStatuses = () => {
+  if (eraNetwork.value.blockExplorerApi) {
+    updateAllWithdrawalStatuses();
+  }
+};
+fetchWithdrawalStatuses();
+
+const { reset: resetAutoUpdate, stop: stopAutoUpdate } = useInterval(() => {
+  fetchWithdrawalStatuses();
+}, 60000);
 
 const unsubscribe = onboardStore.subscribeOnAccountChange((newAddress) => {
   if (!newAddress) return;
+  resetSingleLoading();
   fetch();
+  resetAutoUpdate();
+  fetchWithdrawalStatuses();
 });
 
 const loadMoreEl = ref(null);
@@ -99,6 +134,7 @@ const { stop: stopLoadMoreObserver } = useIntersectionObserver(loadMoreEl, ([{ i
 
 onBeforeUnmount(() => {
   unsubscribe();
+  stopAutoUpdate();
   stopLoadMoreObserver();
 });
 </script>

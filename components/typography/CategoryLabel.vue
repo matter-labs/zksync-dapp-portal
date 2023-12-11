@@ -1,6 +1,7 @@
 <template>
-  <component :is="as" class="category-label" :class="{ 'has-padding': padded }">
+  <component :is="as" class="category-label" :class="{ 'has-padding': padded, 'with-side-content': $slots.right }">
     <slot />
+    <slot name="right" />
   </component>
 </template>
 
@@ -21,9 +22,11 @@ defineProps({
 
 <style lang="scss" scoped>
 .category-label {
-  @apply text-sm font-medium text-gray-secondary dark:text-neutral-200;
   &.has-padding {
-    @apply py-4;
+    @apply my-block-gap;
+  }
+  &.with-side-content {
+    @apply flex justify-between gap-block-gap-1/2;
   }
 }
 </style>

@@ -7,22 +7,19 @@ import type { EraTransfer } from "@/utils/zksync/era/mappers";
 
 import { useOnboardStore } from "@/store/onboard";
 import { useEraProviderStore } from "@/store/zksync/era/provider";
-import { useEraTokensStore } from "@/store/zksync/era/tokens";
 import { mapApiTransfer } from "@/utils/zksync/era/mappers";
 
 const TRANSACTIONS_FETCH_LIMIT = 50;
 
 export const useEraTransfersHistoryStore = defineStore("eraTransfersHistory", () => {
   const onboardStore = useOnboardStore();
-  const eraTokensStore = useEraTokensStore();
   const { eraNetwork } = storeToRefs(useEraProviderStore());
-  const { tokens } = storeToRefs(eraTokensStore);
   const { account } = storeToRefs(onboardStore);
 
   const filterOutDuplicateTransfers = (transfers: EraTransfer[]) => {
     /*
       Currently BE API Deposit and Withdrawal transaction generate 2 logs:
-        1 "transfer" and "deposit" or "withdrawal" depending on the type of the transaction.
+        1 "transfer" and 1 "deposit" / "withdrawal" depending on the type of the transaction.
       We want to remove the "transfer" from the list for user convenience.
     */
     const transactions = transfers.reduce((acc, transfer) => {
@@ -81,7 +78,7 @@ export const useEraTransfersHistoryStore = defineStore("eraTransfersHistory", ()
       if (transfers.value.length) {
         resetPaginatedRequest();
       }
-      const [response] = await Promise.all([loadNext(), eraTokensStore.requestTokens()]);
+      const response = await loadNext();
       const mappedTransfers = response.items.map((e) => mapApiTransfer(e));
       transfers.value = filterOutDuplicateTransfers(mappedTransfers);
     },
@@ -99,7 +96,7 @@ export const useEraTransfersHistoryStore = defineStore("eraTransfersHistory", ()
       if (!oldestTransferInTheList) {
         return requestRecentTransfers();
       }
-      const [response] = await Promise.all([loadNext(), eraTokensStore.requestTokens()]);
+      const response = await loadNext();
       const mappedTransfers = response.items.map((e) => mapApiTransfer(e));
       transfers.value = filterOutDuplicateTransfers([...transfers.value, ...mappedTransfers]);
     },
@@ -114,12 +111,7 @@ export const useEraTransfersHistoryStore = defineStore("eraTransfersHistory", ()
   });
 
   return {
-    transfers: computed(() =>
-      transfers.value.map((e) => ({
-        ...e,
-        token: e.token ? tokens.value?.[e.token.address] ?? e.token : undefined,
-      }))
-    ),
+    transfers: computed(() => transfers.value),
 
     recentTransfersRequestInProgress,
     recentTransfersRequestError,

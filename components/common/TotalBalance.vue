@@ -4,8 +4,8 @@
   </div>
   <div v-else class="total-balance">
     <span class="currency-symbol">{{ total.currencySymbol }}</span>
-    <span class="total-int">{{ total.int }}</span>
-    <span class="total-dec">.{{ total.decimal }}</span>
+    <span class="total-integer">{{ total.integer }}</span>
+    <span class="total-decimal" :class="{ 'opacity-70': total.decimal === '00' }">.{{ total.decimal }}</span>
   </div>
 </template>
 
@@ -30,28 +30,30 @@ const props = defineProps({
 });
 
 const total = computed(() => {
+  const currencySymbol = "$";
   if (props.error || !props.balance) {
     return {
-      int: "?",
+      integer: "?",
       decimal: "??",
-      currencySymbol: "$",
+      currencySymbol,
     };
   }
   const num = calculateTotalTokensPrice(props.balance);
   return {
-    int: Math.floor(num).toString(),
+    integer: Math.floor(num).toString(),
     decimal: (num % 1).toFixed(2).slice(2),
-    currencySymbol: "$",
+    currencySymbol,
   };
 });
 </script>
 
 <style lang="scss" scoped>
 .total-balance {
-  @apply text-[32px] font-semibold;
+  @apply text-6xl;
 
-  .total-dec {
-    @apply text-xl font-bold tracking-[0.1px];
+  .currency-symbol,
+  .total-decimal {
+    @apply text-3xl;
   }
 }
 </style>

@@ -167,7 +167,7 @@ Feature: External Redirection on the Main Page
 
   @id1485
   Scenario Outline: Check redirection for the "Swap" page links
-    Given I go to page "/payments/?network=era-goerli"
+    Given I go to page "/transactions/?network=era-goerli"
     When I click by text "Swap"
     When I click by text "<Swap name>"
     Then New page has "<url>" address

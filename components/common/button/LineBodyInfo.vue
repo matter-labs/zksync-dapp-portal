@@ -16,7 +16,7 @@
 
 <style lang="scss" scoped>
 .button-line-body-info {
-  @apply w-max max-w-full leading-tight;
+  @apply w-max max-w-full;
 
   .button-line-body-info-label,
   .button-line-body-info-secondary {
@@ -26,7 +26,7 @@
     @apply font-medium;
   }
   .button-line-body-info-underline {
-    @apply text-sm text-gray-secondary dark:text-neutral-400;
+    @apply text-gray-secondary opacity-70 dark:text-white;
   }
 }
 </style>

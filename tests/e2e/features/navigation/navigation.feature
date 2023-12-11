@@ -46,18 +46,18 @@ Feature: Navigation
 
   @id1492:I
   Scenario: Check navigation for the Transactions page
-    Given I go to page "/payments/?network=era-goerli"
+    Given I go to page "/transactions/?network=era-goerli"
     When I click by "<Selector type>" with "<Selector value>" value
     Then Current page have "<url>" address
 
     Examples:
       | Selector type | Selector value               | url                        |
-      | xpath         | //a[text()='View all']       | /payments/all              |
+      | xpath         | //a[text()='View all']       | /transactions/all              |
       | xpath         | //a[text()='Send']           | /transaction/zksync/era    |
 
   @id1492:II
   Scenario: Check navigation for the Transactions page
-    Given I go to page "/payments/?network=era-goerli"
+    Given I go to page "/transactions/?network=era-goerli"
     When I click by "<Selector type>" with "<Selector value>" value
     Then New page has "<url>" partial address
 

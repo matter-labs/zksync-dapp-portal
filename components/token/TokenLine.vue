@@ -6,16 +6,21 @@
     <template #default>
       <CommonButtonLineBodyInfo class="text-left">
         <template #label>
-          <div class="flex flex-wrap items-center gap-1.5">
-            <span>{{ symbol }}</span>
-            <div v-if="name" class="truncate text-xs text-gray-secondary dark:text-neutral-400">
-              {{ name }}
-            </div>
-          </div>
+          <div class="truncate">{{ symbol }}</div>
         </template>
-        <template #underline>
-          <span class="hidden xs:block" :title="address">{{ shortenAddress(address, 5) }}</span>
-          <span class="xs:hidden" :title="address">{{ shortenAddress(address, 2) }}</span>
+        <template v-if="name" #underline>
+          <CommonLabelButton
+            v-if="eraNetwork.blockExplorerUrl"
+            as="a"
+            :href="`${eraNetwork.blockExplorerUrl}/address/${address}`"
+            target="_blank"
+            class="flex gap-1"
+            @click.stop=""
+          >
+            <span class="truncate">{{ name }}</span>
+            <ArrowTopRightOnSquareIcon class="h-6 w-6 flex-shrink-0" />
+          </CommonLabelButton>
+          <div v-else class="truncate">{{ name }}</div>
         </template>
       </CommonButtonLineBodyInfo>
     </template>
@@ -26,10 +31,13 @@
 </template>
 
 <script lang="ts" setup>
+import { ArrowTopRightOnSquareIcon } from "@heroicons/vue/24/outline";
+import { storeToRefs } from "pinia";
+
 import type { TokenPrice } from "@/types";
 import type { Component, PropType } from "vue";
 
-import { shortenAddress } from "@/utils/formatters";
+import { useEraProviderStore } from "@/store/zksync/era/provider";
 
 defineProps({
   as: {
@@ -57,6 +65,8 @@ defineProps({
     type: [String, Number] as PropType<TokenPrice>,
   },
 });
+
+const { eraNetwork } = storeToRefs(useEraProviderStore());
 </script>
 
 <style lang="scss" scoped></style>

@@ -16,23 +16,12 @@ defineProps({
 </script>
 
 <style lang="scss" scoped>
-.lite.dark {
-  .label-button {
-    @apply text-primary-300;
-    &:enabled,
-    &:is(a) {
-      &:not([aria-disabled="true"]) {
-        @apply hover:text-primary-200;
-      }
-    }
-  }
-}
 .label-button {
-  @apply block text-sm font-medium text-primary-400 transition-colors dark:text-primary-500;
+  @apply underline underline-offset-2 opacity-70 transition-opacity;
   &:enabled,
   &:is(a) {
     &:not([aria-disabled="true"]) {
-      @apply hover:text-primary-300 dark:hover:text-primary-400;
+      @apply hover:opacity-100;
     }
   }
 }

@@ -1,130 +1,137 @@
 <template>
   <div>
-    <CommonContentBlock>
-      <CommonTotalBalance :balance="balance" :loading="loading" :error="balanceError" />
-      <CommonButtonGroup class="my-4">
-        <CommonButton
-          as="RouterLink"
-          :to="{
-            name: eraNetwork.l1Network ? 'transaction-zksync-era-receive' : 'transaction-zksync-era-receive-address',
-          }"
-        >
-          <template #icon>
-            <ArrowDownIcon aria-hidden="true" />
-          </template>
-          <template #default>Receive</template>
-        </CommonButton>
-        <CommonButton
-          as="RouterLink"
-          :to="{ name: eraNetwork.l1Network ? 'transaction-zksync-era' : 'transaction-zksync-era-send' }"
-        >
-          <template #icon>
-            <PaperAirplaneIcon aria-hidden="true" />
-          </template>
-          <template #default>Send</template>
-        </CommonButton>
-        <CommonButton
-          v-if="eraNetwork.displaySettings?.showPartnerLinks"
-          as="RouterLink"
-          :to="{ name: 'transaction-zksync-era-swap' }"
-        >
-          <template #icon>
-            <ArrowsRightLeftIcon aria-hidden="true" />
-          </template>
-          <template #default>Swap</template>
-        </CommonButton>
-      </CommonButtonGroup>
-
-      <!-- Tokens container -->
-      <div>
-        <div class="flex items-center justify-between py-4">
-          <TypographyCategoryLabel as="h2" :padded="false">Balances</TypographyCategoryLabel>
-          <CommonLabelButton as="RouterLink" :to="{ name: 'balances' }">View all</CommonLabelButton>
-        </div>
-        <div class="-mx-2 -mb-2 -mt-1">
-          <template v-if="loading">
-            <TokenBalanceLoader v-for="index in 2" :key="index" send-route-name />
-          </template>
-          <div v-else-if="balanceError" class="m-3 -mt-1 mb-2.5">
-            <CommonErrorBlock @try-again="fetch">
-              {{ balanceError.message }}
-            </CommonErrorBlock>
-          </div>
-          <template v-else-if="displayedBalances.length">
-            <TokenBalance
-              v-for="item in displayedBalances"
-              as="div"
-              :key="item.address"
-              :send-route-name="eraNetwork.l1Network ? 'transaction-zksync-era' : 'transaction-zksync-era-send'"
-              v-bind="item"
-            />
-          </template>
-          <template v-else>
-            <CommonEmptyBlock class="mx-3 mb-3 mt-1" data-testid="no-balances-warning">
-              <div class="wrap-balance">
-                You don't have any balances on
-                <span class="font-medium" data-testid="no-balances-warning">{{ destinations.era.label }}</span>
-              </div>
-              <span v-if="eraNetwork.l1Network" class="mt-1.5 inline-block">
-                Proceed to
-                <NuxtLink class="link" :to="{ name: 'transaction-zksync-era-receive' }">Add funds</NuxtLink> page to add
-                balance to your account
-              </span>
-            </CommonEmptyBlock>
-          </template>
-        </div>
+    <CommonContentBlock class="mb-block-gap">
+      <div class="flex flex-col flex-wrap gap-block-gap sm:flex-row sm:items-center sm:justify-between">
+        <CommonTotalBalance :balance="balance" :loading="loading" :error="balanceError" />
+        <CommonButtonGroup v-if="!noBalances">
+          <CommonButton
+            as="RouterLink"
+            :to="{
+              name: eraNetwork.l1Network ? 'transaction-zksync-era-receive' : 'transaction-zksync-era-receive-address',
+            }"
+          >
+            <template #icon>
+              <ArrowDownLeftIcon aria-hidden="true" />
+            </template>
+            <template #default>Receive</template>
+          </CommonButton>
+          <CommonButton
+            as="RouterLink"
+            :to="{ name: eraNetwork.l1Network ? 'transaction-zksync-era' : 'transaction-zksync-era-send' }"
+          >
+            <template #icon>
+              <ArrowUpRightIcon aria-hidden="true" />
+            </template>
+            <template #default>Send</template>
+          </CommonButton>
+        </CommonButtonGroup>
       </div>
     </CommonContentBlock>
 
-    <transition v-bind="TransitionAlertScaleInOutTransition">
-      <CommonContentBlock v-if="isFaucetDisplayed" class="faucet-notification">
-        <div class="-m-3">
-          <DestinationItem
+    <template v-if="!noBalances">
+      <TypographyCategoryLabel>
+        <span>Balance</span>
+        <template #right>
+          <CommonLabelButton as="RouterLink" :to="{ name: 'balances' }">View all</CommonLabelButton>
+        </template>
+      </TypographyCategoryLabel>
+      <CommonCardWithLineButtons>
+        <template v-if="loading">
+          <TokenBalanceLoader v-for="index in 2" :key="index" send-route-name />
+        </template>
+        <div v-else-if="balanceError" class="m-3 -mt-1 mb-2.5">
+          <CommonErrorBlock @try-again="fetch">
+            {{ balanceError.message }}
+          </CommonErrorBlock>
+        </div>
+        <template v-else-if="displayedBalances.length">
+          <TokenBalance
+            v-for="item in displayedBalances"
             as="div"
-            :icon-url="destinations.era.iconUrl"
-            label="Not enough tokens?"
-            description="Use official zkSync Era faucet"
-          >
-            <template #right>
-              <CommonButton
-                as="RouterLink"
-                :to="{ name: 'transaction-zksync-era-faucet' }"
-                class="destination-item-button"
-              >
-                Get free test tokens
-              </CommonButton>
+            :key="item.address"
+            :send-route-name="eraNetwork.l1Network ? 'transaction-zksync-era' : 'transaction-zksync-era-send'"
+            v-bind="item"
+          />
+        </template>
+        <template v-else>
+          <CommonEmptyBlock class="mx-3 mb-3 mt-1" data-testid="no-balances-warning">
+            <div class="wrap-balance">
+              You don't have any balances on
+              <span class="font-medium" data-testid="no-balances-warning">{{ destinations.era.label }}</span>
+            </div>
+            <span v-if="eraNetwork.l1Network" class="mt-1.5 inline-block">
+              Proceed to
+              <NuxtLink class="link" :to="{ name: 'transaction-zksync-era-receive' }">Add funds</NuxtLink> page to add
+              balance to your account
+            </span>
+          </CommonEmptyBlock>
+        </template>
+      </CommonCardWithLineButtons>
+    </template>
+
+    <template v-if="noBalances">
+      <TypographyCategoryLabel>
+        To start using zkSync ecosystem, deposit tokens in any convenient way
+      </TypographyCategoryLabel>
+
+      <div class="flex flex-col gap-block-gap">
+        <CommonCardWithLineButtons v-for="(item, index) in depositMethods" :key="index">
+          <DestinationItem v-bind="item.props">
+            <template #image v-if="item.icon">
+              <component :is="item.icon" class="p-0.5" />
             </template>
           </DestinationItem>
-          <CommonButton as="RouterLink" :to="{ name: 'transaction-zksync-era-faucet' }" class="outside-button">
-            Get free test tokens
-          </CommonButton>
-        </div>
-      </CommonContentBlock>
-    </transition>
+        </CommonCardWithLineButtons>
+      </div>
+    </template>
+    <template v-else>
+      <TypographyCategoryLabel>Deposit more tokens to zkSync</TypographyCategoryLabel>
+
+      <CommonCardWithLineButtons>
+        <DestinationItem v-for="(item, index) in depositMethods" :key="index" v-bind="item.props">
+          <template #image v-if="item.icon">
+            <div class="aspect-square h-full w-full rounded-full bg-gray-100 p-3 text-neutral-950 dark:bg-neutral-50">
+              <component :is="item.icon" />
+            </div>
+          </template>
+        </DestinationItem>
+      </CommonCardWithLineButtons>
+    </template>
   </div>
 </template>
 
 <script lang="ts" setup>
 import { computed, onBeforeUnmount } from "vue";
 
-import { ArrowDownIcon, ArrowsRightLeftIcon, PaperAirplaneIcon } from "@heroicons/vue/24/outline";
+import {
+  ArrowDownLeftIcon,
+  ArrowsUpDownIcon,
+  ArrowTopRightOnSquareIcon,
+  ArrowUpRightIcon,
+  BanknotesIcon,
+  QrCodeIcon,
+} from "@heroicons/vue/24/outline";
 import { storeToRefs } from "pinia";
 
 import useInterval from "@/composables/useInterval";
+import useSingleLoading from "@/composables/useSingleLoading";
+
+import type { FunctionalComponent } from "vue";
 
 import { useDestinationsStore } from "@/store/destinations";
 import { useOnboardStore } from "@/store/onboard";
 import { useEraProviderStore } from "@/store/zksync/era/provider";
 import { useEraWalletStore } from "@/store/zksync/era/wallet";
 import { parseTokenAmount, removeSmallAmount } from "@/utils/formatters";
-import { calculateTotalTokensPrice, isOnlyZeroes } from "@/utils/helpers";
-import { TransitionAlertScaleInOutTransition } from "@/utils/transitions";
+import { isOnlyZeroes } from "@/utils/helpers";
 
 const onboardStore = useOnboardStore();
 const walletEraStore = useEraWalletStore();
 const { balance, balanceInProgress, balanceError } = storeToRefs(walletEraStore);
 const { destinations } = storeToRefs(useDestinationsStore());
 const { eraNetwork } = storeToRefs(useEraProviderStore());
+
+const { loading, reset: resetSingleLoading } = useSingleLoading(computed(() => balanceInProgress.value));
 
 const displayedBalances = computed(() => {
   return balance.value.filter(({ amount, decimals, price }) => {
@@ -136,14 +143,60 @@ const displayedBalances = computed(() => {
     return false;
   });
 });
+const noBalances = computed(() => !loading.value && !balanceError.value && !displayedBalances.value.length);
 
-const loading = computed(() => balanceInProgress.value);
-const isFaucetDisplayed = computed(() => {
-  if (loading.value) return false;
-  if (eraNetwork.value.faucetUrl) {
-    return calculateTotalTokensPrice(balance.value) < 50;
+const depositMethods = computed(() => {
+  const methods: { props: Record<string, unknown>; icon?: FunctionalComponent }[] = [];
+  if (eraNetwork.value.l1Network) {
+    methods.push({
+      props: {
+        iconUrl: destinations.value.ethereum.iconUrl,
+        label: `Bridge from ${eraNetwork.value.l1Network?.name}`,
+        description: `Receive tokens from your ${eraNetwork.value.l1Network?.name} account`,
+        variant: "primary",
+        as: "RouterLink",
+        to: {
+          name: "bridge",
+        },
+      },
+    });
   }
-  return false;
+  methods.push({
+    props: {
+      label: "View your address",
+      description: `Receive tokens from another ${eraNetwork.value.shortName} account`,
+      as: "RouterLink",
+      to: {
+        name: "transaction-zksync-era-receive-address",
+      },
+    },
+    icon: QrCodeIcon,
+  });
+  if (eraNetwork.value.displaySettings?.showPartnerLinks) {
+    methods.push({
+      props: {
+        label: "Top-up with cash",
+        description: "Buy tokens using a card or another method for fiat",
+        as: "a",
+        href: "https://zksync.dappradar.com/ecosystem?category-de=gateways",
+        target: "_blank",
+        icon: ArrowTopRightOnSquareIcon,
+      },
+      icon: BanknotesIcon,
+    });
+    methods.push({
+      props: {
+        label: "3rd party bridges",
+        description: "Bridge tokens from other networks",
+        as: "a",
+        href: "https://zksync.dappradar.com/ecosystem?category-de=bridges",
+        target: "_blank",
+        icon: ArrowTopRightOnSquareIcon,
+      },
+      icon: ArrowsUpDownIcon,
+    });
+  }
+  return methods;
 });
 
 const fetch = () => {
@@ -157,6 +210,7 @@ const { reset: resetAutoUpdate, stop: stopAutoUpdate } = useInterval(() => {
 
 const unsubscribe = onboardStore.subscribeOnAccountChange((newAddress) => {
   if (!newAddress) return;
+  resetSingleLoading();
   resetAutoUpdate();
   fetch();
 });
@@ -167,15 +221,4 @@ onBeforeUnmount(() => {
 });
 </script>
 
-<style lang="scss" scoped>
-.faucet-notification {
-  @apply mt-3;
-
-  .destination-item-button {
-    @apply -my-1 max-xs:hidden;
-  }
-  .outside-button {
-    @apply w-full xs:hidden;
-  }
-}
-</style>
+<style lang="scss" scoped></style>

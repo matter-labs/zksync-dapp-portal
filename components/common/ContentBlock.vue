@@ -6,6 +6,6 @@
 
 <style lang="scss" scoped>
 .content-block-container {
-  @apply h-max w-full rounded-3xl bg-white p-4 dark:bg-neutral-900;
+  @apply h-max w-full rounded-3xl bg-white px-block-padding-1/2 py-block-padding dark:bg-neutral-900 sm:px-block-padding;
 }
 </style>

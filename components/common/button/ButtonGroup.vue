@@ -6,6 +6,6 @@
 
 <style lang="scss" scoped>
 .buttons-line-group {
-  @apply flex w-full flex-wrap gap-2;
+  @apply flex flex-wrap gap-block-gap-1/2;
 }
 </style>

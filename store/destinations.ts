@@ -30,7 +30,7 @@ export const useDestinationsStore = defineStore("destinations", () => {
     },
     ethereum: {
       key: "ethereum",
-      label: `Ethereum ${l1Network.value ? l1Network.value.name : ""}`,
+      label: l1Network.value ? l1Network.value.name : "",
       iconUrl: "/img/ethereum.svg",
     },
     layerswap: {

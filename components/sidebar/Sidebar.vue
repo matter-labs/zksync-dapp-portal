@@ -11,7 +11,7 @@
         </NuxtLink>
         <NuxtLink
           v-if="version !== 'era' || (version === 'era' && eraNetwork.blockExplorerApi)"
-          :to="{ name: 'payments' }"
+          :to="{ name: 'transactions' }"
           class="navbar-link"
         >
           <ArrowsRightLeftIcon class="navbar-link-icon" aria-hidden="true" />

@@ -28,7 +28,7 @@
       <div>
         <div class="flex items-center justify-between py-4">
           <TypographyCategoryLabel as="h2" :padded="false">Transactions</TypographyCategoryLabel>
-          <CommonLabelButton as="RouterLink" :to="{ name: 'payments-all' }">View all</CommonLabelButton>
+          <CommonLabelButton as="RouterLink" :to="{ name: 'transactions-all' }">View all</CommonLabelButton>
         </div>
         <div class="-mx-2 -mb-2 -mt-1">
           <template v-if="recentTransactionsRequestInProgress">

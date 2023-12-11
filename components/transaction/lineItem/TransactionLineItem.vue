@@ -3,7 +3,7 @@
     class="transaction-line-item"
     :as="transactionUrl ? 'a' : 'button'"
     :href="transactionUrl"
-    :icon="transactionUrl ? ArrowUpRightIcon : DocumentDuplicateIcon"
+    :icon="transactionUrl ? ArrowTopRightOnSquareIcon : DocumentDuplicateIcon"
     target="_blank"
     @click="!transactionUrl && copy()"
   >
@@ -23,9 +23,15 @@
           <slot v-else name="bottom-left" />
         </template>
       </CommonButtonLineBodyInfo>
+      <div class="flex flex-wrap items-center gap-x-2 sm:hidden">
+        <slot name="top-right" />
+        <div v-if="$slots['bottom-right']" class="text-gray-secondary opacity-70 dark:text-white">
+          <slot name="bottom-right" />
+        </div>
+      </div>
     </template>
     <template #right>
-      <CommonButtonLineBodyInfo ref="el" class="text-right">
+      <CommonButtonLineBodyInfo ref="el" class="hidden text-right sm:block">
         <template #secondary v-if="$slots['top-right']">
           <slot name="top-right" />
         </template>
@@ -41,7 +47,7 @@
 import { computed, ref, watch } from "vue";
 import { useTippy } from "vue-tippy";
 
-import { ArrowUpRightIcon, DocumentDuplicateIcon, XMarkIcon } from "@heroicons/vue/24/outline";
+import { ArrowTopRightOnSquareIcon, DocumentDuplicateIcon, XMarkIcon } from "@heroicons/vue/24/outline";
 
 import useCopy from "@/composables/useCopy";
 

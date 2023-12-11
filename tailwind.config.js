@@ -35,6 +35,13 @@ module.exports = {
           600: "#00CC66",
         },
       },
+      spacing: {
+        "block-padding": "32px",
+        "block-padding-1/2": "16px",
+        "block-padding-1/4": "8px",
+        "block-gap": "24px",
+        "block-gap-1/2": "12px",
+      },
     },
     screens: {
       xxs: "320px",
@@ -50,18 +57,16 @@ module.exports = {
     plugin(function ({ addBase, addUtilities, theme }) {
       addBase({
         ".h1": {
-          fontSize: "32px",
-          fontWeight: theme("fontWeight.bold"),
-          lineHeight: theme("lineHeight.tight"),
-          paddingTop: theme("padding.5"),
-          paddingBottom: theme("padding.4"),
+          fontSize: "40px",
+          fontWeight: "400",
+          lineHeight: "1.4",
+          marginBottom: theme("spacing.block-gap"),
         },
         ".h2": {
           fontSize: "26px",
           fontWeight: theme("fontWeight.bold"),
           lineHeight: theme("lineHeight.tight"),
           paddingTop: theme("padding.5"),
-          paddingBottom: theme("padding.4"),
         },
       });
       addUtilities({
