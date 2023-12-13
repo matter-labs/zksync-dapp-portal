@@ -11,7 +11,7 @@
         :icon-url="destination.iconUrl"
       >
         <template #right>
-          <CommonButton @click="copy">
+          <CommonButton variant="primary" @click="copy">
             <template #icon>
               <CheckIcon v-if="copied" aria-hidden="true" />
               <DocumentDuplicateIcon v-else aria-hidden="true" />

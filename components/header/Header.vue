@@ -1,228 +1,97 @@
 <template>
-  <div class="navbar">
-    <Popover class="popover-container" v-slot="{ open }">
-      <PopoverFunctional :open="open" @popupToggled="handlePopupToggled" />
-      <div
-        class="panel-container-desktop"
-        :class="{ 'bg-gray dark:bg-black lg:bg-transparent dark:lg:bg-transparent': open }"
-      >
-        <div class="logo-container">
-          <NuxtLink v-if="logoLeadsHome" :to="{ name: 'index' }">
-            <IconsZkSync class="w-[120px]" />
-          </NuxtLink>
-          <a v-else href="https://zksync.io" target="_blank">
-            <IconsZkSync class="w-[120px]" />
-          </a>
-        </div>
-        <div class="navigation-container">
-          <PopoverGroup class="popover-group">
-            <DropdownPopover on-hover>
-              Learn
-              <template #items>
-                <DropdownContent :navigation="learnNav" label="Learn" />
-              </template>
-            </DropdownPopover>
-            <DropdownPopover on-hover>
-              Build
-              <template #items>
-                <DropdownContent :navigation="buildNav" label="Build" />
-              </template>
-            </DropdownPopover>
-            <DropdownPopover on-hover>
-              Network
-              <template #items>
-                <DropdownContent :navigation="networkNav" label="Network" />
-              </template>
-            </DropdownPopover>
-          </PopoverGroup>
-        </div>
-        <div class="right-side-menu">
-          <RightSideMenu />
-        </div>
-        <div class="popover-button left-border">
-          <PopoverButton class="align-bottom focus-visible:outline-none" aria-label="Toggle menu">
-            <Bars3Icon v-if="!open" class="menu-icon" />
-            <XMarkIcon v-else class="menu-icon" />
-          </PopoverButton>
-        </div>
-      </div>
-      <PopoverPanel class="panel-container-mobile">
-        <PopoverGroup class="popover-group">
-          <DropdownContent :navigation="learnNav" label="Learn" />
-          <DropdownContent :navigation="buildNav" label="Build" />
-          <DropdownContent :navigation="networkNav" label="Network" />
-        </PopoverGroup>
-      </PopoverPanel>
-    </Popover>
-  </div>
+  <header class="header">
+    <div class="logo-container">
+      <NuxtLink v-if="logoLeadsHome" :to="{ name: 'index' }">
+        <IconsZkSync class="logo-icon" />
+      </NuxtLink>
+      <a v-else href="https://zksync.io" target="_blank">
+        <IconsZkSync class="logo-icon" />
+      </a>
+    </div>
+    <div class="links-container">
+      <NuxtLink class="link-item" :to="{ name: 'bridge' }">
+        <ArrowsUpDownIcon class="link-icon" aria-hidden="true" />
+        Bridge
+      </NuxtLink>
+      <NuxtLink class="link-item" :to="{ name: 'index' }">
+        <WalletIcon class="link-icon" aria-hidden="true" />
+        Assets
+      </NuxtLink>
+      <NuxtLink class="link-item" :to="{ name: 'transactions' }">
+        <ArrowsRightLeftIcon class="link-icon" aria-hidden="true" />
+        Transactions
+      </NuxtLink>
+    </div>
+    <div class="right-side">
+      <HeaderNetworkDropdown class="network-dropdown" />
+      <CommonButton v-if="!account.address" variant="primary" @click="onboardStore.openModal()">
+        Connect wallet
+      </CommonButton>
+      <HeaderAccountDropdown v-else />
+      <CommonButton class="color-mode-button" @click="switchColorMode()">
+        <SunIcon class="h-6 w-6" aria-hidden="true" />
+      </CommonButton>
+      <CommonButton class="hamburger-icon">
+        <Bars3Icon class="h-6 w-6" aria-hidden="true" />
+      </CommonButton>
+    </div>
+  </header>
 </template>
 
 <script lang="ts" setup>
-import { computed, reactive } from "vue";
+import { computed } from "vue";
 
-import { Popover, PopoverButton, PopoverGroup, PopoverPanel } from "@headlessui/vue";
-import { Bars3Icon, XMarkIcon } from "@heroicons/vue/24/outline";
+import { ArrowsRightLeftIcon, ArrowsUpDownIcon, Bars3Icon, SunIcon, WalletIcon } from "@heroicons/vue/24/outline";
 import { storeToRefs } from "pinia";
 
-import DropdownContent from "./DropdownContent.vue";
-import DropdownPopover from "./DropdownPopover.vue";
-import PopoverFunctional from "./PopoverFunctional.vue";
-import RightSideMenu from "./RightSideMenu.vue";
-
-import { tabs as bridgeTabs } from "@/components/bridge/Navigation.vue";
+import useColorMode from "@/composables/useColorMode";
 
 import { useRoute } from "#app";
 import { useOnboardStore } from "@/store/onboard";
 
+const onboardStore = useOnboardStore();
+const { account } = storeToRefs(onboardStore);
+
 const route = useRoute();
-const { account } = storeToRefs(useOnboardStore());
-const logoLeadsHome = computed(() => {
-  return !bridgeTabs.map((e) => e.routeName).includes(route.name as string) && account.value.address;
-});
+const logoLeadsHome = computed(() => route.name !== "index");
 
-export interface Navigation {
-  title?: string;
-  items: {
-    label: string;
-    url: string;
-  }[];
-}
-
-const emit = defineEmits<{
-  (eventName: "update:popupOpened", value: boolean): void;
-}>();
-function handlePopupToggled(value: boolean) {
-  emit("update:popupOpened", value);
-}
-
-const learnNav: Navigation[] = reactive([
-  {
-    title: "",
-    items: [
-      { label: "Freedom is our mission", url: "https://zksync.io/ethos" },
-      { label: "Hyperscalibility", url: "https://zksync.io/hyperscalability" },
-      { label: "Security", url: "https://zksync.io/security" },
-      { label: "Game-changing UX", url: "https://zksync.io/ux" },
-    ],
-  },
-]);
-
-const buildNav: Navigation[] = reactive([
-  {
-    title: "",
-    items: [
-      { label: "Quickstart", url: "https://era.zksync.io/docs/dev/building-on-zksync/hello-world.html" },
-      { label: "Documentation", url: "https://era.zksync.io/docs/" },
-      { label: "Web3 API", url: "https://era.zksync.io/docs/api/api.html" },
-    ],
-  },
-  {
-    title: "Guides",
-    items: [
-      {
-        label: "Contract deployment",
-        url: "https://era.zksync.io/docs/dev/building-on-zksync/contracts/contract-deployment.html",
-      },
-      { label: "Bridging assets", url: "https://era.zksync.io/docs/dev/developer-guides/bridging/bridging-asset.html" },
-      { label: "Account abstraction", url: "https://era.zksync.io/docs/dev/tutorials/custom-aa-tutorial.html" },
-      {
-        label: "Building custom Paymasters",
-        url: "https://era.zksync.io/docs/dev/tutorials/custom-paymaster-tutorial.html",
-      },
-      { label: "Cross-chain governance", url: "https://era.zksync.io/docs/dev/tutorials/cross-chain-tutorial.html" },
-    ],
-  },
-  {
-    title: "Tools",
-    items: [
-      { label: "Javascript SDK", url: "https://era.zksync.io/docs/api/js" },
-      { label: "Hardhat plugins", url: "https://era.zksync.io/docs/api/hardhat" },
-      { label: "zkSync Era CLI", url: "https://era.zksync.io/docs/api/tools/zksync-cli/" },
-    ],
-  },
-]);
-
-const networkNav: Navigation[] = reactive([
-  {
-    title: "zkSync Era (v2)",
-    items: [
-      { label: "Intro to zkSync Era", url: "https://era.zksync.io/docs/dev/fundamentals/zkSync.html" },
-      { label: "Wallet Portal", url: "https://portal.zksync.io/" },
-      { label: "Block Explorer", url: "https://explorer.zksync.io/" },
-    ],
-  },
-  {
-    title: "zkSync Lite (v1)",
-    items: [
-      { label: "Intro to zkSync Lite", url: "https://docs.zksync.io/userdocs/intro/" },
-      { label: "Wallet Portal", url: "https://lite.zksync.io/" },
-      { label: "Block Explorer", url: "https://zkscan.io/" },
-    ],
-  },
-  {
-    title: "Ecosystem",
-    items: [
-      { label: "Explore the Ecosystem", url: "https://ecosystem.zksync.io/" },
-      {
-        label: "Brand assets",
-        url: "https://matterlabs.notion.site/zkSync-Brand-Resources-750bb7b1f3d14ebe9f539a86901c4a1c/",
-      },
-    ],
-  },
-]);
+const { switchColorMode } = useColorMode();
 </script>
-<style lang="scss">
-.navbar {
-  @apply z-50 h-[72px] lg:mb-3;
-  grid-area: header / header / header / header;
 
-  .popover-container {
-    @apply h-full text-neutral-950 dark:text-white;
+<style lang="scss" scoped>
+.header {
+  @apply z-50 flex h-[88px] w-full items-center gap-10 p-2 sm:p-4;
+  grid-area: header;
+
+  .logo-container {
+    @apply w-max;
+    .logo-icon {
+      @apply h-auto w-full max-w-[160px];
+    }
   }
-  .panel-container-desktop {
-    @apply relative z-20 mx-auto flex h-full items-center justify-between px-2;
-    @media screen and (min-width: 720px) {
-      @apply px-6;
-    }
-    @media screen and (min-width: 1024px) {
-      @apply grid grid-cols-[216px_1fr_216px] px-9;
-    }
+  .links-container {
+    @apply hidden items-center gap-10 lg:flex;
 
-    .logo-container {
-      @apply font-semibold;
-    }
-    .navigation-container {
-      @apply hidden h-full justify-self-center lg:flex;
-      .popover-group {
-        @apply flex;
+    .link-item {
+      @apply flex items-center gap-1 text-lg text-neutral-600 dark:text-neutral-500;
+      &.router-link-exact-active {
+        @apply text-neutral-950 dark:text-white;
       }
-    }
-    .right-side-menu {
-      @apply hidden lg:block;
-    }
-    .popover-button {
-      @apply z-10 -mr-2 p-4 focus:outline-none focus-visible:outline-none lg:hidden;
-      .menu-icon {
-        @apply w-6 focus:outline-none;
+
+      .link-icon {
+        @apply h-6 w-6;
       }
     }
   }
-  .panel-container-mobile {
-    @apply absolute left-0 z-50 w-full bg-gray px-6 dark:bg-black lg:hidden;
-    .menu-label {
-      @apply pb-2 pt-8 first:pt-0;
+  .right-side {
+    @apply ml-auto flex items-center gap-3;
+
+    .network-dropdown,
+    .color-mode-button {
+      @apply hidden xl:block;
     }
-    .menu-section-container {
-      @apply mb-8 flex-wrap justify-between border-b pb-8 dark:border-[#292B43] xs:justify-start sm:flex-nowrap sm:justify-between;
-      .menu-section {
-        @apply min-w-[100px] max-w-[6rem] xxs:min-w-[132px] xxs:max-w-[8.25rem] xs:min-w-[160px] xs:max-w-[11rem] sm:min-w-[27%] sm:max-w-[21rem];
-      }
-    }
-    .were-hiring {
-      @apply mb-8 border-b border-[#292B43] pb-8 font-extralight;
-    }
-    .v1-docs {
-      @apply pb-10 font-extralight;
+    .hamburger-icon {
+      @apply xl:hidden;
     }
   }
 }

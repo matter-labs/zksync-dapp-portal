@@ -1,5 +1,4 @@
 import { useStorage } from "@vueuse/core";
-import { defineStore, storeToRefs } from "pinia";
 import { getChangePubkeyLegacyMessage, MAX_TIMESTAMP } from "zksync/build/utils";
 
 import type { PubKeyHash } from "zksync/build/types";

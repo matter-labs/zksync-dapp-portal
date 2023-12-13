@@ -2,7 +2,6 @@ import { watch } from "vue";
 
 import { BigNumber, VoidSigner } from "ethers";
 import { ethers } from "ethers";
-import { defineStore, storeToRefs } from "pinia";
 import { RemoteWallet, Wallet } from "zksync";
 
 import type { ZkSyncLiteTokenAmount } from "@/types";

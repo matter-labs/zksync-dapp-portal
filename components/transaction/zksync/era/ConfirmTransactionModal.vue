@@ -39,7 +39,7 @@
             <div v-if="!buttonDisabled && newFeeAlert" class="mx-4 mt-3">
               <CommonAlert variant="warning" :icon="ExclamationCircleIcon">
                 <p>Fee has changed since you started the transaction. Please confirm the updated fee to proceed.</p>
-                <CommonButton @click="newFeeAlert = false">Confirm</CommonButton>
+                <CommonButton variant="primary" @click="newFeeAlert = false">Confirm</CommonButton>
               </CommonAlert>
             </div>
           </transition>

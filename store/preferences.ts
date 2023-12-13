@@ -2,7 +2,6 @@ import { computed } from "vue";
 
 import { useStorage } from "@vueuse/core";
 import { getAddress, isAddress } from "ethers/lib/utils";
-import { defineStore, storeToRefs } from "pinia";
 
 import { useOnboardStore } from "@/store/onboard";
 

@@ -1,5 +1,4 @@
 import { fetchBalance } from "@wagmi/core";
-import { defineStore, storeToRefs } from "pinia";
 
 import type { Hash, TokenAmount } from "@/types";
 

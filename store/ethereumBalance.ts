@@ -1,6 +1,5 @@
 import { AnkrProvider } from "@ankr.com/ankr.js";
 import { BigNumber } from "ethers";
-import { defineStore, storeToRefs } from "pinia";
 
 import type { TokenAmount } from "@/types";
 import type { Blockchain as AnkrSupportedChains } from "@ankr.com/ankr.js";

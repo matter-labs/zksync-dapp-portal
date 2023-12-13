@@ -1,6 +1,5 @@
 import { BigNumber, ethers, VoidSigner } from "ethers";
 import { $fetch } from "ofetch";
-import { defineStore, storeToRefs } from "pinia";
 import { L1Signer, L1VoidSigner, Web3Provider } from "zksync-web3";
 
 import type { Api, TokenAmount } from "@/types";

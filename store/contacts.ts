@@ -1,5 +1,4 @@
 import { useStorage } from "@vueuse/core";
-import { defineStore, storeToRefs } from "pinia";
 
 import { useOnboardStore } from "@/store/onboard";
 

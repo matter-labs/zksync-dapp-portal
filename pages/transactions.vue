@@ -2,56 +2,61 @@
   <div>
     <h1 class="h1">Transactions</h1>
 
-    <template v-if="recentWithdrawals.length">
-      <TypographyCategoryLabel>Recent withdrawals</TypographyCategoryLabel>
-      <CommonCardWithLineButtons>
-        <WithdrawalLineWithStatus
-          v-for="(item, index) in recentWithdrawals"
-          :key="index"
-          :transfer="item"
-          @timer-finished="() => updateSingleWithdrawal(item.transactionHash!)"
-        />
-      </CommonCardWithLineButtons>
-
-      <TypographyCategoryLabel>Completed transactions</TypographyCategoryLabel>
+    <template v-if="!isConnected">
+      <ConnectWalletBlock />
     </template>
-
-    <div v-if="loading">
-      <CommonCardWithLineButtons>
-        <TokenBalanceLoader v-for="index in 5" :key="index" />
-      </CommonCardWithLineButtons>
-    </div>
-    <CommonCardWithLineButtons v-else-if="recentTransfersRequestError">
-      <CommonErrorBlock @try-again="fetch">
-        Loading transactions error: {{ recentTransfersRequestError.message }}
-      </CommonErrorBlock>
-    </CommonCardWithLineButtons>
-    <div v-else-if="displayedTransfers.length">
-      <CommonCardWithLineButtons>
-        <EraTransferLineItem v-for="(item, index) in displayedTransfers" :key="index" :transfer="item" />
-      </CommonCardWithLineButtons>
-
-      <!-- Load more -->
-      <template v-if="canLoadMore">
-        <div v-if="previousTransfersRequestInProgress" class="mt-block-gap">
-          <CommonCardWithLineButtons>
-            <TokenBalanceLoader v-for="index in 5" :key="index" />
-          </CommonCardWithLineButtons>
-        </div>
-        <CommonCardWithLineButtons v-else-if="previousTransfersRequestError">
-          <CommonErrorBlock @try-again="fetchMore">
-            Loading transactions error: {{ previousTransfersRequestError.message }}
-          </CommonErrorBlock>
+    <template v-else>
+      <template v-if="recentWithdrawals.length">
+        <TypographyCategoryLabel>Recent withdrawals</TypographyCategoryLabel>
+        <CommonCardWithLineButtons>
+          <WithdrawalLineWithStatus
+            v-for="(item, index) in recentWithdrawals"
+            :key="index"
+            :transfer="item"
+            @timer-finished="() => updateSingleWithdrawal(item.transactionHash!)"
+          />
         </CommonCardWithLineButtons>
-        <CommonButton v-else ref="loadMoreEl" class="mx-auto mt-4">Load more</CommonButton>
+
+        <TypographyCategoryLabel>Completed transactions</TypographyCategoryLabel>
       </template>
-    </div>
-    <CommonCardWithLineButtons v-else>
-      <CommonEmptyBlock>
-        At the moment you don't have any transactions on
-        <span class="font-medium">{{ destinations.era.label }}</span>
-      </CommonEmptyBlock>
-    </CommonCardWithLineButtons>
+
+      <div v-if="loading">
+        <CommonCardWithLineButtons>
+          <TokenBalanceLoader v-for="index in 5" :key="index" />
+        </CommonCardWithLineButtons>
+      </div>
+      <CommonCardWithLineButtons v-else-if="recentTransfersRequestError">
+        <CommonErrorBlock @try-again="fetch">
+          Loading transactions error: {{ recentTransfersRequestError.message }}
+        </CommonErrorBlock>
+      </CommonCardWithLineButtons>
+      <div v-else-if="displayedTransfers.length">
+        <CommonCardWithLineButtons>
+          <EraTransferLineItem v-for="(item, index) in displayedTransfers" :key="index" :transfer="item" />
+        </CommonCardWithLineButtons>
+
+        <!-- Load more -->
+        <template v-if="canLoadMore">
+          <div v-if="previousTransfersRequestInProgress" class="mt-block-gap">
+            <CommonCardWithLineButtons>
+              <TokenBalanceLoader v-for="index in 5" :key="index" />
+            </CommonCardWithLineButtons>
+          </div>
+          <CommonCardWithLineButtons v-else-if="previousTransfersRequestError">
+            <CommonErrorBlock @try-again="fetchMore">
+              Loading transactions error: {{ previousTransfersRequestError.message }}
+            </CommonErrorBlock>
+          </CommonCardWithLineButtons>
+          <CommonButton v-else ref="loadMoreEl" variant="primary" class="mx-auto mt-4">Load more</CommonButton>
+        </template>
+      </div>
+      <CommonCardWithLineButtons v-else>
+        <CommonEmptyBlock>
+          At the moment you don't have any transactions on
+          <span class="font-medium">{{ destinations.era.label }}</span>
+        </CommonEmptyBlock>
+      </CommonCardWithLineButtons>
+    </template>
   </div>
 </template>
 
@@ -76,6 +81,7 @@ import { useEraTransfersHistoryStore } from "@/store/zksync/era/transfersHistory
 const onboardStore = useOnboardStore();
 const { eraNetwork } = storeToRefs(useEraProviderStore());
 const eraTransfersHistoryStore = useEraTransfersHistoryStore();
+const { isConnected } = storeToRefs(onboardStore);
 const {
   transfers,
   recentTransfersRequestInProgress,

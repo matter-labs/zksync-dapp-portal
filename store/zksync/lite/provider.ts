@@ -1,4 +1,3 @@
-import { defineStore, storeToRefs } from "pinia";
 import { getDefaultRestProvider } from "zksync";
 
 import type { RestProvider } from "zksync";

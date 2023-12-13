@@ -1,5 +1,3 @@
-import { defineStore, storeToRefs } from "pinia";
-
 import usePaginatedRequest from "@/composables/zksync/era/usePaginatedRequest";
 
 import type { Api } from "@/types";

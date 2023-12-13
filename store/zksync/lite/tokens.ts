@@ -1,5 +1,3 @@
-import { defineStore } from "pinia";
-
 import liteTokenIcons from "@/assets/json/tokens/lite-tokens-icons.json";
 
 import type { TokenPrice, ZkSyncLiteToken } from "@/types";

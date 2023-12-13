@@ -1,5 +1,4 @@
 import { BigNumber } from "ethers";
-import { defineStore, storeToRefs } from "pinia";
 
 import type { ZkSyncLiteTokenAmount } from "@/types";
 

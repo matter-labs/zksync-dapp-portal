@@ -22,9 +22,6 @@
   .button-line-body-info-secondary {
     @apply inline min-h-[1.5rem] overflow-hidden text-ellipsis align-middle;
   }
-  .button-line-body-info-label {
-    @apply font-medium;
-  }
   .button-line-body-info-underline {
     @apply text-gray-secondary opacity-70 dark:text-white;
   }

@@ -1,5 +1,4 @@
 import { useStorage } from "@vueuse/core";
-import { defineStore } from "pinia";
 
 import useNetworks from "@/composables/useNetworks";
 

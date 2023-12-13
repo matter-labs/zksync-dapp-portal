@@ -1,7 +1,5 @@
 import { computed } from "vue";
 
-import { defineStore, storeToRefs } from "pinia";
-
 import { useNetworkStore } from "@/store/network";
 import { useEraProviderStore } from "@/store/zksync/era/provider";
 import { useLiteProviderStore } from "@/store/zksync/lite/provider";

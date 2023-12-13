@@ -1,5 +1,4 @@
 import { $fetch } from "ofetch";
-import { defineStore, storeToRefs } from "pinia";
 
 import type { Api } from "@/types";
 import type { Token } from "@/types";

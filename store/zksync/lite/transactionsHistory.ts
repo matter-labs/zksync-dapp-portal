@@ -1,5 +1,3 @@
-import { defineStore, storeToRefs } from "pinia";
-
 import type { ZkSyncLiteTransaction } from "@/utils/zksync/lite/mappers";
 import type { PaginationQuery } from "zksync/build/types";
 

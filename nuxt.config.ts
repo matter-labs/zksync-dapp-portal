@@ -70,6 +70,13 @@ export default defineNuxtConfig({
       ankrToken: process.env.ANKR_TOKEN,
     },
   },
+  pinia: {
+    autoImports: [
+      // automatically imports `defineStore` and `storeToRefs` typings
+      "defineStore",
+      "storeToRefs",
+    ],
+  },
   vite: {
     build: {
       target: "es2020",

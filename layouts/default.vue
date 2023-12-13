@@ -3,10 +3,7 @@
   <ModalNetworkChangedWarning v-if="!isConnectingWallet" />
   <ModalConnectingWalletError />
 
-  <LoginLayout v-if="!account.isConnected">
-    <LoginPage />
-  </LoginLayout>
-  <div class="app-layout" v-else>
+  <div class="app-layout">
     <ModalWalletWarning />
 
     <Header />
@@ -19,11 +16,9 @@
 <script lang="ts" setup>
 import { storeToRefs } from "pinia";
 
-import LoginLayout from "@/layouts/login.vue";
 import { useOnboardStore } from "@/store/onboard";
-import LoginPage from "@/views/Login.vue";
 
-const { account, isConnectingWallet } = storeToRefs(useOnboardStore());
+const { isConnectingWallet } = storeToRefs(useOnboardStore());
 </script>
 
 <style lang="scss" scoped>

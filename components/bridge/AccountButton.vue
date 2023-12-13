@@ -30,13 +30,13 @@
         </CommonButtonLineWithImg>
       </CommonCardWithLineButtons>
       <CommonButtonGroup class="mt-4">
-        <CommonButton @click="viewOnExplorerModalOpened = true">
+        <CommonButton variant="primary" @click="viewOnExplorerModalOpened = true">
           <template #icon>
             <Squares2X2Icon aria-hidden="true" />
           </template>
           <template #default>View on Explorer</template>
         </CommonButton>
-        <CommonButton @click="logout">
+        <CommonButton variant="primary" @click="logout">
           <template #icon>
             <PowerIcon aria-hidden="true" />
           </template>

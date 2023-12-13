@@ -25,7 +25,7 @@ body {
         @apply -bottom-[8px] border-t-white/70;
       }
       &[data-placement^="bottom"] > .tippy-arrow:before {
-        @apply -top-[7px] border-b-white/70;
+        @apply -top-[8px] border-b-white/70;
       }
     }
   }

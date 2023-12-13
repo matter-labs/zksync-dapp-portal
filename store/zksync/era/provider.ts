@@ -1,4 +1,3 @@
-import { defineStore, storeToRefs } from "pinia";
 import { Provider } from "zksync-web3";
 
 import useNetworks from "@/composables/useNetworks";

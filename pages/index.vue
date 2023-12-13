@@ -1,17 +1,237 @@
 <template>
-  <CommonPage title="Assets">
-    <template #era>
-      <AssetsEra />
+  <div>
+    <h1 class="h1">Assets</h1>
+
+    <template v-if="!isConnected">
+      <ConnectWalletBlock />
     </template>
-    <template #lite>
-      <AssetsLite />
+    <template v-else>
+      <CommonContentBlock class="mb-block-gap">
+        <div class="flex flex-col flex-wrap gap-block-gap sm:flex-row sm:items-center sm:justify-between">
+          <CommonTotalBalance :balance="balance" :loading="loading" :error="balanceError" />
+          <CommonButtonGroup v-if="!noBalances">
+            <CommonButton
+              variant="primary"
+              as="RouterLink"
+              :to="{
+                name: eraNetwork.l1Network
+                  ? 'transaction-zksync-era-receive'
+                  : 'transaction-zksync-era-receive-address',
+              }"
+            >
+              <template #icon>
+                <ArrowDownLeftIcon aria-hidden="true" />
+              </template>
+              <template #default>Receive</template>
+            </CommonButton>
+            <CommonButton
+              variant="primary"
+              as="RouterLink"
+              :to="{ name: eraNetwork.l1Network ? 'transaction-zksync-era' : 'transaction-zksync-era-send' }"
+            >
+              <template #icon>
+                <ArrowUpRightIcon aria-hidden="true" />
+              </template>
+              <template #default>Send</template>
+            </CommonButton>
+          </CommonButtonGroup>
+        </div>
+      </CommonContentBlock>
+
+      <template v-if="!noBalances">
+        <TypographyCategoryLabel>
+          <span>Balance</span>
+          <template #right>
+            <CommonLabelButton as="RouterLink" :to="{ name: 'balances' }">View all</CommonLabelButton>
+          </template>
+        </TypographyCategoryLabel>
+        <CommonCardWithLineButtons>
+          <template v-if="loading">
+            <TokenBalanceLoader v-for="index in 2" :key="index" send-route-name />
+          </template>
+          <div v-else-if="balanceError" class="m-3 -mt-1 mb-2.5">
+            <CommonErrorBlock @try-again="fetch">
+              {{ balanceError.message }}
+            </CommonErrorBlock>
+          </div>
+          <template v-else-if="displayedBalances.length">
+            <TokenBalance
+              v-for="item in displayedBalances"
+              as="div"
+              :key="item.address"
+              :send-route-name="eraNetwork.l1Network ? 'transaction-zksync-era' : 'transaction-zksync-era-send'"
+              v-bind="item"
+            />
+          </template>
+          <template v-else>
+            <CommonEmptyBlock class="mx-3 mb-3 mt-1">
+              <div class="wrap-balance">
+                You don't have any balances on
+                <span class="font-medium">{{ destinations.era.label }}</span>
+              </div>
+              <span v-if="eraNetwork.l1Network" class="mt-1.5 inline-block">
+                Proceed to
+                <NuxtLink class="link" :to="{ name: 'transaction-zksync-era-receive' }">Add funds</NuxtLink> page to add
+                balance to your account
+              </span>
+            </CommonEmptyBlock>
+          </template>
+        </CommonCardWithLineButtons>
+      </template>
+
+      <template v-if="noBalances">
+        <TypographyCategoryLabel>
+          To start using zkSync ecosystem, deposit tokens in any convenient way
+        </TypographyCategoryLabel>
+
+        <div class="flex flex-col gap-block-gap">
+          <CommonCardWithLineButtons v-for="(item, index) in depositMethods" :key="index">
+            <DestinationItem v-bind="item.props">
+              <template #image v-if="item.icon">
+                <component :is="item.icon" class="p-0.5" />
+              </template>
+            </DestinationItem>
+          </CommonCardWithLineButtons>
+        </div>
+      </template>
+      <template v-else>
+        <TypographyCategoryLabel>Deposit more tokens to zkSync</TypographyCategoryLabel>
+
+        <CommonCardWithLineButtons>
+          <DestinationItem v-for="(item, index) in depositMethods" :key="index" v-bind="item.props">
+            <template #image v-if="item.icon">
+              <div class="aspect-square h-full w-full rounded-full bg-gray-100 p-3 text-neutral-950 dark:bg-neutral-50">
+                <component :is="item.icon" />
+              </div>
+            </template>
+          </DestinationItem>
+        </CommonCardWithLineButtons>
+      </template>
     </template>
-  </CommonPage>
+  </div>
 </template>
 
 <script lang="ts" setup>
-import AssetsEra from "@/views/zksync/era/Assets.vue";
-import AssetsLite from "@/views/zksync/lite/Assets.vue";
+import { computed, onBeforeUnmount } from "vue";
+
+import {
+  ArrowDownLeftIcon,
+  ArrowsUpDownIcon,
+  ArrowTopRightOnSquareIcon,
+  ArrowUpRightIcon,
+  BanknotesIcon,
+  QrCodeIcon,
+} from "@heroicons/vue/24/outline";
+import { storeToRefs } from "pinia";
+
+import useInterval from "@/composables/useInterval";
+import useSingleLoading from "@/composables/useSingleLoading";
+
+import type { FunctionalComponent } from "vue";
+
+import { useDestinationsStore } from "@/store/destinations";
+import { useOnboardStore } from "@/store/onboard";
+import { useEraProviderStore } from "@/store/zksync/era/provider";
+import { useEraWalletStore } from "@/store/zksync/era/wallet";
+import { parseTokenAmount, removeSmallAmount } from "@/utils/formatters";
+import { isOnlyZeroes } from "@/utils/helpers";
+
+const onboardStore = useOnboardStore();
+const walletEraStore = useEraWalletStore();
+const { isConnected } = storeToRefs(onboardStore);
+const { balance, balanceInProgress, balanceError } = storeToRefs(walletEraStore);
+const { destinations } = storeToRefs(useDestinationsStore());
+const { eraNetwork } = storeToRefs(useEraProviderStore());
+
+const { loading, reset: resetSingleLoading } = useSingleLoading(computed(() => balanceInProgress.value));
+
+const displayedBalances = computed(() => {
+  return balance.value.filter(({ amount, decimals, price }) => {
+    const decimalAmount =
+      typeof price === "number" ? removeSmallAmount(amount, decimals, price) : parseTokenAmount(amount, decimals);
+    if (!isOnlyZeroes(decimalAmount)) {
+      return true;
+    }
+    return false;
+  });
+});
+const noBalances = computed(() => !loading.value && !balanceError.value && !displayedBalances.value.length);
+
+const depositMethods = computed(() => {
+  const methods: { props: Record<string, unknown>; icon?: FunctionalComponent }[] = [];
+  if (eraNetwork.value.l1Network) {
+    methods.push({
+      props: {
+        iconUrl: destinations.value.ethereum.iconUrl,
+        label: `Bridge from ${eraNetwork.value.l1Network?.name}`,
+        description: `Receive tokens from your ${eraNetwork.value.l1Network?.name} account`,
+        variant: noBalances.value ? "primary" : undefined,
+        as: "RouterLink",
+        to: {
+          name: "bridge",
+        },
+      },
+    });
+  }
+  methods.push({
+    props: {
+      label: "View your address",
+      description: `Receive tokens from another ${eraNetwork.value.shortName} account`,
+      as: "RouterLink",
+      to: {
+        name: "transaction-zksync-era-receive-address",
+      },
+    },
+    icon: QrCodeIcon,
+  });
+  if (eraNetwork.value.displaySettings?.showPartnerLinks) {
+    methods.push({
+      props: {
+        label: "Top-up with cash",
+        description: "Buy tokens using a card or another method for fiat",
+        as: "a",
+        href: "https://zksync.dappradar.com/ecosystem?category-de=gateways",
+        target: "_blank",
+        icon: ArrowTopRightOnSquareIcon,
+      },
+      icon: BanknotesIcon,
+    });
+    methods.push({
+      props: {
+        label: "3rd party bridges",
+        description: "Bridge tokens from other networks",
+        as: "a",
+        href: "https://zksync.dappradar.com/ecosystem?category-de=bridges",
+        target: "_blank",
+        icon: ArrowTopRightOnSquareIcon,
+      },
+      icon: ArrowsUpDownIcon,
+    });
+  }
+  return methods;
+});
+
+const fetch = () => {
+  if (!isConnected.value) return;
+  walletEraStore.requestBalance();
+};
+fetch();
+
+const { reset: resetAutoUpdate, stop: stopAutoUpdate } = useInterval(() => {
+  fetch();
+}, 60000);
+
+const unsubscribe = onboardStore.subscribeOnAccountChange((newAddress) => {
+  if (!newAddress) return;
+  resetSingleLoading();
+  resetAutoUpdate();
+  fetch();
+});
+
+onBeforeUnmount(() => {
+  stopAutoUpdate();
+  unsubscribe();
+});
 </script>
 
 <style lang="scss" scoped></style>

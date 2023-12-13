@@ -11,6 +11,7 @@ export const ETH_TOKEN: Token = {
   address: ETH_L2_ADDRESS,
   l1Address: ETH_L1_ADDRESS,
   symbol: "ETH",
+  name: "Ether",
   decimals: 18,
   iconUrl: "/img/eth.svg",
   enabledForFees: true,

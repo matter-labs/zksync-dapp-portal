@@ -1,7 +1,6 @@
 import { computed } from "vue";
 
 import { fetchEnsAvatar, fetchEnsName } from "@wagmi/core";
-import { defineStore, storeToRefs } from "pinia";
 
 import { useOnboardStore } from "@/store/onboard";
 

@@ -16,19 +16,23 @@
 
       <TypographyCategoryLabel>Actions</TypographyCategoryLabel>
       <CommonButtonGroup>
-        <CommonButton as="RouterLink" :to="{ name: 'transaction-send', query: { address: contact.address } }">
+        <CommonButton
+          variant="primary"
+          as="RouterLink"
+          :to="{ name: 'transaction-send', query: { address: contact.address } }"
+        >
           <template #icon>
             <PaperAirplaneIcon aria-hidden="true" />
           </template>
           <template #default>Send</template>
         </CommonButton>
-        <CommonButton @click="emit('edit')">
+        <CommonButton variant="primary" @click="emit('edit')">
           <template #icon>
             <PencilIcon aria-hidden="true" />
           </template>
           <template #default>Edit</template>
         </CommonButton>
-        <CommonButton @click="confirmRemove ? removeContact() : (confirmRemove = true)">
+        <CommonButton variant="primary" @click="confirmRemove ? removeContact() : (confirmRemove = true)">
           <template #icon>
             <TrashIcon aria-hidden="true" />
           </template>

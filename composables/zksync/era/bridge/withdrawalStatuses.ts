@@ -76,7 +76,7 @@ export default () => {
         .then((isCompleted) => {
           withdrawalStatuses.value[transactionHash] = isCompleted ? "completed" : "not-completed";
           if (isCompleted) {
-            completedWithdrawals.value.push(transactionHash);
+            completedWithdrawals.value = [...completedWithdrawals.value, transactionHash];
           }
         })
         .catch(() => {

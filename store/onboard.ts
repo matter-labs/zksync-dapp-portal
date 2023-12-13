@@ -15,7 +15,6 @@ import { zkSync, zkSyncTestnet } from "@wagmi/core/chains";
 import { WalletConnectConnector } from "@wagmi/core/connectors/walletConnect";
 import { publicProvider } from "@wagmi/core/providers/public";
 import { createWeb3Modal } from "@web3modal/wagmi";
-import { defineStore, storeToRefs } from "pinia";
 
 import useColorMode from "@/composables/useColorMode";
 import useNetworks from "@/composables/useNetworks";
@@ -217,6 +216,7 @@ export const useOnboardStore = defineStore("onboard", () => {
 
   return {
     account: computed(() => account.value),
+    isConnected: computed(() => !!account.value.address),
     network: computed(() => network.value),
     isConnectingWallet: computed(() => account.value.isReconnecting || account.value.isConnecting),
     connectingWalletError,

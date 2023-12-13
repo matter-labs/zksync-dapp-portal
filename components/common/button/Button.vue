@@ -16,44 +16,40 @@ defineProps({
     default: "button",
   },
   variant: {
-    type: String as PropType<"primary" | "primary-solid" | "error">,
-    default: "primary",
+    type: String as PropType<"default" | "primary" | "primary-bigger" | "primary-solid" | "error">,
+    default: "default",
   },
 });
 </script>
 
 <style lang="scss">
-.lite.dark {
-  .default-button {
-    &.variant- {
-      &primary {
-        @apply bg-primary-400;
-        &:enabled,
-        &:is(a, label) {
-          &:not([aria-disabled="true"]) {
-            @apply hover:bg-primary-300;
-          }
-        }
-      }
-      &primary-solid {
-        &:enabled,
-        &:is(a, label) {
-          &:not([aria-disabled="true"]) {
-            @apply hover:bg-primary-300;
-          }
-        }
-      }
-    }
-  }
-}
 .default-button {
-  @apply flex h-14 w-max items-center justify-center rounded-3xl px-6 text-center text-sm font-medium backdrop-blur-sm transition-colors wrap-balance;
+  @apply flex h-14 w-max items-center justify-center rounded-3xl p-4 text-center backdrop-blur-sm transition-colors wrap-balance;
   &:is(label) {
     @apply cursor-pointer;
   }
   &.variant- {
-    &primary {
-      @apply whitespace-nowrap bg-primary-100/50 text-primary-400;
+    &default {
+      @apply bg-neutral-900;
+      &:enabled,
+      &:is(a, label) {
+        &:not([aria-disabled="true"]) {
+          @apply hover:bg-neutral-800;
+        }
+      }
+    }
+    &default {
+      @apply whitespace-nowrap bg-neutral-900 text-white;
+      &:enabled,
+      &:is(a, label) {
+        &:not([aria-disabled="true"]) {
+          @apply hover:bg-neutral-800;
+        }
+      }
+    }
+    &primary,
+    &primary-solid {
+      @apply whitespace-nowrap bg-primary-100/50 px-6 text-primary-400;
       @apply dark:bg-primary-300 dark:text-white;
       &:enabled,
       &:is(a, label) {
@@ -61,19 +57,13 @@ defineProps({
           @apply hover:bg-primary-100/75 dark:hover:bg-primary-200;
         }
       }
-    }
-    &primary-solid {
-      @apply h-max w-full max-w-sm rounded-3xl bg-primary-400 py-3 text-base text-white;
-      &:enabled,
-      &:is(a, label) {
-        &:not([aria-disabled="true"]) {
-          @apply hover:bg-primary-400 dark:hover:bg-primary-200;
-        }
-      }
       &:disabled,
       &[aria-disabled="true"] {
         @apply bg-opacity-50 dark:bg-neutral-800 dark:bg-opacity-50;
       }
+    }
+    &primary-solid {
+      @apply w-full;
     }
     &error {
       @apply bg-red-100/50 text-red-400 dark:bg-red-700 dark:text-white;
