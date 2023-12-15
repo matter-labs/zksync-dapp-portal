@@ -17,9 +17,9 @@
     <CommonButton
       :as="checked ? 'RouterLink' : 'Button'"
       :to="buttonLocation"
-      variant="primary-solid"
+      variant="primary"
       :disabled="!checked"
-      class="mx-auto mt-5"
+      class="mt-5 w-full"
     >
       Proceed
     </CommonButton>

@@ -1,7 +1,6 @@
 <template>
   <div>
-    <BackButton :fallback="{ name: 'index' }" />
-    <h1 class="h1">Balances</h1>
+    <PageTitle :fallback-route="{ name: 'index' }">Balances</PageTitle>
 
     <template v-if="!isConnected">
       <ConnectWalletBlock />

@@ -1,6 +1,7 @@
 <template>
   <ModalTransactionDepositUnavailable />
 
+  <PageTitle>Bridge</PageTitle>
   <div class="mb-2.5 flex items-center space-x-1 pl-3.5 text-left text-sm text-neutral-300">
     <span>From</span>
     <DestinationLabel :label="destinations.ethereum.label" :icon="IconsEthereum" />
@@ -31,11 +32,8 @@ import { storeToRefs } from "pinia";
 
 import IconsEthereum from "@/components/icons/Ethereum.vue";
 
-import { definePageMeta } from "#imports";
 import { useDestinationsStore } from "@/store/destinations";
 import EraDepositForm from "@/views/zksync/era/transactions/Deposit.vue";
-
-definePageMeta({ layout: "bridge" });
 
 defineProps({
   address: {

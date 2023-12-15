@@ -59,8 +59,8 @@
           </CommonButtonTopLink>
           <CommonButton
             :disabled="buttonDisabled || newFeeAlert || status !== 'not-started'"
-            class="mx-auto mt-3"
-            variant="primary-solid"
+            class="mt-3 w-full"
+            variant="primary"
             @click="makeTransaction"
           >
             <transition v-bind="TransitionPrimaryButtonText" mode="out-in">

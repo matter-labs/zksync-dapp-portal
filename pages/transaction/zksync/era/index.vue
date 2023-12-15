@@ -1,12 +1,11 @@
 <template>
   <div>
-    <BackButton :fallback="{ name: 'index' }" />
-    <h1 class="h1">Where to send</h1>
+    <PageTitle :fallback-route="{ name: 'index' }">Where to send</PageTitle>
 
     <ModalTransactionWithdrawExchangeWarning
       :opened="openedModal === 'withdraw-to-exchange'"
-      :button-location="{ name: 'transaction-zksync-era-withdraw' }"
-      :withdraw-to-self-link-location="{ name: 'transaction-zksync-era-withdraw', query: { address: account.address } }"
+      :button-location="{ name: 'bridge-withdraw' }"
+      :withdraw-to-self-link-location="{ name: 'bridge-withdraw', query: { address: account.address } }"
       @close="closeModal"
     />
 
@@ -21,15 +20,8 @@
         v-if="eraNetwork.l1Network"
         v-bind="destinations.ethereum"
         as="RouterLink"
-        :to="{ name: 'transaction-zksync-era-withdraw', query: $route.query }"
+        :to="{ name: 'bridge-withdraw', query: $route.query }"
         :description="`Withdraw to ${destinations.ethereum.label}`"
-      />
-      <DestinationItem
-        v-if="eraNetwork.displaySettings?.showZkSyncLiteNetworks && eraNetwork.displaySettings?.showPartnerLinks"
-        v-bind="destinations.zkSyncLite"
-        as="RouterLink"
-        :to="{ name: 'transaction-zksync-era-send-lite', query: $route.query }"
-        description="Send to zkSync Lite network"
       />
     </CommonCardWithLineButtons>
 

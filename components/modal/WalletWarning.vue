@@ -13,12 +13,7 @@
       <CommonHeightTransition :opened="warningChecked">
         <CommonButtonTopLink @click="doNotShowAgain">Do not show again</CommonButtonTopLink>
       </CommonHeightTransition>
-      <CommonButton
-        class="mx-auto"
-        variant="primary-solid"
-        :disabled="!warningChecked"
-        @click="walletWarningModal = false"
-      >
+      <CommonButton class="w-full" variant="primary" :disabled="!warningChecked" @click="walletWarningModal = false">
         Proceed
       </CommonButton>
     </div>

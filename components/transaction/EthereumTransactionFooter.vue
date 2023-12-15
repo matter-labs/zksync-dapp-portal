@@ -12,7 +12,7 @@
     </transition>
 
     <div v-if="buttonStep === 'connect'" class="transaction-footer-row">
-      <CommonButton variant="primary-solid" :disabled="isConnectingWallet" @click="onboardStore.openModal">
+      <CommonButton variant="primary" :disabled="isConnectingWallet" class="w-full" @click="onboardStore.openModal">
         Connect wallet
       </CommonButton>
     </div>
@@ -23,17 +23,18 @@
           v-if="connectorName !== 'WalletConnect'"
           type="submit"
           :disabled="switchingNetworkInProgress"
-          variant="primary-solid"
+          variant="primary"
+          class="w-full"
           @click="onboardStore.setCorrectNetwork"
         >
           Change wallet network to {{ l1Network.name }}
         </CommonButton>
-        <CommonButton v-else disabled variant="primary-solid">
+        <CommonButton v-else disabled variant="primary" class="w-full">
           Change network manually to {{ l1Network.name }} in your {{ walletName }} wallet
         </CommonButton>
       </template>
       <template v-else>
-        <CommonButton disabled variant="primary-solid">
+        <CommonButton disabled variant="primary" class="w-full">
           L1 network is not available on {{ selectedNetwork.name }}
         </CommonButton>
       </template>

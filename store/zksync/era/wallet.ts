@@ -3,6 +3,7 @@ import { $fetch } from "ofetch";
 import { L1Signer, L1VoidSigner, Web3Provider } from "zksync-web3";
 
 import type { Api, TokenAmount } from "@/types";
+import type { BigNumberish } from "ethers";
 
 import { useOnboardStore } from "@/store/onboard";
 import { useEraProviderStore } from "@/store/zksync/era/provider";
@@ -134,7 +135,7 @@ export const useEraWalletStore = defineStore("eraWallet", () => {
     return [...knownTokens, ...otherTokens];
   });
 
-  const deductBalance = (tokenAddress: string, amount: string) => {
+  const deductBalance = (tokenAddress: string, amount: BigNumberish) => {
     if (!balance.value) return;
     const tokenBalance = balance.value.find((balance) => balance.address === tokenAddress);
     if (!tokenBalance) return;

@@ -1,6 +1,6 @@
 export type Hash = `0x${string}`;
 
-export type TokenPrice = number | "loading" | undefined;
+export type TokenPrice = number | undefined;
 export type Token = {
   address: string;
   l1Address?: string;

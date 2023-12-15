@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1 class="h1">Transactions</h1>
+    <PageTitle>Transactions</PageTitle>
 
     <template v-if="!isConnected">
       <ConnectWalletBlock />

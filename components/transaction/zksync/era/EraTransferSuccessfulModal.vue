@@ -55,7 +55,7 @@
         <CommonButtonTopLink as="RouterLink" :to="{ name: 'transaction-zksync-era' }">
           Make another transaction
         </CommonButtonTopLink>
-        <CommonButton as="RouterLink" :to="{ name: 'index' }" class="mx-auto" variant="primary-solid">
+        <CommonButton as="RouterLink" :to="{ name: 'index' }" class="w-full" variant="primary">
           Go to Assets page
         </CommonButton>
       </TransactionConfirmModalFooter>

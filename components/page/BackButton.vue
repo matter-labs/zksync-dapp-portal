@@ -1,5 +1,5 @@
 <template>
-  <CommonBackButton @click="back" />
+  <CommonButtonBack @click="back" />
 </template>
 
 <script lang="ts" setup>

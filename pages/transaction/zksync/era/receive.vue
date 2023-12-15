@@ -1,7 +1,6 @@
 <template>
   <div>
-    <BackButton :fallback="{ name: 'index' }" />
-    <h1 class="h1">Receive</h1>
+    <PageTitle :fallback-route="{ name: 'index' }">Receive</PageTitle>
 
     <CommonCardWithLineButtons>
       <DestinationItem
@@ -9,7 +8,7 @@
         label="Official bridge"
         :icon-url="destinations.ethereum.iconUrl"
         as="RouterLink"
-        :to="{ name: 'transaction-zksync-era-deposit', query: $route.query }"
+        :to="{ name: 'bridge', query: $route.query }"
         :description="`Add funds from ${destinations.ethereum.label}`"
       />
       <DestinationItem

@@ -5,8 +5,8 @@
     <CommonButton
       as="label"
       for="qr-code-input"
-      variant="primary-solid"
-      class="mx-auto mt-6"
+      variant="primary"
+      class="mt-6 w-full"
       @click="qrCodeModalOpened = false"
     >
       Try again

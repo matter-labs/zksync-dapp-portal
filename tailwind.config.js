@@ -40,6 +40,7 @@ module.exports = {
         "block-padding-1/2": "16px",
         "block-padding-1/4": "8px",
         "block-gap": "24px",
+        "block-gap-2/3": "16px",
         "block-gap-1/2": "12px",
       },
     },
@@ -57,10 +58,17 @@ module.exports = {
     plugin(function ({ addBase, addUtilities, theme }) {
       addBase({
         ".h1": {
-          fontSize: "40px",
+          fontSize: "36px",
           fontWeight: "400",
-          lineHeight: "1.4",
-          marginBottom: theme("spacing.block-gap"),
+          lineHeight: "1.15",
+          marginBottom: theme("spacing.block-gap-2/3"),
+        },
+        "@screen sm": {
+          ".h1": {
+            fontSize: "40px",
+            lineHeight: "1.4",
+            marginBottom: theme("spacing.block-gap"),
+          },
         },
         ".h2": {
           fontSize: "26px",
@@ -90,6 +98,10 @@ module.exports = {
               700: "#113EB2",
               800: "#0C2C80",
               900: "#071B4D",
+            },
+            error: {
+              300: "#FF6666",
+              600: "#CC0000",
             },
             neutral: {
               50: "#F7F9FC",

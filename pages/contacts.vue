@@ -51,9 +51,9 @@
               @click="openContact(item)"
             >
               <template #right>
-                <CommonIconButton
+                <CommonButton
                   as="RouterLink"
-                  :to="{ name: 'transaction-send', query: { address: item.address } }"
+                  :to="{ name: 'transaction-zksync-era-send', query: { address: item.address } }"
                   :icon="PaperAirplaneIcon"
                 />
               </template>

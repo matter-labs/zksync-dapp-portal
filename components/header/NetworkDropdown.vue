@@ -1,11 +1,12 @@
 <template>
   <Menu as="div" class="network-dropdown-container" v-slot="{ open }">
     <MenuButton as="template">
-      <CommonButton class="network-dropdown-item">
-        <IconsEra class="network-dropdown-item-img" />
+      <CommonButtonDropdown :toggled="open">
+        <template #left-icon>
+          <IconsEra />
+        </template>
         <span>{{ selectedNetwork.name }}</span>
-        <ChevronDownIcon class="network-dropdown-item-icon" :class="{ opened: open }" aria-hidden="true" />
-      </CommonButton>
+      </CommonButtonDropdown>
     </MenuButton>
 
     <transition v-bind="TransitionAlertScaleInOutTransition">
@@ -16,12 +17,15 @@
           v-slot="{ active }"
           as="template"
         >
-          <button class="network-dropdown-item" :class="{ active }" @click="buttonClicked(item)">
-            <IconsEra class="network-dropdown-item-img" />
+          <CommonButtonDropdown size="sm" no-chevron :active="{ active }" @click="buttonClicked(item)">
+            <template #left-icon>
+              <IconsEra />
+            </template>
             <span>{{ item.name }}</span>
-            <CheckIcon v-if="isNetworkSelected(item)" class="network-dropdown-item-icon" aria-hidden="true" />
-            <div v-else class="network-dropdown-item-icon"></div>
-          </button>
+            <template #right-icon>
+              <CheckIcon v-if="isNetworkSelected(item)" aria-hidden="true" />
+            </template>
+          </CommonButtonDropdown>
         </MenuItem>
       </MenuItems>
     </transition>
@@ -30,7 +34,7 @@
 
 <script lang="ts" setup>
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/vue";
-import { CheckIcon, ChevronDownIcon } from "@heroicons/vue/24/outline";
+import { CheckIcon } from "@heroicons/vue/24/outline";
 import { storeToRefs } from "pinia";
 
 import useNetworks from "@/composables/useNetworks";
@@ -60,28 +64,8 @@ const buttonClicked = (network: L2Network) => {
 .network-dropdown-container {
   @apply relative;
 
-  .network-dropdown-item {
-    @apply flex items-center gap-2;
-
-    .network-dropdown-item-img {
-      @apply h-6 w-6 flex-shrink-0;
-    }
-    .network-dropdown-item-icon {
-      @apply ml-auto h-6 w-6 flex-shrink-0 transition;
-      &.opened {
-        @apply rotate-180;
-      }
-    }
-  }
   .network-options-container {
     @apply absolute right-0 top-full z-10 mt-0.5 grid h-max w-max min-w-full rounded-3xl bg-white p-1 shadow-lg dark:bg-neutral-900;
-
-    .network-dropdown-item {
-      @apply rounded-3xl p-3 text-left transition;
-      &.active {
-        @apply bg-neutral-800;
-      }
-    }
   }
 }
 </style>

@@ -41,8 +41,8 @@
         </div>
         <CommonButton
           :disabled="status !== 'not-started'"
-          class="mx-auto mt-3"
-          variant="primary-solid"
+          class="mt-3 w-full"
+          variant="primary"
           @click="makeTransaction"
         >
           <transition v-bind="TransitionPrimaryButtonText" mode="out-in">
@@ -113,7 +113,7 @@
 
       <transition v-bind="TransitionAlertScaleInOutTransition">
         <TransactionConfirmModalFooter v-if="transactionCommitted">
-          <CommonButton class="mx-auto mt-4" variant="primary-solid" @click="emit('continue')">Continue</CommonButton>
+          <CommonButton class="mt-4 w-full" variant="primary" @click="emit('continue')">Continue</CommonButton>
         </TransactionConfirmModalFooter>
       </transition>
     </div>

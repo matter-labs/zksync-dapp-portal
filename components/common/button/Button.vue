@@ -1,5 +1,5 @@
 <template>
-  <component :is="as" type="button" class="default-button" :class="`variant-${variant}`">
+  <component :is="as" type="button" class="default-button" :class="[`size-${size}`, `variant-${variant}`]">
     <span v-if="$slots.icon" class="icon-container">
       <slot name="icon" />
     </span>
@@ -16,39 +16,53 @@ defineProps({
     default: "button",
   },
   variant: {
-    type: String as PropType<"default" | "primary" | "primary-bigger" | "primary-solid" | "error">,
+    type: String as PropType<"default" | "primary" | "light" | "error">,
     default: "default",
+  },
+  size: {
+    type: String as PropType<"sm" | "md">,
+    default: "md",
   },
 });
 </script>
 
 <style lang="scss">
 .default-button {
-  @apply flex h-14 w-max items-center justify-center rounded-3xl p-4 text-center backdrop-blur-sm transition-colors wrap-balance;
+  @apply flex items-center justify-center text-center backdrop-blur-sm transition-colors wrap-balance;
   &:is(label) {
     @apply cursor-pointer;
   }
+  &.size- {
+    &xs {
+      @apply rounded-2xl px-4 py-2;
+    }
+    &sm {
+      @apply rounded-[20px] p-3;
+    }
+    &md {
+      @apply rounded-3xl p-4;
+    }
+  }
   &.variant- {
     &default {
-      @apply bg-neutral-900;
+      @apply whitespace-nowrap bg-neutral-100 dark:bg-neutral-900;
       &:enabled,
       &:is(a, label) {
         &:not([aria-disabled="true"]) {
-          @apply hover:bg-neutral-800;
+          @apply hover:bg-neutral-200 dark:hover:bg-neutral-800 dark:focus-visible:bg-neutral-800;
         }
       }
     }
-    &default {
-      @apply whitespace-nowrap bg-neutral-900 text-white;
+    &light {
+      @apply whitespace-nowrap bg-neutral-200 dark:bg-neutral-800;
       &:enabled,
       &:is(a, label) {
         &:not([aria-disabled="true"]) {
-          @apply hover:bg-neutral-800;
+          @apply hover:bg-neutral-300 dark:hover:bg-neutral-700 dark:focus-visible:bg-neutral-700;
         }
       }
     }
-    &primary,
-    &primary-solid {
+    &primary {
       @apply whitespace-nowrap bg-primary-100/50 px-6 text-primary-400;
       @apply dark:bg-primary-300 dark:text-white;
       &:enabled,
@@ -61,9 +75,6 @@ defineProps({
       &[aria-disabled="true"] {
         @apply bg-opacity-50 dark:bg-neutral-800 dark:bg-opacity-50;
       }
-    }
-    &primary-solid {
-      @apply w-full;
     }
     &error {
       @apply bg-red-100/50 text-red-400 dark:bg-red-700 dark:text-white;

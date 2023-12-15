@@ -19,7 +19,7 @@
         <CommonButton
           variant="primary"
           as="RouterLink"
-          :to="{ name: 'transaction-send', query: { address: contact.address } }"
+          :to="{ name: 'transaction-zksync-era-send', query: { address: contact.address } }"
         >
           <template #icon>
             <PaperAirplaneIcon aria-hidden="true" />

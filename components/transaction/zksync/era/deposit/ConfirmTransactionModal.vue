@@ -53,8 +53,8 @@
           </div>
           <CommonButton
             :disabled="buttonDisabled || newFeeAlert || status !== 'not-started'"
-            class="mx-auto"
-            variant="primary-solid"
+            class="w-full"
+            variant="primary"
             autofocus
             @click="makeTransaction"
           >
@@ -121,7 +121,7 @@
 
       <TransactionConfirmModalFooter>
         <template v-if="layout === 'default'">
-          <CommonButton as="RouterLink" :to="{ name: 'index' }" class="mx-auto mt-4" variant="primary-solid">
+          <CommonButton as="RouterLink" :to="{ name: 'index' }" class="mt-4 w-full" variant="primary">
             Go to Assets page
           </CommonButton>
         </template>
@@ -129,7 +129,7 @@
           <CommonButtonTopLink v-if="!isCustomNode" @click="emit('newTransaction')">
             Make another transaction
           </CommonButtonTopLink>
-          <CommonButton v-if="refererName" class="mx-auto" variant="primary-solid" @click="closeWindow">
+          <CommonButton v-if="refererName" class="w-full" variant="primary" @click="closeWindow">
             Go back to {{ refererName }}
           </CommonButton>
           <CommonButton
@@ -137,13 +137,13 @@
             as="a"
             href="https://ecosystem.zksync.io"
             target="_blank"
-            class="mx-auto"
-            variant="primary-solid"
+            class="w-full"
+            variant="primary"
           >
             Explore ecosystem
             <ArrowUpRightIcon class="ml-1 mt-0.5 h-3.5 w-3.5" aria-hidden="true" />
           </CommonButton>
-          <CommonButton v-else class="mx-auto" variant="primary-solid" @click="emit('newTransaction')">
+          <CommonButton v-else class="w-full" variant="primary" @click="emit('newTransaction')">
             Make another transaction
           </CommonButton>
         </template>

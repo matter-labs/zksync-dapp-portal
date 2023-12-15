@@ -1,8 +1,6 @@
 <template>
   <div>
-    <BackButton :fallback="{ name: 'transaction-zksync-era-receive' }" />
-
-    <h1 class="h1">Receive</h1>
+    <PageTitle :fallback-route="{ name: 'transaction-zksync-era-receive' }">Receive</PageTitle>
     <Receive :address="address" :destination="destinations.era" />
   </div>
 </template>

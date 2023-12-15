@@ -3,6 +3,8 @@
 
   <TransactionZksyncEraBridgePreviousWithdrawals class="mb-2.5" />
 
+  <PageTitle>Bridge</PageTitle>
+
   <div class="mb-2.5 flex items-center space-x-1 pl-3.5 text-left text-sm text-neutral-300">
     <span>From</span>
     <DestinationLabel :label="destinations.era.label" :icon="IconsEra" />
@@ -34,11 +36,8 @@ import { storeToRefs } from "pinia";
 
 import IconsEra from "@/components/icons/Era.vue";
 
-import { definePageMeta } from "#imports";
 import { useDestinationsStore } from "@/store/destinations";
 import EraTransferForm from "@/views/zksync/era/transactions/Transfer.vue";
-
-definePageMeta({ layout: "bridge" });
 
 defineProps({
   address: {

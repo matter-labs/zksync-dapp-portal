@@ -60,13 +60,12 @@ const { switchColorMode } = useColorMode();
 
 <style lang="scss" scoped>
 .header {
-  @apply z-50 flex h-[88px] w-full items-center gap-10 p-2 sm:p-4;
-  grid-area: header;
+  @apply z-50 flex h-[88px] w-full items-center gap-2 p-2 sm:gap-10 sm:p-4;
 
   .logo-container {
-    @apply w-max;
+    @apply w-full flex-shrink sm:w-max;
     .logo-icon {
-      @apply h-auto w-full max-w-[160px];
+      @apply h-auto w-full max-w-[140px] sm:max-w-[160px];
     }
   }
   .links-container {
@@ -84,7 +83,7 @@ const { switchColorMode } = useColorMode();
     }
   }
   .right-side {
-    @apply ml-auto flex items-center gap-3;
+    @apply ml-auto flex items-center gap-1 sm:gap-3;
 
     .network-dropdown,
     .color-mode-button {

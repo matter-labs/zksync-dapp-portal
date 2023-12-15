@@ -24,7 +24,7 @@
           {{ error }}
         </CommonErrorBlock>
       </div>
-      <CommonButton type="submit" variant="primary-solid" class="mx-auto mt-5">Save contact</CommonButton>
+      <CommonButton type="submit" variant="primary" class="mt-5 w-full">Save contact</CommonButton>
     </form>
   </CommonModal>
 </template>

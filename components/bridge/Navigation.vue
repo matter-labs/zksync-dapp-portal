@@ -1,7 +1,7 @@
 <template>
   <div>
+    <PageTitle>Bridge</PageTitle>
     <div class="flex items-center justify-between">
-      <h1 class="h1 p-0">Bridge</h1>
       <CommonButton v-if="!account.address" class="-my-1" variant="primary" @click="onboardStore.openModal">
         Connect wallet
       </CommonButton>

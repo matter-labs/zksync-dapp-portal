@@ -1,5 +1,7 @@
 <template>
-  <div class="flex h-full flex-col">
+  <div>
+    <PageTitle :fallback-route="fallbackRoute">{{ title }}</PageTitle>
+
     <TransactionAllowanceModal
       v-model:opened="allowanceModalOpened"
       :transaction="transaction"
@@ -139,7 +141,8 @@
           <CommonButton
             type="submit"
             :disabled="continueButtonDisabled"
-            variant="primary-solid"
+            variant="primary"
+            class="w-full"
             @click="openConfirmationModal"
           >
             Continue
@@ -169,6 +172,7 @@ import type { ConfirmationModalTransaction } from "@/components/transaction/zksy
 import type { Token, TokenAmount } from "@/types";
 import type { BigNumberish } from "ethers";
 import type { PropType } from "vue";
+import type { RouteLocationRaw } from "vue-router";
 
 import { useRoute } from "#app";
 import { useDestinationsStore } from "@/store/destinations";
@@ -188,6 +192,13 @@ const props = defineProps({
   },
   address: {
     type: String,
+  },
+  title: {
+    type: String,
+    required: true,
+  },
+  fallbackRoute: {
+    type: [String, Object] as PropType<string | RouteLocationRaw>,
   },
 });
 

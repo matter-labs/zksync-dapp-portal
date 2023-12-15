@@ -3,7 +3,7 @@ import { formatUnits, getAddress, parseUnits } from "ethers/lib/utils";
 import type { BigNumberish } from "ethers";
 
 export function shortenAddress(address: string, chars = 3): string {
-  return `${address.slice(0, chars + 3)}...${address.slice(-3)}`;
+  return `${address.slice(0, chars + 2)}...${address.slice(-3)}`;
 }
 
 export function parseTokenAmount(amount: BigNumberish, decimals: number): string {

@@ -15,15 +15,13 @@
       <CommonButtonLineBodyInfo class="text-right">
         <template #secondary>
           <div class="token-balance-amount" :title="fullAmount">
-            <CommonContentLoader v-if="priceLoading" :length="15" />
-            <template v-else>{{ displayedAmount }}</template>
+            {{ displayedAmount }}
           </div>
         </template>
         <template #underline>
           <div class="token-balance-price">
-            <CommonContentLoader v-if="priceLoading" :length="12" />
-            <template v-else-if="price && !isZeroAmount">
-              {{ formatTokenPrice(amount, decimals, price as number) }}
+            <template v-if="price && !isZeroAmount">
+              {{ formatTokenPrice(amount, decimals, price) }}
             </template>
           </div>
         </template>
@@ -83,7 +81,6 @@ const props = defineProps({
   },
 });
 
-const priceLoading = computed(() => props.price === "loading");
 const isZeroAmount = computed(() => BigNumber.from(props.amount).isZero());
 
 const fullAmount = computed(() => parseTokenAmount(props.amount, props.decimals));

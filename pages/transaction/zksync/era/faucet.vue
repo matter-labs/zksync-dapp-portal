@@ -7,8 +7,7 @@
     </template>
   </FaucetModal>
 
-  <BackButton :fallback="{ name: 'transaction-zksync-era-receive' }" />
-  <h1 class="h1">Faucet</h1>
+  <PageTitle :fallback-route="{ name: 'transaction-zksync-era-receive' }">Faucet</PageTitle>
   <CommonContentBlock class="faucet-page">
     <AnimationsIdleFaucet class="mx-auto w-80" />
     <div v-if="noFunds">
@@ -66,16 +65,16 @@
         <template v-if="isFaucetAvailable">
           <template v-if="!faucetAvailableOnCurrentNetwork">
             <CommonButtonTopInfo>Switch to {{ faucetNetwork.name }} network to request test tokens</CommonButtonTopInfo>
-            <CommonButton as="button" variant="primary-solid" class="mx-auto" @click="changeNetwork">
+            <CommonButton as="button" variant="primary" class="w-full" @click="changeNetwork">
               Change network to {{ faucetNetwork.name }}
             </CommonButton>
           </template>
           <template v-else>
             <CommonButton
               as="button"
-              variant="primary-solid"
+              variant="primary"
               :disabled="buttonDisabled"
-              class="mx-auto"
+              class="w-full"
               @click="requestTokens"
             >
               Request free test tokens
@@ -84,7 +83,7 @@
         </template>
         <template v-else>
           <CommonButtonTopInfo>You already requested test tokens in the last 24 hours</CommonButtonTopInfo>
-          <CommonButton as="button" variant="primary-solid" disabled class="mx-auto">
+          <CommonButton as="button" variant="primary" disabled class="w-full">
             You can use faucet in&nbsp;<CommonTimer :future-date="faucetAvailableTime!" />
           </CommonButton>
         </template>

@@ -32,13 +32,13 @@
             Explore zkSync Era ecosystem
             <ArrowUpRightIcon class="ml-1 mt-0.5 h-3.5 w-3.5" />
           </CommonButtonTopLink>
-          <CommonButton as="RouterLink" :to="{ name: 'index' }" class="mx-auto" variant="primary-solid">
+          <CommonButton as="RouterLink" :to="{ name: 'index' }" class="w-full" variant="primary">
             Go to Assets page
           </CommonButton>
         </TransactionConfirmModalFooter>
         <TransactionConfirmModalFooter v-else>
           <CommonButtonTopInfo>Test tokens are available on {{ faucetNetwork.name }}</CommonButtonTopInfo>
-          <CommonButton as="a" :href="getNetworkUrl(faucetNetwork, '/')" class="mx-auto" variant="primary-solid">
+          <CommonButton as="a" :href="getNetworkUrl(faucetNetwork, '/')" class="w-full" variant="primary">
             Switch to {{ faucetNetwork.name }}
           </CommonButton>
         </TransactionConfirmModalFooter>
