@@ -8,6 +8,7 @@
       <div v-if="defaultLabel" class="ml-auto text-right">
         <span class="font-bold">{{ inputVisible ? "To another account" : defaultLabel }}</span>
         <button
+          type="button"
           class="ml-1 text-neutral-800 underline underline-offset-2 transition hover:text-neutral-700 dark:text-neutral-400 dark:hover:text-neutral-300"
           @click="toggleCustomValue()"
         >
