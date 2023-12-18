@@ -20,7 +20,7 @@ defineProps({
     default: "default",
   },
   size: {
-    type: String as PropType<"sm" | "md">,
+    type: String as PropType<"xs" | "sm" | "md">,
     default: "md",
   },
 });

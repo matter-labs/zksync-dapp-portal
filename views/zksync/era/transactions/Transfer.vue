@@ -1,6 +1,6 @@
 <template>
   <div>
-    <PageTitle v-if="step === 'form'" :fallback-route="fallbackRoute">{{ title }}</PageTitle>
+    <slot v-if="step === 'form'" name="title" />
     <PageTitle
       v-else-if="step === 'confirm'"
       :back-function="
@@ -11,43 +11,6 @@
     >
       Confirm transaction
     </PageTitle>
-
-    <!-- <ConfirmTransactionModal
-      v-model:opened="transactionConfirmModalOpened"
-      :layout="layout"
-      :fee-token="feeToken"
-      :fee="gasLimitAndPrice"
-      :destination="destination"
-      :transaction="transaction"
-      :button-disabled="continueButtonDisabled || !enoughBalanceForTransaction"
-      :estimate="estimate"
-      :key="`${account.address}-${transactionKey}`"
-      @new-transaction="resetForm"
-    >
-      <template #alerts>
-        <transition v-bind="TransitionAlertScaleInOutTransition">
-          <div v-if="!enoughBalanceForTransaction" class="mx-4 my-3">
-            <CommonAlert variant="error" :icon="ExclamationTriangleIcon">
-              <p>
-                {{
-                  selectedToken?.address === ETH_L2_ADDRESS ? "The fee has changed since the last estimation. " : ""
-                }}Insufficient <span class="font-medium">{{ selectedToken?.symbol }}</span> balance to pay for
-                transaction. Please go back and adjust the amount to proceed.
-              </p>
-              <button type="button" class="alert-link" @click="transactionConfirmModalOpened = false">Go back</button>
-            </CommonAlert>
-          </div>
-        </transition>
-      </template>
-    </ConfirmTransactionModal> -->
-
-    <!-- <TransactionHeader
-      v-if="layout === 'default'"
-      title="Send to"
-      :address="props.address"
-      :destination="destination"
-      :destination-tooltip="`Sending to ${destination.label}`"
-    /> -->
 
     <CommonErrorBlock v-if="tokensRequestError" @try-again="fetchBalances">
       Getting tokens error: {{ tokensRequestError.message }}
@@ -61,6 +24,7 @@
           v-model="amount"
           v-model:error="amountError"
           v-model:token-address="amountInputTokenAddress"
+          :label="isBridgeWithdrawal ? 'From' : undefined"
           :tokens="availableTokens"
           :balances="availableBalances"
           :max-amount="maxAmount"
@@ -71,8 +35,33 @@
               <p>Only tokens available for withdrawal are displayed</p>
             </CommonAlert>
           </template>
+          <template #dropdown v-if="isBridgeWithdrawal">
+            <CommonButtonDropdown :toggled="false" size="xs" variant="light">
+              <template #left-icon>
+                <img :src="destinations.ethereum.iconUrl" class="h-full w-full" />
+              </template>
+              <span>{{ destinations.ethereum.label }}</span>
+            </CommonButtonDropdown>
+          </template>
         </CommonInputTransactionAmount>
-        <CommonInputTransactionAddress v-model="address" class="mt-6" />
+
+        <CommonInputTransactionAddress
+          v-if="isBridgeWithdrawal"
+          v-model="address"
+          label="To"
+          :default-label="`To your account ${account.address ? shortenAddress(account.address) : ''}`"
+          class="mt-6"
+        >
+          <template #dropdown>
+            <CommonButtonDropdown :toggled="false" size="xs" variant="light">
+              <template #left-icon>
+                <img :src="destination.iconUrl" class="h-full w-full" />
+              </template>
+              <span>{{ destination.label }}</span>
+            </CommonButtonDropdown>
+          </template>
+        </CommonInputTransactionAddress>
+        <CommonInputTransactionAddress v-else v-model="address" class="mt-6" />
       </template>
       <template v-else-if="step === 'confirm'">
         <CommonCardWithLineButtons>
@@ -88,19 +77,6 @@
             :destination="transaction!.to.destination"
           />
         </CommonCardWithLineButtons>
-        <transition v-bind="TransitionAlertScaleInOutTransition">
-          <div v-if="!enoughBalanceForTransaction" class="mt-4">
-            <CommonAlert variant="error" :icon="ExclamationTriangleIcon">
-              <p>
-                {{
-                  selectedToken?.address === ETH_L2_ADDRESS ? "The fee has changed since the last estimation. " : ""
-                }}Insufficient <span class="font-medium">{{ selectedToken?.symbol }}</span> balance to pay for
-                transaction. Please go back and adjust the amount to proceed.
-              </p>
-              <button type="button" class="alert-link" @click="step = 'form'">Go back</button>
-            </CommonAlert>
-          </div>
-        </transition>
       </template>
       <template v-else-if="step === 'submitted'">
         <template v-if="transactionCommitted">
@@ -190,18 +166,31 @@
         <CommonErrorBlock v-if="feeError" class="mt-2" @try-again="estimate">
           Fee estimation error: {{ feeError.message }}
         </CommonErrorBlock>
-        <transition v-bind="TransitionOpacity()">
-          <TransactionFeeDetails
-            v-if="!feeError && (fee || feeLoading)"
-            class="mt-4"
-            label="Fee:"
-            :fee-token="feeToken"
-            :fee-amount="fee"
-            :loading="feeLoading"
-            :update-duration="60000"
-            @update="feeAutoUpdateEstimate"
-          />
-        </transition>
+        <div class="mt-4 flex items-center gap-4">
+          <transition v-bind="TransitionOpacity()">
+            <TransactionFeeDetails
+              v-if="!feeError && (fee || feeLoading)"
+              label="Fee:"
+              :fee-token="feeToken"
+              :fee-amount="fee"
+              :loading="feeLoading"
+              :update-duration="60000"
+              @update="feeAutoUpdateEstimate"
+            />
+          </transition>
+          <a
+            v-if="type === 'withdrawal' && !isCustomNode"
+            as="a"
+            :href="ERA_WITHDRAWAL_DELAY"
+            target="_blank"
+            class="ml-auto text-right text-neutral-700 underline underline-offset-2 dark:text-neutral-500"
+          >
+            Up to 24 hours
+          </a>
+          <span v-else-if="type === 'transfer'" class="ml-auto text-right text-neutral-700 dark:text-neutral-500">
+            Almost instant
+          </span>
+        </div>
         <transition v-bind="TransitionAlertScaleInOutTransition">
           <CommonAlert v-if="!enoughBalanceToCoverFee" class="mt-1" variant="error" :icon="ExclamationTriangleIcon">
             <p>
@@ -213,15 +202,6 @@
 
         <EraTransactionFooter>
           <template #after-checks>
-            <!-- <CommonButtonTopLink
-              v-if="type === 'withdrawal' && !isCustomNode"
-              as="a"
-              :href="ERA_WITHDRAWAL_DELAY"
-              target="_blank"
-            >
-              Arriving in ~24 hours
-              <ArrowUpRightIcon class="ml-1 mt-0.5 h-3.5 w-3.5" />
-            </CommonButtonTopLink> -->
             <CommonButton
               v-if="step === 'form'"
               type="submit"
@@ -233,9 +213,24 @@
               Continue
             </CommonButton>
             <template v-else-if="step === 'confirm'">
+              <transition v-bind="TransitionAlertScaleInOutTransition">
+                <div v-if="!enoughBalanceForTransaction" class="mb-4">
+                  <CommonAlert variant="error" :icon="ExclamationTriangleIcon">
+                    <p>
+                      {{
+                        selectedToken?.address === ETH_L2_ADDRESS
+                          ? "The fee has changed since the last estimation. "
+                          : ""
+                      }}Insufficient <span class="font-medium">{{ selectedToken?.symbol }}</span> balance to pay for
+                      transaction. Please go back and adjust the amount to proceed.
+                    </p>
+                    <button type="button" class="alert-link" @click="step = 'form'">Go back</button>
+                  </CommonAlert>
+                </div>
+              </transition>
               <CommonButton
                 :disabled="continueButtonDisabled || status !== 'not-started'"
-                class="mt-3 w-full"
+                class="w-full"
                 variant="primary"
                 @click="buttonContinue()"
               >
@@ -264,6 +259,7 @@ import { storeToRefs } from "pinia";
 
 import EraTransactionFooter from "@/components/transaction/zksync/era/EraTransactionFooter.vue";
 
+import useNetworks from "@/composables/useNetworks";
 import useFee from "@/composables/zksync/era/useFee";
 import useTransaction from "@/composables/zksync/era/useTransaction";
 
@@ -272,7 +268,6 @@ import type { TransactionDestination } from "@/store/destinations";
 import type { Token, TokenAmount } from "@/types";
 import type { BigNumberish } from "ethers";
 import type { PropType } from "vue";
-import type { RouteLocationRaw } from "vue-router";
 
 import { useRoute } from "#app";
 import { useDestinationsStore } from "@/store/destinations";
@@ -283,6 +278,7 @@ import { useEraTokensStore } from "@/store/zksync/era/tokens";
 import { useEraTransfersHistoryStore } from "@/store/zksync/era/transfersHistory";
 import { useEraWalletStore } from "@/store/zksync/era/wallet";
 import { ETH_L2_ADDRESS } from "@/utils/constants";
+import { ERA_WITHDRAWAL_DELAY } from "@/utils/doc-links";
 import { checksumAddress, decimalToBigNumber, formatRawTokenPrice, parseTokenAmount } from "@/utils/formatters";
 import { calculateFee } from "@/utils/helpers";
 import { TransitionAlertScaleInOutTransition, TransitionOpacity } from "@/utils/transitions";
@@ -291,13 +287,6 @@ const props = defineProps({
   layout: {
     type: String as PropType<"default" | "bridge">,
     default: "default",
-  },
-  title: {
-    type: String,
-    required: true,
-  },
-  fallbackRoute: {
-    type: [String, Object] as PropType<string | RouteLocationRaw>,
   },
   type: {
     type: String as PropType<FeeEstimationParams["type"]>,
@@ -316,9 +305,11 @@ const { blockExplorerUrl } = storeToRefs(eraProviderStore);
 const { destinations } = storeToRefs(useDestinationsStore());
 const { tokens, tokensRequestInProgress, tokensRequestError } = storeToRefs(eraTokensStore);
 const { balance, balanceInProgress, balanceError } = storeToRefs(walletEraStore);
+const { isCustomNode } = useNetworks();
 
 const step = ref<"form" | "confirm" | "submitted">("form");
 const destination = computed(() => (props.type === "transfer" ? destinations.value.era : destinations.value.ethereum));
+const isBridgeWithdrawal = computed(() => props.layout === "bridge" && props.type === "withdrawal");
 
 const availableTokens = computed(() => {
   if (!tokens.value) return [];
@@ -378,7 +369,6 @@ const selectedTokenZeroBalance = computed(() => {
   return BigNumber.from(tokenBalance.value).isZero();
 });
 
-const transactionKey = ref(0);
 const unsubscribe = onboardStore.subscribeOnAccountChange(() => {
   step.value = "form";
 });
@@ -500,7 +490,7 @@ const feeLoading = computed(() => feeInProgress.value || (!fee.value && balanceI
 
 const continueButtonDisabled = computed(() => {
   if (
-    !address.value ||
+    (props.type !== "withdrawal" && !address.value) ||
     !transaction.value ||
     !enoughBalanceToCoverFee.value ||
     !enoughBalanceForTransaction.value ||
@@ -574,8 +564,8 @@ const makeTransaction = async () => {
 };
 
 const resetForm = () => {
+  address.value = "";
   amount.value = "";
-  transactionKey.value += 1;
   step.value = "form";
   status.value = "not-started";
   transactionCommitted.value = false;

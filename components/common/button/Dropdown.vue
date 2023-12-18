@@ -1,5 +1,5 @@
 <template>
-  <CommonButton class="dropdown-button-container">
+  <CommonButton class="dropdown-button">
     <div v-if="$slots['left-icon']" class="left-icon-container">
       <slot name="left-icon" />
     </div>
@@ -28,7 +28,7 @@ defineProps({
 </script>
 
 <style lang="scss" scoped>
-.dropdown-button-container {
+.dropdown-button {
   @apply flex items-center justify-start gap-2;
 
   .left-icon-container {
@@ -48,7 +48,7 @@ defineProps({
 </style>
 
 <style lang="scss">
-.dropdown-button-container {
+.dropdown-button {
   .left-icon-container,
   .right-icon-container {
     img,

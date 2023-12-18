@@ -11,14 +11,17 @@
         <slot name="token-dropdown-bottom" />
       </template>
     </TokenSelectDropdown>
-    <CommonInputContainer for="transaction-amount-input">
+    <CommonContentBlock for="transaction-amount-input">
       <div class="flex items-center gap-4">
-        <div class="font-bold">{{ label }}</div>
+        <div class="flex flex-wrap items-center gap-2 sm:flex-nowrap">
+          <div class="font-bold">{{ label }}</div>
+          <slot name="dropdown" />
+        </div>
         <transition v-bind="TransitionOpacity()">
           <button
             v-if="displayedMaxAmount && displayedMaxAmount !== '0'"
             type="button"
-            class="ml-auto text-neutral-800 dark:text-neutral-400"
+            class="ml-auto text-right text-neutral-800 transition hover:text-neutral-700 dark:text-neutral-400 dark:hover:text-neutral-300"
             :class="{ 'is-max': isMaxAmountSet }"
             :title="isMaxAmountSet ? 'Max amount is set' : `Your max amount is ${maxDecimalAmount}`"
             @click.prevent="setMaxAmount()"
@@ -73,7 +76,7 @@
           </span>
         </transition>
       </CommonInputError>
-    </CommonInputContainer>
+    </CommonContentBlock>
   </div>
 </template>
 

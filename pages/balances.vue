@@ -24,7 +24,7 @@
               v-for="item in group.balances"
               as="div"
               :key="item.address"
-              :send-route-name="eraNetwork.l1Network ? 'transaction-zksync-era' : 'transaction-zksync-era-send'"
+              :send-route-name="eraNetwork.l1Network ? 'send-methods' : 'send'"
               v-bind="item"
             />
           </CommonCardWithLineButtons>

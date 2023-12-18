@@ -16,11 +16,7 @@
 
       <TypographyCategoryLabel>Actions</TypographyCategoryLabel>
       <CommonButtonGroup>
-        <CommonButton
-          variant="primary"
-          as="RouterLink"
-          :to="{ name: 'transaction-zksync-era-send', query: { address: contact.address } }"
-        >
+        <CommonButton variant="primary" as="RouterLink" :to="{ name: 'send', query: { address: contact.address } }">
           <template #icon>
             <PaperAirplaneIcon aria-hidden="true" />
           </template>

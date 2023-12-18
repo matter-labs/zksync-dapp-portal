@@ -1,9 +1,9 @@
 <template>
-  <EraTransferForm
-    type="transfer"
-    title="Send to another address"
-    :fallback-route="{ name: 'transaction-zksync-era' }"
-  />
+  <EraTransferForm type="transfer">
+    <template #title>
+      <PageTitle :fallback-route="{ name: 'send-methods' }">Send to another address</PageTitle>
+    </template>
+  </EraTransferForm>
 </template>
 
 <script lang="ts" setup>

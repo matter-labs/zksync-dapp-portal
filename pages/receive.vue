@@ -1,6 +1,6 @@
 <template>
   <div>
-    <PageTitle :fallback-route="{ name: 'transaction-zksync-era-receive' }">Receive</PageTitle>
+    <PageTitle :fallback-route="{ name: 'receive-methods' }">Your address</PageTitle>
     <Receive :address="address" :destination="destinations.era" />
   </div>
 </template>

@@ -34,7 +34,7 @@
 
       <TransactionConfirmModalFooter>
         <template v-if="layout === 'default'">
-          <CommonButtonTopLink as="RouterLink" :to="{ name: 'transaction-zksync-era' }">
+          <CommonButtonTopLink as="RouterLink" :to="{ name: 'send-methods' }">
             Make another transaction
           </CommonButtonTopLink>
           <CommonButton as="RouterLink" :to="{ name: 'index' }" class="w-full" variant="primary">

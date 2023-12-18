@@ -22,8 +22,9 @@
       </DestinationItem>
       <CommonAlert variant="warning">
         <p>
-          Please transfer funds to this address using
-          <span class="font-medium">{{ destination.label }}</span> to successfully receive them
+          Please ensure to send funds to this address using
+          <span class="font-medium">{{ destination.label }}</span> network, otherwise it may result in permanent loss of
+          funds.
         </p>
       </CommonAlert>
     </CommonCardWithLineButtons>

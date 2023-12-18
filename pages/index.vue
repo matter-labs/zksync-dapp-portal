@@ -14,9 +14,7 @@
               variant="primary"
               as="RouterLink"
               :to="{
-                name: eraNetwork.l1Network
-                  ? 'transaction-zksync-era-receive'
-                  : 'transaction-zksync-era-receive-address',
+                name: eraNetwork.l1Network ? 'receive-methods' : 'receive',
               }"
             >
               <template #icon>
@@ -27,7 +25,7 @@
             <CommonButton
               variant="primary"
               as="RouterLink"
-              :to="{ name: eraNetwork.l1Network ? 'transaction-zksync-era' : 'transaction-zksync-era-send' }"
+              :to="{ name: eraNetwork.l1Network ? 'send-methods' : 'send' }"
             >
               <template #icon>
                 <ArrowUpRightIcon aria-hidden="true" />
@@ -59,7 +57,7 @@
               v-for="item in displayedBalances"
               as="div"
               :key="item.address"
-              :send-route-name="eraNetwork.l1Network ? 'transaction-zksync-era' : 'transaction-zksync-era-send'"
+              :send-route-name="eraNetwork.l1Network ? 'send-methods' : 'send'"
               v-bind="item"
             />
           </template>
@@ -71,8 +69,8 @@
               </div>
               <span v-if="eraNetwork.l1Network" class="mt-1.5 inline-block">
                 Proceed to
-                <NuxtLink class="link" :to="{ name: 'transaction-zksync-era-receive' }">Add funds</NuxtLink> page to add
-                balance to your account
+                <NuxtLink class="link" :to="{ name: 'receive-methods' }">Add funds</NuxtLink> page to add balance to
+                your account
               </span>
             </CommonEmptyBlock>
           </template>
@@ -88,7 +86,9 @@
           <CommonCardWithLineButtons v-for="(item, index) in depositMethods" :key="index">
             <DestinationItem v-bind="item.props">
               <template #image v-if="item.icon">
-                <component :is="item.icon" class="p-0.5" />
+                <DestinationIconContainer>
+                  <component :is="item.icon" aria-hidden="true" />
+                </DestinationIconContainer>
               </template>
             </DestinationItem>
           </CommonCardWithLineButtons>
@@ -100,9 +100,9 @@
         <CommonCardWithLineButtons>
           <DestinationItem v-for="(item, index) in depositMethods" :key="index" v-bind="item.props">
             <template #image v-if="item.icon">
-              <div class="aspect-square h-full w-full rounded-full bg-gray-100 p-3 text-neutral-950 dark:bg-neutral-50">
-                <component :is="item.icon" />
-              </div>
+              <DestinationIconContainer>
+                <component :is="item.icon" aria-hidden="true" />
+              </DestinationIconContainer>
             </template>
           </DestinationItem>
         </CommonCardWithLineButtons>
@@ -179,7 +179,7 @@ const depositMethods = computed(() => {
       description: `Receive tokens from another ${eraNetwork.value.shortName} account`,
       as: "RouterLink",
       to: {
-        name: "transaction-zksync-era-receive-address",
+        name: "receive",
       },
     },
     icon: QrCodeIcon,

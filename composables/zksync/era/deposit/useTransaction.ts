@@ -1,5 +1,5 @@
-import type { ConfirmationModalTransaction } from "@/components/transaction/zksync/era/deposit/ConfirmTransactionModal.vue";
 import type { DepositFeeValues } from "@/composables/zksync/era/deposit/useFee";
+import type { BigNumberish } from "ethers";
 import type { L1Signer } from "zksync-web3";
 
 import { formatError } from "@/utils/formatters";
@@ -9,7 +9,14 @@ export default (getL1Signer: () => Promise<L1Signer | undefined>) => {
   const error = ref<Error | undefined>();
   const ethTransactionHash = ref<string | undefined>();
 
-  const commitTransaction = async (transaction: ConfirmationModalTransaction, fee: DepositFeeValues) => {
+  const commitTransaction = async (
+    transaction: {
+      to: string;
+      tokenAddress: string;
+      amount: BigNumberish;
+    },
+    fee: DepositFeeValues
+  ) => {
     try {
       error.value = undefined;
 
@@ -29,7 +36,7 @@ export default (getL1Signer: () => Promise<L1Signer | undefined>) => {
       }
       const depositResponse = await wallet.deposit({
         to: transaction.to,
-        token: transaction.token.address,
+        token: transaction.tokenAddress,
         amount: transaction.amount,
         l2GasLimit: fee.l2GasLimit,
         overrides,

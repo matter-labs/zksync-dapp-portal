@@ -21,7 +21,7 @@
       <TokenAmount v-if="token" :token="token" :amount="computeAmount" :direction="direction" />
     </template>
     <template #bottom-right>
-      <TotalPrice v-if="token" :token="token" :amount="computeAmount" :direction="direction" :loading="priceLoading" />
+      <TotalPrice v-if="token" :token="token" :amount="computeAmount" :direction="direction" />
     </template>
   </TransactionLineItem>
 </template>
@@ -130,9 +130,6 @@ const computeAmount = computed(() => {
 });
 const token = computed(() => {
   return props.transfer.token;
-});
-const priceLoading = computed(() => {
-  return token.value?.price === "loading";
 });
 const icon = computed(() => {
   switch (props.transfer.type) {

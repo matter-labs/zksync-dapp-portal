@@ -34,7 +34,7 @@ defineProps({
   }
 }
 .alert-container {
-  @apply w-full rounded-[1.24rem] p-4 wrap-balance;
+  @apply w-full rounded-[1.24rem] p-4;
   &.has-icon {
     @apply grid grid-cols-[1.25rem_1fr] gap-3;
   }
