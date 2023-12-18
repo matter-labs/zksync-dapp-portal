@@ -106,6 +106,7 @@ const updateSingleWithdrawal = (transactionHash: string) => {
 };
 
 const fetch = () => {
+  if (!isConnected.value) return;
   eraTransfersHistoryStore.requestRecentTransfers();
 };
 fetch();
