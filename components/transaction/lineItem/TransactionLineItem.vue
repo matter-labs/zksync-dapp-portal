@@ -8,10 +8,10 @@
     @click="!transactionUrl && copy()"
   >
     <template #image>
-      <div class="transaction-line-item-icon-container">
-        <XMarkIcon v-if="failed" class="transaction-line-item-icon failed-badge-icon" aria-hidden="true" />
-        <component v-else-if="icon" :is="icon" class="transaction-line-item-icon" aria-hidden="true" />
-      </div>
+      <DestinationIconContainer>
+        <XMarkIcon v-if="failed" class="failed-badge-icon" aria-hidden="true" />
+        <component v-else-if="icon" :is="icon" aria-hidden="true" />
+      </DestinationIconContainer>
     </template>
     <template #default>
       <CommonButtonLineBodyInfo class="text-left">
@@ -102,15 +102,8 @@ const transactionUrl = computed(() => {
 
 <style lang="scss">
 .transaction-line-item {
-  .transaction-line-item-icon-container {
-    @apply relative flex aspect-square h-auto w-full items-center justify-center rounded-full border border-primary-100 bg-primary-100/10 dark:border-none;
-
-    .transaction-line-item-icon {
-      @apply h-4 w-4 text-primary-500 dark:text-white;
-      &.failed-badge-icon {
-        @apply h-5 w-5 text-red-500;
-      }
-    }
+  .failed-badge-icon {
+    @apply text-red-500;
   }
   .failed-underline {
     @apply text-red-500;

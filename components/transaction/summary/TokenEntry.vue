@@ -3,7 +3,7 @@
     <div class="entry-label">{{ label }}</div>
     <div class="entry-info">
       <div class="entry-text-info">
-        <div class="token-amount">{{ displayedAmount }}</div>
+        <div class="token-amount">{{ displayedAmount }} {{ token.symbol }}</div>
         <div v-if="token.price && displayedAmount !== '0'" class="token-price">
           {{ formatTokenPrice(token.amount, token.decimals, token.price) }}
         </div>
@@ -46,7 +46,7 @@ const displayedAmount = computed(() => parseTokenAmount(props.token.amount, prop
     @apply ml-auto flex gap-4;
 
     .entry-text-info {
-      @apply text-right;
+      @apply flex flex-col justify-center text-right;
 
       .token-price {
         @apply text-neutral-600 dark:text-neutral-400;

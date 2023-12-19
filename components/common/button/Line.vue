@@ -40,12 +40,12 @@ defineProps({
 
   &.variant- {
     &default {
-      @apply bg-white dark:bg-neutral-900;
+      @apply bg-neutral-100 dark:bg-neutral-900;
 
       &:enabled,
       &:is(a) {
         &:not([aria-disabled="true"]) {
-          @apply hover:bg-gray-50 dark:hover:bg-neutral-800;
+          @apply hover:bg-white dark:hover:bg-neutral-800;
         }
       }
     }

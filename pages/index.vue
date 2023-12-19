@@ -40,7 +40,7 @@
         <TypographyCategoryLabel>
           <span>Balance</span>
           <template #right>
-            <CommonLabelButton as="RouterLink" :to="{ name: 'balances' }">View all</CommonLabelButton>
+            <CommonButtonLabel as="RouterLink" variant="light" :to="{ name: 'balances' }">View all</CommonButtonLabel>
           </template>
         </TypographyCategoryLabel>
         <CommonCardWithLineButtons>

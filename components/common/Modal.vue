@@ -1,6 +1,6 @@
 <template>
   <TransitionRoot as="template" :show="isModalOpened" @after-leave="afterLeave">
-    <Dialog as="div" class="relative z-10" @close="closeOnBackgroundClick">
+    <Dialog as="div" class="modal-container" @close="closeOnBackgroundClick">
       <TransitionChild
         as="template"
         enter="ease-out duration-300"
@@ -10,11 +10,11 @@
         leave-from="opacity-100"
         leave-to="opacity-0"
       >
-        <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity dark:bg-black dark:bg-opacity-80" />
+        <div class="modal-background" />
       </TransitionChild>
 
-      <div class="fixed inset-0 z-10 overflow-y-auto">
-        <div class="flex h-full items-end justify-center p-2 text-center sm:items-center sm:p-0">
+      <div class="modal-card-y-container">
+        <div class="modal-card-container">
           <TransitionChild
             as="template"
             enter="ease-out duration-300"
@@ -34,17 +34,11 @@
               @trigger="closeOnBackgroundClick"
               @keydown.esc="closeOnBackgroundClick"
             >
-              <div class="mb-4 flex items-center justify-between">
-                <DialogTitle as="div" class="h2 py-0">{{ title }}</DialogTitle>
+              <div class="modal-header">
+                <DialogTitle as="div" class="modal-title">{{ title }}</DialogTitle>
                 <button v-if="closable" @click="closeModal" data-testid="close-button">
-                  <XMarkIcon class="h-6 w-6 text-neutral-700 dark:text-white" aria-hidden="true" />
+                  <XMarkIcon class="modal-close-icon" aria-hidden="true" />
                 </button>
-              </div>
-              <div
-                v-if="$slots.animation"
-                class="pointer-events-none flex h-36 w-full items-center justify-center overflow-visible"
-              >
-                <slot name="animation" />
               </div>
               <slot />
             </DialogPanel>
@@ -111,12 +105,41 @@ const afterLeave = () => {
 };
 </script>
 
+<style lang="scss">
+.modal-container {
+  // can not apply styles to this block in scoped style
+  @apply relative z-[1000];
+}
+</style>
+
 <style lang="scss" scoped>
-.modal-card {
-  @apply relative max-h-[570px] w-full max-w-[500px] transform overflow-hidden rounded-3xl bg-gray p-3 text-left shadow-xl transition-all xs:p-5 xs:pb-6;
-  @apply dark:bg-neutral-950;
-  @media screen and (max-height: 640px) {
-    @apply max-h-[90vh];
+.modal-container {
+  .modal-background {
+    @apply fixed inset-0 bg-black bg-opacity-70 transition-opacity;
+  }
+  .modal-card-y-container {
+    @apply fixed inset-0 z-10 overflow-y-auto;
+  }
+  .modal-card-container {
+    @apply flex h-full items-end justify-center p-3 pb-0 text-center sm:items-center sm:p-[72px];
+
+    .modal-card {
+      @apply relative max-h-[600px] w-full max-w-[600px] transform overflow-hidden rounded-3xl rounded-b-none bg-gray p-block-padding-1/2 text-left shadow-xl transition-all dark:bg-neutral-900 sm:rounded-b-3xl sm:p-block-padding;
+      @media screen and (max-height: 640px) {
+        max-height: calc(100vh - 96px);
+        max-height: calc(100dvh - 96px);
+      }
+      .modal-header {
+        @apply mb-4 flex items-center justify-between;
+
+        .modal-title {
+          @apply text-2xl;
+        }
+        .modal-close-icon {
+          @apply h-6 w-6 text-neutral-700 dark:text-white;
+        }
+      }
+    }
   }
 }
 </style>

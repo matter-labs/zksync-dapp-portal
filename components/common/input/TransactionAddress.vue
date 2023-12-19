@@ -1,5 +1,5 @@
 <template>
-  <CommonContentBlock for="transaction-address-input">
+  <CommonContentBlock for="transaction-address-input" as="label">
     <div class="flex items-center gap-4">
       <div class="flex flex-wrap items-center gap-2 sm:flex-nowrap">
         <div class="font-bold">{{ label }}</div>
@@ -7,13 +7,9 @@
       </div>
       <div v-if="defaultLabel" class="ml-auto text-right">
         <span class="font-bold">{{ inputVisible ? "To another account" : defaultLabel }}</span>
-        <button
-          type="button"
-          class="ml-1 text-neutral-800 underline underline-offset-2 transition hover:text-neutral-700 dark:text-neutral-400 dark:hover:text-neutral-300"
-          @click="toggleCustomValue()"
-        >
-          Change
-        </button>
+        <CommonButtonLabel variant="light" class="ml-1" @click="toggleCustomValue()">
+          {{ inputVisible ? "Use my account" : "Change" }}
+        </CommonButtonLabel>
       </div>
     </div>
     <CommonInputLine

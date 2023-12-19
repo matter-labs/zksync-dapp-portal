@@ -41,22 +41,6 @@ export default (
     { cache: false }
   );
 
-  const setAllowance = async (amount: BigNumberish) => {
-    if (!accountAddress.value) throw new Error("Account address is not available");
-
-    const contractAddress = await getContractAddress();
-    if (!contractAddress) throw new Error("Contract address is not available");
-
-    const wallet = await getWallet();
-    const txHash = await wallet.writeContract({
-      address: tokenAddress.value as Hash,
-      abi: IERC20.abi,
-      functionName: "approve",
-      args: [contractAddress, amount.toString()],
-    });
-    return txHash;
-  };
-
   const requestAllowance = async () => {
     if (accountAddress.value && tokenAddress.value && tokenAddress.value !== ETH_L1_ADDRESS) {
       await getAllowance();
@@ -65,10 +49,68 @@ export default (
     }
   };
 
+  let approvalAmount: BigNumberish | undefined;
+  const setAllowanceStatus = ref<"not-started" | "processing" | "waiting-for-signature" | "sending" | "done">(
+    "not-started"
+  );
+  const {
+    result: setAllowanceReceipt,
+    inProgress: setAllowanceInProgress,
+    error: setAllowanceError,
+    execute: executeSetAllowance,
+    reset: resetExecuteSetAllowance,
+  } = usePromise(
+    async () => {
+      try {
+        setAllowanceStatus.value = "processing";
+        if (!accountAddress.value) throw new Error("Account address is not available");
+
+        const contractAddress = await getContractAddress();
+        if (!contractAddress) throw new Error("Contract address is not available");
+
+        const wallet = await getWallet();
+
+        setAllowanceStatus.value = "waiting-for-signature";
+        let txHash = await wallet.writeContract({
+          address: tokenAddress.value as Hash,
+          abi: IERC20.abi,
+          functionName: "approve",
+          args: [contractAddress, approvalAmount!.toString()],
+        });
+
+        setAllowanceStatus.value = "sending";
+        const receipt = await getPublicClient().waitForTransactionReceipt({
+          hash: txHash,
+          onReplaced: (replacement) => {
+            txHash = replacement.transaction.hash;
+          },
+        });
+        await requestAllowance();
+
+        setAllowanceStatus.value = "done";
+        return receipt;
+      } catch (err) {
+        setAllowanceStatus.value = "not-started";
+        throw err;
+      }
+    },
+    { cache: false }
+  );
+  const setAllowance = async (amount: BigNumberish) => {
+    approvalAmount = amount;
+    await executeSetAllowance();
+  };
+  const resetSetAllowance = () => {
+    approvalAmount = undefined;
+    setAllowanceStatus.value = "not-started";
+    resetExecuteSetAllowance();
+  };
+
   watch(
     [accountAddress, tokenAddress],
     () => {
       requestAllowance();
+      resetSetAllowance();
     },
     { immediate: true }
   );
@@ -79,6 +121,10 @@ export default (
     error: computed(() => error.value),
     requestAllowance,
 
+    setAllowanceReceipt,
+    setAllowanceStatus,
+    setAllowanceInProgress,
+    setAllowanceError,
     setAllowance,
   };
 };

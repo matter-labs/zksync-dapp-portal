@@ -7,8 +7,12 @@
     </template>
     <template #default>
       <CommonButtonLineBodyInfo class="text-left">
-        <template #label v-if="label">{{ label }} </template>
-        <template #underline v-if="description">{{ description }}</template>
+        <template #label v-if="label || $slots['label']">
+          <slot name="label">{{ label }}</slot>
+        </template>
+        <template #underline v-if="description || $slots['underline']">
+          <slot name="underline">{{ description }}</slot>
+        </template>
       </CommonButtonLineBodyInfo>
     </template>
     <template #right v-if="$slots.right">

@@ -45,7 +45,7 @@ defineProps({
   }
   &.variant- {
     &default {
-      @apply whitespace-nowrap bg-neutral-100 dark:bg-neutral-900;
+      @apply bg-neutral-100 dark:bg-neutral-900;
       &:enabled,
       &:is(a, label) {
         &:not([aria-disabled="true"]) {
@@ -54,7 +54,7 @@ defineProps({
       }
     }
     &light {
-      @apply whitespace-nowrap bg-neutral-200 dark:bg-neutral-800;
+      @apply bg-neutral-200 dark:bg-neutral-800;
       &:enabled,
       &:is(a, label) {
         &:not([aria-disabled="true"]) {
@@ -63,12 +63,11 @@ defineProps({
       }
     }
     &primary {
-      @apply whitespace-nowrap bg-primary-100/50 px-6 text-primary-400;
-      @apply dark:bg-primary-300 dark:text-white;
+      @apply bg-primary-400 px-6 text-white;
       &:enabled,
       &:is(a, label) {
         &:not([aria-disabled="true"]) {
-          @apply hover:bg-primary-100/75 dark:hover:bg-primary-200;
+          @apply hover:bg-primary-300;
         }
       }
       &:disabled,

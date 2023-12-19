@@ -77,7 +77,17 @@ export default defineNuxtConfig({
       "storeToRefs",
     ],
   },
+  styleResources: {
+    scss: ["./assets/css/_mixins.scss"],
+  },
   vite: {
+    css: {
+      preprocessorOptions: {
+        scss: {
+          additionalData: '@use "@/assets/css/_mixins.scss" as *;',
+        },
+      },
+    },
     build: {
       target: "es2020",
     },

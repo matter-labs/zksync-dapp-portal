@@ -65,7 +65,7 @@ const buttonClicked = (network: L2Network) => {
   @apply relative;
 
   .network-options-container {
-    @apply absolute right-0 top-full z-10 mt-0.5 grid h-max w-max min-w-full rounded-3xl bg-white p-1 shadow-lg dark:bg-neutral-900;
+    @apply absolute right-0 top-full z-10 mt-0.5 grid h-max w-max min-w-full rounded-3xl bg-neutral-100 p-1 shadow-lg dark:bg-neutral-900;
   }
 }
 </style>

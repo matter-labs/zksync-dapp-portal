@@ -31,6 +31,7 @@
           :tokens="availableTokens"
           :balances="availableBalances"
           :max-amount="maxAmount"
+          :approve-required="!enoughAllowance"
           :loading="tokensRequestInProgress || balanceInProgress"
         >
           <template #dropdown>
@@ -60,7 +61,7 @@
       </template>
       <template v-else-if="step === 'confirm'">
         <CommonCardWithLineButtons>
-          <TransactionSummaryTokenEntry label="You send" :token="transaction!.token" />
+          <TransactionSummaryTokenEntry label="You bridge" :token="transaction!.token" />
           <TransactionSummaryAddressEntry
             label="From"
             :address="transaction!.from.address"
@@ -74,7 +75,7 @@
         </CommonCardWithLineButtons>
       </template>
       <template v-else-if="step === 'submitted'">
-        <h1 class="h1 mt-block-gap text-center">Transaction submitted</h1>
+        <h1 class="h1 mt-block-gap-1/2 text-center">Transaction submitted</h1>
         <p class="text-center">
           Your funds will be available after the transaction is committed on
           <span class="font-medium">{{ destinations.ethereum.label }}</span> and then processed on
@@ -155,7 +156,7 @@
           </span>
         </div>
         <transition v-bind="TransitionAlertScaleInOutTransition">
-          <CommonAlert v-if="!enoughBalanceToCoverFee" class="mt-1" variant="error" :icon="ExclamationTriangleIcon">
+          <CommonAlert v-if="!enoughBalanceToCoverFee" class="mt-4" variant="error" :icon="ExclamationTriangleIcon">
             <p>
               Insufficient <span class="font-medium">{{ feeToken?.symbol }}</span> balance on
               <span class="font-medium">{{ destinations.ethereum.label }}</span> to cover the fee
@@ -165,7 +166,7 @@
         <transition v-bind="TransitionAlertScaleInOutTransition">
           <CommonAlert
             v-if="recommendedBalance && feeToken"
-            class="mt-1"
+            class="mt-4"
             variant="error"
             :icon="ExclamationTriangleIcon"
           >
@@ -177,44 +178,91 @@
             </p>
           </CommonAlert>
         </transition>
-        <transition v-bind="TransitionAlertScaleInOutTransition">
-          <CommonAlert
-            v-if="!enoughAllowance && !allowance?.isZero()"
-            class="mt-1"
-            variant="info"
-            :icon="InformationCircleIcon"
-          >
-            <p>
-              Your current allowance for <span class="font-medium">{{ selectedToken!.symbol }}</span> is
-              <button type="button" class="link inline underline underline-offset-2" @click="setAmountToAllowance">
-                {{ parseTokenAmount(allowance!, selectedToken!.decimals) }}
-              </button>
-              <span class="block wrap-balance">
-                Depositing more than that will require you to approve a new allowance.
-              </span>
-            </p>
-            <a :href="TOKEN_ALLOWANCE" target="_blank" class="alert-link">
-              Learn more
-              <ArrowUpRightIcon class="ml-1 h-3 w-3" />
-            </a>
-          </CommonAlert>
-        </transition>
         <CommonErrorBlock v-if="allowanceRequestError" class="mt-2" @try-again="requestAllowance">
           Checking allowance error: {{ allowanceRequestError.message }}
         </CommonErrorBlock>
+        <CommonErrorBlock v-else-if="setAllowanceError" class="mt-2" @try-again="setTokenAllowance">
+          Allowance approval error: {{ setAllowanceError.message }}
+        </CommonErrorBlock>
+        <CommonHeightTransition
+          v-if="step === 'form'"
+          :opened="(!enoughAllowance && !continueButtonDisabled) || !!setAllowanceReceipt"
+        >
+          <CommonCardWithLineButtons class="mt-4">
+            <DestinationItem
+              v-if="enoughAllowance && setAllowanceReceipt"
+              as="div"
+              :label="`${selectedToken?.symbol} allowance approved`"
+              :description="`You can now proceed to deposit`"
+            >
+              <template #image>
+                <div class="aspect-square h-full w-full rounded-full bg-success-400 p-3 text-black">
+                  <CheckIcon aria-hidden="true" />
+                </div>
+              </template>
+            </DestinationItem>
+            <DestinationItem v-else as="div" :label="`Approve ${selectedToken?.symbol} allowance`">
+              <template #underline>
+                Before depositing you need to give our bridge permission to spend specified amount of
+                {{ selectedToken?.symbol }}.
+                <span v-if="allowance && !allowance.isZero()"
+                  >You can deposit up to
+                  <CommonButtonLabel variant="light" @click="setAmountToCurrentAllowance()">
+                    {{ parseTokenAmount(allowance!, selectedToken!.decimals) }}
+                  </CommonButtonLabel>
+                  {{ selectedToken!.symbol }} without approving a new allowance.
+                </span>
+                <CommonButtonLabel variant="light" as="a" :href="TOKEN_ALLOWANCE" target="_blank">
+                  Learn more
+                </CommonButtonLabel>
+              </template>
+              <template #image>
+                <div class="aspect-square h-full w-full rounded-full bg-warning-400 p-3 text-black">
+                  <LockClosedIcon aria-hidden="true" />
+                </div>
+              </template>
+            </DestinationItem>
+          </CommonCardWithLineButtons>
+        </CommonHeightTransition>
 
         <EthereumTransactionFooter>
           <template #after-checks>
-            <CommonButton
-              v-if="step === 'form'"
-              type="submit"
-              :disabled="continueButtonDisabled"
-              variant="primary"
-              class="w-full"
-              @click="buttonContinue()"
-            >
-              Continue
-            </CommonButton>
+            <template v-if="step === 'form'">
+              <template v-if="!enoughAllowance && !continueButtonDisabled">
+                <CommonButton
+                  type="submit"
+                  :disabled="continueButtonDisabled || setAllowanceInProgress"
+                  variant="primary"
+                  class="w-full"
+                  @click="setTokenAllowance()"
+                >
+                  <transition v-bind="TransitionPrimaryButtonText" mode="out-in">
+                    <span v-if="setAllowanceStatus === 'processing'">Processing...</span>
+                    <span v-else-if="setAllowanceStatus === 'waiting-for-signature'"
+                      >Waiting for allowance approval confirmation</span
+                    >
+                    <span class="flex items-center" v-else-if="setAllowanceStatus === 'sending'">
+                      <CommonSpinner class="mr-2 h-6 w-6" />
+                      Approving allowance...
+                    </span>
+                    <span v-else>Approve {{ selectedToken?.symbol }} allowance</span>
+                  </transition>
+                </CommonButton>
+                <TransactionButtonUnderlineConfirmTransaction
+                  :opened="setAllowanceStatus === 'waiting-for-signature'"
+                />
+              </template>
+              <CommonButton
+                v-else
+                type="submit"
+                :disabled="continueButtonDisabled"
+                variant="primary"
+                class="w-full"
+                @click="buttonContinue()"
+              >
+                Continue
+              </CommonButton>
+            </template>
             <template v-else-if="step === 'confirm'">
               <transition v-bind="TransitionAlertScaleInOutTransition">
                 <div v-if="!enoughBalanceForTransaction" class="mb-4">
@@ -265,9 +313,9 @@ import { computed, onBeforeUnmount, ref, watch } from "vue";
 
 import {
   ArrowTopRightOnSquareIcon,
-  ArrowUpRightIcon,
+  CheckIcon,
   ExclamationTriangleIcon,
-  InformationCircleIcon,
+  LockClosedIcon,
 } from "@heroicons/vue/24/outline";
 import { BigNumber } from "ethers";
 import { isAddress } from "ethers/lib/utils";
@@ -361,14 +409,17 @@ const tokenBalance = computed<BigNumberish | undefined>(() => {
   return balance.value?.find((e) => e.address === selectedToken.value?.address)?.amount;
 });
 
-const transactionKey = ref(0);
 const {
   result: allowance,
   inProgress: allowanceRequestInProgress,
   error: allowanceRequestError,
   requestAllowance,
 
-  /* setAllowance, */
+  setAllowanceReceipt,
+  setAllowanceStatus,
+  setAllowanceInProgress,
+  setAllowanceError,
+  setAllowance,
 } = useAllowance(
   computed(() => account.value.address),
   computed(() => selectedToken.value?.address),
@@ -380,15 +431,19 @@ const enoughAllowance = computed(() => {
   if (!allowance.value || !selectedToken.value) {
     return true;
   }
-  return BigNumber.from(allowance.value).gte(totalComputeAmount.value);
+  return !allowance.value.isZero() && allowance.value.gte(totalComputeAmount.value);
 });
-const setAmountToAllowance = () => {
+const setAmountToCurrentAllowance = () => {
   if (!allowance.value || !selectedToken.value) {
     return;
   }
   amount.value = parseTokenAmount(allowance.value, selectedToken.value.decimals);
 };
-/* const setTokenAllowance = async () => await setAllowance(totalComputeAmount.value); */
+const setTokenAllowance = async () => {
+  await setAllowance(totalComputeAmount.value);
+  await new Promise((resolve) => setTimeout(resolve, 2000)); // Wait for balances to be updated on API side
+  await fetchBalances(true);
+};
 
 const unsubscribe = onboardStore.subscribeOnAccountChange(() => {
   step.value = "form";
@@ -495,8 +550,8 @@ const continueButtonDisabled = computed(() => {
     BigNumber.from(transaction.value.token.amount).isZero()
   )
     return true;
-  if (allowanceRequestInProgress.value || allowanceRequestError.value) return true;
-  if (!enoughAllowance.value) return false; // We can proceed to allowance modal even if fee is not loaded
+  if ((allowanceRequestInProgress.value && !allowance.value) || allowanceRequestError.value) return true;
+  if (!enoughAllowance.value) return false; // When allowance approval is required we can proceed to approve stage even if deposit fee is not loaded
   if (feeLoading.value || !fee.value) return true;
   return false;
 });
@@ -557,7 +612,6 @@ const makeTransaction = async () => {
 const resetForm = () => {
   address.value = "";
   amount.value = "";
-  transactionKey.value += 1;
   step.value = "form";
   status.value = "not-started";
 };

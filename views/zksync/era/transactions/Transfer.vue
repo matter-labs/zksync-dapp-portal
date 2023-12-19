@@ -38,9 +38,9 @@
           <template #dropdown v-if="isBridgeWithdrawal">
             <CommonButtonDropdown :toggled="false" size="xs" variant="light">
               <template #left-icon>
-                <img :src="destinations.ethereum.iconUrl" class="h-full w-full" />
+                <img :src="destinations.era.iconUrl" class="h-full w-full" />
               </template>
-              <span>{{ destinations.ethereum.label }}</span>
+              <span>{{ destinations.era.label }}</span>
             </CommonButtonDropdown>
           </template>
         </CommonInputTransactionAmount>
@@ -80,7 +80,7 @@
       </template>
       <template v-else-if="step === 'submitted'">
         <template v-if="transactionCommitted">
-          <h1 class="h1 mt-block-gap text-center">Transaction completed</h1>
+          <h1 class="h1 mt-block-gap-1/2 text-center">Transaction completed</h1>
           <p class="text-center">
             Your funds should now be available at the
             <a
@@ -94,7 +94,7 @@
           </p>
         </template>
         <template v-else>
-          <h1 class="h1 mt-block-gap text-center">Transaction submitted</h1>
+          <h1 class="h1 mt-block-gap-1/2 text-center">Transaction submitted</h1>
           <p class="text-center">
             Your funds will be available at the
             <a
@@ -109,52 +109,15 @@
             >. You are free to close this page.
           </p>
         </template>
-        <CommonContentBlock class="mt-block-gap">
-          <div class="grid grid-cols-[max-content_1fr_max-content] items-center gap-x-4 gap-y-2">
-            <AddressAvatar class="mx-auto h-12 w-12" :address="transaction!.from.address">
-              <template #icon>
-                <img
-                  v-tooltip="transaction!.from.destination.label"
-                  :src="transaction!.from.destination.iconUrl"
-                  :alt="transaction!.from.destination.label"
-                />
-              </template>
-            </AddressAvatar>
-            <div class="border-t border-dashed border-neutral-500"></div>
-            <AddressAvatar class="mx-auto h-12 w-12" :address="transaction!.to.address">
-              <template #icon>
-                <img
-                  v-tooltip="transaction!.to.destination.label"
-                  :src="transaction!.to.destination.iconUrl"
-                  :alt="transaction!.to.destination.label"
-                />
-              </template>
-            </AddressAvatar>
-
-            <div>{{ shortenAddress(transaction!.from.address) }}</div>
-            <div></div>
-            <div>{{ shortenAddress(transaction!.to.address) }}</div>
-          </div>
-          <CommonButton
-            size="sm"
-            variant="light"
-            as="a"
-            :href="`${blockExplorerUrl}/tx/${transactionHash}`"
-            target="_blank"
-            class="mx-auto mt-block-gap w-max"
-          >
-            Explorer
-            <ArrowTopRightOnSquareIcon class="ml-2 h-6 w-6" aria-hidden="true" />
-          </CommonButton>
-          <div class="mt-block-padding flex items-center justify-center">
-            <span class="text-neutral-400">Value:</span>
-            <span class="ml-1">
-              {{ parseTokenAmount(transaction!.token.amount, transaction!.token.decimals) }}
-              {{ transaction!.token.symbol }}</span
-            >
-            <TokenImage class="ml-1.5 mr-1 h-5 w-5" v-bind="transaction!.token" />
-          </div>
-        </CommonContentBlock>
+        <TransactionProgress
+          :from-address="transaction!.from.address"
+          :from-destination="transaction!.from.destination"
+          :to-address="transaction!.to.address"
+          :to-destination="transaction!.to.destination"
+          :transaction-link="`${blockExplorerUrl}/tx/${transactionHash}`"
+          :token="transaction!.token"
+          class="mt-block-gap"
+        />
 
         <CommonButton as="RouterLink" :to="{ name: 'index' }" class="mt-block-gap" variant="primary">
           Go to Assets page
@@ -178,21 +141,21 @@
               @update="feeAutoUpdateEstimate"
             />
           </transition>
-          <a
+          <CommonButtonLabel
             v-if="type === 'withdrawal' && !isCustomNode"
             as="a"
             :href="ERA_WITHDRAWAL_DELAY"
             target="_blank"
-            class="ml-auto text-right text-neutral-700 underline underline-offset-2 dark:text-neutral-500"
+            class="ml-auto text-right"
           >
             Up to 24 hours
-          </a>
-          <span v-else-if="type === 'transfer'" class="ml-auto text-right text-neutral-700 dark:text-neutral-500">
+          </CommonButtonLabel>
+          <CommonButtonLabel v-else-if="type === 'transfer'" as="span" class="ml-auto text-right">
             Almost instant
-          </span>
+          </CommonButtonLabel>
         </div>
         <transition v-bind="TransitionAlertScaleInOutTransition">
-          <CommonAlert v-if="!enoughBalanceToCoverFee" class="mt-1" variant="error" :icon="ExclamationTriangleIcon">
+          <CommonAlert v-if="!enoughBalanceToCoverFee" class="mt-4" variant="error" :icon="ExclamationTriangleIcon">
             <p>
               Insufficient <span class="font-medium">{{ feeToken?.symbol }}</span> balance on
               {{ destinations.era.label }} to cover the fee
@@ -252,7 +215,7 @@
 <script lang="ts" setup>
 import { computed, onBeforeUnmount, ref, watch } from "vue";
 
-import { ArrowTopRightOnSquareIcon, ExclamationTriangleIcon, InformationCircleIcon } from "@heroicons/vue/24/outline";
+import { ExclamationTriangleIcon, InformationCircleIcon } from "@heroicons/vue/24/outline";
 import { BigNumber } from "ethers";
 import { isAddress } from "ethers/lib/utils";
 import { storeToRefs } from "pinia";
@@ -279,7 +242,7 @@ import { useEraTransfersHistoryStore } from "@/store/zksync/era/transfersHistory
 import { useEraWalletStore } from "@/store/zksync/era/wallet";
 import { ETH_L2_ADDRESS } from "@/utils/constants";
 import { ERA_WITHDRAWAL_DELAY } from "@/utils/doc-links";
-import { checksumAddress, decimalToBigNumber, formatRawTokenPrice, parseTokenAmount } from "@/utils/formatters";
+import { checksumAddress, decimalToBigNumber, formatRawTokenPrice } from "@/utils/formatters";
 import { calculateFee } from "@/utils/helpers";
 import { TransitionAlertScaleInOutTransition, TransitionOpacity } from "@/utils/transitions";
 

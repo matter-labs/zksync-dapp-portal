@@ -9,9 +9,10 @@
           <div class="truncate">{{ symbol }}</div>
         </template>
         <template v-if="name" #underline>
-          <CommonLabelButton
+          <CommonButtonLabel
             v-if="eraNetwork.blockExplorerUrl"
             as="a"
+            variant="light"
             :href="`${eraNetwork.blockExplorerUrl}/address/${address}`"
             target="_blank"
             class="flex gap-1"
@@ -19,7 +20,7 @@
           >
             <span class="truncate">{{ name }}</span>
             <ArrowTopRightOnSquareIcon class="h-6 w-6 flex-shrink-0" />
-          </CommonLabelButton>
+          </CommonButtonLabel>
           <div v-else class="truncate">{{ name }}</div>
         </template>
       </CommonButtonLineBodyInfo>

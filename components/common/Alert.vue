@@ -40,15 +40,15 @@ defineProps({
   }
   &.variant- {
     &info {
-      @apply border bg-primary-100 text-primary-700;
-      @apply dark:border-primary-200/50 dark:bg-primary-200/10 dark:text-white;
+      @apply border bg-primary-300 text-primary-700;
+      @apply dark:border-primary-300/50 dark:bg-primary-300/10 dark:text-white;
 
       .alert-icon {
         @apply dark:text-primary-300;
       }
       .alert-body {
         .alert-link {
-          @apply hover:text-primary-600 dark:hover:text-primary-200;
+          @apply hover:text-primary-400 dark:hover:text-primary-300;
         }
       }
     }

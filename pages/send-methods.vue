@@ -13,7 +13,7 @@
       <CommonCardWithLineButtons>
         <DestinationItem
           v-bind="destinations.era"
-          :label="`Send do another account on ${destinations.era.label}`"
+          :label="`Send to another account on ${destinations.era.label}`"
           as="RouterLink"
           :to="{ name: 'send', query: $route.query }"
         />
@@ -38,9 +38,9 @@
           target="_blank"
         >
           <template #image>
-            <div class="aspect-square h-full w-full rounded-full bg-gray-100 p-3 text-neutral-950 dark:bg-neutral-50">
+            <DestinationIconContainer>
               <Squares2X2Icon aria-hidden="true" />
-            </div>
+            </DestinationIconContainer>
           </template>
         </DestinationItem>
       </CommonCardWithLineButtons>

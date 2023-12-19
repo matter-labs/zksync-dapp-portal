@@ -11,23 +11,26 @@
         <slot name="token-dropdown-bottom" />
       </template>
     </TokenSelectDropdown>
-    <CommonContentBlock for="transaction-amount-input">
+    <CommonContentBlock for="transaction-amount-input" as="label">
       <div class="flex items-center gap-4">
         <div class="flex flex-wrap items-center gap-2 sm:flex-nowrap">
           <div class="font-bold">{{ label }}</div>
           <slot name="dropdown" />
         </div>
         <transition v-bind="TransitionOpacity()">
-          <button
-            v-if="displayedMaxAmount && displayedMaxAmount !== '0'"
-            type="button"
-            class="ml-auto text-right text-neutral-800 transition hover:text-neutral-700 dark:text-neutral-400 dark:hover:text-neutral-300"
-            :class="{ 'is-max': isMaxAmountSet }"
-            :title="isMaxAmountSet ? 'Max amount is set' : `Your max amount is ${maxDecimalAmount}`"
-            @click.prevent="setMaxAmount()"
-          >
-            Max: <span class="underline underline-offset-2">{{ displayedMaxAmount }}</span>
-          </button>
+          <template v-if="displayedMaxAmount && displayedMaxAmount !== '0'">
+            <span class="ml-auto text-right">
+              <CommonButtonLabel variant="light" as="span">Max:&nbsp;</CommonButtonLabel>
+              <CommonButtonLabel
+                variant="light"
+                :class="{ 'is-max': isMaxAmountSet }"
+                :title="isMaxAmountSet ? 'Max amount is set' : `Your max amount is ${maxDecimalAmount}`"
+                @click.prevent="setMaxAmount()"
+              >
+                {{ displayedMaxAmount }}
+              </CommonButtonLabel>
+            </span>
+          </template>
         </transition>
       </div>
       <div class="mt-4 flex items-center gap-2">
@@ -44,6 +47,11 @@
           autofocus
         />
 
+        <transition v-bind="TransitionOpacity(300)">
+          <div v-if="approveRequired" v-tooltip="'Allowance approval required'">
+            <LockClosedIcon class="h-6 w-6 text-warning-400" aria-hidden="true" />
+          </div>
+        </transition>
         <CommonButtonDropdown :toggled="selectTokenModalOpened" variant="light" @click="selectTokenModalOpened = true">
           <template #left-icon>
             <CommonContentLoader v-if="loading" class="block h-full w-full rounded-full" />
@@ -83,6 +91,7 @@
 <script lang="ts" setup>
 import { computed, ref, watch } from "vue";
 
+import { LockClosedIcon } from "@heroicons/vue/24/outline";
 import { BigNumber } from "ethers";
 
 import type { Token, TokenAmount } from "@/types";
@@ -108,6 +117,10 @@ const props = defineProps({
     type: Array as PropType<TokenAmount[]>,
     default: () => [],
     required: true,
+  },
+  approveRequired: {
+    type: Boolean,
+    default: false,
   },
   tokenAddress: {
     type: String,

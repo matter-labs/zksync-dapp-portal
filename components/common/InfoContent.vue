@@ -48,7 +48,7 @@ const { copy, copied } = useCopy(content);
   }
 }
 .info-content {
-  @apply w-full rounded-xl bg-white p-3 dark:bg-neutral-900;
+  @apply w-full rounded-xl bg-neutral-100 p-3 dark:bg-neutral-900;
 
   .info-content-inner {
     @apply flex justify-between;
@@ -57,7 +57,7 @@ const { copy, copied } = useCopy(content);
       @apply text-sm text-gray-secondary dark:text-neutral-400;
     }
     .info-content-copy-button {
-      @apply text-sm font-medium text-primary-400 dark:text-primary-500;
+      @apply text-sm font-medium text-primary-400;
     }
   }
 }

@@ -1,0 +1,7 @@
+@mixin interactiveStyles {
+  &:enabled,
+  &[interactive="true"]:not([aria-disabled="true"]),
+  &:is(a, label):not([aria-disabled="true"]) {
+    @content;
+  }
+}
