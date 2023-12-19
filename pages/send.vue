@@ -7,7 +7,7 @@
 </template>
 
 <script lang="ts" setup>
-import EraTransferForm from "@/views/zksync/era/transactions/Transfer.vue";
+import EraTransferForm from "@/views/transactions/Transfer.vue";
 
 /* const queryAddress = useRouteQuery("address", undefined, {
   transform: String,

@@ -1,22 +1,9 @@
-import { storeToRefs } from "pinia";
-
 import useColorMode from "@/composables/useColorMode";
 
 import { useRouter } from "#app";
-import { useNetworkStore } from "@/store/network";
 
 export default defineNuxtPlugin(() => {
   useColorMode();
-
-  const { version } = storeToRefs(useNetworkStore());
-  watch(
-    version,
-    () => {
-      document.documentElement.classList.remove("lite", "era");
-      document.documentElement.classList.add(version.value);
-    },
-    { immediate: true }
-  );
 
   const router = useRouter();
   router.onError((error, to) => {

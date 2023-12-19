@@ -13,7 +13,7 @@
 <script lang="ts" setup>
 import { storeToRefs } from "pinia";
 
-import { useEraProviderStore } from "@/store/zksync/era/provider";
+import { useZkSyncProviderStore } from "@/store/zksync/provider";
 
-const { eraNetwork } = storeToRefs(useEraProviderStore());
+const { eraNetwork } = storeToRefs(useZkSyncProviderStore());
 </script>

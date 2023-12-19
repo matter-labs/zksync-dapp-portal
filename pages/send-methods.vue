@@ -2,13 +2,6 @@
   <div>
     <PageTitle :fallback-route="{ name: 'index' }">Send</PageTitle>
 
-    <ModalTransactionWithdrawExchangeWarning
-      :opened="openedModal === 'withdraw-to-exchange'"
-      :button-location="{ name: 'bridge-withdraw' }"
-      :withdraw-to-self-link-location="{ name: 'bridge-withdraw', query: { address: account.address } }"
-      @close="closeModal"
-    />
-
     <div class="space-y-4">
       <CommonCardWithLineButtons>
         <DestinationItem
@@ -49,23 +42,14 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue";
-
 import { ArrowTopRightOnSquareIcon, Squares2X2Icon } from "@heroicons/vue/24/outline";
 import { storeToRefs } from "pinia";
 
 import { useDestinationsStore } from "@/store/destinations";
-import { useOnboardStore } from "@/store/onboard";
-import { useEraProviderStore } from "@/store/zksync/era/provider";
+import { useZkSyncProviderStore } from "@/store/zksync/provider";
 
 const { destinations } = storeToRefs(useDestinationsStore());
-const { account } = storeToRefs(useOnboardStore());
-const { eraNetwork } = storeToRefs(useEraProviderStore());
-
-const openedModal = ref<"withdraw-to-exchange" | undefined>();
-const closeModal = () => {
-  openedModal.value = undefined;
-};
+const { eraNetwork } = storeToRefs(useZkSyncProviderStore());
 </script>
 
 <style lang="scss" scoped></style>

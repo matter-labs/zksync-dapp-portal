@@ -1,0 +1,597 @@
+<template>
+  <div>
+    <PageTitle v-if="step === 'form'">Bridge</PageTitle>
+    <PageTitle
+      v-else-if="step === 'confirm'"
+      :back-function="
+        () => {
+          step = 'form';
+        }
+      "
+    >
+      Confirm transaction
+    </PageTitle>
+
+    <CommonErrorBlock v-if="tokensRequestError" @try-again="fetchBalances">
+      Getting tokens error: {{ tokensRequestError.message }}
+    </CommonErrorBlock>
+    <CommonErrorBlock v-else-if="balanceError" @try-again="fetchBalances">
+      Getting balances error: {{ balanceError.message }}
+    </CommonErrorBlock>
+    <form v-else @submit.prevent="">
+      <template v-if="step === 'form'">
+        <CommonInputTransactionAmount
+          v-model="amount"
+          v-model:error="amountError"
+          v-model:token-address="amountInputTokenAddress"
+          label="From"
+          :tokens="availableTokens"
+          :balances="availableBalances"
+          :max-amount="maxAmount"
+          :approve-required="!enoughAllowance"
+          :loading="tokensRequestInProgress || balanceInProgress"
+        >
+          <template #dropdown>
+            <CommonButtonDropdown :toggled="false" size="xs" variant="light">
+              <template #left-icon>
+                <img :src="destinations.ethereum.iconUrl" class="h-full w-full" />
+              </template>
+              <span>{{ destinations.ethereum.label }}</span>
+            </CommonButtonDropdown>
+          </template>
+        </CommonInputTransactionAmount>
+        <CommonInputTransactionAddress
+          v-model="address"
+          label="To"
+          :default-label="`To your account ${account.address ? shortenAddress(account.address) : ''}`"
+          class="mt-6"
+        >
+          <template #dropdown>
+            <CommonButtonDropdown :toggled="false" size="xs" variant="light">
+              <template #left-icon>
+                <img :src="destination.iconUrl" class="h-full w-full" />
+              </template>
+              <span>{{ destination.label }}</span>
+            </CommonButtonDropdown>
+          </template>
+        </CommonInputTransactionAddress>
+      </template>
+      <template v-else-if="step === 'confirm'">
+        <CommonCardWithLineButtons>
+          <TransactionSummaryTokenEntry label="You bridge" :token="transaction!.token" />
+          <TransactionSummaryAddressEntry
+            label="From"
+            :address="transaction!.from.address"
+            :destination="transaction!.from.destination"
+          />
+          <TransactionSummaryAddressEntry
+            label="To"
+            :address="transaction!.to.address"
+            :destination="transaction!.to.destination"
+          />
+        </CommonCardWithLineButtons>
+      </template>
+      <template v-else-if="step === 'submitted'">
+        <h1 class="h1 mt-block-gap-1/2 text-center">Transaction submitted</h1>
+        <p class="text-center">
+          Your funds will be available after the transaction is committed on
+          <span class="font-medium">{{ destinations.ethereum.label }}</span> and then processed on
+          <span class="font-medium">{{ destination.label }}</span
+          >.<br />You are free to close this page.
+        </p>
+        <TransactionProgress
+          :from-address="transaction!.from.address"
+          :from-destination="transaction!.from.destination"
+          :to-address="transaction!.to.address"
+          :to-destination="transaction!.to.destination"
+          :transaction-link="`${l1BlockExplorerUrl}/tx/${ethTransactionHash}`"
+          :token="transaction!.token"
+          class="mt-block-gap"
+        />
+
+        <CommonButton as="RouterLink" :to="{ name: 'index' }" class="mt-block-gap" variant="primary">
+          Go to Assets page
+        </CommonButton>
+        <CommonButton size="sm" class="mx-auto mt-block-gap" @click="resetForm">Make another transaction</CommonButton>
+      </template>
+
+      <template v-if="step === 'form' || step === 'confirm'">
+        <CommonErrorBlock v-if="feeError" class="mt-2" @try-again="estimate">
+          Fee estimation error: {{ feeError.message }}
+        </CommonErrorBlock>
+        <div class="mt-4 flex items-center gap-4">
+          <transition v-bind="TransitionOpacity()">
+            <TransactionFeeDetails
+              v-if="!feeError && (fee || feeLoading)"
+              label="Fee:"
+              :fee-token="feeToken"
+              :fee-amount="fee"
+              :loading="feeLoading"
+              :update-duration="60000"
+              @update="feeAutoUpdateEstimate"
+            />
+          </transition>
+          <span v-if="!isCustomNode" class="ml-auto text-right text-neutral-700 dark:text-neutral-500">
+            ~15 minutes
+          </span>
+        </div>
+        <transition v-bind="TransitionAlertScaleInOutTransition">
+          <CommonAlert v-if="!enoughBalanceToCoverFee" class="mt-4" variant="error" :icon="ExclamationTriangleIcon">
+            <p>
+              Insufficient <span class="font-medium">{{ feeToken?.symbol }}</span> balance on
+              <span class="font-medium">{{ destinations.ethereum.label }}</span> to cover the fee
+            </p>
+          </CommonAlert>
+        </transition>
+        <transition v-bind="TransitionAlertScaleInOutTransition">
+          <CommonAlert
+            v-if="recommendedBalance && feeToken"
+            class="mt-4"
+            variant="error"
+            :icon="ExclamationTriangleIcon"
+          >
+            <p>
+              Insufficient <span class="font-medium">{{ feeToken?.symbol }}</span> balance on
+              {{ destinations.ethereum.label }} to cover the fee. We recommend having at least
+              <span class="font-medium">{{ recommendedBalance }} {{ feeToken?.symbol }}</span> on
+              {{ eraNetwork.l1Network?.name ?? "L1" }} for deposit.
+            </p>
+          </CommonAlert>
+        </transition>
+        <CommonErrorBlock v-if="allowanceRequestError" class="mt-2" @try-again="requestAllowance">
+          Checking allowance error: {{ allowanceRequestError.message }}
+        </CommonErrorBlock>
+        <CommonErrorBlock v-else-if="setAllowanceError" class="mt-2" @try-again="setTokenAllowance">
+          Allowance approval error: {{ setAllowanceError.message }}
+        </CommonErrorBlock>
+        <CommonHeightTransition
+          v-if="step === 'form'"
+          :opened="(!enoughAllowance && !continueButtonDisabled) || !!setAllowanceReceipt"
+        >
+          <CommonCardWithLineButtons class="mt-4">
+            <DestinationItem
+              v-if="enoughAllowance && setAllowanceReceipt"
+              as="div"
+              :label="`${selectedToken?.symbol} allowance approved`"
+              :description="`You can now proceed to deposit`"
+            >
+              <template #image>
+                <div class="aspect-square h-full w-full rounded-full bg-success-400 p-3 text-black">
+                  <CheckIcon aria-hidden="true" />
+                </div>
+              </template>
+            </DestinationItem>
+            <DestinationItem v-else as="div" :label="`Approve ${selectedToken?.symbol} allowance`">
+              <template #underline>
+                Before depositing you need to give our bridge permission to spend specified amount of
+                {{ selectedToken?.symbol }}.
+                <span v-if="allowance && !allowance.isZero()"
+                  >You can deposit up to
+                  <CommonButtonLabel variant="light" @click="setAmountToCurrentAllowance()">
+                    {{ parseTokenAmount(allowance!, selectedToken!.decimals) }}
+                  </CommonButtonLabel>
+                  {{ selectedToken!.symbol }} without approving a new allowance.
+                </span>
+                <CommonButtonLabel variant="light" as="a" :href="TOKEN_ALLOWANCE" target="_blank">
+                  Learn more
+                </CommonButtonLabel>
+              </template>
+              <template #image>
+                <div class="aspect-square h-full w-full rounded-full bg-warning-400 p-3 text-black">
+                  <LockClosedIcon aria-hidden="true" />
+                </div>
+              </template>
+            </DestinationItem>
+          </CommonCardWithLineButtons>
+        </CommonHeightTransition>
+
+        <EthereumTransactionFooter>
+          <template #after-checks>
+            <template v-if="step === 'form'">
+              <template v-if="!enoughAllowance && !continueButtonDisabled">
+                <CommonButton
+                  type="submit"
+                  :disabled="continueButtonDisabled || setAllowanceInProgress"
+                  variant="primary"
+                  class="w-full"
+                  @click="setTokenAllowance()"
+                >
+                  <transition v-bind="TransitionPrimaryButtonText" mode="out-in">
+                    <span v-if="setAllowanceStatus === 'processing'">Processing...</span>
+                    <span v-else-if="setAllowanceStatus === 'waiting-for-signature'"
+                      >Waiting for allowance approval confirmation</span
+                    >
+                    <span class="flex items-center" v-else-if="setAllowanceStatus === 'sending'">
+                      <CommonSpinner class="mr-2 h-6 w-6" />
+                      Approving allowance...
+                    </span>
+                    <span v-else>Approve {{ selectedToken?.symbol }} allowance</span>
+                  </transition>
+                </CommonButton>
+                <TransactionButtonUnderlineConfirmTransaction
+                  :opened="setAllowanceStatus === 'waiting-for-signature'"
+                />
+              </template>
+              <CommonButton
+                v-else
+                type="submit"
+                :disabled="continueButtonDisabled"
+                variant="primary"
+                class="w-full"
+                @click="buttonContinue()"
+              >
+                Continue
+              </CommonButton>
+            </template>
+            <template v-else-if="step === 'confirm'">
+              <transition v-bind="TransitionAlertScaleInOutTransition">
+                <div v-if="!enoughBalanceForTransaction" class="mb-4">
+                  <CommonAlert
+                    v-if="amountError === 'exceeds_max_amount'"
+                    variant="error"
+                    :icon="ExclamationTriangleIcon"
+                  >
+                    <p>
+                      The inputted amount is higher than the recommended maximum amount. This means your transaction
+                      might fail.
+                    </p>
+                    <button type="button" class="alert-link" @click="step = 'form'">Go back</button>
+                  </CommonAlert>
+                  <CommonAlert v-else-if="continueButtonDisabled" variant="error" :icon="ExclamationTriangleIcon">
+                    <p>
+                      The fee has changed since the last estimation. Insufficient
+                      <span class="font-medium">{{ selectedToken?.symbol }}</span> balance to pay for transaction.
+                      Please go back and adjust the amount to proceed.
+                    </p>
+                    <button type="button" class="alert-link" @click="step = 'form'">Go back</button>
+                  </CommonAlert>
+                </div>
+              </transition>
+              <CommonButton
+                :disabled="continueButtonDisabled || status !== 'not-started'"
+                class="w-full"
+                variant="primary"
+                @click="buttonContinue()"
+              >
+                <transition v-bind="TransitionPrimaryButtonText" mode="out-in">
+                  <span v-if="status === 'processing'">Processing...</span>
+                  <span v-else-if="status === 'waiting-for-signature'">Waiting for confirmation</span>
+                  <span v-else>Bridge now</span>
+                </transition>
+              </CommonButton>
+              <TransactionButtonUnderlineConfirmTransaction :opened="status === 'waiting-for-signature'" />
+            </template>
+          </template>
+        </EthereumTransactionFooter>
+      </template>
+    </form>
+  </div>
+</template>
+
+<script lang="ts" setup>
+import { computed, onBeforeUnmount, ref, watch } from "vue";
+
+import { CheckIcon, ExclamationTriangleIcon, LockClosedIcon } from "@heroicons/vue/24/outline";
+import { BigNumber } from "ethers";
+import { isAddress } from "ethers/lib/utils";
+import { storeToRefs } from "pinia";
+
+import EthereumTransactionFooter from "@/components/transaction/EthereumTransactionFooter.vue";
+
+import useAllowance from "@/composables/transaction/useAllowance";
+import useNetworks from "@/composables/useNetworks";
+import useFee from "@/composables/zksync/deposit/useFee";
+import useTransaction from "@/composables/zksync/deposit/useTransaction";
+
+import type { TransactionDestination } from "@/store/destinations";
+import type { Token, TokenAmount } from "@/types";
+import type { BigNumberish } from "ethers";
+
+import { useRoute } from "#app";
+import { useDestinationsStore } from "@/store/destinations";
+import { useNetworkStore } from "@/store/network";
+import { useOnboardStore } from "@/store/onboard";
+import { usePreferencesStore } from "@/store/preferences";
+import { useZkSyncEthereumBalanceStore } from "@/store/zksync/ethereumBalance";
+import { useZkSyncProviderStore } from "@/store/zksync/provider";
+import { useZkSyncTokensStore } from "@/store/zksync/tokens";
+import { useZkSyncTransfersHistoryStore } from "@/store/zksync/transfersHistory";
+import { useZkSyncWalletStore } from "@/store/zksync/wallet";
+import { TOKEN_ALLOWANCE } from "@/utils/doc-links";
+import { checksumAddress, decimalToBigNumber, formatRawTokenPrice, parseTokenAmount } from "@/utils/formatters";
+import { TransitionAlertScaleInOutTransition, TransitionOpacity } from "@/utils/transitions";
+
+const route = useRoute();
+
+const onboardStore = useOnboardStore();
+const eraTokensStore = useZkSyncTokensStore();
+const eraProviderStore = useZkSyncProviderStore();
+const zkSyncEthereumBalance = useZkSyncEthereumBalanceStore();
+const eraWalletStore = useZkSyncWalletStore();
+const { account, isConnected } = storeToRefs(onboardStore);
+const { eraNetwork } = storeToRefs(eraProviderStore);
+const { destinations } = storeToRefs(useDestinationsStore());
+const { l1BlockExplorerUrl } = storeToRefs(useNetworkStore());
+const { l1Tokens, tokensRequestInProgress, tokensRequestError } = storeToRefs(eraTokensStore);
+const { balance, balanceInProgress, balanceError } = storeToRefs(zkSyncEthereumBalance);
+const { isCustomNode } = useNetworks();
+
+const step = ref<"form" | "confirm" | "submitted">("form");
+const destination = computed(() => destinations.value.era);
+
+const availableTokens = computed<Token[]>(() => {
+  if (balance.value) return balance.value;
+  return Object.values(l1Tokens.value ?? []);
+});
+const availableBalances = computed<TokenAmount[]>(() => {
+  return balance.value ?? [];
+});
+const routeTokenAddress = computed(() => {
+  if (!route.query.token || Array.isArray(route.query.token) || !isAddress(route.query.token)) {
+    return;
+  }
+  return checksumAddress(route.query.token);
+});
+const tokenWithHighestBalancePrice = computed(() => {
+  const tokenWithHighestBalancePrice = [...availableBalances.value].sort((a, b) => {
+    const aPrice = typeof a.price === "number" ? formatRawTokenPrice(a.amount, a.decimals, a.price) : 0;
+    const bPrice = typeof b.price === "number" ? formatRawTokenPrice(b.amount, b.decimals, b.price) : 0;
+    return bPrice - aPrice;
+  });
+  return tokenWithHighestBalancePrice[0] ? tokenWithHighestBalancePrice[0] : undefined;
+});
+const defaultToken = computed(() => availableTokens.value[0] ?? undefined);
+const selectedTokenAddress = ref<string | undefined>(
+  routeTokenAddress.value ?? tokenWithHighestBalancePrice.value?.address ?? defaultToken.value?.address
+);
+const selectedToken = computed<Token | undefined>(() => {
+  if (!selectedTokenAddress.value) {
+    return defaultToken.value;
+  }
+  return (
+    availableTokens.value.find((e) => e.address === selectedTokenAddress.value) ||
+    availableBalances.value.find((e) => e.address === selectedTokenAddress.value) ||
+    defaultToken.value
+  );
+});
+const amountInputTokenAddress = computed({
+  get: () => selectedToken.value?.address,
+  set: (address) => {
+    selectedTokenAddress.value = address;
+  },
+});
+const tokenBalance = computed<BigNumberish | undefined>(() => {
+  return balance.value?.find((e) => e.address === selectedToken.value?.address)?.amount;
+});
+
+const {
+  result: allowance,
+  inProgress: allowanceRequestInProgress,
+  error: allowanceRequestError,
+  requestAllowance,
+
+  setAllowanceReceipt,
+  setAllowanceStatus,
+  setAllowanceInProgress,
+  setAllowanceError,
+  setAllowance,
+} = useAllowance(
+  computed(() => account.value.address),
+  computed(() => selectedToken.value?.address),
+  async () => (await eraProviderStore.requestProvider().getDefaultBridgeAddresses()).erc20L1,
+  onboardStore.getWallet,
+  onboardStore.getPublicClient
+);
+const enoughAllowance = computed(() => {
+  if (!allowance.value || !selectedToken.value) {
+    return true;
+  }
+  return !allowance.value.isZero() && allowance.value.gte(totalComputeAmount.value);
+});
+const setAmountToCurrentAllowance = () => {
+  if (!allowance.value || !selectedToken.value) {
+    return;
+  }
+  amount.value = parseTokenAmount(allowance.value, selectedToken.value.decimals);
+};
+const setTokenAllowance = async () => {
+  await setAllowance(totalComputeAmount.value);
+  await new Promise((resolve) => setTimeout(resolve, 2000)); // Wait for balances to be updated on API side
+  await fetchBalances(true);
+};
+
+const unsubscribe = onboardStore.subscribeOnAccountChange(() => {
+  step.value = "form";
+});
+
+const {
+  fee: feeValues,
+  result: fee,
+  inProgress: feeInProgress,
+  error: feeError,
+  recommendedBalance,
+  feeToken,
+  enoughBalanceToCoverFee,
+  estimateFee,
+  resetFee,
+} = useFee(availableTokens, balance, eraWalletStore.getL1VoidSigner, onboardStore.getPublicClient);
+
+const address = ref("");
+const amount = ref("");
+const amountError = ref<string | undefined>();
+const maxAmount = computed(() => {
+  if (!selectedToken.value || !tokenBalance.value) {
+    return undefined;
+  }
+  if (feeToken.value?.address === selectedToken.value.address) {
+    if (BigNumber.from(tokenBalance.value).isZero()) {
+      return "0";
+    }
+    if (!fee.value) {
+      return undefined;
+    }
+    if (BigNumber.from(fee.value).gt(tokenBalance.value)) {
+      return "0";
+    }
+    return BigNumber.from(tokenBalance.value).sub(fee.value).toString();
+  }
+  return tokenBalance.value.toString();
+});
+const totalComputeAmount = computed(() => {
+  try {
+    if (!amount.value || !selectedToken.value) {
+      return BigNumber.from("0");
+    }
+    return decimalToBigNumber(amount.value, selectedToken.value.decimals);
+  } catch (error) {
+    return BigNumber.from("0");
+  }
+});
+const enoughBalanceForTransaction = computed(() => !amountError.value);
+
+const transaction = computed<
+  | {
+      token: TokenAmount;
+      from: { address: string; destination: TransactionDestination };
+      to: { address: string; destination: TransactionDestination };
+    }
+  | undefined
+>(() => {
+  const toAddress = isAddress(address.value) ? address.value : account.value.address;
+  if (!toAddress || !selectedToken.value) {
+    return undefined;
+  }
+  return {
+    token: {
+      ...selectedToken.value!,
+      amount: totalComputeAmount.value.toString(),
+    },
+    from: {
+      address: account.value.address!,
+      destination: destinations.value.ethereum,
+    },
+    to: {
+      address: toAddress,
+      destination: destination.value,
+    },
+  };
+});
+
+const estimate = async () => {
+  if (!transaction.value?.from.address || !transaction.value?.to.address || !selectedToken.value) {
+    return;
+  }
+  await estimateFee(transaction.value.to.address, selectedToken.value.address);
+};
+const feeAutoUpdateEstimate = async () => {
+  await estimate();
+};
+watch(
+  [() => selectedToken.value?.address, () => transaction.value?.from.address],
+  () => {
+    resetFee();
+    estimate();
+  },
+  { immediate: true }
+);
+
+const feeLoading = computed(() => feeInProgress.value || (!fee.value && balanceInProgress.value));
+
+const continueButtonDisabled = computed(() => {
+  if (
+    !transaction.value ||
+    !enoughBalanceToCoverFee.value ||
+    !(!amountError.value || amountError.value === "exceeds_max_amount") ||
+    BigNumber.from(transaction.value.token.amount).isZero()
+  )
+    return true;
+  if ((allowanceRequestInProgress.value && !allowance.value) || allowanceRequestError.value) return true;
+  if (!enoughAllowance.value) return false; // When allowance approval is required we can proceed to approve stage even if deposit fee is not loaded
+  if (feeLoading.value || !fee.value) return true;
+  return false;
+});
+
+const buttonContinue = () => {
+  if (continueButtonDisabled.value) {
+    return;
+  }
+  if (step.value === "form") {
+    step.value = "confirm";
+  } else if (step.value === "confirm") {
+    makeTransaction();
+  }
+};
+
+/* Transaction signing and submitting */
+const eraTransfersHistoryStore = useZkSyncTransfersHistoryStore();
+const { previousTransactionAddress } = storeToRefs(usePreferencesStore());
+const { status, error, ethTransactionHash, commitTransaction } = useTransaction(eraWalletStore.getL1Signer);
+
+const transactionCommitted = ref(false);
+const makeTransaction = async () => {
+  if (continueButtonDisabled.value) return;
+
+  const tx = await commitTransaction(
+    {
+      to: transaction.value!.to.address,
+      tokenAddress: transaction.value!.token.address,
+      amount: transaction.value!.token.amount,
+    },
+    feeValues.value!
+  );
+
+  if (status.value === "done") {
+    step.value = "submitted";
+    previousTransactionAddress.value = transaction.value!.to.address;
+  }
+
+  if (tx) {
+    zkSyncEthereumBalance.deductBalance(feeToken.value!.address!, fee.value!);
+    zkSyncEthereumBalance.deductBalance(transaction.value!.token.address!, transaction.value!.token.amount);
+    tx.wait()
+      .then(async () => {
+        transactionCommitted.value = true;
+        setTimeout(() => {
+          eraTransfersHistoryStore.reloadRecentTransfers().catch(() => undefined);
+          eraWalletStore.requestBalance({ force: true }).catch(() => undefined);
+        }, 2000);
+      })
+      .catch((err) => {
+        transactionCommitted.value = false;
+        error.value = err as Error;
+        status.value = "not-started";
+      });
+  }
+};
+
+const resetForm = () => {
+  address.value = "";
+  amount.value = "";
+  step.value = "form";
+  status.value = "not-started";
+};
+
+const fetchBalances = async (force = false) => {
+  eraTokensStore.requestTokens();
+  if (!isConnected.value) return;
+
+  await zkSyncEthereumBalance.requestBalance({ force }).then(() => {
+    if (!selectedToken.value) {
+      selectedTokenAddress.value = tokenWithHighestBalancePrice.value?.address;
+    }
+  });
+};
+fetchBalances();
+
+const unsubscribeFetchBalance = onboardStore.subscribeOnAccountChange((newAddress) => {
+  if (!newAddress) return;
+  fetchBalances();
+});
+
+onBeforeUnmount(() => {
+  unsubscribe();
+  unsubscribeFetchBalance();
+});
+</script>
+
+<style lang="scss" scoped></style>

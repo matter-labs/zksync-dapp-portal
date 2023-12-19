@@ -52,17 +52,6 @@ onBeforeUnmount(() => {
 
 <style lang="scss" scoped>
 @use "sass:math";
-.lite.dark {
-  .radial-progress {
-    .circle {
-      .mask {
-        .fill {
-          @apply bg-primary-300;
-        }
-      }
-    }
-  }
-}
 .radial-progress {
   $circle-size: 20px;
   $inset-size: 14px;

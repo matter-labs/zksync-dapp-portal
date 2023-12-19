@@ -1,6 +1,6 @@
 import { computed } from "vue";
 
-import type { TokenAmount } from "@/types";
+import type { Api, Token, TokenAmount } from "@/types";
 import type { Ref } from "vue";
 
 export const groupBalancesByAmount = <T = TokenAmount>(balances: Ref<T[]>) =>
@@ -35,19 +35,39 @@ export const groupBalancesByAmount = <T = TokenAmount>(balances: Ref<T[]>) =>
     return [groups.default, groups.small, groups.zero].filter((group) => group.balances.length);
   });
 
-export const groupTransactionsByDate = <T>(transactions: Ref<T[]>, getDate: (transaction: T) => Date) =>
-  computed(() => {
-    const groups: Record<string, { title: string | null; transactions: T[] }> = {};
-    for (const transaction of transactions.value) {
-      const date = getDate(transaction);
-      const dateKey = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
-      if (!groups[dateKey]) {
-        groups[dateKey] = {
-          title: date.toLocaleDateString([], { day: "numeric", month: "long", year: "numeric" }),
-          transactions: [],
-        };
-      }
-      groups[dateKey].transactions.push(transaction);
-    }
-    return groups;
-  });
+export const mapApiToken = (token: Api.Response.Token): Token => {
+  if (token.l2Address === ETH_TOKEN.address) {
+    return {
+      ...ETH_TOKEN,
+      price: token.usdPrice || undefined,
+    };
+  }
+
+  return {
+    l1Address: token.l1Address || undefined,
+    address: token.l2Address,
+    symbol: token.symbol || "unknown",
+    name: token.name || "unknown",
+    decimals: token.decimals,
+    iconUrl: token.iconURL || undefined,
+    enabledForFees: token.l2Address === ETH_TOKEN.address,
+    price: token.usdPrice || undefined,
+  };
+};
+
+export type NetworkLayer = "L1" | "L2";
+export function mapApiTransfer(transfer: Api.Response.Transfer) {
+  const token = transfer.token ? mapApiToken(transfer.token) : undefined;
+  return {
+    transactionHash: transfer.transactionHash,
+    type: transfer.type,
+    from: transfer.from,
+    to: transfer.to,
+    fromNetwork: transfer.type === "deposit" ? "L1" : ("L2" as NetworkLayer),
+    toNetwork: transfer.type === "withdrawal" ? "L1" : ("L2" as NetworkLayer),
+    amount: transfer.amount,
+    token,
+    timestamp: transfer.timestamp,
+  };
+}
+export type Transfer = ReturnType<typeof mapApiTransfer>;

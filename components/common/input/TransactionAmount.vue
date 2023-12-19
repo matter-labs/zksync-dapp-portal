@@ -1,6 +1,6 @@
 <template>
   <div>
-    <TokenSelectDropdown
+    <TokenSelectModal
       v-model:opened="selectTokenModalOpened"
       v-model:token-address="selectedTokenAddress"
       :loading="loading"
@@ -10,7 +10,7 @@
       <template #body-bottom v-if="$slots['token-dropdown-bottom']">
         <slot name="token-dropdown-bottom" />
       </template>
-    </TokenSelectDropdown>
+    </TokenSelectModal>
     <CommonContentBlock for="transaction-amount-input" as="label">
       <div class="flex items-center gap-4">
         <div class="flex flex-wrap items-center gap-2 sm:flex-nowrap">
@@ -61,7 +61,7 @@
           <span v-else-if="selectedToken">{{ selectedToken.symbol }}</span>
         </CommonButtonDropdown>
       </div>
-      <CommonInputError>
+      <CommonInputErrorMessage>
         <transition v-bind="TransitionOpacity()">
           <span v-if="amountError">
             <template v-if="amountError === 'insufficient_balance' || maxDecimalAmount === '0'">
@@ -83,7 +83,7 @@
             </template>
           </span>
         </transition>
-      </CommonInputError>
+      </CommonInputErrorMessage>
     </CommonContentBlock>
   </div>
 </template>

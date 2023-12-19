@@ -2,12 +2,12 @@ import { prompt } from "enquirer";
 import { readFileSync, writeFileSync } from "fs";
 import { join as pathJoin } from "path";
 
-import { ETH_L1_ADDRESS, ETH_L2_ADDRESS } from "../../utils/constants";
+import { ETH_TOKEN } from "../../utils/constants";
 
-import type { EraNetwork } from "../../data/networks";
+import type { ZkSyncNetwork } from "../../data/networks";
 import type { Token } from "../../types";
 
-export type Network = Omit<EraNetwork, "getTokens">;
+export type Network = Omit<ZkSyncNetwork, "getTokens">;
 export type Config = { network: Network; tokens: Token[] }[];
 
 export const configPath = pathJoin(__dirname, "../../hyperchains/config.json");
@@ -50,15 +50,8 @@ export const generateNetworkConfig = async (network: Network, tokens: Token[]) =
   const config = getConfig();
 
   // Add ETH token if it's not in the list
-  if (!tokens.find((token: Token) => token.address === ETH_L2_ADDRESS)) {
-    tokens.unshift({
-      address: ETH_L2_ADDRESS,
-      l1Address: ETH_L1_ADDRESS,
-      symbol: "ETH",
-      decimals: 18,
-      iconUrl: "/img/eth.svg",
-      enabledForFees: true,
-    });
+  if (!tokens.some((token: Token) => token.address === ETH_TOKEN.address)) {
+    tokens.unshift(ETH_TOKEN);
   }
 
   config.unshift({ network, tokens });

@@ -9,7 +9,7 @@
       <template v-if="recentWithdrawals.length">
         <TypographyCategoryLabel>Recent withdrawals</TypographyCategoryLabel>
         <CommonCardWithLineButtons>
-          <WithdrawalLineWithStatus
+          <TransactionTransferWithdrawalLineItem
             v-for="(item, index) in recentWithdrawals"
             :key="index"
             :transfer="item"
@@ -32,7 +32,7 @@
       </CommonCardWithLineButtons>
       <div v-else-if="displayedTransfers.length">
         <CommonCardWithLineButtons>
-          <EraTransferLineItem v-for="(item, index) in displayedTransfers" :key="index" :transfer="item" />
+          <TransactionTransferLineItem v-for="(item, index) in displayedTransfers" :key="index" :transfer="item" />
         </CommonCardWithLineButtons>
 
         <!-- Load more -->
@@ -66,21 +66,18 @@ import { computed, onBeforeUnmount, ref } from "vue";
 import { useIntersectionObserver } from "@vueuse/core";
 import { storeToRefs } from "pinia";
 
-import EraTransferLineItem from "@/components/transaction/zksync/era/EraTransferLineItem.vue";
-import WithdrawalLineWithStatus from "@/components/transaction/zksync/era/bridge/WithdrawalLineWithStatus.vue";
-
 import useInterval from "@/composables/useInterval";
 import useSingleLoading from "@/composables/useSingleLoading";
-import useWithdrawalStatuses from "@/composables/zksync/era/bridge/withdrawalStatuses";
+import useWithdrawalStatuses from "@/composables/zksync/useBridgeWithdrawalStatuses";
 
 import { useDestinationsStore } from "@/store/destinations";
 import { useOnboardStore } from "@/store/onboard";
-import { useEraProviderStore } from "@/store/zksync/era/provider";
-import { useEraTransfersHistoryStore } from "@/store/zksync/era/transfersHistory";
+import { useZkSyncProviderStore } from "@/store/zksync/provider";
+import { useZkSyncTransfersHistoryStore } from "@/store/zksync/transfersHistory";
 
 const onboardStore = useOnboardStore();
-const { eraNetwork } = storeToRefs(useEraProviderStore());
-const eraTransfersHistoryStore = useEraTransfersHistoryStore();
+const { eraNetwork } = storeToRefs(useZkSyncProviderStore());
+const eraTransfersHistoryStore = useZkSyncTransfersHistoryStore();
 const { isConnected } = storeToRefs(onboardStore);
 const {
   transfers,

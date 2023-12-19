@@ -13,9 +13,6 @@ export type Token = {
 };
 export type TokenAmount = Token & { amount: BigNumberish };
 
-export type ZkSyncLiteToken = Token & { id: number };
-export type ZkSyncLiteTokenAmount = TokenAmount & ZkSyncLiteToken;
-
 export declare namespace Api {
   namespace Response {
     type Collection<T> = {

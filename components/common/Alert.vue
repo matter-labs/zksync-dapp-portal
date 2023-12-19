@@ -24,15 +24,6 @@ defineProps({
 </script>
 
 <style lang="scss">
-.lite.dark {
-  .alert-container {
-    &.variant- {
-      &info {
-        @apply border-primary-300/50 bg-primary-300/10;
-      }
-    }
-  }
-}
 .alert-container {
   @apply w-full rounded-[1.24rem] p-4;
   &.has-icon {

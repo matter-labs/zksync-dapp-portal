@@ -24,13 +24,13 @@
       autocomplete="off"
       class="mt-4 text-lg"
     />
-    <CommonInputError>
+    <CommonInputErrorMessage>
       <transition v-bind="TransitionOpacity()">
         <span v-if="addressError">
           <template v-if="addressError === 'invalid_address'">Invalid Ethereum 0x address</template>
         </span>
       </transition>
-    </CommonInputError>
+    </CommonInputErrorMessage>
   </CommonContentBlock>
 </template>
 

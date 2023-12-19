@@ -131,17 +131,17 @@ import type { FunctionalComponent } from "vue";
 
 import { useDestinationsStore } from "@/store/destinations";
 import { useOnboardStore } from "@/store/onboard";
-import { useEraProviderStore } from "@/store/zksync/era/provider";
-import { useEraWalletStore } from "@/store/zksync/era/wallet";
+import { useZkSyncProviderStore } from "@/store/zksync/provider";
+import { useZkSyncWalletStore } from "@/store/zksync/wallet";
 import { parseTokenAmount, removeSmallAmount } from "@/utils/formatters";
 import { isOnlyZeroes } from "@/utils/helpers";
 
 const onboardStore = useOnboardStore();
-const walletEraStore = useEraWalletStore();
+const walletEraStore = useZkSyncWalletStore();
 const { isConnected } = storeToRefs(onboardStore);
 const { balance, balanceInProgress, balanceError } = storeToRefs(walletEraStore);
 const { destinations } = storeToRefs(useDestinationsStore());
-const { eraNetwork } = storeToRefs(useEraProviderStore());
+const { eraNetwork } = storeToRefs(useZkSyncProviderStore());
 
 const { loading, reset: resetSingleLoading } = useSingleLoading(computed(() => balanceInProgress.value));
 

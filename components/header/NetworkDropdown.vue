@@ -12,7 +12,7 @@
     <transition v-bind="TransitionAlertScaleInOutTransition">
       <MenuItems class="network-options-container">
         <MenuItem
-          v-for="item in eraNetworks.filter((e) => !e.hidden)"
+          v-for="item in zkSyncNetworks.filter((e) => !e.hidden)"
           :key="item.key"
           v-slot="{ active }"
           as="template"
@@ -39,7 +39,7 @@ import { storeToRefs } from "pinia";
 
 import useNetworks from "@/composables/useNetworks";
 
-import type { L2Network } from "@/data/networks";
+import type { ZkSyncNetwork } from "@/data/networks";
 
 import { useRoute } from "#app";
 import { useNetworkStore } from "@/store/network";
@@ -47,12 +47,12 @@ import { getNetworkUrl } from "@/utils/helpers";
 
 const route = useRoute();
 
-const { eraNetworks } = useNetworks();
+const { zkSyncNetworks } = useNetworks();
 const { selectedNetwork } = storeToRefs(useNetworkStore());
 
-const isNetworkSelected = (network: L2Network) => selectedNetwork.value.key === network.key;
+const isNetworkSelected = (network: ZkSyncNetwork) => selectedNetwork.value.key === network.key;
 
-const buttonClicked = (network: L2Network) => {
+const buttonClicked = (network: ZkSyncNetwork) => {
   if (isNetworkSelected(network)) {
     return;
   }

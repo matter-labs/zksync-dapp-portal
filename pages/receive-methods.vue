@@ -66,10 +66,10 @@ import { ArrowsUpDownIcon, ArrowTopRightOnSquareIcon, BanknotesIcon, QrCodeIcon 
 import { storeToRefs } from "pinia";
 
 import { useDestinationsStore } from "@/store/destinations";
-import { useEraProviderStore } from "@/store/zksync/era/provider";
+import { useZkSyncProviderStore } from "@/store/zksync/provider";
 
 const { destinations } = storeToRefs(useDestinationsStore());
-const { eraNetwork } = storeToRefs(useEraProviderStore());
+const { eraNetwork } = storeToRefs(useZkSyncProviderStore());
 </script>
 
 <style lang="scss" scoped></style>

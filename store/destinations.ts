@@ -1,8 +1,7 @@
 import { computed } from "vue";
 
 import { useNetworkStore } from "@/store/network";
-import { useEraProviderStore } from "@/store/zksync/era/provider";
-import { useLiteProviderStore } from "@/store/zksync/lite/provider";
+import { useZkSyncProviderStore } from "@/store/zksync/provider";
 
 export type TransactionDestination = {
   key?: string;
@@ -12,15 +11,9 @@ export type TransactionDestination = {
 
 export const useDestinationsStore = defineStore("destinations", () => {
   const { l1Network } = storeToRefs(useNetworkStore());
-  const { eraNetwork } = storeToRefs(useEraProviderStore());
-  const { zkSyncLiteNetwork } = storeToRefs(useLiteProviderStore());
+  const { eraNetwork } = storeToRefs(useZkSyncProviderStore());
 
   const destinations = computed(() => ({
-    zkSyncLite: {
-      key: "zkSyncLite",
-      label: zkSyncLiteNetwork.value.name,
-      iconUrl: "/img/zksync-lite.svg",
-    },
     era: {
       key: "era",
       label: eraNetwork.value.name,

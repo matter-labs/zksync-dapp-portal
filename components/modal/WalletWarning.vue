@@ -26,23 +26,21 @@ import { ref, watch } from "vue";
 import { useStorage } from "@vueuse/core";
 import { storeToRefs } from "pinia";
 
-import { useNetworkStore } from "@/store/network";
 import { useOnboardStore } from "@/store/onboard";
 
 const { walletNotSupported } = storeToRefs(useOnboardStore());
-const { version } = storeToRefs(useNetworkStore());
 const checkbox = ref<HTMLInputElement | undefined>();
 
 const doNotShowWarning = useStorage("wallet-warning-hidden", false);
 const warningChecked = ref(false);
 const walletWarningModal = ref(false);
 watch(
-  [walletNotSupported, version],
-  ([notSupported, zkSyncVersion]) => {
+  walletNotSupported,
+  (notSupported) => {
     if (doNotShowWarning.value) return;
     if (!notSupported) {
       walletWarningModal.value = false;
-    } else if (zkSyncVersion === "era") {
+    } else {
       walletWarningModal.value = true;
     }
   },

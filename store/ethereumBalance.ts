@@ -6,15 +6,14 @@ import type { Blockchain as AnkrSupportedChains } from "@ankr.com/ankr.js";
 
 import { l1Networks } from "@/data/networks";
 import { useOnboardStore } from "@/store/onboard";
-import { useEraProviderStore } from "@/store/zksync/era/provider";
-import { ETH_L1_ADDRESS } from "@/utils/constants";
+import { useZkSyncProviderStore } from "@/store/zksync/provider";
 import { checksumAddress } from "@/utils/formatters";
 
 export const useEthereumBalanceStore = defineStore("ethereumBalance", () => {
   const runtimeConfig = useRuntimeConfig();
   const onboardStore = useOnboardStore();
   const { account } = storeToRefs(onboardStore);
-  const { eraNetwork } = storeToRefs(useEraProviderStore());
+  const { eraNetwork } = storeToRefs(useZkSyncProviderStore());
 
   const {
     result: balance,
@@ -45,7 +44,7 @@ export const useEthereumBalanceStore = defineStore("ethereumBalance", () => {
         .filter((e) => e.contractAddress || e.tokenType === "NATIVE")
         .map((e) => {
           return {
-            address: e.tokenType === "NATIVE" ? ETH_L1_ADDRESS : checksumAddress(e.contractAddress!),
+            address: e.tokenType === "NATIVE" ? ETH_TOKEN.l1Address : checksumAddress(e.contractAddress!),
             symbol: e.tokenSymbol,
             name: e.tokenName,
             decimals: e.tokenDecimals,

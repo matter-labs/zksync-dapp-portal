@@ -39,13 +39,23 @@
       ],
       "redirects": [
         {
+          "source": "https://sepolia.staging-portal.zksync.dev/*",
+          "destination": "https://staging-portal.zksync.dev/?network=sepolia",
+          "type": 301
+        },
+        {
+          "source": "https://sepolia.portal.zksync.io/*",
+          "destination": "https://portal.zksync.io/?network=sepolia",
+          "type": 301
+        },
+        {
           "source": "https://goerli.staging-portal.zksync.dev/*",
-          "destination": "https://staging-portal.zksync.dev/?network=era-goerli",
+          "destination": "https://staging-portal.zksync.dev/?network=goerli",
           "type": 301
         },
         {
           "source": "https://goerli.portal.zksync.io/*",
-          "destination": "https://portal.zksync.io/?network=era-goerli",
+          "destination": "https://portal.zksync.io/?network=goerli",
           "type": 301
         }
       ]

@@ -38,7 +38,7 @@ import { storeToRefs } from "pinia";
 import type { TokenPrice } from "@/types";
 import type { Component, PropType } from "vue";
 
-import { useEraProviderStore } from "@/store/zksync/era/provider";
+import { useZkSyncProviderStore } from "@/store/zksync/provider";
 
 defineProps({
   as: {
@@ -67,7 +67,7 @@ defineProps({
   },
 });
 
-const { eraNetwork } = storeToRefs(useEraProviderStore());
+const { eraNetwork } = storeToRefs(useZkSyncProviderStore());
 </script>
 
 <style lang="scss" scoped></style>
