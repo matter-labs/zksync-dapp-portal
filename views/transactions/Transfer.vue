@@ -12,6 +12,17 @@
       Confirm transaction
     </PageTitle>
 
+    <NetworkSelectModal
+      v-model:opened="fromNetworkModalOpened"
+      :network-key="destinations.era.key"
+      @update:network-key="fromNetworkSelected($event)"
+    />
+    <NetworkSelectModal
+      v-model:opened="toNetworkModalOpened"
+      :network-key="destination.key"
+      @update:network-key="toNetworkSelected($event)"
+    />
+
     <CommonErrorBlock v-if="tokensRequestError" @try-again="fetchBalances">
       Getting tokens error: {{ tokensRequestError.message }}
     </CommonErrorBlock>
@@ -36,7 +47,12 @@
             </CommonAlert>
           </template>
           <template #dropdown v-if="type === 'withdrawal'">
-            <CommonButtonDropdown :toggled="false" size="xs" variant="light">
+            <CommonButtonDropdown
+              :toggled="fromNetworkModalOpened"
+              size="xs"
+              variant="light"
+              @click="fromNetworkModalOpened = true"
+            >
               <template #left-icon>
                 <img :src="destinations.era.iconUrl" class="h-full w-full" />
               </template>
@@ -53,7 +69,12 @@
           class="mt-6"
         >
           <template #dropdown>
-            <CommonButtonDropdown :toggled="false" size="xs" variant="light">
+            <CommonButtonDropdown
+              :toggled="toNetworkModalOpened"
+              size="xs"
+              variant="light"
+              @click="toNetworkModalOpened = true"
+            >
               <template #left-icon>
                 <img :src="destination.iconUrl" class="h-full w-full" />
               </template>
@@ -225,7 +246,7 @@ import type { Token, TokenAmount } from "@/types";
 import type { BigNumberish } from "ethers";
 import type { PropType } from "vue";
 
-import { useRoute } from "#app";
+import { useRoute, useRouter } from "#app";
 import { useDestinationsStore } from "@/store/destinations";
 import { useOnboardStore } from "@/store/onboard";
 import { usePreferencesStore } from "@/store/preferences";
@@ -246,6 +267,7 @@ const props = defineProps({
 });
 
 const route = useRoute();
+const router = useRouter();
 
 const onboardStore = useOnboardStore();
 const walletEraStore = useZkSyncWalletStore();
@@ -257,6 +279,19 @@ const { destinations } = storeToRefs(useDestinationsStore());
 const { tokens, tokensRequestInProgress, tokensRequestError } = storeToRefs(eraTokensStore);
 const { balance, balanceInProgress, balanceError } = storeToRefs(walletEraStore);
 const { isCustomNode } = useNetworks();
+
+const toNetworkModalOpened = ref(false);
+const toNetworkSelected = (networkKey?: string) => {
+  if (destinations.value.era.key === networkKey) {
+    router.push({ name: "bridge" });
+  }
+};
+const fromNetworkModalOpened = ref(false);
+const fromNetworkSelected = (networkKey?: string) => {
+  if (destinations.value.ethereum.key === networkKey) {
+    router.push({ name: "bridge" });
+  }
+};
 
 const step = ref<"form" | "confirm" | "submitted">("form");
 const destination = computed(() => (props.type === "transfer" ? destinations.value.era : destinations.value.ethereum));

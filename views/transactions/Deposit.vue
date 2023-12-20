@@ -12,6 +12,17 @@
       Confirm transaction
     </PageTitle>
 
+    <NetworkSelectModal
+      v-model:opened="fromNetworkModalOpened"
+      :network-key="destinations.ethereum.key"
+      @update:network-key="fromNetworkSelected($event)"
+    />
+    <NetworkSelectModal
+      v-model:opened="toNetworkModalOpened"
+      :network-key="destination.key"
+      @update:network-key="toNetworkSelected($event)"
+    />
+
     <CommonErrorBlock v-if="tokensRequestError" @try-again="fetchBalances">
       Getting tokens error: {{ tokensRequestError.message }}
     </CommonErrorBlock>
@@ -38,7 +49,12 @@
           class="mb-block-padding-1/2 sm:mb-block-gap"
         >
           <template #dropdown>
-            <CommonButtonDropdown :toggled="false" size="xs" variant="light">
+            <CommonButtonDropdown
+              :toggled="fromNetworkModalOpened"
+              size="xs"
+              variant="light"
+              @click="fromNetworkModalOpened = true"
+            >
               <template #left-icon>
                 <img :src="destinations.ethereum.iconUrl" class="h-full w-full" />
               </template>
@@ -52,7 +68,12 @@
           :default-label="`To your account ${account.address ? shortenAddress(account.address) : ''}`"
         >
           <template #dropdown>
-            <CommonButtonDropdown :toggled="false" size="xs" variant="light">
+            <CommonButtonDropdown
+              :toggled="toNetworkModalOpened"
+              size="xs"
+              variant="light"
+              @click="toNetworkModalOpened = true"
+            >
               <template #left-icon>
                 <img :src="destination.iconUrl" class="h-full w-full" />
               </template>
@@ -289,7 +310,7 @@ import type { TransactionDestination } from "@/store/destinations";
 import type { Token, TokenAmount } from "@/types";
 import type { BigNumberish } from "ethers";
 
-import { useRoute } from "#app";
+import { useRoute, useRouter } from "#app";
 import { useDestinationsStore } from "@/store/destinations";
 import { useNetworkStore } from "@/store/network";
 import { useOnboardStore } from "@/store/onboard";
@@ -304,6 +325,7 @@ import { checksumAddress, decimalToBigNumber, formatRawTokenPrice, parseTokenAmo
 import { TransitionAlertScaleInOutTransition, TransitionOpacity } from "@/utils/transitions";
 
 const route = useRoute();
+const router = useRouter();
 
 const onboardStore = useOnboardStore();
 const eraTokensStore = useZkSyncTokensStore();
@@ -317,6 +339,19 @@ const { l1BlockExplorerUrl } = storeToRefs(useNetworkStore());
 const { l1Tokens, tokensRequestInProgress, tokensRequestError } = storeToRefs(eraTokensStore);
 const { balance, balanceInProgress, balanceError } = storeToRefs(zkSyncEthereumBalance);
 const { isCustomNode } = useNetworks();
+
+const toNetworkModalOpened = ref(false);
+const toNetworkSelected = (networkKey?: string) => {
+  if (destinations.value.ethereum.key === networkKey) {
+    router.push({ name: "bridge-withdraw" });
+  }
+};
+const fromNetworkModalOpened = ref(false);
+const fromNetworkSelected = (networkKey?: string) => {
+  if (destinations.value.era.key === networkKey) {
+    router.push({ name: "bridge-withdraw" });
+  }
+};
 
 const step = ref<"form" | "confirm" | "submitted">("form");
 const destination = computed(() => destinations.value.era);
