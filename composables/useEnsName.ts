@@ -24,14 +24,16 @@ export default (ensName: Ref<string>) => {
     { cache: false }
   );
 
-  watch(ensName, async (newValue) => {
-    if (newValue.endsWith(".eth")) {
+  const isValidEnsFormat = computed(() => ensName.value.endsWith(".eth"));
+  watch(ensName, async () => {
+    if (isValidEnsFormat.value) {
       await parseEns();
     }
   });
 
   return {
     address: computed(() => nameToAddress.value[ensName.value]),
+    isValidEnsFormat,
     inProgress,
     error,
     parseEns,

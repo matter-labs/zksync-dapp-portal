@@ -1,5 +1,5 @@
 <template>
-  <CommonButtonLineWithImg icon-loading as="div" class="address-card-loader">
+  <CommonButtonLineWithImg as="div" class="address-card-loader">
     <template #image>
       <CommonContentLoader class="address-avatar-img" />
     </template>

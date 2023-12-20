@@ -546,6 +546,7 @@ const makeTransaction = async () => {
 
   if (status.value === "done") {
     step.value = "submitted";
+    console.log(transaction.value);
     previousTransactionAddress.value = transaction.value!.to.address;
     recentlyBridged.value = true;
   }

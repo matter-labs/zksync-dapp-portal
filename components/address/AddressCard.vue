@@ -8,10 +8,10 @@
       </AddressAvatar>
     </template>
     <template #default>
-      <CommonButtonLineBodyInfo class="text-left" data-testid="your-account">
-        <template #label v-if="name">{{ name }} </template>
+      <CommonButtonLineBodyInfo class="text-left">
+        <template #label v-if="name">{{ name }}</template>
         <template #underline>
-          <span class="address-card-address" :title="address">{{ shortenAddress(address) }}</span>
+          <span class="block break-all" :title="address">{{ address }}</span>
         </template>
       </CommonButtonLineBodyInfo>
     </template>
@@ -23,8 +23,6 @@
 
 <script lang="ts" setup>
 import type { Component, PropType } from "vue";
-
-import { shortenAddress } from "@/utils/formatters";
 
 defineProps({
   as: {
