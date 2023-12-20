@@ -54,9 +54,7 @@
         </div>
       </template>
 
-      <div class="divider">
-        <PaperAirplaneIcon class="airplane" aria-hidden="true" />
-      </div>
+      <AnimationsTransactionProgress :completed="completed" class="transaction-animation" />
     </div>
     <CommonButton
       size="sm"
@@ -83,7 +81,7 @@
 <script lang="ts" setup>
 import { computed } from "vue";
 
-import { ArrowTopRightOnSquareIcon, PaperAirplaneIcon } from "@heroicons/vue/24/outline";
+import { ArrowTopRightOnSquareIcon } from "@heroicons/vue/24/outline";
 
 import type { TransactionDestination } from "@/store/destinations";
 import type { TokenAmount } from "@/types";
@@ -114,6 +112,10 @@ const props = defineProps({
     type: Object as PropType<TokenAmount>,
     required: true,
   },
+  completed: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const isSameAddress = computed(() => props.fromAddress === props.toAddress);
@@ -135,6 +137,9 @@ const isSameAddressDifferentDestination = computed(
     &.right {
       grid-area: info-col-right;
     }
+  }
+  .transaction-animation {
+    grid-area: divider;
   }
   .divider {
     @apply relative border-t border-dashed border-neutral-500;

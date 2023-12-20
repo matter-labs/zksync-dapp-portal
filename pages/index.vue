@@ -6,6 +6,11 @@
       <ConnectWalletBlock />
     </template>
     <template v-else>
+      <EcosystemBlock
+        v-if="eraNetwork.displaySettings?.showPartnerLinks && ecosystemBannerVisible"
+        show-close-button
+        class="mb-block-padding-1/2 sm:mb-block-gap"
+      />
       <CommonContentBlock class="mb-block-gap">
         <div class="flex flex-col flex-wrap gap-block-gap sm:flex-row sm:items-center sm:justify-between">
           <CommonTotalBalance :balance="balance" :loading="loading" :error="balanceError" />
@@ -126,6 +131,7 @@ import { storeToRefs } from "pinia";
 
 import useInterval from "@/composables/useInterval";
 import useSingleLoading from "@/composables/useSingleLoading";
+import useEcosystemBanner from "@/composables/zksync/deposit/useEcosystemBanner";
 
 import type { FunctionalComponent } from "vue";
 
@@ -142,6 +148,8 @@ const { isConnected } = storeToRefs(onboardStore);
 const { balance, balanceInProgress, balanceError } = storeToRefs(walletEraStore);
 const { destinations } = storeToRefs(useDestinationsStore());
 const { eraNetwork } = storeToRefs(useZkSyncProviderStore());
+
+const { ecosystemBannerVisible } = useEcosystemBanner();
 
 const { loading, reset: resetSingleLoading } = useSingleLoading(computed(() => balanceInProgress.value));
 

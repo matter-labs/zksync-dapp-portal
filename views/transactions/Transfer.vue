@@ -79,23 +79,11 @@
         </CommonCardWithLineButtons>
       </template>
       <template v-else-if="step === 'submitted'">
-        <template v-if="transactionCommitted">
-          <h1 class="h1 mt-block-gap-1/2 text-center">Transaction completed</h1>
-          <p class="text-center">
-            Your funds should now be available at the
-            <a
-              v-if="blockExplorerUrl"
-              :href="`${blockExplorerUrl}/address/${transaction!.to.address}`"
-              target="_blank"
-              class="font-medium underline underline-offset-2"
-              >destination address</a
-            >
-            <span v-else>destination address</span>.
-          </p>
-        </template>
-        <template v-else>
-          <h1 class="h1 mt-block-gap-1/2 text-center">Transaction submitted</h1>
-          <p class="text-center">
+        <h1 class="h1 mt-block-gap-1/2 text-center">
+          {{ transactionCommitted && type !== "withdrawal" ? "Transaction completed" : "Transaction submitted" }}
+        </h1>
+        <CommonHeightTransition v-if="type !== 'withdrawal'" :opened="!transactionCommitted">
+          <p class="mb-4 text-center">
             Your funds will be available at the
             <a
               v-if="blockExplorerUrl"
@@ -108,7 +96,14 @@
             after the transaction is committed on the <span class="font-medium">{{ destinations.era.label }}</span
             >. You are free to close this page.
           </p>
-        </template>
+        </CommonHeightTransition>
+        <p v-else class="mb-block-gap text-center">
+          Your funds will be available on <span class="font-medium">{{ destination.label }}</span> after the
+          <CommonButtonLabel variant="light" as="a" :href="ZKSYNC_WITHDRAWAL_DELAY" target="_blank" class="link">
+            24-hour delay </CommonButtonLabel
+          >. During this time, the transaction will be processed and finalized. You are free to close this page. You are
+          free to close this page.
+        </p>
         <TransactionProgress
           :from-address="transaction!.from.address"
           :from-destination="transaction!.from.destination"
@@ -116,7 +111,7 @@
           :to-destination="transaction!.to.destination"
           :transaction-link="`${blockExplorerUrl}/tx/${transactionHash}`"
           :token="transaction!.token"
-          class="mt-block-gap"
+          :completed="transactionCommitted && type !== 'withdrawal'"
         />
 
         <CommonButton as="RouterLink" :to="{ name: 'index' }" class="mt-block-gap" variant="primary">

@@ -124,5 +124,6 @@ export default (
     setAllowanceInProgress,
     setAllowanceError,
     setAllowance,
+    resetSetAllowance,
   };
 };

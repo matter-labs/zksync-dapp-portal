@@ -20,6 +20,11 @@
     </CommonErrorBlock>
     <form v-else @submit.prevent="">
       <template v-if="step === 'form'">
+        <EcosystemBlock
+          v-if="eraNetwork.displaySettings?.showPartnerLinks && ecosystemBannerVisible"
+          show-close-button
+          class="mb-block-padding-1/2 sm:mb-block-gap"
+        />
         <CommonInputTransactionAmount
           v-model="amount"
           v-model:error="amountError"
@@ -30,6 +35,7 @@
           :max-amount="maxAmount"
           :approve-required="!enoughAllowance"
           :loading="tokensRequestInProgress || balanceInProgress"
+          class="mb-block-padding-1/2 sm:mb-block-gap"
         >
           <template #dropdown>
             <CommonButtonDropdown :toggled="false" size="xs" variant="light">
@@ -44,7 +50,6 @@
           v-model="address"
           label="To"
           :default-label="`To your account ${account.address ? shortenAddress(account.address) : ''}`"
-          class="mt-6"
         >
           <template #dropdown>
             <CommonButtonDropdown :toggled="false" size="xs" variant="light">
@@ -77,7 +82,7 @@
           Your funds will be available after the transaction is committed on
           <span class="font-medium">{{ destinations.ethereum.label }}</span> and then processed on
           <span class="font-medium">{{ destination.label }}</span
-          >.<br />You are free to close this page.
+          >. This usually takes around 15 minutes. You are free to close this page.
         </p>
         <TransactionProgress
           :from-address="transaction!.from.address"
@@ -89,9 +94,7 @@
           class="mt-block-gap"
         />
 
-        <CommonButton as="RouterLink" :to="{ name: 'index' }" class="mt-block-gap" variant="primary">
-          Go to Assets page
-        </CommonButton>
+        <EcosystemBlock v-if="eraNetwork.displaySettings?.showPartnerLinks" class="mt-block-gap" />
         <CommonButton size="sm" class="mx-auto mt-block-gap" @click="resetForm">Make another transaction</CommonButton>
       </template>
 
@@ -111,9 +114,7 @@
               @update="feeAutoUpdateEstimate"
             />
           </transition>
-          <span v-if="!isCustomNode" class="ml-auto text-right text-neutral-700 dark:text-neutral-500">
-            ~15 minutes
-          </span>
+          <CommonButtonLabel as="span" v-if="!isCustomNode" class="ml-auto text-right">~15 minutes</CommonButtonLabel>
         </div>
         <transition v-bind="TransitionAlertScaleInOutTransition">
           <CommonAlert v-if="!enoughBalanceToCoverFee" class="mt-4" variant="error" :icon="ExclamationTriangleIcon">
@@ -280,6 +281,7 @@ import EthereumTransactionFooter from "@/components/transaction/EthereumTransact
 
 import useAllowance from "@/composables/transaction/useAllowance";
 import useNetworks from "@/composables/useNetworks";
+import useEcosystemBanner from "@/composables/zksync/deposit/useEcosystemBanner";
 import useFee from "@/composables/zksync/deposit/useFee";
 import useTransaction from "@/composables/zksync/deposit/useTransaction";
 
@@ -375,6 +377,7 @@ const {
   setAllowanceInProgress,
   setAllowanceError,
   setAllowance,
+  resetSetAllowance,
 } = useAllowance(
   computed(() => account.value.address),
   computed(() => selectedToken.value?.address),
@@ -526,6 +529,7 @@ const buttonContinue = () => {
 const eraTransfersHistoryStore = useZkSyncTransfersHistoryStore();
 const { previousTransactionAddress } = storeToRefs(usePreferencesStore());
 const { status, error, ethTransactionHash, commitTransaction } = useTransaction(eraWalletStore.getL1Signer);
+const { recentlyBridged, ecosystemBannerVisible } = useEcosystemBanner();
 
 const transactionCommitted = ref(false);
 const makeTransaction = async () => {
@@ -543,6 +547,7 @@ const makeTransaction = async () => {
   if (status.value === "done") {
     step.value = "submitted";
     previousTransactionAddress.value = transaction.value!.to.address;
+    recentlyBridged.value = true;
   }
 
   if (tx) {
@@ -569,6 +574,7 @@ const resetForm = () => {
   amount.value = "";
   step.value = "form";
   status.value = "not-started";
+  resetSetAllowance();
 };
 
 const fetchBalances = async (force = false) => {

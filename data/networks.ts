@@ -36,7 +36,6 @@ export type ZkSyncNetwork = {
   blockExplorerApi?: string;
   displaySettings?: {
     showPartnerLinks?: boolean;
-    showZkSyncLiteNetworks?: boolean;
   };
   getTokens?: () => Token[] | Promise<Token[]>; // If blockExplorerApi is specified, tokens will be fetched from there. Otherwise, this function will be used.
 };
@@ -83,7 +82,6 @@ export const zkSyncNetworks: ZkSyncNetwork[] = [
     blockExplorerApi: "https://block-explorer-api.mainnet.zksync.io",
     displaySettings: {
       showPartnerLinks: true,
-      showZkSyncLiteNetworks: true,
     },
     l1Network: l1Networks.mainnet,
   },
@@ -97,7 +95,6 @@ export const zkSyncNetworks: ZkSyncNetwork[] = [
     blockExplorerApi: "https://block-explorer-api.sepolia.zksync.dev",
     displaySettings: {
       showPartnerLinks: true,
-      showZkSyncLiteNetworks: true,
     },
     l1Network: l1Networks.sepolia,
   },
@@ -111,7 +108,6 @@ export const zkSyncNetworks: ZkSyncNetwork[] = [
     blockExplorerApi: "https://block-explorer-api.testnets.zksync.dev",
     displaySettings: {
       showPartnerLinks: true,
-      showZkSyncLiteNetworks: true,
     },
     l1Network: l1Networks.goerli,
   },

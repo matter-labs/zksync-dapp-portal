@@ -25,7 +25,7 @@
           :to="{ name: 'bridge', query: $route.query }"
         />
       </CommonCardWithLineButtons>
-      <CommonCardWithLineButtons>
+      <CommonCardWithLineButtons v-if="eraNetwork.displaySettings?.showPartnerLinks">
         <DestinationItem
           label="Top-up with cash"
           description="Buy tokens using a card or another method for fiat"
@@ -41,7 +41,7 @@
           </template>
         </DestinationItem>
       </CommonCardWithLineButtons>
-      <CommonCardWithLineButtons>
+      <CommonCardWithLineButtons v-if="eraNetwork.displaySettings?.showPartnerLinks">
         <DestinationItem
           label="3rd party bridges"
           description="Bridge tokens from other networks"
