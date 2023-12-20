@@ -1,6 +1,5 @@
+import { BigNumber, type BigNumberish } from "ethers";
 import { formatUnits, getAddress, parseUnits } from "ethers/lib/utils";
-
-import type { BigNumberish } from "ethers";
 
 export function shortenAddress(address: string, chars = 3): string {
   return `${address.slice(0, chars + 2)}...${address.slice(-3)}`;
@@ -78,6 +77,9 @@ export function removeSmallAmountPretty(
   minTokenValue?: number,
   maxChars?: number
 ): string {
+  if (BigNumber.from(amount).isZero()) {
+    return "0";
+  }
   const withoutSmallAmount = removeSmallAmount(amount, decimals, price, minTokenValue, maxChars);
   if (isOnlyZeroes(withoutSmallAmount)) {
     return `<${withoutSmallAmount.slice(0, -1)}1`;

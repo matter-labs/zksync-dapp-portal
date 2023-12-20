@@ -1,7 +1,8 @@
 <template>
   <CommonModal v-model:opened="isModalOpened" class="network-select-modal" :title="title" @after-leave="search = ''">
     <Combobox v-model="selectedNetworkKey">
-      <CommonInputSearch
+      <!-- Temporarily hidden -->
+      <!-- <CommonInputSearch
         v-model.trim="search"
         class="mb-block-padding-1/4"
         placeholder="Network name"
@@ -10,12 +11,12 @@
         <template #icon>
           <MagnifyingGlassIcon aria-hidden="true" />
         </template>
-      </CommonInputSearch>
+      </CommonInputSearch> -->
       <div class="-mx-block-padding-1/2 h-full overflow-auto px-block-padding-1/2">
         <div v-for="(group, groupIndex) in displayedGroups" :key="groupIndex" class="category">
-          <TypographyCategoryLabel size="sm" variant="darker" class="group-category-label">
+          <!-- <TypographyCategoryLabel size="sm" variant="darker" class="group-category-label">
             {{ group.title }}
-          </TypographyCategoryLabel>
+          </TypographyCategoryLabel> -->
           <div class="-mx-block-padding-1/4 sm:-mx-block-padding-1/2">
             <DestinationItem
               v-for="(item, itemIndex) in group.destinations"
@@ -40,7 +41,7 @@
 import { computed, ref } from "vue";
 
 import { Combobox } from "@headlessui/vue";
-import { CheckIcon, MagnifyingGlassIcon } from "@heroicons/vue/24/outline";
+import { CheckIcon } from "@heroicons/vue/24/outline";
 import { storeToRefs } from "pinia";
 
 import type { TransactionDestination } from "@/store/destinations";

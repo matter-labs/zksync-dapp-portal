@@ -4,12 +4,9 @@
     <HeaderMobileAccountNavigation v-model:opened="mobileAccountNavigationOpened" />
 
     <div class="logo-container">
-      <NuxtLink v-if="logoLeadsHome" :to="{ name: 'index' }">
+      <NuxtLink :to="{ name: 'index' }">
         <IconsZkSync class="logo-icon" />
       </NuxtLink>
-      <a v-else href="https://zksync.io" target="_blank">
-        <IconsZkSync class="logo-icon" />
-      </a>
     </div>
     <div class="links-container">
       <NuxtLink class="link-item" :to="{ name: 'bridge' }">
@@ -49,21 +46,18 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref } from "vue";
+import { ref } from "vue";
 
 import { ArrowsRightLeftIcon, ArrowsUpDownIcon, Bars3Icon, SunIcon, WalletIcon } from "@heroicons/vue/24/outline";
 import { storeToRefs } from "pinia";
 
 import useColorMode from "@/composables/useColorMode";
 
-import { useRoute } from "#app";
 import { useOnboardStore } from "@/store/onboard";
 
 const onboardStore = useOnboardStore();
 const { account } = storeToRefs(onboardStore);
 
-const route = useRoute();
-const logoLeadsHome = computed(() => route.name !== "index");
 const mobileMainNavigationOpened = ref(false);
 const mobileAccountNavigationOpened = ref(false);
 
