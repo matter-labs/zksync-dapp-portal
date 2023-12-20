@@ -67,8 +67,8 @@ defineProps({
       }
     }
     &warning {
-      @apply border border-orange-100 bg-orange-100 p-block-padding-1/2 text-orange-700 sm:p-block-padding;
-      @apply dark:border-warning-400/30 dark:bg-warning-400/10 dark:text-white;
+      @apply border p-block-padding-1/2 sm:p-block-padding;
+      @apply border-warning-400/30 bg-warning-400/10;
 
       .alert-icon-container {
         @apply h-12 w-12 bg-warning-400;

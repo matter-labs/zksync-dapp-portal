@@ -85,6 +85,20 @@
         <CommonInputTransactionAddress v-else v-model="address" class="mt-6" />
       </template>
       <template v-else-if="step === 'confirm'">
+        <CommonAlert
+          v-if="type === 'withdrawal'"
+          variant="warning"
+          :icon="ExclamationTriangleIcon"
+          class="mb-block-padding-1/2 sm:mb-block-gap"
+        >
+          <p>
+            You will receive funds only after a 24-hour withdrawal delay.
+            <CommonButtonLabel variant="light" as="a" :href="ZKSYNC_WITHDRAWAL_DELAY" target="_blank">
+              Learn more
+            </CommonButtonLabel>
+          </p>
+        </CommonAlert>
+
         <CommonCardWithLineButtons>
           <TransactionSummaryTokenEntry label="You send" :token="transaction!.token" />
           <TransactionSummaryAddressEntry
@@ -120,7 +134,7 @@
         </CommonHeightTransition>
         <p v-else class="mb-block-gap text-center">
           Your funds will be available on <span class="font-medium">{{ destination.label }}</span> after the
-          <CommonButtonLabel variant="light" as="a" :href="ZKSYNC_WITHDRAWAL_DELAY" target="_blank" class="link">
+          <CommonButtonLabel variant="light" as="a" :href="ZKSYNC_WITHDRAWAL_DELAY" target="_blank">
             24-hour delay </CommonButtonLabel
           >. During this time, the transaction will be processed and finalized. You are free to close this page. You are
           free to close this page.
