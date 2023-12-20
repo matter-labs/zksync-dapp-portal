@@ -136,8 +136,7 @@
           Your funds will be available on <span class="font-medium">{{ destination.label }}</span> after the
           <CommonButtonLabel variant="light" as="a" :href="ZKSYNC_WITHDRAWAL_DELAY" target="_blank">
             24-hour delay </CommonButtonLabel
-          >. During this time, the transaction will be processed and finalized. You are free to close this page. You are
-          free to close this page.
+          >. During this time, the transaction will be processed and finalized. You are free to close this page.
         </p>
         <TransactionProgress
           :from-address="transaction!.from.address"
