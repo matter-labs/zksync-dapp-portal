@@ -1,8 +1,10 @@
 <template>
   <Menu as="div" class="account-dropdown-container" v-slot="{ open }">
     <HeaderHelpModal v-model:opened="helpModalOpened" />
-    <MenuButton as="template">
-      <HeaderAccountDropdownButton :toggled="open" />
+    <MenuButton as="div">
+      <div ref="addressEl">
+        <HeaderAccountDropdownButton :toggled="open" />
+      </div>
     </MenuButton>
 
     <transition v-bind="TransitionAlertScaleInOutTransition">
@@ -83,7 +85,6 @@ const tooltip = useTippy(addressEl, {
   content: "Address copied!",
   trigger: "manual",
   hideOnClick: false,
-  offset: [0, 25],
 });
 watch(
   copied,
