@@ -1,12 +1,8 @@
 <template>
   <Menu as="div" class="account-dropdown-container" v-slot="{ open }">
+    <HeaderHelpModal v-model:opened="helpModalOpened" />
     <MenuButton as="template">
-      <CommonButtonDropdown :toggled="open">
-        <template #left-icon>
-          <AddressAvatar :address="account.address!" class="h-full w-full" />
-        </template>
-        <span ref="addressEl">{{ shortenAddress(account.address!) }}</span>
-      </CommonButtonDropdown>
+      <HeaderAccountDropdownButton :toggled="open" />
     </MenuButton>
 
     <transition v-bind="TransitionAlertScaleInOutTransition">
@@ -38,7 +34,7 @@
           </CommonButtonDropdown>
         </MenuItem>
         <MenuItem v-slot="{ active }" as="template">
-          <CommonButtonDropdown size="sm" no-chevron :active="active">
+          <CommonButtonDropdown size="sm" no-chevron :active="active" @click="helpModalOpened = true">
             <template #left-icon>
               <ExclamationCircleIcon aria-hidden="true" />
             </template>
@@ -100,6 +96,8 @@ watch(
   },
   { immediate: true }
 );
+
+const helpModalOpened = ref(false);
 </script>
 
 <style lang="scss" scoped>

@@ -24,3 +24,20 @@ export const TransitionPrimaryButtonText = {
   leaveFromClass: "translate-y-0 opacity-100",
   leaveToClass: "translate-y-3 opacity-0",
 };
+
+export const TransitionSlideOutToRight = {
+  enterActiveClass: "transition ease duration-200",
+  enterFromClass: "opacity-0 -translate-x-2",
+  enterToClass: "opacity-100 translate-x-0",
+  leaveActiveClass: "transition ease duration-200",
+  leaveFromClass: "opacity-100 translate-x-0",
+  leaveToClass: "opacity-0 translate-x-2",
+};
+export const TransitionSlideOutToLeft = {
+  enterActiveClass: "transition ease duration-200",
+  enterFromClass: "opacity-0 translate-x-2",
+  enterToClass: "opacity-100 translate-x-0",
+  leaveActiveClass: "transition ease duration-200",
+  leaveFromClass: "opacity-100 translate-x-0",
+  leaveToClass: "opacity-0 -translate-x-2",
+};

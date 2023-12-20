@@ -1,5 +1,8 @@
 <template>
   <header class="header">
+    <HeaderMobileMainNavigation v-model:opened="mobileMainNavigationOpened" />
+    <HeaderMobileAccountNavigation v-model:opened="mobileAccountNavigationOpened" />
+
     <div class="logo-container">
       <NuxtLink v-if="logoLeadsHome" :to="{ name: 'index' }">
         <IconsZkSync class="logo-icon" />
@@ -27,11 +30,18 @@
       <CommonButton v-if="!account.address" variant="primary" @click="onboardStore.openModal()">
         Connect wallet
       </CommonButton>
-      <HeaderAccountDropdown v-else />
+      <template v-else>
+        <div class="sm:hidden">
+          <HeaderAccountDropdownButton no-chevron @click="mobileAccountNavigationOpened = true" />
+        </div>
+        <div class="hidden sm:block">
+          <HeaderAccountDropdown />
+        </div>
+      </template>
       <CommonButton class="color-mode-button" @click="switchColorMode()">
         <SunIcon class="h-6 w-6" aria-hidden="true" />
       </CommonButton>
-      <CommonButton class="hamburger-icon">
+      <CommonButton class="hamburger-icon" @click="mobileMainNavigationOpened = true">
         <Bars3Icon class="h-6 w-6" aria-hidden="true" />
       </CommonButton>
     </div>
@@ -39,7 +49,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from "vue";
+import { computed, ref } from "vue";
 
 import { ArrowsRightLeftIcon, ArrowsUpDownIcon, Bars3Icon, SunIcon, WalletIcon } from "@heroicons/vue/24/outline";
 import { storeToRefs } from "pinia";
@@ -54,13 +64,15 @@ const { account } = storeToRefs(onboardStore);
 
 const route = useRoute();
 const logoLeadsHome = computed(() => route.name !== "index");
+const mobileMainNavigationOpened = ref(false);
+const mobileAccountNavigationOpened = ref(false);
 
 const { switchColorMode } = useColorMode();
 </script>
 
 <style lang="scss" scoped>
 .header {
-  @apply z-50 flex h-[88px] w-full items-center gap-2 p-2 sm:gap-10 sm:p-4;
+  @apply z-50 flex w-full items-center gap-2 p-2 sm:gap-10 sm:p-4;
 
   .logo-container {
     @apply w-full flex-shrink sm:w-max;
