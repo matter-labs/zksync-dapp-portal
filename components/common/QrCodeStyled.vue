@@ -18,7 +18,7 @@ defineProps({
 <style lang="scss">
 .qr-code-styles-container {
   .qr-code-container {
-    @apply mx-auto aspect-square h-48 w-48 rounded-xl bg-neutral-100 p-3 shadow-sm;
+    @apply mx-auto aspect-square h-36 w-36 rounded-xl bg-neutral-100 p-2 shadow-sm;
 
     & > * {
       width: 100% !important;

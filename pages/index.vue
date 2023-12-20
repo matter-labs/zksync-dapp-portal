@@ -88,6 +88,8 @@
         </TypographyCategoryLabel>
 
         <div class="flex flex-col gap-block-gap">
+          <BridgeFromEthereumButton v-if="eraNetwork.l1Network" />
+
           <CommonCardWithLineButtons v-for="(item, index) in depositMethods" :key="index">
             <DestinationItem v-bind="item.props">
               <template #image v-if="item.icon">
@@ -167,7 +169,7 @@ const noBalances = computed(() => !loading.value && !balanceError.value && !disp
 
 const depositMethods = computed(() => {
   const methods: { props: Record<string, unknown>; icon?: FunctionalComponent }[] = [];
-  if (eraNetwork.value.l1Network) {
+  /* if (eraNetwork.value.l1Network) {
     methods.push({
       props: {
         iconUrl: destinations.value.ethereum.iconUrl,
@@ -180,7 +182,7 @@ const depositMethods = computed(() => {
         },
       },
     });
-  }
+  } */
   methods.push({
     props: {
       label: "View your address",
