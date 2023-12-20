@@ -108,7 +108,7 @@ const afterLeave = () => {
 <style lang="scss">
 .modal-container {
   // can not apply styles to this block in scoped style
-  @apply relative z-[1000];
+  @apply relative z-[60];
 }
 </style>
 

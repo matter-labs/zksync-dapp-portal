@@ -4,7 +4,7 @@
       <CommonInputSearch
         v-model.trim="search"
         class="mb-block-padding-1/4"
-        placeholder="Symbol or address"
+        placeholder="Network name"
         autofocus="desktop"
       >
         <template #icon>
@@ -16,13 +16,13 @@
           <TypographyCategoryLabel size="sm" variant="darker" class="group-category-label">
             {{ group.title }}
           </TypographyCategoryLabel>
-          <div class="-mx-block-padding-1/2">
+          <div class="-mx-block-padding-1/4 sm:-mx-block-padding-1/2">
             <DestinationItem
               v-for="(item, itemIndex) in group.destinations"
               v-bind="item"
               :key="itemIndex"
               :icon="item.key === selectedNetworkKey ? CheckIcon : undefined"
-              size="sm"
+              variant="light"
               @click="selectedNetworkKey = item.key!"
             />
           </div>

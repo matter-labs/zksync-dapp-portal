@@ -155,8 +155,15 @@
             <p>
               Insufficient <span class="font-medium">{{ feeToken?.symbol }}</span> balance on
               {{ destinations.ethereum.label }} to cover the fee. We recommend having at least
-              <span class="font-medium">{{ recommendedBalance }} {{ feeToken?.symbol }}</span> on
-              {{ eraNetwork.l1Network?.name ?? "L1" }} for deposit.
+              <span class="font-medium"
+                >{{
+                  feeToken?.price
+                    ? removeSmallAmountPretty(recommendedBalance, feeToken?.decimals, feeToken?.price)
+                    : parseTokenAmount(recommendedBalance, ETH_TOKEN.decimals)
+                }}
+                {{ feeToken?.symbol }}</span
+              >
+              on {{ eraNetwork.l1Network?.name ?? "L1" }} for deposit.
             </p>
           </CommonAlert>
         </transition>

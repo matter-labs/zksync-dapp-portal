@@ -10,7 +10,7 @@
         </template>
         <template v-if="name" #underline>
           <CommonButtonLabel
-            v-if="eraNetwork.blockExplorerUrl"
+            v-if="showNameLink && eraNetwork.blockExplorerUrl"
             as="a"
             variant="light"
             :href="`${eraNetwork.blockExplorerUrl}/address/${address}`"
@@ -50,6 +50,10 @@ defineProps({
   },
   name: {
     type: String,
+  },
+  showNameLink: {
+    type: Boolean,
+    default: false,
   },
   address: {
     type: String,

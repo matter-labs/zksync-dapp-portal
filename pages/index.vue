@@ -62,6 +62,7 @@
               v-for="item in displayedBalances"
               as="div"
               :key="item.address"
+              show-name-link
               :send-route-name="eraNetwork.l1Network ? 'send-methods' : 'send'"
               v-bind="item"
             />
@@ -157,8 +158,7 @@ const { loading, reset: resetSingleLoading } = useSingleLoading(computed(() => b
 
 const displayedBalances = computed(() => {
   return balance.value.filter(({ amount, decimals, price }) => {
-    const decimalAmount =
-      typeof price === "number" ? removeSmallAmount(amount, decimals, price) : parseTokenAmount(amount, decimals);
+    const decimalAmount = price ? removeSmallAmount(amount, decimals, price) : parseTokenAmount(amount, decimals);
     if (!isOnlyZeroes(decimalAmount)) {
       return true;
     }

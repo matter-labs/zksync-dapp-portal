@@ -34,6 +34,7 @@ export function formatTokenPrice(amount: BigNumberish, decimals: number, price: 
   return formatPricePretty(formatRawTokenPrice(amount, decimals, price));
 }
 
+/* Might return value like "0.0000" */
 export function removeSmallAmount(
   amount: BigNumberish,
   decimals: number,
@@ -67,6 +68,21 @@ export function removeSmallAmount(
     return acc.slice(0, -1);
   }
   return acc;
+}
+
+/* Fixes value like "0.0000" with "<0.0001" */
+export function removeSmallAmountPretty(
+  amount: BigNumberish,
+  decimals: number,
+  price: number,
+  minTokenValue?: number,
+  maxChars?: number
+): string {
+  const withoutSmallAmount = removeSmallAmount(amount, decimals, price, minTokenValue, maxChars);
+  if (isOnlyZeroes(withoutSmallAmount)) {
+    return `<${withoutSmallAmount.slice(0, -1)}1`;
+  }
+  return withoutSmallAmount;
 }
 
 export function checksumAddress(address: string) {

@@ -1,5 +1,5 @@
 export const portal = {
-  title: "zkSync Portal | Wallet, Bridge and Faucet",
+  title: "zkSync Portal | Wallet and Bridge for zkSync",
   description:
     "zkSync Portal provides all the required tools for working with Era and Lite networks such as Wallet, Bridge & Faucet functionality.",
   previewImg: {

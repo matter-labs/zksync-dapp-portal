@@ -40,8 +40,7 @@ import type { TokenPrice } from "@/types";
 import type { BigNumberish } from "ethers";
 import type { Component, PropType } from "vue";
 
-import { formatTokenPrice, parseTokenAmount, removeSmallAmount } from "@/utils/formatters";
-import { isOnlyZeroes } from "@/utils/helpers";
+import { formatTokenPrice, parseTokenAmount, removeSmallAmountPretty } from "@/utils/formatters";
 
 const props = defineProps({
   as: {
@@ -89,13 +88,7 @@ const displayedAmount = computed(() => {
     return fullAmount.value;
   }
   if (props.amountDisplay === "remove-small") {
-    const withoutSmallAmount = removeSmallAmount(props.amount, props.decimals, props.price);
-    if (isZeroAmount.value) {
-      return "0";
-    } else if (!isOnlyZeroes(withoutSmallAmount)) {
-      return withoutSmallAmount;
-    }
-    return `<${withoutSmallAmount.slice(0, -1)}1`;
+    return removeSmallAmountPretty(props.amount, props.decimals, props.price);
   }
   return fullAmount.value;
 });

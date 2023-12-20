@@ -24,7 +24,7 @@
           </CommonErrorBlock>
         </template>
         <template v-else-if="!hasBalances">
-          <div class="category -mx-block-padding-1/2">
+          <div class="category -mx-block-padding-1/4 sm:-mx-block-padding-1/2">
             <TokenLine
               v-for="item in displayedTokens"
               class="token-line"
@@ -39,7 +39,7 @@
             <TypographyCategoryLabel size="sm" variant="darker" class="group-category-label">
               {{ group.title || "Your assets" }}
             </TypographyCategoryLabel>
-            <div class="-mx-block-padding-1/2">
+            <div class="-mx-block-padding-1/4 sm:-mx-block-padding-1/2">
               <TokenBalance
                 v-for="item in group.balances"
                 v-bind="item"

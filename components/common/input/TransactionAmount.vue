@@ -98,7 +98,7 @@ import type { Token, TokenAmount } from "@/types";
 import type { BigNumberish } from "ethers";
 import type { PropType } from "vue";
 
-import { decimalToBigNumber, parseTokenAmount, removeSmallAmount } from "@/utils/formatters";
+import { decimalToBigNumber, parseTokenAmount, removeSmallAmountPretty } from "@/utils/formatters";
 
 const props = defineProps({
   modelValue: {
@@ -192,7 +192,7 @@ const displayedMaxAmount = computed(() => {
   if (!maxDecimalAmount.value || !selectedToken.value?.price) {
     return maxDecimalAmount.value;
   }
-  return removeSmallAmount(props.maxAmount!, selectedToken.value.decimals, selectedToken.value.price);
+  return removeSmallAmountPretty(props.maxAmount!, selectedToken.value.decimals, selectedToken.value.price);
 });
 const isMaxAmountSet = computed(() => {
   if (!props.maxAmount) {

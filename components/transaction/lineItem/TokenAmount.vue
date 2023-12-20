@@ -17,13 +17,12 @@
 <script lang="ts" setup>
 import { computed } from "vue";
 
-import { BigNumber, type BigNumberish } from "ethers";
+import { type BigNumberish } from "ethers";
 
 import type { Token } from "@/types";
 import type { PropType } from "vue";
 
-import { parseTokenAmount, removeSmallAmount } from "@/utils/formatters";
-import { isOnlyZeroes } from "@/utils/helpers";
+import { parseTokenAmount, removeSmallAmountPretty } from "@/utils/formatters";
 
 const props = defineProps({
   token: {
@@ -42,18 +41,11 @@ const props = defineProps({
 const fullAmount = computed(() => {
   return parseTokenAmount(props.amount, props.token.decimals);
 });
-const isZeroAmount = computed(() => BigNumber.from(props.amount).isZero());
 
 const displayedAmount = computed(() => {
-  if (typeof props.token.price !== "number") {
+  if (!props.token.price) {
     return fullAmount.value;
   }
-  const withoutSmallAmount = removeSmallAmount(props.amount, props.token.decimals, props.token.price);
-  if (isZeroAmount.value) {
-    return "0";
-  } else if (!isOnlyZeroes(withoutSmallAmount)) {
-    return withoutSmallAmount;
-  }
-  return `<${withoutSmallAmount.slice(0, -1)}1`;
+  return removeSmallAmountPretty(props.amount, props.token.decimals, props.token.price);
 });
 </script>

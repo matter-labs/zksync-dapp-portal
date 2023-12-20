@@ -1,12 +1,14 @@
 import { computed, ref } from "vue";
 
 import { BigNumber } from "ethers";
+import { parseEther } from "ethers/lib/utils";
 import { L1_RECOMMENDED_MIN_ERC20_DEPOSIT_GAS_LIMIT } from "zksync-web3/build/src/utils";
 
 import useTimedCache from "@/composables/useTimedCache";
 
 import type { Token, TokenAmount } from "@/types";
 import type { PublicClient } from "@wagmi/core";
+import type { BigNumberish } from "ethers";
 import type { Ref } from "vue";
 import type { L1Signer } from "zksync-web3";
 
@@ -34,7 +36,7 @@ export default (
   };
 
   const fee = ref<DepositFeeValues | undefined>();
-  const recommendedBalance = ref<string | undefined>();
+  const recommendedBalance = ref<BigNumberish | undefined>();
 
   const totalFee = computed(() => {
     if (!fee.value) return undefined;
@@ -80,7 +82,7 @@ export default (
           const match = err.message.match(/([\d\\.]+) ETH/);
           if (feeToken.value && match?.length) {
             const ethAmount = match[1].split(" ")?.[0];
-            recommendedBalance.value = ethAmount;
+            recommendedBalance.value = parseEther(ethAmount);
             return;
           }
         }

@@ -44,6 +44,6 @@ const title = computed(() => {
 
 <style lang="scss" scoped>
 .connecting-container {
-  @apply absolute inset-0 z-10 flex h-full w-full flex-col items-center justify-center bg-gray dark:bg-neutral-950;
+  @apply absolute inset-0 z-[70] flex h-full w-full flex-col items-center justify-center bg-gray dark:bg-neutral-950;
 }
 </style>

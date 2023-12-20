@@ -41,7 +41,7 @@
           </DestinationItem>
         </CommonCardWithLineButtons>
         <CommonCardWithLineButtons class="mt-block-padding-1/2">
-          <DestinationItem label="Logout" size="sm" @click="onboardStore.disconnect()">
+          <DestinationItem label="Logout" size="sm" @click="logout()">
             <template #image>
               <DestinationIconContainer>
                 <PowerIcon aria-hidden="true" />
@@ -161,9 +161,21 @@ watch(
     }
   }
 );
+const logout = () => {
+  modalOpened.value = false;
+  onboardStore.disconnect();
+};
 
 const onboardStore = useOnboardStore();
-const { account } = storeToRefs(onboardStore);
+const { account, isConnected } = storeToRefs(onboardStore);
+watch(
+  () => isConnected,
+  (connected) => {
+    if (!connected) {
+      modalOpened.value = false;
+    }
+  }
+);
 const { copy, copied } = useCopy(computed(() => account.value.address!));
 const { selectedNetwork } = storeToRefs(useNetworkStore());
 </script>
