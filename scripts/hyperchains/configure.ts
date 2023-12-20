@@ -44,7 +44,6 @@ const createNetworkFromEnv = (envPath: string): Network => {
     id: Number(env.CHAIN_ETH_ZKSYNC_NETWORK_ID),
     key: baseName,
     name: env.CHAIN_ETH_ZKSYNC_NETWORK,
-    shortName: env.CHAIN_ETH_ZKSYNC_NETWORK,
     rpcUrl: env.API_WEB3_JSON_RPC_HTTP_URL,
     l1Network: {
       id: Number(env.ETH_CLIENT_CHAIN_ID),
@@ -102,19 +101,12 @@ const promptNetworkEnv = async () => {
   return createNetworkFromEnv(pathJoin(envsDirectory, `${selectedEnv}.env`));
 };
 const promptNetworkInfo = async (network: Network) => {
-  const { name, shortName, l1NetworkName }: { name: string; shortName: string; l1NetworkName: string } = await prompt([
+  const { name, l1NetworkName }: { name: string; l1NetworkName: string } = await prompt([
     {
       message: "Displayed network name",
       name: "name",
       type: "input",
       initial: network.name,
-      required: true,
-    },
-    {
-      message: "Displayed network short name",
-      name: "shortName",
-      type: "input",
-      initial: network.shortName,
       required: true,
     },
     {
@@ -127,7 +119,6 @@ const promptNetworkInfo = async (network: Network) => {
   ]);
 
   network.name = name;
-  network.shortName = shortName;
   network.l1Network.name = l1NetworkName;
 };
 

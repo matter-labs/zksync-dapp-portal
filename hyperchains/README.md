@@ -60,7 +60,6 @@ Array<{
     id: number; // L2 Network ID
     rpcUrl: string; // L2 RPC URL
     name: string;
-    shortName: string;
     blockExplorerUrl?: string; // L2 Block Explorer URL
     hidden?: boolean; // Hidden in the network selector
     l1Network?: { // @wagmi `Chain` structure https://wagmi.sh/core/chains#build-your-own

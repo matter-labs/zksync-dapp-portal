@@ -186,7 +186,7 @@ const depositMethods = computed(() => {
   methods.push({
     props: {
       label: "View your address",
-      description: `Receive tokens from another ${eraNetwork.value.shortName} account`,
+      description: `Receive tokens from another ${eraNetwork.value.name} account`,
       as: "RouterLink",
       to: {
         name: "receive",

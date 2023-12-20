@@ -28,7 +28,6 @@ export type ZkSyncNetwork = {
   id: number;
   key: string;
   name: string;
-  shortName: string;
   rpcUrl: string;
   hidden?: boolean; // If set to true, the network will not be shown in the network selector
   l1Network?: L1Network;
@@ -48,7 +47,6 @@ export const inMemoryNode: ZkSyncNetwork = {
   id: 260,
   key: "in-memory-node",
   name: "In-memory node",
-  shortName: "In-memory local node",
   rpcUrl: "http://localhost:8011",
 };
 
@@ -57,7 +55,6 @@ export const dockerizedNode: ZkSyncNetwork = {
   id: 270,
   key: "dockerized-node",
   name: "Dockerized local node",
-  shortName: "Dockerized node",
   rpcUrl: "http://localhost:3050",
   l1Network: {
     id: 9,
@@ -76,7 +73,6 @@ export const zkSyncNetworks: ZkSyncNetwork[] = [
     id: 324,
     key: "mainnet",
     name: "zkSync",
-    shortName: "zkSync",
     rpcUrl: "https://mainnet.era.zksync.io",
     blockExplorerUrl: "https://explorer.zksync.io",
     blockExplorerApi: "https://block-explorer-api.mainnet.zksync.io",
@@ -89,7 +85,6 @@ export const zkSyncNetworks: ZkSyncNetwork[] = [
     id: 300,
     key: "sepolia",
     name: "zkSync Sepolia Testnet",
-    shortName: "zkSync Sepolia",
     rpcUrl: "https://sepolia.era.zksync.dev",
     blockExplorerUrl: "https://sepolia.explorer.zksync.io",
     blockExplorerApi: "https://block-explorer-api.sepolia.zksync.dev",
@@ -102,7 +97,6 @@ export const zkSyncNetworks: ZkSyncNetwork[] = [
     id: 280,
     key: "goerli",
     name: "zkSync Goerli Testnet",
-    shortName: "zkSync Goerli",
     rpcUrl: "https://testnet.era.zksync.dev",
     blockExplorerUrl: "https://goerli.explorer.zksync.io",
     blockExplorerApi: "https://block-explorer-api.testnets.zksync.dev",
@@ -115,7 +109,6 @@ export const zkSyncNetworks: ZkSyncNetwork[] = [
     id: 270,
     key: "stage",
     name: "zkSync Stage",
-    shortName: "zkSync Stage",
     rpcUrl: "https://z2-dev-api.zksync.dev",
     blockExplorerUrl: "https://goerli-beta.staging-scan-v2.zksync.dev",
     blockExplorerApi: "https://block-explorer-api.stage.zksync.dev",

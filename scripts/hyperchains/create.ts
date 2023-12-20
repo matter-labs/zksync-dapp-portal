@@ -21,15 +21,6 @@ const promptHyperchainInfo = async (): Promise<Network> => {
       required: true,
     },
   ]);
-  const { shortName }: { shortName: string } = await prompt([
-    {
-      message: "Displayed hyperchain short name",
-      name: "shortName",
-      type: "input",
-      required: true,
-      initial: name,
-    },
-  ]);
   const {
     key,
     rpcUrl,
@@ -41,7 +32,7 @@ const promptHyperchainInfo = async (): Promise<Network> => {
       name: "key",
       type: "input",
       required: true,
-      initial: slugify(shortName, {
+      initial: slugify(name, {
         lower: true,
         replacement: "-",
         strict: true,
@@ -137,7 +128,6 @@ const promptHyperchainInfo = async (): Promise<Network> => {
   return {
     id,
     name,
-    shortName,
     key,
     rpcUrl,
     blockExplorerUrl,

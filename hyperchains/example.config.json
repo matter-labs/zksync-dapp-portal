@@ -4,7 +4,6 @@
       "id": 1234,
       "key": "my-hyperchain",
       "name": "My new hyperchain",
-      "shortName": "My hyperchain",
       "rpcUrl": "http://127.0.0.1:3050",
       "l1Network": {
         "id": 9,
