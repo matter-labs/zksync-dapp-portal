@@ -1,7 +1,8 @@
 <template>
   <div>
     <PageTitle :fallback-route="{ name: 'receive-methods' }">Your address</PageTitle>
-    <Receive :address="address" :destination="destinations.era" />
+    <ConnectWalletBlock v-if="!isConnected" />
+    <Receive v-else :address="address" :destination="destinations.era" />
   </div>
 </template>
 
@@ -14,7 +15,7 @@ import { useDestinationsStore } from "@/store/destinations";
 import { useOnboardStore } from "@/store/onboard";
 import Receive from "@/views/transactions/Receive.vue";
 
-const { account } = storeToRefs(useOnboardStore());
+const { account, isConnected } = storeToRefs(useOnboardStore());
 const { destinations } = storeToRefs(useDestinationsStore());
 
 const address = computed(() => account.value.address || "");
