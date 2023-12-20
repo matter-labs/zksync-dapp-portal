@@ -301,6 +301,7 @@
 import { computed, onBeforeUnmount, ref, watch } from "vue";
 
 import { CheckIcon, ExclamationTriangleIcon, LockClosedIcon } from "@heroicons/vue/24/outline";
+import { useRouteQuery } from "@vueuse/router";
 import { BigNumber } from "ethers";
 import { isAddress } from "ethers/lib/utils";
 import { storeToRefs } from "pinia";
@@ -350,13 +351,13 @@ const { isCustomNode } = useNetworks();
 const toNetworkModalOpened = ref(false);
 const toNetworkSelected = (networkKey?: string) => {
   if (destinations.value.ethereum.key === networkKey) {
-    router.push({ name: "bridge-withdraw" });
+    router.replace({ name: "bridge-withdraw", query: route.query });
   }
 };
 const fromNetworkModalOpened = ref(false);
 const fromNetworkSelected = (networkKey?: string) => {
   if (destinations.value.era.key === networkKey) {
-    router.push({ name: "bridge-withdraw" });
+    router.replace({ name: "bridge-withdraw", query: route.query });
   }
 };
 
@@ -461,7 +462,21 @@ const {
   resetFee,
 } = useFee(availableTokens, balance, eraWalletStore.getL1VoidSigner, onboardStore.getPublicClient);
 
-const address = ref("");
+const queryAddress = useRouteQuery<string | undefined>("address", undefined, {
+  transform: String,
+  mode: "replace",
+});
+const address = ref((queryAddress.value !== "undefined" && queryAddress.value) || "");
+const isAddressInputValid = computed(() => {
+  if (address.value) {
+    return isAddress(address.value);
+  }
+  return false;
+});
+watch(address, (_address) => {
+  queryAddress.value = !_address.length ? undefined : _address;
+});
+
 const amount = ref("");
 const amountError = ref<string | undefined>();
 const maxAmount = computed(() => {
@@ -552,6 +567,7 @@ const continueButtonDisabled = computed(() => {
     return true;
   if ((allowanceRequestInProgress.value && !allowance.value) || allowanceRequestError.value) return true;
   if (!enoughAllowance.value) return false; // When allowance approval is required we can proceed to approve stage even if deposit fee is not loaded
+  if (!isAddressInputValid.value) return true;
   if (feeLoading.value || !fee.value) return true;
   return false;
 });

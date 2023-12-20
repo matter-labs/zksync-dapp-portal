@@ -245,6 +245,7 @@
 import { computed, onBeforeUnmount, ref, watch } from "vue";
 
 import { ExclamationTriangleIcon, InformationCircleIcon } from "@heroicons/vue/24/outline";
+import { useRouteQuery } from "@vueuse/router";
 import { BigNumber } from "ethers";
 import { isAddress } from "ethers/lib/utils";
 import { storeToRefs } from "pinia";
@@ -296,13 +297,13 @@ const { isCustomNode } = useNetworks();
 const toNetworkModalOpened = ref(false);
 const toNetworkSelected = (networkKey?: string) => {
   if (destinations.value.era.key === networkKey) {
-    router.push({ name: "bridge" });
+    router.replace({ name: "bridge", query: route.query });
   }
 };
 const fromNetworkModalOpened = ref(false);
 const fromNetworkSelected = (networkKey?: string) => {
   if (destinations.value.ethereum.key === networkKey) {
-    router.push({ name: "bridge" });
+    router.replace({ name: "bridge", query: route.query });
   }
 };
 
@@ -383,7 +384,24 @@ const {
   resetFee,
 } = useFee(eraProviderStore.requestProvider, tokens, balance);
 
-const address = ref("");
+const queryAddress = useRouteQuery<string | undefined>("address", undefined, {
+  transform: String,
+  mode: "replace",
+});
+const address = ref((queryAddress.value !== "undefined" && queryAddress.value) || "");
+const isAddressInputValid = computed(() => {
+  if (address.value) {
+    return isAddress(address.value);
+  }
+  if (props.type === "withdrawal") {
+    return true;
+  }
+  return false;
+});
+watch(address, (_address) => {
+  queryAddress.value = !_address.length ? undefined : _address;
+});
+
 const amount = ref("");
 const amountError = ref<string | undefined>();
 const maxAmount = computed(() => {
@@ -488,7 +506,7 @@ const feeLoading = computed(() => feeInProgress.value || (!fee.value && balanceI
 
 const continueButtonDisabled = computed(() => {
   if (
-    (props.type !== "withdrawal" && !address.value) ||
+    !isAddressInputValid.value ||
     !transaction.value ||
     !enoughBalanceToCoverFee.value ||
     !enoughBalanceForTransaction.value ||

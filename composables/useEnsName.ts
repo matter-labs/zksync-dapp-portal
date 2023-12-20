@@ -25,11 +25,15 @@ export default (ensName: Ref<string>) => {
   );
 
   const isValidEnsFormat = computed(() => ensName.value.endsWith(".eth"));
-  watch(ensName, async () => {
-    if (isValidEnsFormat.value) {
-      await parseEns();
-    }
-  });
+  watch(
+    ensName,
+    async () => {
+      if (isValidEnsFormat.value) {
+        await parseEns();
+      }
+    },
+    { immediate: true }
+  );
 
   return {
     address: computed(() => nameToAddress.value[ensName.value]),

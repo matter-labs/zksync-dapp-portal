@@ -9,7 +9,11 @@
       </NuxtLink>
     </div>
     <div class="links-container">
-      <NuxtLink class="link-item" :to="{ name: 'bridge' }">
+      <NuxtLink
+        class="link-item"
+        :to="{ name: 'bridge' }"
+        :class="{ 'router-link-exact-active': route.name === 'bridge-withdraw' }"
+      >
         <ArrowsUpDownIcon class="link-icon" aria-hidden="true" />
         Bridge
       </NuxtLink>
@@ -24,8 +28,8 @@
     </div>
     <div class="right-side">
       <HeaderNetworkDropdown class="network-dropdown" />
-      <CommonButton v-if="!account.address" variant="primary" @click="onboardStore.openModal()">
-        Connect wallet
+      <CommonButton v-if="!isConnected" variant="primary" @click="onboardStore.openModal()">
+        <span class="whitespace-nowrap">Connect wallet</span>
       </CommonButton>
       <template v-else>
         <div class="sm:hidden">
@@ -53,10 +57,13 @@ import { storeToRefs } from "pinia";
 
 import useColorMode from "@/composables/useColorMode";
 
+import { useRoute } from "#imports";
 import { useOnboardStore } from "@/store/onboard";
 
+const route = useRoute();
+
 const onboardStore = useOnboardStore();
-const { account } = storeToRefs(onboardStore);
+const { isConnected } = storeToRefs(onboardStore);
 
 const mobileMainNavigationOpened = ref(false);
 const mobileAccountNavigationOpened = ref(false);

@@ -158,6 +158,9 @@ watch(
 
   .select-address-popover {
     @apply pointer-events-none absolute left-0 top-full z-[11] mt-1 w-full opacity-0 transition-opacity duration-300 hover:pointer-events-auto;
+    &:not(:hover) {
+      @apply focus-within:pointer-events-auto focus-within:opacity-100;
+    }
   }
 }
 </style>
