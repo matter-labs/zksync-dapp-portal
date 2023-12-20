@@ -8,7 +8,6 @@ export type Token = {
   symbol: string;
   decimals: number;
   iconUrl?: string;
-  enabledForFees?: boolean;
   price?: TokenPrice;
 };
 export type TokenAmount = Token & { amount: BigNumberish };

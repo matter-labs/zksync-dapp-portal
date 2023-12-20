@@ -7,5 +7,4 @@ export const ETH_TOKEN: Token = {
   name: "Ether",
   decimals: 18,
   iconUrl: "/img/eth.svg",
-  enabledForFees: true,
 };

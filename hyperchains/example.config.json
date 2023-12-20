@@ -22,8 +22,7 @@
         "l1Address": "0x0000000000000000000000000000000000000000",
         "symbol": "ETH",
         "decimals": 18,
-        "iconUrl": "/img/eth.svg",
-        "enabledForFees": true
+        "iconUrl": "/img/eth.svg"
       }
     ]
   }

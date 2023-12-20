@@ -50,7 +50,6 @@ export const mapApiToken = (token: Api.Response.Token): Token => {
     name: token.name || "unknown",
     decimals: token.decimals,
     iconUrl: token.iconURL || undefined,
-    enabledForFees: token.l2Address === ETH_TOKEN.address,
     price: token.usdPrice || undefined,
   };
 };
