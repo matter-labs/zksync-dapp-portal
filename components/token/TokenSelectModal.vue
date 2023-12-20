@@ -1,53 +1,61 @@
 <template>
   <CommonModal v-model:opened="isModalOpened" class="token-select-modal" :title="title" @after-leave="search = ''">
     <Combobox v-model="selectedToken">
-      <!-- TODO: Refactor this to use ComboboxInput as main component but look like CommonSmallInput -->
-      <CommonSmallInput v-model.trim="search" class="mb-4" placeholder="Symbol or address" autofocus="desktop">
+      <!-- TODO: Refactor this to use ComboboxInput as main component but look like CommonInputSearch -->
+      <CommonInputSearch
+        v-model.trim="search"
+        class="mb-block-padding-1/4"
+        placeholder="Symbol or address"
+        autofocus="desktop"
+      >
         <template #icon>
           <MagnifyingGlassIcon aria-hidden="true" />
         </template>
-      </CommonSmallInput>
-      <div class="h-full overflow-auto">
-        <CommonCardWithLineButtons v-if="loading">
-          <TokenBalanceLoader v-for="index in 2" :key="index" />
-        </CommonCardWithLineButtons>
-        <CommonCardWithLineButtons v-else-if="error">
+      </CommonInputSearch>
+      <div class="-mx-block-padding-1/2 h-full overflow-auto px-block-padding-1/2">
+        <template v-if="loading">
+          <div class="-mx-block-padding-1/2">
+            <TokenBalanceLoader v-for="index in 2" variant="light" :key="index" />
+          </div>
+        </template>
+        <template v-else-if="error">
           <CommonErrorBlock class="m-2" @try-again="emit('try-again')">
             {{ error.message }}
           </CommonErrorBlock>
-        </CommonCardWithLineButtons>
+        </template>
         <template v-else-if="!hasBalances">
-          <div class="category">
-            <CommonCardWithLineButtons>
-              <TokenLine
-                v-for="item in displayedTokens"
-                :key="item.address"
-                v-bind="item"
-                @click="selectedToken = item"
-              />
-            </CommonCardWithLineButtons>
+          <div class="category -mx-block-padding-1/2">
+            <TokenLine
+              v-for="item in displayedTokens"
+              class="token-line"
+              :key="item.address"
+              v-bind="item"
+              @click="selectedToken = item"
+            />
           </div>
         </template>
         <template v-else-if="balanceGroups.length || !search">
           <div v-for="(group, index) in balanceGroups" :key="index" class="category">
-            <TypographyCategoryLabel v-if="group.title" class="group-category-label">
-              {{ group.title }}
+            <TypographyCategoryLabel size="sm" variant="darker" class="group-category-label">
+              {{ group.title || "Your assets" }}
             </TypographyCategoryLabel>
-            <CommonCardWithLineButtons>
+            <div class="-mx-block-padding-1/2">
               <TokenBalance
                 v-for="item in group.balances"
-                :key="item.address"
                 v-bind="item"
+                size="sm"
+                variant="light"
+                :key="item.address"
                 @click="selectedToken = item"
               />
-            </CommonCardWithLineButtons>
+            </div>
           </div>
         </template>
-        <CommonEmptyBlock v-else class="search-empty-block">
+        <p v-else class="mt-block-padding-1/2 text-center">
           No tokens was found for "{{ search }}"
           <br />
           <span class="mt-1.5 inline-block">Make sure you are using correct zkSync network</span>
-        </CommonEmptyBlock>
+        </p>
         <slot name="body-bottom" />
       </div>
     </Combobox>
@@ -59,8 +67,6 @@ import { computed, ref } from "vue";
 
 import { Combobox } from "@headlessui/vue";
 import { MagnifyingGlassIcon } from "@heroicons/vue/24/outline";
-
-import CommonCardWithLineButtons from "@/components/common/CardWithLineButtons.vue";
 
 import type { Token, TokenAmount } from "@/types";
 import type { PropType } from "vue";
@@ -106,10 +112,10 @@ const search = ref("");
 const hasBalances = computed(() => props.balances.length > 0);
 const filterTokens = (tokens: Token[]) => {
   const lowercaseSearch = search.value.toLowerCase();
-  return tokens.filter(({ address, symbol }) =>
-    Object.values({ address, symbol })
+  return tokens.filter(({ address, name, symbol }) =>
+    Object.values({ address, name, symbol })
       .filter((e) => typeof e === "string")
-      .some((value) => value.toLowerCase().includes(lowercaseSearch))
+      .some((value) => value!.toLowerCase().includes(lowercaseSearch))
   );
 };
 const displayedTokens = computed(() => filterTokens(props.tokens));

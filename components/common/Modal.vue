@@ -124,7 +124,7 @@ const afterLeave = () => {
     @apply flex h-full items-end justify-center p-3 pb-0 text-center sm:items-center sm:p-[72px];
 
     .modal-card {
-      @apply relative max-h-[600px] w-full max-w-[600px] transform overflow-hidden rounded-3xl rounded-b-none bg-gray p-block-padding-1/2 text-left shadow-xl transition-all dark:bg-neutral-900 sm:rounded-b-3xl sm:p-block-padding;
+      @apply relative max-h-[600px] w-full max-w-[600px] transform overflow-hidden rounded-3xl rounded-b-none bg-neutral-50 p-block-padding-1/2 text-left shadow-xl transition-all dark:bg-neutral-900 sm:rounded-b-3xl sm:p-block-padding;
       @media screen and (max-height: 640px) {
         max-height: calc(100vh - 96px);
         max-height: calc(100dvh - 96px);

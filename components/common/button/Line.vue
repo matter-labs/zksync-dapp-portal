@@ -1,13 +1,8 @@
 <template>
-  <component :is="as" class="line-button-container" :class="`variant-${variant}`">
+  <component :is="as" class="line-button-container" :class="[`size-${size}`, `variant-${variant}`]">
     <slot />
   </component>
 </template>
-
-<script lang="ts">
-export type LineVariant = "default" | "primary";
-export const LineDefaultVariant = "default";
-</script>
 
 <script lang="ts" setup>
 import type { Component, PropType } from "vue";
@@ -18,15 +13,19 @@ defineProps({
     default: "button",
   },
   variant: {
-    type: String as PropType<LineVariant>,
-    default: LineDefaultVariant,
+    type: String as PropType<"default" | "light" | "primary">,
+    default: "default",
+  },
+  size: {
+    type: String as PropType<"md" | "sm">,
+    default: "md",
   },
 });
 </script>
 
 <style lang="scss" scoped>
 .line-button-container {
-  @apply w-full rounded-[1.24rem] px-block-padding-1/4 py-block-padding-1/2 transition-colors sm:px-block-padding-1/2;
+  @apply w-full rounded-[1.24rem] px-block-padding-1/4 transition-colors sm:px-block-padding-1/2;
   &:enabled,
   &:is(a) {
     &:not([aria-disabled="true"]) {
@@ -38,9 +37,27 @@ defineProps({
     @apply cursor-not-allowed opacity-75;
   }
 
+  &.size- {
+    &md {
+      @apply py-block-padding-1/2;
+    }
+    &sm {
+      @apply py-block-padding-1/4;
+    }
+  }
   &.variant- {
     &default {
       @apply bg-neutral-100 dark:bg-neutral-900;
+
+      &:enabled,
+      &:is(a) {
+        &:not([aria-disabled="true"]) {
+          @apply hover:bg-white dark:hover:bg-neutral-800;
+        }
+      }
+    }
+    &light {
+      @apply bg-neutral-50 dark:bg-neutral-900;
 
       &:enabled,
       &:is(a) {
