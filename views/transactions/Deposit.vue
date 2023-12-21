@@ -471,7 +471,7 @@ const isAddressInputValid = computed(() => {
   if (address.value) {
     return isAddress(address.value);
   }
-  return false;
+  return true; // Own address by default
 });
 watch(address, (_address) => {
   queryAddress.value = !_address.length ? undefined : _address;

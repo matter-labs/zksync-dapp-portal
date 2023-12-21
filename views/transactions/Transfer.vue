@@ -394,7 +394,7 @@ const isAddressInputValid = computed(() => {
     return isAddress(address.value);
   }
   if (props.type === "withdrawal") {
-    return true;
+    return true; // Own address by default
   }
   return false;
 });
