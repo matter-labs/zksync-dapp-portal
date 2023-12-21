@@ -10,7 +10,7 @@
     <transition v-bind="TransitionAlertScaleInOutTransition">
       <MenuItems class="account-options-container">
         <MenuItem v-slot="{ active }" as="template">
-          <CommonButtonDropdown size="sm" no-chevron :active="active" @click="copy()">
+          <CommonButtonDropdown size="sm" no-chevron :active="active" class="options-item" @click="copy()">
             <template #left-icon>
               <DocumentDuplicateIcon aria-hidden="true" />
             </template>
@@ -25,6 +25,7 @@
             as="a"
             :href="`${selectedNetwork.blockExplorerUrl}/address/${account.address!}`"
             target="_blank"
+            class="options-item"
           >
             <template #left-icon>
               <Squares2X2Icon aria-hidden="true" />
@@ -36,7 +37,13 @@
           </CommonButtonDropdown>
         </MenuItem>
         <MenuItem v-slot="{ active }" as="template">
-          <CommonButtonDropdown size="sm" no-chevron :active="active" @click="helpModalOpened = true">
+          <CommonButtonDropdown
+            size="sm"
+            no-chevron
+            :active="active"
+            class="options-item"
+            @click="helpModalOpened = true"
+          >
             <template #left-icon>
               <ExclamationCircleIcon aria-hidden="true" />
             </template>
@@ -44,7 +51,13 @@
           </CommonButtonDropdown>
         </MenuItem>
         <MenuItem v-slot="{ active }" as="template">
-          <CommonButtonDropdown size="sm" no-chevron :active="active" @click="onboardStore.disconnect()">
+          <CommonButtonDropdown
+            size="sm"
+            no-chevron
+            :active="active"
+            class="options-item"
+            @click="onboardStore.disconnect()"
+          >
             <template #left-icon>
               <PowerIcon aria-hidden="true" />
             </template>
@@ -106,7 +119,11 @@ const helpModalOpened = ref(false);
   @apply relative;
 
   .account-options-container {
-    @apply absolute right-0 top-full z-10 mt-0.5 grid h-max w-max min-w-full rounded-3xl bg-neutral-100 p-1 shadow-lg dark:bg-neutral-900;
+    @apply absolute right-0 top-full z-10 mt-0.5 h-max w-max min-w-full rounded-3xl bg-neutral-100 p-1 shadow-lg dark:bg-neutral-900;
+
+    .options-item {
+      @apply w-full;
+    }
   }
 }
 </style>
