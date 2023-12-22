@@ -1,4 +1,4 @@
-![zkSync Portal](https://portal.zksync.io/preview.jpg)
+![zkSync Portal](public/preview.png)
 
 # zkSync Portal 🚀
 
