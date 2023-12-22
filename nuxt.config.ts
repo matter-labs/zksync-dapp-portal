@@ -4,7 +4,6 @@ import { portal as portalMeta } from "./data/meta";
 export default defineNuxtConfig({
   app: {
     baseURL: "/bridge",
-    buildAssetsDir: "/bridge/_nuxt/",
     head: {
       htmlAttrs: {
         lang: "en",
