@@ -3,7 +3,7 @@
     <PageTitle :fallback-route="{ name: 'index' }">Send</PageTitle>
 
     <div class="space-y-4">
-      <CommonCardWithLineButtons>
+      <CommonCardWithLineButtons size="sm">
         <DestinationItem
           v-bind="destinations.era"
           :label="`Send to another account on ${destinations.era.label}`"

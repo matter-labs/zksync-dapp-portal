@@ -3,7 +3,7 @@
     <PageTitle>Transactions</PageTitle>
 
     <template v-if="!isConnected">
-      <ConnectWalletBlock />
+      <ConnectWalletBlock>Connect wallet to view your latest transactions on {{ eraNetwork.name }}</ConnectWalletBlock>
     </template>
     <template v-else>
       <template v-if="recentWithdrawals.length">

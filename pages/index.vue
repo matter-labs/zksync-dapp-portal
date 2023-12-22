@@ -3,7 +3,7 @@
     <PageTitle>Assets</PageTitle>
 
     <template v-if="!isConnected">
-      <ConnectWalletBlock />
+      <ConnectWalletBlock>Connect wallet to view your balances on {{ eraNetwork.name }}</ConnectWalletBlock>
     </template>
     <template v-else>
       <EcosystemBlock
@@ -169,20 +169,19 @@ const noBalances = computed(() => !loading.value && !balanceError.value && !disp
 
 const depositMethods = computed(() => {
   const methods: { props: Record<string, unknown>; icon?: FunctionalComponent }[] = [];
-  /* if (eraNetwork.value.l1Network) {
+  if (eraNetwork.value.l1Network && !noBalances.value) {
     methods.push({
       props: {
         iconUrl: destinations.value.ethereum.iconUrl,
         label: `Bridge from ${eraNetwork.value.l1Network?.name}`,
         description: `Receive tokens from your ${eraNetwork.value.l1Network?.name} account`,
-        variant: noBalances.value ? "primary" : undefined,
         as: "RouterLink",
         to: {
           name: "bridge",
         },
       },
     });
-  } */
+  }
   methods.push({
     props: {
       label: "View your address",
@@ -208,8 +207,8 @@ const depositMethods = computed(() => {
     });
     methods.push({
       props: {
-        label: "3rd party bridges",
-        description: "Bridge tokens from other networks",
+        label: "Bridge from other networks",
+        description: "Explore ecosystem of third party bridges",
         as: "a",
         href: "https://zksync.dappradar.com/ecosystem?category-de=bridges",
         target: "_blank",

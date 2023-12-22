@@ -24,6 +24,7 @@
               :key="itemIndex"
               :icon="item.key === selectedNetworkKey ? CheckIcon : undefined"
               variant="light"
+              size="sm"
               @click="selectedNetworkKey = item.key!"
             />
           </div>

@@ -57,7 +57,7 @@
       <AnimationsTransactionProgress :completed="completed" class="transaction-animation" />
     </div>
     <CommonButton
-      size="sm"
+      size="xs"
       variant="light"
       as="a"
       :href="transactionLink"
@@ -67,13 +67,13 @@
       Explorer
       <ArrowTopRightOnSquareIcon class="ml-2 h-6 w-6" aria-hidden="true" />
     </CommonButton>
-    <div class="mt-block-padding flex items-center justify-center">
+    <div class="mt-block-padding-1/2 flex items-center justify-center">
       <span class="text-neutral-400">Value:</span>
-      <span class="ml-1">
+      <span class="ml-1 flex items-center">
         {{ parseTokenAmount(token.amount, token.decimals) }}
-        {{ token.symbol }}</span
-      >
-      <TokenImage class="ml-1.5 mr-1 h-5 w-5" v-bind="token" />
+        <TokenImage class="mx-1 h-5 w-5" v-bind="token" />
+        {{ token.symbol }}
+      </span>
     </div>
   </CommonContentBlock>
 </template>

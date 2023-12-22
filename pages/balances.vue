@@ -3,7 +3,7 @@
     <PageTitle :fallback-route="{ name: 'index' }">Balances</PageTitle>
 
     <template v-if="!isConnected">
-      <ConnectWalletBlock />
+      <ConnectWalletBlock>Connect wallet to view your assets on {{ eraNetwork.name }}</ConnectWalletBlock>
     </template>
     <template v-else>
       <CommonCardWithLineButtons v-if="loading">

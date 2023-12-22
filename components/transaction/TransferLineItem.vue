@@ -90,15 +90,15 @@ const label = computed(() => {
     return `Sent to ${formatAddress(props.transfer.to)}`;
   } else if (props.transfer.type === "withdrawal") {
     if (props.transfer.to === account.value.address) {
-      return "Withdrawal";
+      return "Bridged";
     }
-    return `Withdrawal to ${formatAddress(props.transfer.to)}`;
+    return `Bridged to ${formatAddress(props.transfer.to)}`;
   } else if (props.transfer.type === "deposit") {
     if (direction.value === "in") {
       if (props.transfer.from === account.value.address) {
-        return "Deposit";
+        return "Bridged";
       }
-      return `Deposit from ${formatAddress(props.transfer.from)}`;
+      return `Bridged from ${formatAddress(props.transfer.from)}`;
     } else {
       return `Sent to ${formatAddress(props.transfer.to)}`;
     }

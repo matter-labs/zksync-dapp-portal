@@ -1,8 +1,11 @@
 <template>
   <div>
     <CommonAlert variant="warning" :icon="ExclamationTriangleIcon" class="mb-block-padding-1/2 sm:mb-block-gap">
-      Please ensure funds will be sent from an account on {{ eraNetwork.name }} network, otherwise it may result in the
-      permanent loss of funds.
+      <p>
+        Please ensure funds to be sent from an account on
+        <span class="font-medium">{{ eraNetwork.name }}</span
+        >, otherwise it may result in the permanent loss of funds.
+      </p>
     </CommonAlert>
     <CommonContentBlock>
       <div class="grid gap-block-padding-1/2 sm:grid-cols-[max-content_1fr] sm:items-center sm:gap-block-padding">

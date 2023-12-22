@@ -229,7 +229,9 @@
                 <transition v-bind="TransitionPrimaryButtonText" mode="out-in">
                   <span v-if="status === 'processing'">Processing...</span>
                   <span v-else-if="status === 'waiting-for-signature'">Waiting for confirmation</span>
-                  <span v-else>Send now</span>
+                  <span v-else>
+                    {{ type === "withdrawal" ? "Bridge now" : "Send now" }}
+                  </span>
                 </transition>
               </CommonButton>
               <TransactionButtonUnderlineConfirmTransaction :opened="status === 'waiting-for-signature'" />

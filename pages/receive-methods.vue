@@ -43,8 +43,8 @@
       </CommonCardWithLineButtons>
       <CommonCardWithLineButtons v-if="eraNetwork.displaySettings?.showPartnerLinks">
         <DestinationItem
-          label="3rd party bridges"
-          description="Bridge tokens from other networks"
+          label="Bridge from other networks"
+          description="Explore ecosystem of third party bridges"
           as="a"
           href="https://zksync.dappradar.com/ecosystem?category-de=bridges"
           target="_blank"

@@ -1,14 +1,16 @@
 <template>
   <Dialog as="template" :open="modalOpened">
     <DialogPanel class="mobile-navigation-container">
-      <div class="navigation-header">
-        <PageTitle :as="DialogTitle" class="navigation-title">{{ title }}</PageTitle>
-        <CommonButton @click="close()">
-          <XMarkIcon class="h-6 w-6" aria-hidden="true" />
-        </CommonButton>
-      </div>
-      <div class="navigation-body">
-        <slot />
+      <div class="mx-auto max-w-[600px]">
+        <div class="navigation-header">
+          <PageTitle :as="DialogTitle" class="navigation-title">{{ title }}</PageTitle>
+          <CommonButton @click="close()">
+            <XMarkIcon class="h-6 w-6" aria-hidden="true" />
+          </CommonButton>
+        </div>
+        <div class="navigation-body">
+          <slot />
+        </div>
       </div>
     </DialogPanel>
   </Dialog>
@@ -65,16 +67,12 @@ const close = () => {
 
 <style scoped lang="scss">
 .mobile-navigation-container {
-  @apply fixed left-0 top-0 z-[60] w-full overflow-y-auto overflow-x-hidden;
+  @apply fixed left-0 top-0 z-[60] w-full overflow-y-auto overflow-x-hidden bg-neutral-50 dark:bg-black;
   height: 100vh;
   height: 100dvh;
-  &,
-  .navigation-header {
-    @apply bg-neutral-50 dark:bg-black;
-  }
 
   .navigation-header {
-    @apply sticky top-0 flex items-center justify-between p-2;
+    @apply sticky top-0 flex items-center justify-between p-2 sm:p-4;
 
     .navigation-title {
       @apply mb-0;

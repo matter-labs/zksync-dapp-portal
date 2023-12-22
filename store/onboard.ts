@@ -11,7 +11,7 @@ import {
   watchAccount,
   watchNetwork,
 } from "@wagmi/core";
-import { zkSync, zkSyncTestnet } from "@wagmi/core/chains";
+import { zkSync, zkSyncSepoliaTestnet, zkSyncTestnet } from "@wagmi/core/chains";
 import { WalletConnectConnector } from "@wagmi/core/connectors/walletConnect";
 import { publicProvider } from "@wagmi/core/providers/public";
 import { createWeb3Modal } from "@web3modal/wagmi";
@@ -30,7 +30,7 @@ import { useNetworkStore } from "@/store/network";
 export const useOnboardStore = defineStore("onboard", () => {
   const { zkSyncNetworks } = useNetworks();
   const useExistingEraChain = (network: ZkSyncNetwork) => {
-    const existingNetworks = [zkSync, zkSyncTestnet];
+    const existingNetworks = [zkSync, zkSyncSepoliaTestnet, zkSyncTestnet];
     return existingNetworks.find((existingNetwork) => existingNetwork.id === network.id);
   };
   const createEraChain = (network: ZkSyncNetwork) => {
@@ -71,8 +71,7 @@ export const useOnboardStore = defineStore("onboard", () => {
   const { publicClient } = configureChains(extendedChains, [publicProvider()]);
   const metadata = {
     name: "zkSync Portal",
-    description:
-      "zkSync Portal provides all the required tools for working with Era and Lite networks such as Wallet, Bridge & Faucet functionality.",
+    description: "zkSync Portal - view balances, transfer and bridge tokens",
     url: "https://portal.zksync.io",
     icons: ["https://portal.zksync.io/icon.png"],
   };

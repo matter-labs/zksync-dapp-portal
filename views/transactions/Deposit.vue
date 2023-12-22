@@ -181,16 +181,39 @@
             <DestinationItem
               v-if="enoughAllowance && setAllowanceReceipt"
               as="div"
-              :label="`${selectedToken?.symbol} allowance approved`"
               :description="`You can now proceed to deposit`"
             >
+              <template #label>
+                {{ selectedToken?.symbol }} allowance approved
+                <a
+                  v-if="l1BlockExplorerUrl"
+                  :href="`${l1BlockExplorerUrl}/tx/${setAllowanceReceipt.transactionHash}`"
+                  target="_blank"
+                  class="inline-flex items-center gap-1 underline underline-offset-2"
+                >
+                  View on Explorer
+                  <ArrowTopRightOnSquareIcon class="h-6 w-6" aria-hidden="true" />
+                </a>
+              </template>
               <template #image>
                 <div class="aspect-square h-full w-full rounded-full bg-success-400 p-3 text-black">
                   <CheckIcon aria-hidden="true" />
                 </div>
               </template>
             </DestinationItem>
-            <DestinationItem v-else as="div" :label="`Approve ${selectedToken?.symbol} allowance`">
+            <DestinationItem v-else as="div">
+              <template #label>
+                Approve {{ selectedToken?.symbol }} allowance
+                <a
+                  v-if="l1BlockExplorerUrl && setAllowanceTransactionHash"
+                  :href="`${l1BlockExplorerUrl}/tx/${setAllowanceTransactionHash}`"
+                  target="_blank"
+                  class="inline-flex items-center gap-1 underline underline-offset-2"
+                >
+                  View on Explorer
+                  <ArrowTopRightOnSquareIcon class="h-6 w-6" aria-hidden="true" />
+                </a>
+              </template>
               <template #underline>
                 Before depositing you need to give our bridge permission to spend specified amount of
                 {{ selectedToken?.symbol }}.
@@ -300,7 +323,12 @@
 <script lang="ts" setup>
 import { computed, onBeforeUnmount, ref, watch } from "vue";
 
-import { CheckIcon, ExclamationTriangleIcon, LockClosedIcon } from "@heroicons/vue/24/outline";
+import {
+  ArrowTopRightOnSquareIcon,
+  CheckIcon,
+  ExclamationTriangleIcon,
+  LockClosedIcon,
+} from "@heroicons/vue/24/outline";
 import { useRouteQuery } from "@vueuse/router";
 import { BigNumber } from "ethers";
 import { isAddress } from "ethers/lib/utils";
@@ -415,6 +443,7 @@ const {
   error: allowanceRequestError,
   requestAllowance,
 
+  setAllowanceTransactionHash,
   setAllowanceReceipt,
   setAllowanceStatus,
   setAllowanceInProgress,
@@ -604,7 +633,6 @@ const makeTransaction = async () => {
 
   if (status.value === "done") {
     step.value = "submitted";
-    console.log(transaction.value);
     previousTransactionAddress.value = transaction.value!.to.address;
     recentlyBridged.value = true;
   }

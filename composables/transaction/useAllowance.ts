@@ -51,6 +51,7 @@ export default (
   const setAllowanceStatus = ref<"not-started" | "processing" | "waiting-for-signature" | "sending" | "done">(
     "not-started"
   );
+  const setAllowanceTransactionHash = ref<Hash | undefined>();
   const {
     result: setAllowanceReceipt,
     inProgress: setAllowanceInProgress,
@@ -69,7 +70,7 @@ export default (
         const wallet = await getWallet();
 
         setAllowanceStatus.value = "waiting-for-signature";
-        let txHash = await wallet.writeContract({
+        setAllowanceTransactionHash.value = await wallet.writeContract({
           address: tokenAddress.value as Hash,
           abi: IERC20.abi,
           functionName: "approve",
@@ -78,9 +79,9 @@ export default (
 
         setAllowanceStatus.value = "sending";
         const receipt = await getPublicClient().waitForTransactionReceipt({
-          hash: txHash,
+          hash: setAllowanceTransactionHash.value!,
           onReplaced: (replacement) => {
-            txHash = replacement.transaction.hash;
+            setAllowanceTransactionHash.value = replacement.transaction.hash;
           },
         });
         await requestAllowance();
@@ -101,6 +102,7 @@ export default (
   const resetSetAllowance = () => {
     approvalAmount = undefined;
     setAllowanceStatus.value = "not-started";
+    setAllowanceTransactionHash.value = undefined;
     resetExecuteSetAllowance();
   };
 
@@ -119,6 +121,7 @@ export default (
     error: computed(() => error.value),
     requestAllowance,
 
+    setAllowanceTransactionHash,
     setAllowanceReceipt,
     setAllowanceStatus,
     setAllowanceInProgress,

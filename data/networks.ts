@@ -16,10 +16,6 @@ export const l1Networks = {
   sepolia: {
     ...sepolia,
     name: "Ethereum Sepolia Testnet",
-    rpcUrls: {
-      public: { http: ["https://rpc.ankr.com/eth_sepolia"] },
-      default: { http: ["https://rpc.ankr.com/eth_sepolia"] },
-    },
   },
 } as const;
 export type L1Network = Chain;
