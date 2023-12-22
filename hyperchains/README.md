@@ -117,7 +117,3 @@ Build the application for production:
 ```bash
 npm run generate:node:hyperchain
 ```
-
-#### 🌉 Bridge
-
-If your Hyperchain is connected to L1, you can also access Bridge on `/bridge` page.
