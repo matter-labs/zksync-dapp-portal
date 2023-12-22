@@ -1,6 +1,6 @@
 <template>
   <div>
-    <PageTitle :fallback-route="{ name: 'index' }">Balances</PageTitle>
+    <PageTitle :fallback-route="{ name: 'assets' }">Balances</PageTitle>
 
     <template v-if="!isConnected">
       <ConnectWalletBlock>Connect wallet to view your assets on {{ eraNetwork.name }}</ConnectWalletBlock>

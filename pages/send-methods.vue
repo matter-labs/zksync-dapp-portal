@@ -1,6 +1,6 @@
 <template>
   <div>
-    <PageTitle :fallback-route="{ name: 'index' }">Send</PageTitle>
+    <PageTitle :fallback-route="{ name: 'assets' }">Send</PageTitle>
 
     <div class="space-y-4">
       <CommonCardWithLineButtons size="sm">
@@ -17,7 +17,7 @@
           v-bind="destinations.ethereum"
           :label="`Bridge to ${destinations.ethereum.label}`"
           as="RouterLink"
-          :to="{ name: 'bridge-withdraw', query: $route.query }"
+          :to="{ name: 'withdraw', query: $route.query }"
         />
       </CommonCardWithLineButtons>
       <CommonCardWithLineButtons>

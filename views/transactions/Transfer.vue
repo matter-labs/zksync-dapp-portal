@@ -148,7 +148,7 @@
           :completed="transactionCommitted && type !== 'withdrawal'"
         />
 
-        <CommonButton as="RouterLink" :to="{ name: 'index' }" class="mt-block-gap" variant="primary">
+        <CommonButton as="RouterLink" :to="{ name: 'assets' }" class="mt-block-gap" variant="primary">
           Go to Assets page
         </CommonButton>
         <CommonButton size="sm" class="mx-auto mt-block-gap" @click="resetForm">Make another transaction</CommonButton>
@@ -299,13 +299,13 @@ const { isCustomNode } = useNetworks();
 const toNetworkModalOpened = ref(false);
 const toNetworkSelected = (networkKey?: string) => {
   if (destinations.value.era.key === networkKey) {
-    router.replace({ name: "bridge", query: route.query });
+    router.replace({ name: "index", query: route.query });
   }
 };
 const fromNetworkModalOpened = ref(false);
 const fromNetworkSelected = (networkKey?: string) => {
   if (destinations.value.ethereum.key === networkKey) {
-    router.replace({ name: "bridge", query: route.query });
+    router.replace({ name: "index", query: route.query });
   }
 };
 

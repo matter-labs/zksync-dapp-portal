@@ -20,14 +20,14 @@
 
         <TypographyCategoryLabel size="sm">Portal</TypographyCategoryLabel>
         <CommonCardWithLineButtons>
-          <DestinationItem label="Bridge" as="RouterLink" :to="{ name: 'bridge' }" size="sm">
+          <DestinationItem label="Bridge" as="RouterLink" :to="{ name: 'index' }" size="sm">
             <template #image>
               <DestinationIconContainer>
                 <ArrowsUpDownIcon aria-hidden="true" />
               </DestinationIconContainer>
             </template>
           </DestinationItem>
-          <DestinationItem label="Assets" as="RouterLink" :to="{ name: 'index' }" size="sm">
+          <DestinationItem label="Assets" as="RouterLink" :to="{ name: 'assets' }" size="sm">
             <template #image>
               <DestinationIconContainer>
                 <WalletIcon aria-hidden="true" />

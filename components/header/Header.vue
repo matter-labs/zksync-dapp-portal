@@ -11,13 +11,13 @@
     <div class="links-container">
       <NuxtLink
         class="link-item"
-        :to="{ name: 'bridge' }"
-        :class="{ 'router-link-exact-active': route.name === 'bridge-withdraw' }"
+        :to="{ name: 'index' }"
+        :class="{ 'router-link-exact-active': route.name === 'withdraw' }"
       >
         <ArrowsUpDownIcon class="link-icon" aria-hidden="true" />
         Bridge
       </NuxtLink>
-      <NuxtLink class="link-item" :to="{ name: 'index' }">
+      <NuxtLink class="link-item" :to="{ name: 'assets' }">
         <WalletIcon class="link-icon" aria-hidden="true" />
         Assets
       </NuxtLink>
