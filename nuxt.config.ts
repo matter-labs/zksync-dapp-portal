@@ -3,7 +3,6 @@ import { portal as portalMeta } from "./data/meta";
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   app: {
-    baseURL: "/bridge",
     buildAssetsDir: "/_nuxt/bridge",
     head: {
       htmlAttrs: {
