@@ -1,18 +1,24 @@
 <template>
   <div class="imgs-container">
-    <img src="/img/ecosystem/ramp.svg" alt="Ramp" class="animated-logo" />
-    <img src="/img/ecosystem/1inch.svg" alt="1inch" class="animated-logo" />
-    <img src="/img/ecosystem/gravity.svg" alt="Gravity" class="animated-logo" />
-    <img src="/img/ecosystem/layerswap.svg" alt="QuarkID" class="animated-logo" />
-    <img src="/img/ecosystem/lido.svg" alt="Lido" class="animated-logo" />
-    <img src="/img/ecosystem/quarkid.svg" alt="QuarkID" class="animated-logo" />
-    <img src="/img/ecosystem/pudgy_penguin.svg" alt="Pudgy Penguins" class="animated-logo" />
-    <img src="/img/ecosystem/clave.svg" alt="Clave" class="animated-logo" />
-    <img src="/img/ecosystem/rocket_pool.svg" alt="Rocket Pool" class="animated-logo" />
-    <img src="/img/ecosystem/uniswap.svg" alt="Uniswap" class="animated-logo" />
-    <img src="/img/ecosystem/mase.svg" alt="Mase" class="animated-logo" />
+    <img v-for="item in ecosystem" :key="item.name" :src="item.src" :alt="item.name" class="animated-logo" />
   </div>
 </template>
+
+<script lang="ts" setup>
+const ecosystem = [
+  { name: "Ramp", src: "/img/ecosystem/ramp.svg" },
+  { name: "1inch", src: "/img/ecosystem/1inch.svg" },
+  { name: "Gravity", src: "/img/ecosystem/gravity.svg" },
+  { name: "LayerSwap", src: "/img/ecosystem/layerswap.svg" },
+  { name: "Lido", src: "/img/ecosystem/lido.svg" },
+  { name: "QuarkID", src: "/img/ecosystem/quarkid.svg" },
+  { name: "Pudgy Penguins", src: "/img/ecosystem/pudgy_penguin.svg" },
+  { name: "Clave", src: "/img/ecosystem/clave.svg" },
+  { name: "Rocket Pool", src: "/img/ecosystem/rocket_pool.svg" },
+  { name: "Uniswap", src: "/img/ecosystem/uniswap.svg" },
+  { name: "Mase", src: "/img/ecosystem/mase.svg" },
+];
+</script>
 
 <style lang="scss" scoped>
 @use "sass:math";
