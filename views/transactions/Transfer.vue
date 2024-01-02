@@ -112,6 +112,10 @@
             :destination="transaction!.to.destination"
           />
         </CommonCardWithLineButtons>
+
+        <CommonErrorBlock v-if="transactionError" :retry-button="false" class="mt-4">
+          {{ transactionError.message }}
+        </CommonErrorBlock>
       </template>
       <template v-else-if="step === 'submitted'">
         <h1 class="h1 mt-block-gap-1/2 text-center">
@@ -221,20 +225,20 @@
                 </div>
               </transition>
               <CommonButton
-                :disabled="continueButtonDisabled || status !== 'not-started'"
+                :disabled="continueButtonDisabled || transactionStatus !== 'not-started'"
                 class="w-full"
                 variant="primary"
                 @click="buttonContinue()"
               >
                 <transition v-bind="TransitionPrimaryButtonText" mode="out-in">
-                  <span v-if="status === 'processing'">Processing...</span>
-                  <span v-else-if="status === 'waiting-for-signature'">Waiting for confirmation</span>
+                  <span v-if="transactionStatus === 'processing'">Processing...</span>
+                  <span v-else-if="transactionStatus === 'waiting-for-signature'">Waiting for confirmation</span>
                   <span v-else>
                     {{ type === "withdrawal" ? "Bridge now" : "Send now" }}
                   </span>
                 </transition>
               </CommonButton>
-              <TransactionButtonUnderlineConfirmTransaction :opened="status === 'waiting-for-signature'" />
+              <TransactionButtonUnderlineConfirmTransaction :opened="transactionStatus === 'waiting-for-signature'" />
             </template>
           </template>
         </TransactionFooter>
@@ -286,14 +290,14 @@ const route = useRoute();
 const router = useRouter();
 
 const onboardStore = useOnboardStore();
-const walletEraStore = useZkSyncWalletStore();
-const eraTokensStore = useZkSyncTokensStore();
-const eraProviderStore = useZkSyncProviderStore();
+const walletStore = useZkSyncWalletStore();
+const tokensStore = useZkSyncTokensStore();
+const providerStore = useZkSyncProviderStore();
 const { account, isConnected } = storeToRefs(onboardStore);
-const { blockExplorerUrl } = storeToRefs(eraProviderStore);
+const { blockExplorerUrl } = storeToRefs(providerStore);
 const { destinations } = storeToRefs(useDestinationsStore());
-const { tokens, tokensRequestInProgress, tokensRequestError } = storeToRefs(eraTokensStore);
-const { balance, balanceInProgress, balanceError } = storeToRefs(walletEraStore);
+const { tokens, tokensRequestInProgress, tokensRequestError } = storeToRefs(tokensStore);
+const { balance, balanceInProgress, balanceError } = storeToRefs(walletStore);
 const { isCustomNode } = useNetworks();
 
 const toNetworkModalOpened = ref(false);
@@ -384,7 +388,7 @@ const {
   enoughBalanceToCoverFee,
   estimateFee,
   resetFee,
-} = useFee(eraProviderStore.requestProvider, tokens, balance);
+} = useFee(providerStore.requestProvider, tokens, balance);
 
 const queryAddress = useRouteQuery<string | undefined>("address", undefined, {
   transform: String,
@@ -532,12 +536,20 @@ const buttonContinue = () => {
 };
 
 /* Transaction signing and submitting */
-const eraTransfersHistoryStore = useZkSyncTransfersHistoryStore();
+const transfersHistoryStore = useZkSyncTransfersHistoryStore();
 const { previousTransactionAddress } = storeToRefs(usePreferencesStore());
-const { status, error, transactionHash, commitTransaction } = useTransaction(
-  walletEraStore.getSigner,
-  eraProviderStore.requestProvider
-);
+const {
+  status: transactionStatus,
+  error: transactionError,
+  transactionHash,
+  commitTransaction,
+} = useTransaction(walletStore.getSigner, providerStore.requestProvider);
+
+watch(step, (newStep) => {
+  if (newStep === "form") {
+    transactionError.value = undefined;
+  }
+});
 
 const transactionCommitted = ref(false);
 const makeTransaction = async () => {
@@ -556,27 +568,27 @@ const makeTransaction = async () => {
     }
   );
 
-  if (status.value === "done") {
+  if (transactionStatus.value === "done") {
     step.value = "submitted";
     previousTransactionAddress.value = transaction.value!.to.address;
   }
 
   if (tx) {
     const fee = calculateFee(gasLimit.value!, gasPrice.value!);
-    walletEraStore.deductBalance(feeToken.value!.address, fee);
-    walletEraStore.deductBalance(transaction.value!.token.address, transaction.value!.token.amount);
+    walletStore.deductBalance(feeToken.value!.address, fee);
+    walletStore.deductBalance(transaction.value!.token.address, transaction.value!.token.amount);
     tx.wait()
       .then(async () => {
         transactionCommitted.value = true;
         setTimeout(() => {
-          eraTransfersHistoryStore.reloadRecentTransfers().catch(() => undefined);
-          walletEraStore.requestBalance({ force: true }).catch(() => undefined);
+          transfersHistoryStore.reloadRecentTransfers().catch(() => undefined);
+          walletStore.requestBalance({ force: true }).catch(() => undefined);
         }, 2000);
       })
       .catch((err) => {
         transactionCommitted.value = false;
-        error.value = err as Error;
-        status.value = "not-started";
+        transactionError.value = err as Error;
+        transactionStatus.value = "not-started";
       });
   }
 };
@@ -585,15 +597,15 @@ const resetForm = () => {
   address.value = "";
   amount.value = "";
   step.value = "form";
-  status.value = "not-started";
+  transactionStatus.value = "not-started";
   transactionCommitted.value = false;
 };
 
 const fetchBalances = async (force = false) => {
-  eraTokensStore.requestTokens();
+  tokensStore.requestTokens();
   if (!isConnected.value) return;
 
-  await walletEraStore.requestBalance({ force }).then(() => {
+  await walletStore.requestBalance({ force }).then(() => {
     if (!selectedToken.value) {
       selectedTokenAddress.value = tokenWithHighestBalancePrice.value?.address;
     }

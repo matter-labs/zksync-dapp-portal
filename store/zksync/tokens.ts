@@ -7,8 +7,8 @@ import { useZkSyncProviderStore } from "@/store/zksync/provider";
 import { mapApiToken } from "@/utils/mappers";
 
 export const useZkSyncTokensStore = defineStore("zkSyncTokens", () => {
-  const eraProviderStore = useZkSyncProviderStore();
-  const { eraNetwork } = storeToRefs(eraProviderStore);
+  const providerStore = useZkSyncProviderStore();
+  const { eraNetwork } = storeToRefs(providerStore);
 
   const {
     result: tokensRaw,

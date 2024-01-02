@@ -49,9 +49,9 @@ import { useZkSyncWalletStore } from "@/store/zksync/wallet";
 import { groupBalancesByAmount } from "@/utils/mappers";
 
 const onboardStore = useOnboardStore();
-const walletEraStore = useZkSyncWalletStore();
+const walletStore = useZkSyncWalletStore();
 const { isConnected } = storeToRefs(onboardStore);
-const { balance, balanceInProgress, balanceError } = storeToRefs(walletEraStore);
+const { balance, balanceInProgress, balanceError } = storeToRefs(walletStore);
 const { eraNetwork } = storeToRefs(useZkSyncProviderStore());
 
 const { loading, reset: resetSingleLoading } = useSingleLoading(computed(() => balanceInProgress.value));
@@ -59,7 +59,7 @@ const { loading, reset: resetSingleLoading } = useSingleLoading(computed(() => b
 const balanceGroups = groupBalancesByAmount(balance);
 
 const fetch = () => {
-  walletEraStore.requestBalance();
+  walletStore.requestBalance();
 };
 fetch();
 

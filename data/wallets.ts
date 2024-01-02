@@ -13,5 +13,5 @@ export const confirmedSupportedWallets: WalletEntry[] = [
 ];
 
 export const disabledWallets: WalletEntry[] = [
-  { walletName: "Argent", type: "walletConnect" }, // Argent has different L1 and L2 Era addresses, also Remote wallet type for zkSync Lite should be fixed
+  { walletName: "Argent", type: "walletConnect" }, // Argent has different L1 and L2 Era addresses
 ];

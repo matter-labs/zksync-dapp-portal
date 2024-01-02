@@ -1,15 +1,15 @@
 <template>
   <ModalTransactionWithdrawalUnavailable />
 
-  <EraTransferForm type="withdrawal">
+  <TransferView type="withdrawal">
     <template #title>
       <PageTitle>Bridge</PageTitle>
     </template>
-  </EraTransferForm>
+  </TransferView>
 </template>
 
 <script lang="ts" setup>
-import EraTransferForm from "@/views/transactions/Transfer.vue";
+import TransferView from "@/views/transactions/Transfer.vue";
 </script>
 
 <style lang="scss" scoped></style>

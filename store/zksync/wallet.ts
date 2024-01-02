@@ -11,10 +11,10 @@ import { useZkSyncTokensStore } from "@/store/zksync/tokens";
 
 export const useZkSyncWalletStore = defineStore("zkSyncWallet", () => {
   const onboardStore = useOnboardStore();
-  const eraProviderStore = useZkSyncProviderStore();
-  const eraTokensStore = useZkSyncTokensStore();
-  const { eraNetwork } = storeToRefs(eraProviderStore);
-  const { tokens } = storeToRefs(eraTokensStore);
+  const providerStore = useZkSyncProviderStore();
+  const tokensStore = useZkSyncTokensStore();
+  const { eraNetwork } = storeToRefs(providerStore);
+  const { tokens } = storeToRefs(tokensStore);
   const { account, network } = storeToRefs(onboardStore);
 
   const { execute: getSigner, reset: resetSigner } = usePromise(async () => {
@@ -42,7 +42,7 @@ export const useZkSyncWalletStore = defineStore("zkSyncWallet", () => {
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const web3Provider = new ethers.providers.Web3Provider((await onboardStore.getWallet()) as any, "any");
-    const eraL1Signer = L1Signer.from(web3Provider.getSigner(), eraProviderStore.requestProvider());
+    const eraL1Signer = L1Signer.from(web3Provider.getSigner(), providerStore.requestProvider());
     return eraL1Signer;
   });
   const getL1VoidSigner = () => {
@@ -51,7 +51,7 @@ export const useZkSyncWalletStore = defineStore("zkSyncWallet", () => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const web3Provider = new ethers.providers.Web3Provider(onboardStore.getPublicClient() as any, "any");
     const voidSigner = new VoidSigner(account.value.address, web3Provider);
-    return L1VoidSigner.from(voidSigner, eraProviderStore.requestProvider()) as unknown as L1Signer;
+    return L1VoidSigner.from(voidSigner, providerStore.requestProvider()) as unknown as L1Signer;
   };
 
   const {
@@ -67,7 +67,7 @@ export const useZkSyncWalletStore = defineStore("zkSyncWallet", () => {
   });
 
   const getBalancesFromBlockExplorerApi = async (): Promise<TokenAmount[]> => {
-    await Promise.all([requestAccountState({ force: true }), eraTokensStore.requestTokens()]);
+    await Promise.all([requestAccountState({ force: true }), tokensStore.requestTokens()]);
     if (!accountState.value) throw new Error("Account state is not available");
     if (!tokens.value) throw new Error("Tokens are not available");
     return Object.entries(accountState.value.balances)
@@ -84,11 +84,11 @@ export const useZkSyncWalletStore = defineStore("zkSyncWallet", () => {
       });
   };
   const getBalancesFromRPC = async (): Promise<TokenAmount[]> => {
-    await eraTokensStore.requestTokens();
+    await tokensStore.requestTokens();
     if (!tokens.value) throw new Error("Tokens are not available");
     if (!account.value.address) throw new Error("Account is not available");
 
-    const provider = eraProviderStore.requestProvider();
+    const provider = providerStore.requestProvider();
     const balances = await Promise.all(
       Object.entries(tokens.value).map(async ([, token]) => {
         const amount = await provider.getBalance(onboardStore.account.address!, undefined, token.address);

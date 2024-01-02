@@ -6,6 +6,7 @@ import useTimedCache from "@/composables/useTimedCache";
 import type { Hash } from "@/types";
 import type { Transfer } from "@/utils/mappers";
 
+import { useOnboardStore } from "@/store/onboard";
 import { useZkSyncProviderStore } from "@/store/zksync/provider";
 import { useZkSyncTransfersHistoryStore } from "@/store/zksync/transfersHistory";
 import { useZkSyncWalletStore } from "@/store/zksync/wallet";
@@ -35,8 +36,9 @@ const forceCheckWithdrawalStatus = (transactionHash: string) => {
 };
 
 export default () => {
-  const eraTransfersHistoryStore = useZkSyncTransfersHistoryStore();
-  const { transfers } = storeToRefs(eraTransfersHistoryStore);
+  const transfersHistoryStore = useZkSyncTransfersHistoryStore();
+  const { isConnected } = storeToRefs(useOnboardStore());
+  const { transfers } = storeToRefs(transfersHistoryStore);
   const { eraNetwork } = storeToRefs(useZkSyncProviderStore());
 
   const storageCompletedWithdrawals = useStorage<{ [networkKey: string]: string[] }>(
@@ -88,7 +90,7 @@ export default () => {
     }
   };
   const updateAllWithdrawalStatuses = async () => {
-    eraTransfersHistoryStore.requestRecentTransfers();
+    transfersHistoryStore.requestRecentTransfers();
     for (const withdrawalTransfer of recentWithdrawals.value) {
       await updateWithdrawalStatus(withdrawalTransfer.transactionHash!);
     }
@@ -96,6 +98,7 @@ export default () => {
   watch(
     () => recentWithdrawals.value.map((e) => e.transactionHash),
     () => {
+      if (!isConnected.value) return;
       if (!eraNetwork.value.blockExplorerApi) return;
       updateAllWithdrawalStatuses();
     },

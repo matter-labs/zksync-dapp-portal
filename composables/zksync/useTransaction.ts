@@ -1,5 +1,7 @@
 import { useMemoize } from "@vueuse/core";
 
+import useScreening from "@/composables/useScreening";
+
 import type { BigNumberish } from "ethers";
 import type { Provider, Signer } from "zksync-web3";
 
@@ -18,6 +20,7 @@ export default (getSigner: () => Promise<Signer | undefined>, getProvider: () =>
   const transactionHash = ref<string | undefined>();
 
   const retrieveBridgeAddresses = useMemoize(() => getProvider().getDefaultBridgeAddresses());
+  const { validateAddress } = useScreening();
 
   const commitTransaction = async (
     transaction: TransactionParams,
@@ -28,13 +31,15 @@ export default (getSigner: () => Promise<Signer | undefined>, getProvider: () =>
 
       status.value = "processing";
       const signer = await getSigner();
-      if (!signer) throw new Error("Era Signer is not available");
+      if (!signer) throw new Error("zkSync Signer is not available");
 
       const getRequiredBridgeAddress = async () => {
         if (transaction.tokenAddress === ETH_TOKEN.address) return undefined;
         const bridgeAddresses = await retrieveBridgeAddresses();
         return bridgeAddresses.erc20L2;
       };
+
+      await validateAddress(transaction.to);
 
       status.value = "waiting-for-signature";
       const tx = await signer[transaction.type === "transfer" ? "transfer" : "withdraw"]({

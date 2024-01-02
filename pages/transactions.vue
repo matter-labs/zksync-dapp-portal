@@ -77,7 +77,7 @@ import { useZkSyncTransfersHistoryStore } from "@/store/zksync/transfersHistory"
 
 const onboardStore = useOnboardStore();
 const { eraNetwork } = storeToRefs(useZkSyncProviderStore());
-const eraTransfersHistoryStore = useZkSyncTransfersHistoryStore();
+const transfersHistoryStore = useZkSyncTransfersHistoryStore();
 const { isConnected } = storeToRefs(onboardStore);
 const {
   transfers,
@@ -86,7 +86,7 @@ const {
   canLoadMore,
   previousTransfersRequestInProgress,
   previousTransfersRequestError,
-} = storeToRefs(eraTransfersHistoryStore);
+} = storeToRefs(transfersHistoryStore);
 const { destinations } = storeToRefs(useDestinationsStore());
 const { recentWithdrawals, updateAllWithdrawalStatuses, updateWithdrawalStatus } = useWithdrawalStatuses();
 
@@ -98,16 +98,19 @@ const displayedTransfers = computed(() => {
 const { loading, reset: resetSingleLoading } = useSingleLoading(recentTransfersRequestInProgress);
 
 const updateSingleWithdrawal = (transactionHash: string) => {
+  if (!isConnected.value) return;
   if (!eraNetwork.value.blockExplorerApi) return;
   updateWithdrawalStatus(transactionHash, true);
 };
 
 const fetch = () => {
   if (!isConnected.value) return;
-  eraTransfersHistoryStore.requestRecentTransfers();
+  transfersHistoryStore.requestRecentTransfers();
 };
 fetch();
+
 const fetchWithdrawalStatuses = () => {
+  if (!isConnected.value) return;
   if (eraNetwork.value.blockExplorerApi) {
     updateAllWithdrawalStatuses();
   }
@@ -128,7 +131,7 @@ const unsubscribe = onboardStore.subscribeOnAccountChange((newAddress) => {
 
 const loadMoreEl = ref(null);
 const fetchMore = () => {
-  eraTransfersHistoryStore.requestPreviousTransfers();
+  transfersHistoryStore.requestPreviousTransfers();
 };
 const { stop: stopLoadMoreObserver } = useIntersectionObserver(loadMoreEl, ([{ isIntersecting }]) => {
   if (isIntersecting) {

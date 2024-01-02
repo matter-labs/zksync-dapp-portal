@@ -12,14 +12,14 @@ export const useZkSyncEthereumBalanceStore = defineStore("zkSyncEthereumBalances
   const runtimeConfig = useRuntimeConfig();
   const onboardStore = useOnboardStore();
   const ethereumBalancesStore = useEthereumBalanceStore();
-  const eraTokensStore = useZkSyncTokensStore();
+  const tokensStore = useZkSyncTokensStore();
   const { l1Network, selectedNetwork } = storeToRefs(useNetworkStore());
   const { account } = storeToRefs(onboardStore);
   const { balance: ethereumBalance } = storeToRefs(ethereumBalancesStore);
-  const { l1Tokens } = storeToRefs(eraTokensStore);
+  const { l1Tokens } = storeToRefs(tokensStore);
 
   const getBalancesFromApi = async (): Promise<TokenAmount[]> => {
-    await Promise.all([ethereumBalancesStore.requestBalance(), eraTokensStore.requestTokens()]);
+    await Promise.all([ethereumBalancesStore.requestBalance(), tokensStore.requestTokens()]);
 
     if (!ethereumBalance.value) throw new Error("Ethereum balances are not available");
 
@@ -44,7 +44,7 @@ export const useZkSyncEthereumBalanceStore = defineStore("zkSyncEthereumBalances
     ];
   };
   const getBalancesFromRPC = async (): Promise<TokenAmount[]> => {
-    await eraTokensStore.requestTokens();
+    await tokensStore.requestTokens();
     if (!l1Tokens.value) throw new Error("Tokens are not available");
     if (!account.value.address) throw new Error("Account is not available");
 

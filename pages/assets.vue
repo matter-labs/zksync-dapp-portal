@@ -146,9 +146,9 @@ import { parseTokenAmount, removeSmallAmount } from "@/utils/formatters";
 import { isOnlyZeroes } from "@/utils/helpers";
 
 const onboardStore = useOnboardStore();
-const walletEraStore = useZkSyncWalletStore();
+const walletStore = useZkSyncWalletStore();
 const { isConnected } = storeToRefs(onboardStore);
-const { balance, balanceInProgress, balanceError } = storeToRefs(walletEraStore);
+const { balance, balanceInProgress, balanceError } = storeToRefs(walletStore);
 const { destinations } = storeToRefs(useDestinationsStore());
 const { eraNetwork } = storeToRefs(useZkSyncProviderStore());
 
@@ -222,7 +222,7 @@ const depositMethods = computed(() => {
 
 const fetch = () => {
   if (!isConnected.value) return;
-  walletEraStore.requestBalance();
+  walletStore.requestBalance();
 };
 fetch();
 
