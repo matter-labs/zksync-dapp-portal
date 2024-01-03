@@ -1,5 +1,5 @@
 export const portal = {
-  title: "zkSync Portal - view balances, transfer and bridge tokens",
+  title: "zkSync Portal | View balances, transfer and bridge tokens",
   description:
     "zkSync Portal allows you to view your balances, transfer tokens and bridge assets between zkSync and Ethereum",
   previewImg: {

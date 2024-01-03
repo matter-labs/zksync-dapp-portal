@@ -121,7 +121,7 @@ const afterLeave = () => {
     @apply fixed inset-0 z-10 overflow-y-auto;
   }
   .modal-card-container {
-    @apply flex h-full items-end justify-center p-3 pb-0 text-center sm:items-center sm:p-[72px];
+    @apply flex h-full items-end justify-center text-center sm:items-center sm:p-[72px];
 
     .modal-card {
       @apply relative max-h-[600px] w-full max-w-[600px] transform overflow-hidden rounded-3xl rounded-b-none bg-neutral-50 p-block-padding-1/2 text-left shadow-xl transition-all dark:bg-neutral-900 sm:rounded-b-3xl sm:p-block-padding;

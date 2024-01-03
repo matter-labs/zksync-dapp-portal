@@ -14,11 +14,13 @@
 
     <NetworkSelectModal
       v-model:opened="fromNetworkModalOpened"
+      title="From"
       :network-key="destinations.ethereum.key"
       @update:network-key="fromNetworkSelected($event)"
     />
     <NetworkSelectModal
       v-model:opened="toNetworkModalOpened"
+      title="To"
       :network-key="destination.key"
       @update:network-key="toNetworkSelected($event)"
     />

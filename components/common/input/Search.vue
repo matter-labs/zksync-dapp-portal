@@ -82,7 +82,7 @@ const inputted = computed({
     @apply h-6 w-6 flex-shrink-0;
   }
   .search-input-field {
-    @apply w-full truncate border-none bg-transparent text-neutral-950 outline-none placeholder:text-neutral-700 dark:text-white dark:placeholder:text-neutral-400;
+    @apply w-full truncate rounded-none border-none bg-transparent text-neutral-950 outline-none placeholder:text-neutral-700 dark:text-white dark:placeholder:text-neutral-400;
   }
   .search-input-clear-button {
     @apply block aspect-square h-6 w-6 self-end rounded-full p-1 transition-all hover:text-neutral-950 hover:dark:text-white;

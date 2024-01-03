@@ -5,7 +5,7 @@
         <div class="font-bold">{{ label }}</div>
         <slot name="dropdown" />
       </div>
-      <div v-if="defaultLabel" class="ml-auto text-right">
+      <div v-if="defaultLabel && isConnected" class="ml-auto text-right">
         <span class="font-bold">{{ inputVisible ? "To another account" : defaultLabel }}</span>
         <CommonButtonLabel variant="light" class="ml-1" @click="toggleCustomValue()">
           {{ inputVisible ? "Use my account" : "Change" }}
@@ -66,6 +66,7 @@ import { isAddress } from "viem";
 
 import useEns from "@/composables/useEnsName";
 
+import { useOnboardStore } from "@/store/onboard";
 import { usePreferencesStore } from "@/store/preferences";
 
 const props = defineProps({
@@ -91,6 +92,8 @@ const inputted = computed({
   get: () => props.modelValue,
   set: (value: string) => emit("update:modelValue", value),
 });
+
+const { isConnected } = storeToRefs(useOnboardStore());
 
 const usingCustomValue = ref(false);
 const toggleCustomValue = () => {

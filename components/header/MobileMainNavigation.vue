@@ -52,7 +52,8 @@
           >
             <template #image>
               <DestinationIconContainer>
-                <SunIcon aria-hidden="true" />
+                <SunIcon v-if="selectedColorMode === 'dark'" aria-hidden="true" />
+                <MoonIcon v-else aria-hidden="true" />
               </DestinationIconContainer>
             </template>
           </DestinationItem>
@@ -92,6 +93,7 @@ import {
   ArrowsUpDownIcon,
   CheckIcon,
   ChevronRightIcon,
+  MoonIcon,
   SunIcon,
   WalletIcon,
 } from "@heroicons/vue/24/outline";

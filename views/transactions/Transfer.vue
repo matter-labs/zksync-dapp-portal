@@ -14,11 +14,13 @@
 
     <NetworkSelectModal
       v-model:opened="fromNetworkModalOpened"
+      title="From"
       :network-key="destinations.era.key"
       @update:network-key="fromNetworkSelected($event)"
     />
     <NetworkSelectModal
       v-model:opened="toNetworkModalOpened"
+      title="To"
       :network-key="destination.key"
       @update:network-key="toNetworkSelected($event)"
     />
@@ -93,9 +95,7 @@
         >
           <p>
             You will receive funds only after a 24-hour withdrawal delay.
-            <CommonButtonLabel variant="light" as="a" :href="ZKSYNC_WITHDRAWAL_DELAY" target="_blank">
-              Learn more
-            </CommonButtonLabel>
+            <a class="underline underline-offset-2" :href="ZKSYNC_WITHDRAWAL_DELAY" target="_blank">Learn more</a>
           </p>
         </CommonAlert>
 
@@ -138,9 +138,8 @@
         </CommonHeightTransition>
         <p v-else class="mb-block-gap text-center">
           Your funds will be available on <span class="font-medium">{{ destination.label }}</span> after the
-          <CommonButtonLabel variant="light" as="a" :href="ZKSYNC_WITHDRAWAL_DELAY" target="_blank">
-            24-hour delay </CommonButtonLabel
-          >. During this time, the transaction will be processed and finalized. You are free to close this page.
+          <a class="underline underline-offset-2" :href="ZKSYNC_WITHDRAWAL_DELAY" target="_blank">24-hour delay</a>.
+          During this time, the transaction will be processed and finalized. You are free to close this page.
         </p>
         <TransactionProgress
           :from-address="transaction!.from.address"

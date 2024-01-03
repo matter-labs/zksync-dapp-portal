@@ -94,7 +94,7 @@ const inputted = computed({
     }
   }
   .small-input-field {
-    @apply mx-2 w-full truncate border-none bg-transparent outline-none placeholder:text-gray-secondary dark:placeholder:text-neutral-400;
+    @apply mx-2 w-full truncate rounded-none border-none bg-transparent outline-none placeholder:text-gray-secondary dark:placeholder:text-neutral-400;
   }
   .small-input-clear-button {
     @apply block aspect-square h-6 w-6 self-end rounded-full bg-gray-300 p-1 transition-all dark:bg-neutral-800;

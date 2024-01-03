@@ -3,7 +3,6 @@
   "description": "zkSync Portal provides Wallet and Bridge functionality for interacting with zkSync",
   "private": true,
   "scripts": {
-    "build": "nuxt build",
     "dev": "nuxt dev",
     "dev:node:memory": "cross-env NODE_TYPE=memory npm run dev",
     "dev:node:docker": "cross-env NODE_TYPE=dockerized npm run dev",

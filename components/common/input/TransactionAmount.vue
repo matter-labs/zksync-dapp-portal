@@ -33,26 +33,57 @@
           </template>
         </transition>
       </div>
-      <div class="mt-4 flex items-center gap-2">
-        <CommonInputLine
-          :has-error="!!amountError"
-          id="transaction-amount-input"
-          class="text-[40px]"
-          v-model.trim="inputted"
-          placeholder="0"
-          type="text"
-          maxlength="25"
-          spellcheck="false"
-          autocomplete="off"
-          autofocus
-        />
+      <div class="mt-4 flex gap-2">
+        <div class="w-full">
+          <CommonInputLine
+            :has-error="!!amountError"
+            id="transaction-amount-input"
+            class="text-[40px]"
+            v-model.trim="inputted"
+            placeholder="0"
+            type="text"
+            maxlength="25"
+            spellcheck="false"
+            autocomplete="off"
+            autofocus
+          />
+          <transition v-bind="TransitionOpacity()" mode="default">
+            <CommonInputErrorMessage v-if="amountError">
+              <template v-if="amountError === 'insufficient_balance' || maxDecimalAmount === '0'">
+                Insufficient balance
+              </template>
+              <template v-else-if="amountError === 'exceeds_balance' && !maxAmount">Amount exceeds balance</template>
+              <template v-else-if="amountError === 'exceeds_max_amount' || amountError === 'exceeds_balance'">
+                Max amount is
+                <button
+                  type="button"
+                  class="cursor-pointer font-medium underline underline-offset-2"
+                  @click.prevent="setMaxAmount()"
+                >
+                  {{ maxDecimalAmount }}
+                </button>
+              </template>
+              <template v-else-if="amountError === 'exceeds_decimals'">
+                Max decimal length for {{ selectedToken?.symbol }} is {{ selectedToken?.decimals }}
+              </template>
+            </CommonInputErrorMessage>
+            <CommonButtonLabel v-else-if="inputted" as="div" variant="light" class="-mb-6 mt-1 text-right text-sm">
+              {{ totalAmountPrice }}
+            </CommonButtonLabel>
+          </transition>
+        </div>
 
         <transition v-bind="TransitionOpacity(300)">
           <div v-if="approveRequired" v-tooltip="'Allowance approval required'">
-            <LockClosedIcon class="h-6 w-6 text-warning-400" aria-hidden="true" />
+            <LockClosedIcon class="mt-4 h-6 w-6 text-warning-400" aria-hidden="true" />
           </div>
         </transition>
-        <CommonButtonDropdown :toggled="selectTokenModalOpened" variant="light" @click="selectTokenModalOpened = true">
+        <CommonButtonDropdown
+          class="h-max"
+          :toggled="selectTokenModalOpened"
+          variant="light"
+          @click="selectTokenModalOpened = true"
+        >
           <template #left-icon>
             <CommonContentLoader v-if="loading" class="block h-full w-full rounded-full" />
             <TokenImage v-else-if="selectedToken" v-bind="selectedToken" />
@@ -61,29 +92,6 @@
           <span v-else-if="selectedToken">{{ selectedToken.symbol }}</span>
         </CommonButtonDropdown>
       </div>
-      <CommonInputErrorMessage>
-        <transition v-bind="TransitionOpacity()">
-          <span v-if="amountError">
-            <template v-if="amountError === 'insufficient_balance' || maxDecimalAmount === '0'">
-              Insufficient balance
-            </template>
-            <template v-else-if="amountError === 'exceeds_balance' && !maxAmount">Amount exceeds balance</template>
-            <template v-else-if="amountError === 'exceeds_max_amount' || amountError === 'exceeds_balance'">
-              Max amount is
-              <button
-                type="button"
-                class="cursor-pointer font-medium underline underline-offset-2"
-                @click.prevent="setMaxAmount()"
-              >
-                {{ maxDecimalAmount }}
-              </button>
-            </template>
-            <template v-else-if="amountError === 'exceeds_decimals'">
-              Max decimal length for {{ selectedToken?.symbol }} is {{ selectedToken?.decimals }}
-            </template>
-          </span>
-        </transition>
-      </CommonInputErrorMessage>
     </CommonContentBlock>
   </div>
 </template>
@@ -98,7 +106,7 @@ import type { Token, TokenAmount } from "@/types";
 import type { BigNumberish } from "ethers";
 import type { PropType } from "vue";
 
-import { decimalToBigNumber, parseTokenAmount, removeSmallAmountPretty } from "@/utils/formatters";
+import { decimalToBigNumber, formatTokenPrice, parseTokenAmount, removeSmallAmountPretty } from "@/utils/formatters";
 
 const props = defineProps({
   modelValue: {
@@ -174,12 +182,12 @@ const totalComputeAmount = computed(() => {
     return BigNumber.from("0");
   }
 });
-/* const totalAmountPrice = computed(() => {
+const totalAmountPrice = computed(() => {
   if (!selectedToken.value || !selectedToken.value.price) {
     return "";
   }
   return formatTokenPrice(totalComputeAmount.value, selectedToken.value.decimals, selectedToken.value.price);
-}); */
+});
 const maxDecimalAmount = computed(() => {
   // Full decimal amount
   if (!props.maxAmount || !selectedToken.value) {

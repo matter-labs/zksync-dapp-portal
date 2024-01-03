@@ -40,7 +40,8 @@
         </div>
       </template>
       <CommonButton class="color-mode-button" @click="switchColorMode()">
-        <SunIcon class="h-6 w-6" aria-hidden="true" />
+        <SunIcon v-if="selectedColorMode === 'dark'" class="h-6 w-6" aria-hidden="true" />
+        <MoonIcon v-else class="h-6 w-6" aria-hidden="true" />
       </CommonButton>
       <CommonButton class="hamburger-icon" @click="mobileMainNavigationOpened = true">
         <Bars3Icon class="h-6 w-6" aria-hidden="true" />
@@ -52,7 +53,14 @@
 <script lang="ts" setup>
 import { ref } from "vue";
 
-import { ArrowsRightLeftIcon, ArrowsUpDownIcon, Bars3Icon, SunIcon, WalletIcon } from "@heroicons/vue/24/outline";
+import {
+  ArrowsRightLeftIcon,
+  ArrowsUpDownIcon,
+  Bars3Icon,
+  MoonIcon,
+  SunIcon,
+  WalletIcon,
+} from "@heroicons/vue/24/outline";
 import { storeToRefs } from "pinia";
 
 import useColorMode from "@/composables/useColorMode";
@@ -68,7 +76,7 @@ const { isConnected } = storeToRefs(onboardStore);
 const mobileMainNavigationOpened = ref(false);
 const mobileAccountNavigationOpened = ref(false);
 
-const { switchColorMode } = useColorMode();
+const { selectedColorMode, switchColorMode } = useColorMode();
 </script>
 
 <style lang="scss" scoped>
