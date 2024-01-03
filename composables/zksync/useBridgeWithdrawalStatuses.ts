@@ -16,7 +16,7 @@ export type TransferWithStatus = Transfer & {
   expectedCompletionTimestamp: string;
 };
 
-const WITHDRAWAL_DELAY = 24 * 60 * 60 * 1000; //24h
+export const WITHDRAWAL_DELAY = 24 * 60 * 60 * 1000; //24h
 
 let updateCacheCounter = 0;
 const checkWithdrawalStatus = useTimedCache<boolean, [transactionHash: string, updateCacheCounter?: number]>(
@@ -36,9 +36,9 @@ const forceCheckWithdrawalStatus = (transactionHash: string) => {
 };
 
 export default () => {
-  const transfersHistoryStore = useZkSyncTransfersHistoryStore();
+  const eraTransfersHistoryStore = useZkSyncTransfersHistoryStore();
   const { isConnected } = storeToRefs(useOnboardStore());
-  const { transfers } = storeToRefs(transfersHistoryStore);
+  const { transfers } = storeToRefs(eraTransfersHistoryStore);
   const { eraNetwork } = storeToRefs(useZkSyncProviderStore());
 
   const storageCompletedWithdrawals = useStorage<{ [networkKey: string]: string[] }>(
@@ -90,7 +90,7 @@ export default () => {
     }
   };
   const updateAllWithdrawalStatuses = async () => {
-    transfersHistoryStore.requestRecentTransfers();
+    eraTransfersHistoryStore.requestRecentTransfers();
     for (const withdrawalTransfer of recentWithdrawals.value) {
       await updateWithdrawalStatus(withdrawalTransfer.transactionHash!);
     }

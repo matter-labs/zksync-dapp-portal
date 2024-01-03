@@ -70,13 +70,26 @@
       class="mx-auto mt-block-gap"
     />
 
-    <div class="mt-block-padding flex items-center justify-center">
-      <span class="text-neutral-400">Value:</span>
-      <span class="ml-1 flex items-center">
-        {{ parseTokenAmount(token.amount, token.decimals) }}
-        <TokenImage class="mx-1 h-5 w-5" v-bind="token" />
-        {{ token.symbol }}
-      </span>
+    <div class="mt-block-padding flex flex-wrap items-center justify-center gap-4">
+      <div>
+        <span class="text-neutral-400">Value:</span>
+        <span class="ml-1 inline-flex items-center">
+          {{ parseTokenAmount(token.amount, token.decimals) }}
+          <TokenImage class="mx-1 h-5 w-5" v-bind="token" />
+          {{ token.symbol }}
+        </span>
+      </div>
+      <div v-if="expectedCompleteTimestamp && !completed">
+        <span class="text-neutral-400">Time: </span>
+        <CommonTimer format="human-readable" :future-date="expectedCompleteTimestamp">
+          <template #default="{ timer, isTimerFinished }">
+            <template v-if="isTimerFinished">Funds should arrive soon!</template>
+            <template v-else>
+              <span class="tabular-nums">{{ timer }} left</span>
+            </template>
+          </template>
+        </CommonTimer>
+      </div>
     </div>
   </CommonContentBlock>
 </template>
@@ -128,6 +141,9 @@ const props = defineProps({
   token: {
     type: Object as PropType<TokenAmount>,
     required: true,
+  },
+  expectedCompleteTimestamp: {
+    type: String,
   },
   completed: {
     type: Boolean,

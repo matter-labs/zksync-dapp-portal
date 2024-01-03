@@ -112,7 +112,7 @@
             Your funds will be available after the transaction is committed on
             <span class="font-medium">{{ destinations.ethereum.label }}</span> and then processed on
             <span class="font-medium">{{ destination.label }}</span
-            >. This usually takes around 15 minutes. You are free to close this page.
+            >. You are free to close this page.
           </p>
         </CommonHeightTransition>
         <TransactionProgress
@@ -124,6 +124,7 @@
           :to-destination="transaction!.to.destination"
           :to-explorer-link="blockExplorerUrl"
           :to-transaction-hash="l2TransactionHash"
+          :expected-complete-timestamp="estimatedDepositTimestamp"
           :token="transaction!.token"
           :completed="!!l2TransactionHash"
         />
@@ -353,7 +354,7 @@ import useAllowance from "@/composables/transaction/useAllowance";
 import useNetworks from "@/composables/useNetworks";
 import useEcosystemBanner from "@/composables/zksync/deposit/useEcosystemBanner";
 import useFee from "@/composables/zksync/deposit/useFee";
-import useTransaction from "@/composables/zksync/deposit/useTransaction";
+import useTransaction, { ESTIMATED_DEPOSIT_DELAY } from "@/composables/zksync/deposit/useTransaction";
 
 import type { TransactionDestination } from "@/store/destinations";
 import type { Token, TokenAmount } from "@/types";
@@ -642,6 +643,7 @@ watch(step, (newStep) => {
   }
 });
 
+const estimatedDepositTimestamp = ref<string | undefined>();
 const l2TransactionHash = ref<string | undefined>();
 const makeTransaction = async () => {
   if (continueButtonDisabled.value) return;
@@ -659,6 +661,7 @@ const makeTransaction = async () => {
     step.value = "submitted";
     previousTransactionAddress.value = transaction.value!.to.address;
     recentlyBridged.value = true;
+    estimatedDepositTimestamp.value = new Date(new Date().getTime() + ESTIMATED_DEPOSIT_DELAY).toISOString();
   }
 
   if (tx) {
@@ -666,7 +669,6 @@ const makeTransaction = async () => {
     zkSyncEthereumBalance.deductBalance(transaction.value!.token.address!, transaction.value!.token.amount);
     tx.wait()
       .then(async (receipt) => {
-        console.log("Final receipt", receipt);
         l2TransactionHash.value = receipt.transactionHash;
         setTimeout(() => {
           transfersHistoryStore.reloadRecentTransfers().catch(() => undefined);
@@ -675,6 +677,7 @@ const makeTransaction = async () => {
       })
       .catch((err) => {
         l2TransactionHash.value = undefined;
+        estimatedDepositTimestamp.value = undefined;
         transactionError.value = err as Error;
         transactionStatus.value = "not-started";
       });
@@ -687,6 +690,7 @@ const resetForm = () => {
   step.value = "form";
   transactionStatus.value = "not-started";
   l2TransactionHash.value = undefined;
+  estimatedDepositTimestamp.value = undefined;
   resetSetAllowance();
   requestAllowance();
 };
