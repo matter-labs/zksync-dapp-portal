@@ -53,12 +53,13 @@
               :toggled="fromNetworkModalOpened"
               size="xs"
               variant="light"
+              class="overflow-hidden"
               @click="fromNetworkModalOpened = true"
             >
               <template #left-icon>
                 <img :src="destinations.era.iconUrl" class="h-full w-full" />
               </template>
-              <span>{{ destinations.era.label }}</span>
+              <span class="truncate">{{ destinations.era.label }}</span>
             </CommonButtonDropdown>
           </template>
         </CommonInputTransactionAmount>
@@ -75,12 +76,13 @@
               :toggled="toNetworkModalOpened"
               size="xs"
               variant="light"
+              class="overflow-hidden"
               @click="toNetworkModalOpened = true"
             >
               <template #left-icon>
                 <img :src="destination.iconUrl" class="h-full w-full" />
               </template>
-              <span>{{ destination.label }}</span>
+              <span class="truncate">{{ destination.label }}</span>
             </CommonButtonDropdown>
           </template>
         </CommonInputTransactionAddress>

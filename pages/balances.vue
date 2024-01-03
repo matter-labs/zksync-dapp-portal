@@ -25,7 +25,9 @@
               as="div"
               :key="item.address"
               show-name-link
-              :send-route-name="eraNetwork.l1Network ? 'send-methods' : 'send'"
+              :send-route-name="
+                item.amount === '0' ? 'receive-methods' : eraNetwork.l1Network ? 'send-methods' : 'send'
+              "
               v-bind="item"
             />
           </CommonCardWithLineButtons>
@@ -49,9 +51,9 @@ import { useZkSyncWalletStore } from "@/store/zksync/wallet";
 import { groupBalancesByAmount } from "@/utils/mappers";
 
 const onboardStore = useOnboardStore();
-const walletStore = useZkSyncWalletStore();
+const walletEraStore = useZkSyncWalletStore();
 const { isConnected } = storeToRefs(onboardStore);
-const { balance, balanceInProgress, balanceError } = storeToRefs(walletStore);
+const { balance, balanceInProgress, balanceError } = storeToRefs(walletEraStore);
 const { eraNetwork } = storeToRefs(useZkSyncProviderStore());
 
 const { loading, reset: resetSingleLoading } = useSingleLoading(computed(() => balanceInProgress.value));
@@ -59,7 +61,7 @@ const { loading, reset: resetSingleLoading } = useSingleLoading(computed(() => b
 const balanceGroups = groupBalancesByAmount(balance);
 
 const fetch = () => {
-  walletStore.requestBalance();
+  walletEraStore.requestBalance();
 };
 fetch();
 

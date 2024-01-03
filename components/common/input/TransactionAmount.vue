@@ -12,14 +12,14 @@
       </template>
     </TokenSelectModal>
     <CommonContentBlock for="transaction-amount-input" as="label">
-      <div class="flex items-center gap-4">
-        <div class="flex flex-wrap items-center gap-2 sm:flex-nowrap">
+      <div class="flex flex-wrap items-center justify-between gap-4">
+        <div class="flex items-center gap-2 overflow-hidden">
           <div class="font-bold">{{ label }}</div>
           <slot name="dropdown" />
         </div>
         <transition v-bind="TransitionOpacity()">
           <template v-if="displayedMaxAmount && displayedMaxAmount !== '0'">
-            <span class="ml-auto text-right">
+            <span>
               <CommonButtonLabel variant="light" as="span">Max:&nbsp;</CommonButtonLabel>
               <CommonButtonLabel
                 variant="light"

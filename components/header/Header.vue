@@ -12,12 +12,16 @@
       <NuxtLink
         class="link-item"
         :to="{ name: 'index' }"
-        :class="{ 'router-link-exact-active': route.name === 'withdraw' }"
+        :class="{ 'router-link-exact-active': routes.bridge.includes(route.name?.toString() || '') }"
       >
         <ArrowsUpDownIcon class="link-icon" aria-hidden="true" />
         Bridge
       </NuxtLink>
-      <NuxtLink class="link-item" :to="{ name: 'assets' }">
+      <NuxtLink
+        class="link-item"
+        :to="{ name: 'assets' }"
+        :class="{ 'router-link-exact-active': routes.assets.includes(route.name?.toString() || '') }"
+      >
         <WalletIcon class="link-icon" aria-hidden="true" />
         Assets
       </NuxtLink>
@@ -70,6 +74,11 @@ import { useOnboardStore } from "@/store/onboard";
 
 const route = useRoute();
 
+const routes = {
+  bridge: ["index", "withdraw"],
+  assets: ["assets", "balances", "receive-methods", "receive", "send-methods", "send"],
+};
+
 const onboardStore = useOnboardStore();
 const { isConnected } = storeToRefs(onboardStore);
 
@@ -95,11 +104,15 @@ const { selectedColorMode, switchColorMode } = useColorMode();
     .link-item {
       @apply flex items-center gap-1 text-lg text-neutral-600 dark:text-neutral-500;
       &.router-link-exact-active {
-        @apply text-neutral-950 dark:text-white;
+        @apply text-black dark:text-white;
+
+        .link-icon {
+          @apply text-black dark:text-white;
+        }
       }
 
       .link-icon {
-        @apply h-6 w-6;
+        @apply h-6 w-6 text-neutral-400 dark:text-neutral-500;
       }
     }
   }

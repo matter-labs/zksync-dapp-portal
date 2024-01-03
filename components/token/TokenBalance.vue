@@ -6,7 +6,6 @@
     :decimals="decimals"
     :icon-url="iconUrl"
     :as="sendRouteName ? 'RouterLink' : as"
-    :icon="sendRouteName ? PaperAirplaneIcon : undefined"
     :to="sendRouteName ? { name: sendRouteName, query: { token: address } } : undefined"
     class="token-balance"
     :class="{ 'is-zero-amount': isZeroAmount }"
@@ -33,7 +32,6 @@
 <script lang="ts" setup>
 import { computed } from "vue";
 
-import { PaperAirplaneIcon } from "@heroicons/vue/24/outline";
 import { BigNumber } from "ethers";
 
 import type { TokenPrice } from "@/types";
