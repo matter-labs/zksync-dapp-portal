@@ -40,32 +40,19 @@ export const useEthereumBalanceStore = defineStore("ethereumBalance", () => {
         walletAddress: account.value.address,
         onlyWhitelisted: false,
       });
-      return [
-        ...balances.assets
-          .filter((e) => e.contractAddress || e.tokenType === "NATIVE")
-          .map((e) => {
-            return {
-              address: e.tokenType === "NATIVE" ? ETH_TOKEN.l1Address : checksumAddress(e.contractAddress!),
-              symbol: e.tokenSymbol,
-              name: e.tokenName,
-              decimals: e.tokenDecimals,
-              iconUrl: e.thumbnail,
-              price: e.tokenPrice === "0" ? undefined : parseFloat(e.tokenPrice),
-              amount: e.balanceRawInteger,
-            } as TokenAmount;
-          }),
-        ...[
-          {
-            address: "0x63bfb2118771bd0da7A6936667A7BB705A06c1bA",
-            symbol: "Test",
-            name: "Test",
-            decimals: 4,
-            iconUrl: undefined,
-            price: 0,
-            amount: "100",
-          },
-        ],
-      ];
+      return balances.assets
+        .filter((e) => e.contractAddress || e.tokenType === "NATIVE")
+        .map((e) => {
+          return {
+            address: e.tokenType === "NATIVE" ? ETH_TOKEN.l1Address : checksumAddress(e.contractAddress!),
+            symbol: e.tokenSymbol,
+            name: e.tokenName,
+            decimals: e.tokenDecimals,
+            iconUrl: e.thumbnail,
+            price: e.tokenPrice === "0" ? undefined : parseFloat(e.tokenPrice),
+            amount: e.balanceRawInteger,
+          } as TokenAmount;
+        });
     },
     { cache: false }
   );
