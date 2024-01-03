@@ -95,7 +95,7 @@ const inputted = computed({
 
 const { isConnected } = storeToRefs(useOnboardStore());
 
-const usingCustomValue = ref(false);
+const usingCustomValue = ref(!!inputted.value);
 const toggleCustomValue = () => {
   usingCustomValue.value = !usingCustomValue.value;
   if (usingCustomValue.value) {
