@@ -55,18 +55,21 @@
       </template>
 
       <AnimationsTransactionProgress :completed="completed" class="transaction-animation" />
+
+      <div v-if="fromExplorerLink || fromTransactionHash" class="info-column bottom-left mt-block-gap-1/2">
+        <TransactionHashButton :explorer-url="fromExplorerLink" :transaction-hash="fromTransactionHash" />
+      </div>
+      <div v-if="toExplorerLink || toTransactionHash" class="info-column bottom-right mt-block-gap-1/2">
+        <TransactionHashButton :explorer-url="toExplorerLink" :transaction-hash="toTransactionHash" />
+      </div>
     </div>
-    <CommonButton
-      size="xs"
-      variant="light"
-      as="a"
-      :href="transactionLink"
-      target="_blank"
-      class="mx-auto mt-block-gap w-max"
-    >
-      Explorer
-      <ArrowTopRightOnSquareIcon class="-mr-1 ml-2 h-6 w-6" aria-hidden="true" />
-    </CommonButton>
+    <TransactionHashButton
+      v-if="explorerLink || transactionHash"
+      :explorer-url="explorerLink"
+      :transaction-hash="transactionHash"
+      class="mx-auto mt-block-gap"
+    />
+
     <div class="mt-block-padding flex items-center justify-center">
       <span class="text-neutral-400">Value:</span>
       <span class="ml-1 flex items-center">
@@ -80,8 +83,6 @@
 
 <script lang="ts" setup>
 import { computed } from "vue";
-
-import { ArrowTopRightOnSquareIcon } from "@heroicons/vue/24/outline";
 
 import type { TransactionDestination } from "@/store/destinations";
 import type { TokenAmount } from "@/types";
@@ -104,9 +105,25 @@ const props = defineProps({
     type: Object as PropType<TransactionDestination>,
     required: true,
   },
-  transactionLink: {
+  // left right buttons
+  fromExplorerLink: {
     type: String,
-    required: true,
+  },
+  fromTransactionHash: {
+    type: String,
+  },
+  toExplorerLink: {
+    type: String,
+  },
+  toTransactionHash: {
+    type: String,
+  },
+  // center button
+  explorerLink: {
+    type: String,
+  },
+  transactionHash: {
+    type: String,
   },
   token: {
     type: Object as PropType<TokenAmount>,
@@ -126,8 +143,8 @@ const isSameAddressDifferentDestination = computed(
 
 <style lang="scss" scoped>
 .transaction-progress {
-  @apply grid grid-cols-3 items-center gap-x-4 text-center;
-  grid-template-areas: "info-col-left divider info-col-right";
+  @apply grid grid-flow-row grid-cols-3 grid-rows-[max-content] items-center gap-x-4 text-center;
+  grid-template-areas: "info-col-left divider info-col-right" "info-col-bottom-left space info-col-bottom-right";
 
   .info-column {
     @apply flex flex-col items-center justify-center gap-2;
@@ -136,6 +153,12 @@ const isSameAddressDifferentDestination = computed(
     }
     &.right {
       grid-area: info-col-right;
+    }
+    &.bottom-left {
+      grid-area: info-col-bottom-left;
+    }
+    &.bottom-right {
+      grid-area: info-col-bottom-right;
     }
   }
   .transaction-animation {

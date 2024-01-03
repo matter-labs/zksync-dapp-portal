@@ -146,7 +146,8 @@
           :from-destination="transaction!.from.destination"
           :to-address="transaction!.to.address"
           :to-destination="transaction!.to.destination"
-          :transaction-link="`${blockExplorerUrl}/tx/${transactionHash}`"
+          :explorer-link="blockExplorerUrl"
+          :transaction-hash="transactionHash"
           :token="transaction!.token"
           :completed="transactionCommitted && type !== 'withdrawal'"
         />

@@ -5,7 +5,7 @@
       <div class="entry-text-info">
         <div class="account-label">{{ accountLabel }}</div>
         <div class="account-address">
-          {{ shortenAddress(address, 8) }}
+          {{ address }}
         </div>
       </div>
       <AddressAvatar class="account-avatar" :address="address">
@@ -26,7 +26,6 @@ import type { TransactionDestination } from "@/store/destinations";
 import type { PropType } from "vue";
 
 import { useOnboardStore } from "@/store/onboard";
-import { shortenAddress } from "@/utils/formatters";
 
 const props = defineProps({
   label: {
@@ -55,7 +54,7 @@ const accountLabel = computed(() => {
 
 <style lang="scss" scoped>
 .transaction-summary-address-entry {
-  @apply flex items-center;
+  @apply flex items-center gap-4;
 
   .entry-label {
     @apply font-bold;
@@ -65,9 +64,13 @@ const accountLabel = computed(() => {
 
     .entry-text-info {
       @apply text-right;
+
+      .account-address {
+        @apply break-all;
+      }
     }
     .account-avatar {
-      @apply h-12 w-12;
+      @apply h-12 w-12 shrink-0;
     }
   }
 }

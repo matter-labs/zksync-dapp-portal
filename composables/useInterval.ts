@@ -1,7 +1,7 @@
 import { ref } from "vue";
 
 export default <ResultType>(fn: () => ResultType, delay: number) => {
-  let interval: NodeJS.Timer | undefined = undefined;
+  let interval: ReturnType<typeof setInterval> | undefined = undefined;
   const currentDelay = ref(delay);
 
   function stop() {

@@ -70,8 +70,8 @@ const props = defineProps({
   },
 });
 
-const el = ref<{ $el?: HTMLButtonElement } | undefined>();
 const { copy, copied } = useCopy(computed(() => props.transactionHash));
+const el = ref<{ $el?: HTMLButtonElement } | undefined>();
 const a = useTippy(
   computed(() => el.value?.$el?.parentElement?.parentElement || undefined),
   {

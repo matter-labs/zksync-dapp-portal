@@ -54,7 +54,7 @@ defineProps({
       }
     }
     &light {
-      @apply bg-neutral-200 dark:bg-neutral-800;
+      @apply bg-neutral-200 transition disabled:opacity-70 dark:bg-neutral-800;
       &:enabled,
       &:is(a, label) {
         &:not([aria-disabled="true"]) {

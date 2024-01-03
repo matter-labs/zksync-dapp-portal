@@ -104,21 +104,28 @@
         </CommonErrorBlock>
       </template>
       <template v-else-if="step === 'submitted'">
-        <h1 class="h1 mt-block-gap-1/2 text-center">Transaction submitted</h1>
-        <p class="text-center">
-          Your funds will be available after the transaction is committed on
-          <span class="font-medium">{{ destinations.ethereum.label }}</span> and then processed on
-          <span class="font-medium">{{ destination.label }}</span
-          >. This usually takes around 15 minutes. You are free to close this page.
-        </p>
+        <h1 class="h1 mt-block-gap-1/2 text-center">
+          {{ l2TransactionHash ? "Transaction completed" : "Transaction submitted" }}
+        </h1>
+        <CommonHeightTransition :opened="!l2TransactionHash">
+          <p class="mb-4 text-center">
+            Your funds will be available after the transaction is committed on
+            <span class="font-medium">{{ destinations.ethereum.label }}</span> and then processed on
+            <span class="font-medium">{{ destination.label }}</span
+            >. This usually takes around 15 minutes. You are free to close this page.
+          </p>
+        </CommonHeightTransition>
         <TransactionProgress
           :from-address="transaction!.from.address"
           :from-destination="transaction!.from.destination"
+          :from-explorer-link="l1BlockExplorerUrl"
+          :from-transaction-hash="ethTransactionHash"
           :to-address="transaction!.to.address"
           :to-destination="transaction!.to.destination"
-          :transaction-link="`${l1BlockExplorerUrl}/tx/${ethTransactionHash}`"
+          :to-explorer-link="blockExplorerUrl"
+          :to-transaction-hash="l2TransactionHash"
           :token="transaction!.token"
-          class="mt-block-gap"
+          :completed="!!l2TransactionHash"
         />
 
         <EcosystemBlock v-if="eraNetwork.displaySettings?.showPartnerLinks" class="mt-block-gap" />
@@ -375,7 +382,7 @@ const providerStore = useZkSyncProviderStore();
 const zkSyncEthereumBalance = useZkSyncEthereumBalanceStore();
 const eraWalletStore = useZkSyncWalletStore();
 const { account, isConnected } = storeToRefs(onboardStore);
-const { eraNetwork } = storeToRefs(providerStore);
+const { eraNetwork, blockExplorerUrl } = storeToRefs(providerStore);
 const { destinations } = storeToRefs(useDestinationsStore());
 const { l1BlockExplorerUrl } = storeToRefs(useNetworkStore());
 const { l1Tokens, tokensRequestInProgress, tokensRequestError } = storeToRefs(tokensStore);
@@ -635,7 +642,7 @@ watch(step, (newStep) => {
   }
 });
 
-const transactionCommitted = ref(false);
+const l2TransactionHash = ref<string | undefined>();
 const makeTransaction = async () => {
   if (continueButtonDisabled.value) return;
 
@@ -658,15 +665,16 @@ const makeTransaction = async () => {
     zkSyncEthereumBalance.deductBalance(feeToken.value!.address!, fee.value!);
     zkSyncEthereumBalance.deductBalance(transaction.value!.token.address!, transaction.value!.token.amount);
     tx.wait()
-      .then(async () => {
-        transactionCommitted.value = true;
+      .then(async (receipt) => {
+        console.log("Final receipt", receipt);
+        l2TransactionHash.value = receipt.transactionHash;
         setTimeout(() => {
           transfersHistoryStore.reloadRecentTransfers().catch(() => undefined);
           eraWalletStore.requestBalance({ force: true }).catch(() => undefined);
         }, 2000);
       })
       .catch((err) => {
-        transactionCommitted.value = false;
+        l2TransactionHash.value = undefined;
         transactionError.value = err as Error;
         transactionStatus.value = "not-started";
       });
@@ -678,7 +686,9 @@ const resetForm = () => {
   amount.value = "";
   step.value = "form";
   transactionStatus.value = "not-started";
+  l2TransactionHash.value = undefined;
   resetSetAllowance();
+  requestAllowance();
 };
 
 const fetchBalances = async (force = false) => {
