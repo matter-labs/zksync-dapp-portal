@@ -13,17 +13,20 @@
       </div>
     </div>
     <div v-if="inputVisible" class="mt-4">
-      <CommonInputLine
-        v-model.trim="inputted"
-        :has-error="!!addressError"
-        id="transaction-address-input"
-        placeholder="Address or ENS"
-        type="text"
-        maxlength="42"
-        spellcheck="false"
-        autocomplete="off"
-        class="text-lg"
-      />
+      <div class="flex items-center gap-2">
+        <CommonInputLine
+          v-model.trim="inputted"
+          :has-error="!!addressError"
+          id="transaction-address-input"
+          placeholder="Address or ENS"
+          type="text"
+          maxlength="42"
+          spellcheck="false"
+          autocomplete="off"
+          class="w-full text-lg"
+        />
+        <CommonQrUploadIconButton v-if="isMobile()" class="h-6 w-6" @decoded-address="inputted = $event" />
+      </div>
       <transition v-bind="TransitionOpacity()">
         <CommonCardWithLineButtons v-if="selectAddressVisible" class="select-address-popover">
           <AddressCardLoader v-if="ensParseInProgress" />
@@ -68,6 +71,7 @@ import useEns from "@/composables/useEnsName";
 
 import { useOnboardStore } from "@/store/onboard";
 import { usePreferencesStore } from "@/store/preferences";
+import { isMobile } from "@/utils/helpers";
 
 const props = defineProps({
   label: {

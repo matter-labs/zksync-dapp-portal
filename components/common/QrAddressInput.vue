@@ -4,7 +4,7 @@
 
     <CommonButton
       as="label"
-      for="qr-code-input"
+      for="transaction-qr-address-input"
       variant="primary"
       class="mt-6 w-full"
       @click="qrCodeModalOpened = false"
@@ -29,7 +29,7 @@ defineProps({
 });
 
 const emit = defineEmits<{
-  (eventName: "selected", address: string): void;
+  (eventName: "decoded-address", address: string): void;
 }>();
 
 const qrDecodeErrorMessage = ref<string>();
@@ -40,7 +40,7 @@ const onQrDecodeError = (message: string) => {
 };
 const onQrCodeDecoded = (data: string) => {
   if (isAddress(data)) {
-    emit("selected", checksumAddress(data));
+    emit("decoded-address", checksumAddress(data));
   } else {
     onQrDecodeError("QR code doesn't contain a valid ethereum address");
   }
