@@ -4,8 +4,8 @@
     <div class="entry-info">
       <div class="entry-text-info">
         <div class="account-label">{{ accountLabel }}</div>
-        <div class="account-address">
-          {{ address }}
+        <div v-tooltip="{ content: address, maxWidth: 'none' }" class="account-address">
+          {{ shortenAddress(address, 6) }}
         </div>
       </div>
       <AddressAvatar class="account-avatar" :address="address">
@@ -26,6 +26,7 @@ import type { TransactionDestination } from "@/store/destinations";
 import type { PropType } from "vue";
 
 import { useOnboardStore } from "@/store/onboard";
+import { shortenAddress } from "@/utils/formatters";
 
 const props = defineProps({
   label: {
