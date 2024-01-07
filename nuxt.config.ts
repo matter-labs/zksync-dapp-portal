@@ -69,6 +69,7 @@ export default defineNuxtConfig({
       turnstileKey: process.env.TURNSTILE_KEY,
       nodeType: process.env.NODE_TYPE as undefined | "memory" | "dockerized" | "hyperchain",
       ankrToken: process.env.ANKR_TOKEN,
+      screeningApiUrl: process.env.SCREENING_API_URL,
     },
   },
   pinia: {

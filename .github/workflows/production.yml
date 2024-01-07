@@ -34,6 +34,7 @@ jobs:
         run: |
           echo "WALLET_CONNECT_PROJECT_ID=${{ secrets.WALLET_CONNECT_PROJECT_ID }}" > .env
           echo "ANKR_TOKEN=${{ secrets.ANKR_TOKEN }}" >> .env
+          echo "SCREENING_API_URL=${{ secrets.SCREENING_API_URL }}" >> .env
 
       - name: Build
         run: |
