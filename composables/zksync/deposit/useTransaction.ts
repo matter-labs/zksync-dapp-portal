@@ -32,7 +32,6 @@ export default (getL1Signer: () => Promise<L1Signer | undefined>) => {
 
       await validateAddress(transaction.to);
 
-      status.value = "waiting-for-signature";
       const overrides = {
         gasPrice: fee.gasPrice,
         gasLimit: fee.l1GasLimit,
@@ -43,6 +42,7 @@ export default (getL1Signer: () => Promise<L1Signer | undefined>) => {
         overrides.gasPrice = undefined;
       }
 
+      status.value = "waiting-for-signature";
       const depositResponse = await wallet.deposit({
         to: transaction.to,
         token: transaction.tokenAddress,
