@@ -38,6 +38,7 @@ export default (getSigner: () => Promise<Signer | undefined>, getProvider: () =>
         const bridgeAddresses = await retrieveBridgeAddresses();
         return bridgeAddresses.erc20L2;
       };
+      const bridgeAddress = transaction.type === "withdrawal" ? await getRequiredBridgeAddress() : undefined;
 
       await validateAddress(transaction.to);
 
@@ -46,7 +47,7 @@ export default (getSigner: () => Promise<Signer | undefined>, getProvider: () =>
         to: transaction.to,
         token: transaction.tokenAddress === ETH_TOKEN.address ? ETH_TOKEN.l1Address! : transaction.tokenAddress,
         amount: transaction.amount,
-        bridgeAddress: transaction.type === "withdrawal" ? await getRequiredBridgeAddress() : undefined,
+        bridgeAddress,
         overrides: {
           gasPrice: fee.gasPrice,
           gasLimit: fee.gasLimit,

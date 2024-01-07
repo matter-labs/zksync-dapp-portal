@@ -30,6 +30,8 @@ export default (getL1Signer: () => Promise<L1Signer | undefined>) => {
       const wallet = await getL1Signer();
       if (!wallet) throw new Error("Wallet is not available");
 
+      await validateAddress(transaction.to);
+
       status.value = "waiting-for-signature";
       const overrides = {
         gasPrice: fee.gasPrice,
@@ -40,8 +42,6 @@ export default (getL1Signer: () => Promise<L1Signer | undefined>) => {
       if (overrides.gasPrice && overrides.maxFeePerGas) {
         overrides.gasPrice = undefined;
       }
-
-      await validateAddress(transaction.to);
 
       const depositResponse = await wallet.deposit({
         to: transaction.to,
