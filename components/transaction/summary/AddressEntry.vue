@@ -67,7 +67,7 @@ const accountLabel = computed(() => {
       @apply text-right;
 
       .account-address {
-        @apply break-all;
+        @apply ml-auto w-max break-all;
       }
     }
     .account-avatar {
