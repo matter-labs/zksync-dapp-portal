@@ -4,8 +4,14 @@
     <div class="entry-info">
       <div class="entry-text-info">
         <div class="account-label">{{ accountLabel }}</div>
-        <div v-tooltip="{ content: address, maxWidth: 'none' }" class="account-address">
-          {{ shortenAddress(address, 6) }}
+        <div class="account-address">
+          <span
+            v-for="(part, index) in addressParts"
+            :key="index"
+            :class="{ 'text-neutral-600 dark:text-neutral-400': index === 1 }"
+          >
+            {{ part }}
+          </span>
         </div>
       </div>
       <AddressAvatar class="account-avatar" :address="address">
@@ -26,7 +32,6 @@ import type { TransactionDestination } from "@/store/destinations";
 import type { PropType } from "vue";
 
 import { useOnboardStore } from "@/store/onboard";
-import { shortenAddress } from "@/utils/formatters";
 
 const props = defineProps({
   label: {
@@ -51,6 +56,10 @@ const accountLabel = computed(() => {
   }
   return `Another ${props.destination.label} account`;
 });
+const addressParts = computed<[string, string, string]>(() => {
+  const address = props.address;
+  return [address.slice(0, 5), address.slice(5, 39), address.slice(39)];
+});
 </script>
 
 <style lang="scss" scoped>
@@ -67,7 +76,7 @@ const accountLabel = computed(() => {
       @apply text-right;
 
       .account-address {
-        @apply ml-auto w-max break-all;
+        @apply break-all;
       }
     }
     .account-avatar {

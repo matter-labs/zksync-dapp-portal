@@ -75,8 +75,8 @@
         <span class="text-neutral-400">Value:</span>
         <span class="ml-1 inline-flex items-center">
           {{ parseTokenAmount(token.amount, token.decimals) }}
-          <TokenImage class="mx-1 h-5 w-5" v-bind="token" />
           {{ token.symbol }}
+          <TokenImage class="ml-1.5 h-5 w-5" v-bind="token" />
         </span>
       </div>
       <div v-if="expectedCompleteTimestamp && !completed">

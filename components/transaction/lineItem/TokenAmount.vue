@@ -3,13 +3,10 @@
     <div class="flex items-center justify-end">
       <span v-if="direction" class="relative -top-px mr-[2px] text-xs">{{ direction === "in" ? "+" : "-" }}</span>
       <span class="max-w-[100px] truncate xs:max-w-[150px]">{{ displayedAmount }}</span>
-      <TokenImage
-        class="ml-1 mr-0.5 h-4 w-4"
-        :symbol="token.symbol"
-        :address="token.address"
-        :icon-url="token.iconUrl"
-      />
+      &nbsp;
       <span :title="token.symbol" class="max-w-[5.5rem] truncate font-medium">{{ token.symbol }}</span>
+      &nbsp;
+      <TokenImage class="h-4 w-4" :symbol="token.symbol" :address="token.address" :icon-url="token.iconUrl" />
     </div>
   </div>
 </template>

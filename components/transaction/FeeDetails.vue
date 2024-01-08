@@ -27,18 +27,12 @@
             <span v-if="canDisplayFeeAsFiat && displayFeeAsFiat">{{ totalPrice }} of</span>
             <span v-else class="break-all">{{ parseTokenAmount(feeAmount, feeToken.decimals) }}</span>
           </transition>
-          <TokenImage class="ml-1.5 mr-1 h-5 w-5" v-bind="feeToken" />
+          &nbsp;
           <span class="font-medium">{{ feeToken.symbol }}</span>
+          &nbsp;
+          <TokenImage class="h-5 w-5" v-bind="feeToken" />
         </component>
         <template v-else>Unknown fee</template>
-        <CommonCircleLoader
-          v-if="updateDuration"
-          v-tooltip="`Updating fee every ${Math.ceil(updateDuration / 1000)} seconds`"
-          :duration="updateDuration"
-          :active="!loading"
-          class="ml-1.5 cursor-help"
-          @finished="emit('update')"
-        />
       </div>
       <slot />
     </div>
@@ -69,14 +63,7 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
-  updateDuration: {
-    type: Number,
-  },
 });
-
-const emit = defineEmits<{
-  (eventName: "update"): void;
-}>();
 
 const displayFeeAsFiat = ref(true);
 const canDisplayFeeAsFiat = computed(() => (props.feeToken?.price ? true : false));

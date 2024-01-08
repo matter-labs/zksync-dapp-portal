@@ -172,8 +172,6 @@
               :fee-token="feeToken"
               :fee-amount="fee"
               :loading="feeLoading"
-              :update-duration="60000"
-              @update="feeAutoUpdateEstimate"
             />
           </transition>
           <CommonButtonLabel
@@ -258,6 +256,7 @@ import { BigNumber } from "ethers";
 import { isAddress } from "ethers/lib/utils";
 import { storeToRefs } from "pinia";
 
+import useInterval from "@/composables/useInterval";
 import useNetworks from "@/composables/useNetworks";
 import useFee from "@/composables/zksync/useFee";
 import useTransaction from "@/composables/zksync/useTransaction";
@@ -480,6 +479,7 @@ const transaction = computed<
   };
 });
 
+const feeLoading = computed(() => feeInProgress.value || (!fee.value && balanceInProgress.value));
 const estimate = async () => {
   // estimation fails when token balance is 0
   if (
@@ -498,9 +498,6 @@ const estimate = async () => {
     tokenAddress: selectedToken.value.address,
   });
 };
-const feeAutoUpdateEstimate = async () => {
-  await estimate();
-};
 watch(
   [() => selectedToken.value?.address, () => selectedTokenZeroBalance.value],
   () => {
@@ -510,7 +507,22 @@ watch(
   { immediate: true }
 );
 
-const feeLoading = computed(() => feeInProgress.value || (!fee.value && balanceInProgress.value));
+const autoUpdatingFee = computed(() => !feeError.value && fee.value && !feeLoading.value);
+const { reset: resetAutoUpdateEstimate, stop: stopAutoUpdateEstimate } = useInterval(async () => {
+  if (!autoUpdatingFee.value) return;
+  await estimate();
+}, 60000);
+watch(
+  autoUpdatingFee,
+  (updatingFee) => {
+    if (!updatingFee) {
+      stopAutoUpdateEstimate();
+    } else {
+      resetAutoUpdateEstimate();
+    }
+  },
+  { immediate: true }
+);
 
 const continueButtonDisabled = computed(() => {
   if (
