@@ -120,44 +120,7 @@
         </CommonErrorBlock>
       </template>
       <template v-else-if="step === 'submitted'">
-        <h1 class="h1 mt-block-gap-1/2 text-center">
-          {{ transactionCommitted && type !== "withdrawal" ? "Transaction completed" : "Transaction submitted" }}
-        </h1>
-        <CommonHeightTransition v-if="type !== 'withdrawal'" :opened="!transactionCommitted">
-          <p class="mb-4 text-center">
-            Your funds will be available at the
-            <a
-              v-if="blockExplorerUrl"
-              :href="`${blockExplorerUrl}/address/${transaction!.to.address}`"
-              target="_blank"
-              class="font-medium underline underline-offset-2"
-              >destination address</a
-            >
-            <span v-else>destination address</span>
-            after the transaction is committed on the <span class="font-medium">{{ destinations.era.label }}</span
-            >. You are free to close this page.
-          </p>
-        </CommonHeightTransition>
-        <p v-else class="mb-block-gap text-center">
-          Your funds will be available on <span class="font-medium">{{ destination.label }}</span> after the
-          <a class="underline underline-offset-2" :href="ZKSYNC_WITHDRAWAL_DELAY" target="_blank">24-hour delay</a>.
-          During this time, the transaction will be processed and finalized. You are free to close this page.
-        </p>
-        <TransactionProgress
-          :from-address="transaction!.from.address"
-          :from-destination="transaction!.from.destination"
-          :to-address="transaction!.to.address"
-          :to-destination="transaction!.to.destination"
-          :explorer-link="blockExplorerUrl"
-          :transaction-hash="transactionHash"
-          :token="transaction!.token"
-          :completed="transactionCommitted && type !== 'withdrawal'"
-        />
-
-        <CommonButton as="RouterLink" :to="{ name: 'assets' }" class="mt-block-gap" variant="primary">
-          Go to Assets page
-        </CommonButton>
-        <CommonButton size="sm" class="mx-auto mt-block-gap" @click="resetForm">Make another transaction</CommonButton>
+        <TransferSubmitted :transaction="transactionInfo!" :make-another-transaction="resetForm" />
       </template>
 
       <template v-if="step === 'form' || step === 'confirm'">
@@ -258,6 +221,7 @@ import { storeToRefs } from "pinia";
 
 import useInterval from "@/composables/useInterval";
 import useNetworks from "@/composables/useNetworks";
+import { WITHDRAWAL_DELAY } from "@/composables/zksync/useBridgeWithdrawalStatuses";
 import useFee from "@/composables/zksync/useFee";
 import useTransaction from "@/composables/zksync/useTransaction";
 
@@ -266,6 +230,7 @@ import type { TransactionDestination } from "@/store/destinations";
 import type { Token, TokenAmount } from "@/types";
 import type { BigNumberish } from "ethers";
 import type { PropType } from "vue";
+import type { TransactionInfo } from "~/store/zksync/transactionStatus";
 
 import { useRoute, useRouter } from "#app";
 import { useDestinationsStore } from "@/store/destinations";
@@ -273,12 +238,15 @@ import { useOnboardStore } from "@/store/onboard";
 import { usePreferencesStore } from "@/store/preferences";
 import { useZkSyncProviderStore } from "@/store/zksync/provider";
 import { useZkSyncTokensStore } from "@/store/zksync/tokens";
+import { useZkSyncTransactionStatusStore } from "@/store/zksync/transactionStatus";
 import { useZkSyncTransfersHistoryStore } from "@/store/zksync/transfersHistory";
 import { useZkSyncWalletStore } from "@/store/zksync/wallet";
 import { ZKSYNC_WITHDRAWAL_DELAY } from "@/utils/doc-links";
 import { checksumAddress, decimalToBigNumber, formatRawTokenPrice } from "@/utils/formatters";
 import { calculateFee } from "@/utils/helpers";
+import { silentRouterChange } from "@/utils/helpers";
 import { TransitionAlertScaleInOutTransition, TransitionOpacity } from "@/utils/transitions";
+import TransferSubmitted from "@/views/transactions/TransferSubmitted.vue";
 
 const props = defineProps({
   type: {
@@ -295,7 +263,7 @@ const walletStore = useZkSyncWalletStore();
 const tokensStore = useZkSyncTokensStore();
 const providerStore = useZkSyncProviderStore();
 const { account, isConnected } = storeToRefs(onboardStore);
-const { blockExplorerUrl } = storeToRefs(providerStore);
+const { eraNetwork } = storeToRefs(providerStore);
 const { destinations } = storeToRefs(useDestinationsStore());
 const { tokens, tokensRequestInProgress, tokensRequestError } = storeToRefs(tokensStore);
 const { balance, balanceInProgress, balanceError } = storeToRefs(walletStore);
@@ -555,9 +523,9 @@ const { previousTransactionAddress } = storeToRefs(usePreferencesStore());
 const {
   status: transactionStatus,
   error: transactionError,
-  transactionHash,
   commitTransaction,
 } = useTransaction(walletStore.getSigner, providerStore.requestProvider);
+const { saveTransaction, waitForCompletion } = useZkSyncTransactionStatusStore();
 
 watch(step, (newStep) => {
   if (newStep === "form") {
@@ -565,7 +533,7 @@ watch(step, (newStep) => {
   }
 });
 
-const transactionCommitted = ref(false);
+const transactionInfo = ref<TransactionInfo | undefined>();
 const makeTransaction = async () => {
   if (continueButtonDisabled.value) return;
 
@@ -591,16 +559,37 @@ const makeTransaction = async () => {
     const fee = calculateFee(gasLimit.value!, gasPrice.value!);
     walletStore.deductBalance(feeToken.value!.address, fee);
     walletStore.deductBalance(transaction.value!.token.address, transaction.value!.token.amount);
-    tx.wait()
-      .then(async () => {
-        transactionCommitted.value = true;
+    transactionInfo.value = {
+      type: transaction.value!.type,
+      transactionHash: tx.hash,
+      token: transaction.value!.token,
+      from: transaction.value!.from,
+      to: transaction.value!.to,
+      info: {
+        expectedCompleteTimestamp:
+          transaction.value?.type === "withdrawal"
+            ? new Date(new Date().getTime() + WITHDRAWAL_DELAY).toISOString()
+            : undefined,
+        completed: false,
+      },
+    };
+    saveTransaction(transactionInfo.value);
+    silentRouterChange(
+      router.resolve({
+        name: "transaction-hash",
+        params: { hash: transactionInfo.value.transactionHash },
+        query: { network: eraNetwork.value.key },
+      }).href
+    );
+    waitForCompletion(transactionInfo.value)
+      .then(async (completedTransaction) => {
+        transactionInfo.value = completedTransaction;
         setTimeout(() => {
           transfersHistoryStore.reloadRecentTransfers().catch(() => undefined);
           walletStore.requestBalance({ force: true }).catch(() => undefined);
         }, 2000);
       })
       .catch((err) => {
-        transactionCommitted.value = false;
         transactionError.value = err as Error;
         transactionStatus.value = "not-started";
       });
@@ -612,7 +601,8 @@ const resetForm = () => {
   amount.value = "";
   step.value = "form";
   transactionStatus.value = "not-started";
-  transactionCommitted.value = false;
+  transactionInfo.value = undefined;
+  silentRouterChange((route as unknown as { href: string }).href);
 };
 
 const fetchBalances = async (force = false) => {

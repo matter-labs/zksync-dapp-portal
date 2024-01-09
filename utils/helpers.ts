@@ -31,6 +31,11 @@ export const calculateTotalTokensPrice = (tokens: TokenAmount[]) => {
   }, 0);
 };
 
+// Changes URL without changing actual router view
+export const silentRouterChange = (location: string, mode: "push" | "replace" = "push") => {
+  window.history[mode === "push" ? "pushState" : "replaceState"]({}, "", location);
+};
+
 interface RetryOptions {
   retries?: number;
 }

@@ -104,33 +104,7 @@
         </CommonErrorBlock>
       </template>
       <template v-else-if="step === 'submitted'">
-        <h1 class="h1 mt-block-gap-1/2 text-center">
-          {{ l2TransactionHash ? "Transaction completed" : "Transaction submitted" }}
-        </h1>
-        <CommonHeightTransition :opened="!l2TransactionHash">
-          <p class="mb-4 text-center">
-            Your funds will be available after the transaction is committed on
-            <span class="font-medium">{{ destinations.ethereum.label }}</span> and then processed on
-            <span class="font-medium">{{ destination.label }}</span
-            >. You are free to close this page.
-          </p>
-        </CommonHeightTransition>
-        <TransactionProgress
-          :from-address="transaction!.from.address"
-          :from-destination="transaction!.from.destination"
-          :from-explorer-link="l1BlockExplorerUrl"
-          :from-transaction-hash="ethTransactionHash"
-          :to-address="transaction!.to.address"
-          :to-destination="transaction!.to.destination"
-          :to-explorer-link="blockExplorerUrl"
-          :to-transaction-hash="l2TransactionHash"
-          :expected-complete-timestamp="estimatedDepositTimestamp"
-          :token="transaction!.token"
-          :completed="!!l2TransactionHash"
-        />
-
-        <EcosystemBlock v-if="eraNetwork.displaySettings?.showPartnerLinks" class="mt-block-gap" />
-        <CommonButton size="sm" class="mx-auto mt-block-gap" @click="resetForm">Make another transaction</CommonButton>
+        <DepositSubmitted :transaction="transactionInfo!" :make-another-transaction="resetForm" />
       </template>
 
       <template v-if="step === 'form' || step === 'confirm'">
@@ -356,6 +330,7 @@ import useFee from "@/composables/zksync/deposit/useFee";
 import useTransaction, { ESTIMATED_DEPOSIT_DELAY } from "@/composables/zksync/deposit/useTransaction";
 
 import type { TransactionDestination } from "@/store/destinations";
+import type { TransactionInfo } from "@/store/zksync/transactionStatus";
 import type { Token, TokenAmount } from "@/types";
 import type { BigNumberish } from "ethers";
 
@@ -367,11 +342,14 @@ import { usePreferencesStore } from "@/store/preferences";
 import { useZkSyncEthereumBalanceStore } from "@/store/zksync/ethereumBalance";
 import { useZkSyncProviderStore } from "@/store/zksync/provider";
 import { useZkSyncTokensStore } from "@/store/zksync/tokens";
+import { useZkSyncTransactionStatusStore } from "@/store/zksync/transactionStatus";
 import { useZkSyncTransfersHistoryStore } from "@/store/zksync/transfersHistory";
 import { useZkSyncWalletStore } from "@/store/zksync/wallet";
 import { TOKEN_ALLOWANCE } from "@/utils/doc-links";
 import { checksumAddress, decimalToBigNumber, formatRawTokenPrice, parseTokenAmount } from "@/utils/formatters";
+import { silentRouterChange } from "@/utils/helpers";
 import { TransitionAlertScaleInOutTransition, TransitionOpacity } from "@/utils/transitions";
+import DepositSubmitted from "@/views/transactions/DepositSubmitted.vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -382,7 +360,7 @@ const providerStore = useZkSyncProviderStore();
 const zkSyncEthereumBalance = useZkSyncEthereumBalanceStore();
 const eraWalletStore = useZkSyncWalletStore();
 const { account, isConnected } = storeToRefs(onboardStore);
-const { eraNetwork, blockExplorerUrl } = storeToRefs(providerStore);
+const { eraNetwork } = storeToRefs(providerStore);
 const { destinations } = storeToRefs(useDestinationsStore());
 const { l1BlockExplorerUrl } = storeToRefs(useNetworkStore());
 const { l1Tokens, tokensRequestInProgress, tokensRequestError } = storeToRefs(tokensStore);
@@ -644,10 +622,10 @@ const { previousTransactionAddress } = storeToRefs(usePreferencesStore());
 const {
   status: transactionStatus,
   error: transactionError,
-  ethTransactionHash,
   commitTransaction,
 } = useTransaction(eraWalletStore.getL1Signer);
 const { recentlyBridged, ecosystemBannerVisible } = useEcosystemBanner();
+const { saveTransaction, waitForCompletion } = useZkSyncTransactionStatusStore();
 
 watch(step, (newStep) => {
   if (newStep === "form") {
@@ -655,8 +633,7 @@ watch(step, (newStep) => {
   }
 });
 
-const estimatedDepositTimestamp = ref<string | undefined>();
-const l2TransactionHash = ref<string | undefined>();
+const transactionInfo = ref<TransactionInfo | undefined>();
 const makeTransaction = async () => {
   if (continueButtonDisabled.value) return;
 
@@ -673,23 +650,39 @@ const makeTransaction = async () => {
     step.value = "submitted";
     previousTransactionAddress.value = transaction.value!.to.address;
     recentlyBridged.value = true;
-    estimatedDepositTimestamp.value = new Date(new Date().getTime() + ESTIMATED_DEPOSIT_DELAY).toISOString();
   }
 
   if (tx) {
     zkSyncEthereumBalance.deductBalance(feeToken.value!.address!, fee.value!);
     zkSyncEthereumBalance.deductBalance(transaction.value!.token.address!, transaction.value!.token.amount);
-    tx.wait()
-      .then(async (receipt) => {
-        l2TransactionHash.value = receipt.transactionHash;
+    transactionInfo.value = {
+      type: "deposit",
+      transactionHash: tx.hash,
+      token: transaction.value!.token,
+      from: transaction.value!.from,
+      to: transaction.value!.to,
+      info: {
+        expectedCompleteTimestamp: new Date(new Date().getTime() + ESTIMATED_DEPOSIT_DELAY).toISOString(),
+        completed: false,
+      },
+    };
+    saveTransaction(transactionInfo.value);
+    silentRouterChange(
+      router.resolve({
+        name: "transaction-hash",
+        params: { hash: transactionInfo.value.transactionHash },
+        query: { network: eraNetwork.value.key },
+      }).href
+    );
+    waitForCompletion(transactionInfo.value)
+      .then(async (completedTransaction) => {
+        transactionInfo.value = completedTransaction;
         setTimeout(() => {
           transfersHistoryStore.reloadRecentTransfers().catch(() => undefined);
           eraWalletStore.requestBalance({ force: true }).catch(() => undefined);
         }, 2000);
       })
       .catch((err) => {
-        l2TransactionHash.value = undefined;
-        estimatedDepositTimestamp.value = undefined;
         transactionError.value = err as Error;
         transactionStatus.value = "not-started";
       });
@@ -701,10 +694,10 @@ const resetForm = () => {
   amount.value = "";
   step.value = "form";
   transactionStatus.value = "not-started";
-  l2TransactionHash.value = undefined;
-  estimatedDepositTimestamp.value = undefined;
+  transactionInfo.value = undefined;
   resetSetAllowance();
   requestAllowance();
+  silentRouterChange((route as unknown as { href: string }).href);
 };
 
 const fetchBalances = async (force = false) => {
