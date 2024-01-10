@@ -112,7 +112,12 @@ export function formatError(error?: Error) {
       return undefined;
     } else if (message.toLowerCase().includes("fee is to low")) {
       return new Error("Transaction fee was to low. Try again.");
-    } else if (message === "Network Error" || message === "Failed to fetch ()" || message.includes("noNetwork")) {
+    } else if (
+      message === "Network Error" ||
+      message === "Failed to fetch ()" ||
+      message.includes("<no response> Failed to fetch") ||
+      message.includes("noNetwork")
+    ) {
       return new Error("Network error. Check your internet connection and try again.");
     }
   }

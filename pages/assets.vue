@@ -52,7 +52,7 @@
           <template v-if="loading">
             <TokenBalanceLoader v-for="index in 2" :key="index" send-route-name />
           </template>
-          <div v-else-if="balanceError" class="m-3 -mt-1 mb-2.5">
+          <div v-else-if="balanceError">
             <CommonErrorBlock @try-again="fetch">
               {{ balanceError.message }}
             </CommonErrorBlock>
