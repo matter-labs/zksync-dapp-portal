@@ -6,8 +6,6 @@ import type { L1Signer } from "zksync-web3";
 
 import { formatError } from "@/utils/formatters";
 
-export const ESTIMATED_DEPOSIT_DELAY = 15 * 60 * 1000; //15 minutes
-
 export default (getL1Signer: () => Promise<L1Signer | undefined>) => {
   const status = ref<"not-started" | "processing" | "waiting-for-signature" | "done">("not-started");
   const error = ref<Error | undefined>();

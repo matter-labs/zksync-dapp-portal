@@ -1,5 +1,9 @@
 <template>
-  <TransactionLineItem :icon="icon" :explorer-url="blockExplorerUrl" :transaction-hash="transfer.transactionHash!">
+  <TransactionLineItem
+    :icon="transactionIcon"
+    :explorer-url="blockExplorerUrl"
+    :transaction-hash="transfer.transactionHash!"
+  >
     <template #top-left>{{ label }}</template>
     <template #bottom-left>
       <template v-if="chainsLabel">
@@ -131,7 +135,7 @@ const computeAmount = computed(() => {
 const token = computed(() => {
   return props.transfer.token;
 });
-const icon = computed(() => {
+const transactionIcon = computed(() => {
   switch (props.transfer.type) {
     case "transfer":
       return direction.value === "in" ? ArrowDownLeftIcon : ArrowUpRightIcon;

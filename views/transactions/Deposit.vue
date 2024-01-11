@@ -327,7 +327,7 @@ import useInterval from "@/composables/useInterval";
 import useNetworks from "@/composables/useNetworks";
 import useEcosystemBanner from "@/composables/zksync/deposit/useEcosystemBanner";
 import useFee from "@/composables/zksync/deposit/useFee";
-import useTransaction, { ESTIMATED_DEPOSIT_DELAY } from "@/composables/zksync/deposit/useTransaction";
+import useTransaction from "@/composables/zksync/deposit/useTransaction";
 
 import type { TransactionDestination } from "@/store/destinations";
 import type { TransactionInfo } from "@/store/zksync/transactionStatus";
@@ -342,7 +342,7 @@ import { usePreferencesStore } from "@/store/preferences";
 import { useZkSyncEthereumBalanceStore } from "@/store/zksync/ethereumBalance";
 import { useZkSyncProviderStore } from "@/store/zksync/provider";
 import { useZkSyncTokensStore } from "@/store/zksync/tokens";
-import { useZkSyncTransactionStatusStore } from "@/store/zksync/transactionStatus";
+import { ESTIMATED_DEPOSIT_DELAY, useZkSyncTransactionStatusStore } from "@/store/zksync/transactionStatus";
 import { useZkSyncTransfersHistoryStore } from "@/store/zksync/transfersHistory";
 import { useZkSyncWalletStore } from "@/store/zksync/wallet";
 import { TOKEN_ALLOWANCE } from "@/utils/doc-links";
@@ -658,6 +658,7 @@ const makeTransaction = async () => {
     transactionInfo.value = {
       type: "deposit",
       transactionHash: tx.hash,
+      timestamp: new Date().toISOString(),
       token: transaction.value!.token,
       from: transaction.value!.from,
       to: transaction.value!.to,

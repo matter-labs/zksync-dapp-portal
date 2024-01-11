@@ -221,7 +221,6 @@ import { storeToRefs } from "pinia";
 
 import useInterval from "@/composables/useInterval";
 import useNetworks from "@/composables/useNetworks";
-import { WITHDRAWAL_DELAY } from "@/composables/zksync/useBridgeWithdrawalStatuses";
 import useFee from "@/composables/zksync/useFee";
 import useTransaction from "@/composables/zksync/useTransaction";
 
@@ -238,6 +237,7 @@ import { useOnboardStore } from "@/store/onboard";
 import { usePreferencesStore } from "@/store/preferences";
 import { useZkSyncProviderStore } from "@/store/zksync/provider";
 import { useZkSyncTokensStore } from "@/store/zksync/tokens";
+import { WITHDRAWAL_DELAY } from "@/store/zksync/transactionStatus";
 import { useZkSyncTransactionStatusStore } from "@/store/zksync/transactionStatus";
 import { useZkSyncTransfersHistoryStore } from "@/store/zksync/transfersHistory";
 import { useZkSyncWalletStore } from "@/store/zksync/wallet";
@@ -562,6 +562,7 @@ const makeTransaction = async () => {
     transactionInfo.value = {
       type: transaction.value!.type,
       transactionHash: tx.hash,
+      timestamp: new Date().toISOString(),
       token: transaction.value!.token,
       from: transaction.value!.from,
       to: transaction.value!.to,

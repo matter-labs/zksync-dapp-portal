@@ -18,6 +18,7 @@ export type TransactionInfo = {
   from: { address: string; destination: TransactionDestination };
   to: { address: string; destination: TransactionDestination };
   transactionHash: string;
+  timestamp: string;
   info: {
     toTransactionHash?: string;
     expectedCompleteTimestamp?: string;
@@ -25,12 +26,18 @@ export type TransactionInfo = {
   };
 };
 
+export const ESTIMATED_DEPOSIT_DELAY = 15 * 60 * 1000; // 15 minutes
+export const WITHDRAWAL_DELAY = 24 * 60 * 60 * 1000; // 24 hours
+
 export const useZkSyncTransactionStatusStore = defineStore("zkSyncTransactionStatus", () => {
   const onboardStore = useOnboardStore();
   const providerStore = useZkSyncProviderStore();
   const { eraNetwork } = storeToRefs(providerStore);
 
-  const storageSavedTransactions = useStorage<{ [networkKey: string]: TransactionInfo[] }>("zksync-transactions", {});
+  const storageSavedTransactions = useStorage<{ [networkKey: string]: TransactionInfo[] }>(
+    "zksync-bridge-transactions",
+    {}
+  );
   const savedTransactions = computed<TransactionInfo[]>({
     get: () => {
       return storageSavedTransactions.value[eraNetwork.value.key] || [];

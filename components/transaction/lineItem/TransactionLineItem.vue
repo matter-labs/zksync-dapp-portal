@@ -1,12 +1,5 @@
 <template>
-  <CommonButtonLineWithImg
-    class="transaction-line-item"
-    :as="transactionUrl ? 'a' : 'button'"
-    :href="transactionUrl"
-    :icon="transactionUrl ? ArrowTopRightOnSquareIcon : DocumentDuplicateIcon"
-    target="_blank"
-    @click="!transactionUrl && copy()"
-  >
+  <CommonButtonLineWithImg v-bind="buttonProps" class="transaction-line-item" @click="handleClick()">
     <template #image>
       <DestinationIconContainer>
         <XMarkIcon v-if="failed" class="failed-badge-icon" aria-hidden="true" />
@@ -47,10 +40,16 @@
 import { computed, ref, watch } from "vue";
 import { useTippy } from "vue-tippy";
 
-import { ArrowTopRightOnSquareIcon, DocumentDuplicateIcon, XMarkIcon } from "@heroicons/vue/24/outline";
+import {
+  ArrowTopRightOnSquareIcon,
+  DocumentDuplicateIcon,
+  InformationCircleIcon,
+  XMarkIcon,
+} from "@heroicons/vue/24/outline";
 
 import useCopy from "@/composables/useCopy";
 
+import type { RouteLocation } from "#vue-router";
 import type { Component, PropType } from "vue";
 
 const props = defineProps({
@@ -59,10 +58,12 @@ const props = defineProps({
   },
   transactionHash: {
     type: String,
-    required: true,
   },
   explorerUrl: {
     type: String,
+  },
+  to: {
+    type: Object as PropType<RouteLocation>,
   },
   failed: {
     type: Boolean,
@@ -70,7 +71,7 @@ const props = defineProps({
   },
 });
 
-const { copy, copied } = useCopy(computed(() => props.transactionHash));
+const { copy, copied } = useCopy(computed(() => props.transactionHash || ""));
 const el = ref<{ $el?: HTMLButtonElement } | undefined>();
 const a = useTippy(
   computed(() => el.value?.$el?.parentElement?.parentElement || undefined),
@@ -98,6 +99,33 @@ const transactionUrl = computed(() => {
   }
   return `${props.explorerUrl}/tx/${props.transactionHash}`;
 });
+
+const buttonProps = computed(() => {
+  if (props.to) {
+    return {
+      as: "RouterLink",
+      to: props.to,
+      icon: InformationCircleIcon,
+    };
+  } else if (transactionUrl.value) {
+    return {
+      as: "a",
+      href: transactionUrl.value,
+      target: "_blank",
+      icon: ArrowTopRightOnSquareIcon,
+    };
+  } else {
+    return {
+      icon: DocumentDuplicateIcon,
+    };
+  }
+});
+
+const handleClick = () => {
+  if (!props.to && !transactionUrl.value && props.transactionHash) {
+    copy();
+  }
+};
 </script>
 
 <style lang="scss">
