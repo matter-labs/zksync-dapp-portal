@@ -25,9 +25,9 @@
         <WalletIcon class="link-icon" aria-hidden="true" />
         Assets
       </NuxtLink>
-      <NuxtLink class="link-item" :to="{ name: 'transactions' }">
+      <NuxtLink class="link-item" :to="{ name: 'transfers' }">
         <ArrowsRightLeftIcon class="link-icon" aria-hidden="true" />
-        Transactions
+        Transfers
       </NuxtLink>
     </div>
     <div class="right-side">

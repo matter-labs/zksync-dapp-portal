@@ -82,7 +82,8 @@ export const useZkSyncTransactionStatusStore = defineStore("zkSyncTransactionSta
   const getWithdrawalStatus = async (transaction: TransactionInfo) => {
     const isFinalized = await useZkSyncWalletStore()
       .getL1VoidSigner()
-      ?.isWithdrawalFinalized(transaction.transactionHash);
+      ?.isWithdrawalFinalized(transaction.transactionHash)
+      .catch(() => false);
     transaction.info.completed = isFinalized;
     return transaction;
   };

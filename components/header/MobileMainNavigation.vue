@@ -34,7 +34,7 @@
               </DestinationIconContainer>
             </template>
           </DestinationItem>
-          <DestinationItem label="Transactions" as="RouterLink" :to="{ name: 'transactions' }" size="sm">
+          <DestinationItem label="Transfers" as="RouterLink" :to="{ name: 'transfers' }" size="sm">
             <template #image>
               <DestinationIconContainer>
                 <ArrowsRightLeftIcon aria-hidden="true" />

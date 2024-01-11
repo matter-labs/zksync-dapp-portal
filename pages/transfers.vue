@@ -1,12 +1,12 @@
 <template>
   <div>
-    <PageTitle>Transactions</PageTitle>
+    <PageTitle>Transfers</PageTitle>
 
     <template v-if="!isConnected">
-      <ConnectWalletBlock>Connect wallet to view your latest transactions on {{ eraNetwork.name }}</ConnectWalletBlock>
+      <ConnectWalletBlock>Connect wallet to view your latest transfers on {{ eraNetwork.name }}</ConnectWalletBlock>
     </template>
     <template v-else>
-      <template v-if="recentBridgeOperations.length">
+      <template v-if="!loading && recentBridgeOperations.length">
         <TypographyCategoryLabel>Recent bridge operations</TypographyCategoryLabel>
         <CommonCardWithLineButtons>
           <TransactionTransferLineItem
@@ -21,7 +21,7 @@
           />
         </CommonCardWithLineButtons>
 
-        <TypographyCategoryLabel>Completed transactions</TypographyCategoryLabel>
+        <TypographyCategoryLabel v-if="!hasOnlyRecentBridgeOperations">Completed transfers</TypographyCategoryLabel>
       </template>
 
       <div v-if="loading">
@@ -31,7 +31,7 @@
       </div>
       <CommonCardWithLineButtons v-else-if="recentTransfersRequestError">
         <CommonErrorBlock @try-again="fetch">
-          Loading transactions error: {{ recentTransfersRequestError.message }}
+          Loading transfers error: {{ recentTransfersRequestError.message }}
         </CommonErrorBlock>
       </CommonCardWithLineButtons>
       <div v-else-if="displayedTransfers.length">
@@ -48,15 +48,15 @@
           </div>
           <CommonCardWithLineButtons v-else-if="previousTransfersRequestError">
             <CommonErrorBlock @try-again="fetchMore">
-              Loading transactions error: {{ previousTransfersRequestError.message }}
+              Loading transfers error: {{ previousTransfersRequestError.message }}
             </CommonErrorBlock>
           </CommonCardWithLineButtons>
           <CommonButton v-else ref="loadMoreEl" variant="primary" class="mx-auto mt-4">Load more</CommonButton>
         </template>
       </div>
-      <CommonCardWithLineButtons v-else>
+      <CommonCardWithLineButtons v-else-if="!hasOnlyRecentBridgeOperations">
         <CommonEmptyBlock>
-          At the moment you don't have any transactions on
+          At the moment you don't have any transfers on
           <span class="font-medium">{{ destinations.era.label }}</span>
         </CommonEmptyBlock>
       </CommonCardWithLineButtons>
@@ -128,6 +128,9 @@ const displayedTransfers = computed(() => {
   return transfers.value.filter(
     (transfer) => !recentBridgeOperations.value.find((tx) => tx.transactionHash === transfer.transactionHash)
   );
+});
+const hasOnlyRecentBridgeOperations = computed(() => {
+  return !displayedTransfers.value.length && recentBridgeOperations.value.length;
 });
 const { loading, reset: resetSingleLoading } = useSingleLoading(recentTransfersRequestInProgress);
 
