@@ -63,6 +63,11 @@ export default defineNuxtConfig({
       autoprefixer: {},
     },
   },
+  nitro: {
+    routeRules: {
+      "/verify": { proxy: process.env.SCREENING_API_URL },
+    },
+  },
   runtimeConfig: {
     public: {
       walletConnectProjectID: process.env.WALLET_CONNECT_PROJECT_ID,
