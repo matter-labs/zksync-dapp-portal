@@ -10,7 +10,7 @@ const validateAddress = useMemoize(async (address: string) => {
   }
   const url = new URL(runtimeConfig.public.screeningApiUrl);
   url.searchParams.append("address", address);
-  const response = await $fetch(url.toString());
+  const response = await $fetch(url.toString()).catch(() => ({ result: true }));
   if (!response.result) {
     throw new Error("We were unable to process this transaction...");
   }

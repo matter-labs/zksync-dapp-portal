@@ -2,6 +2,8 @@ import { BigNumber, ethers, VoidSigner } from "ethers";
 import { $fetch } from "ofetch";
 import { L1Signer, L1VoidSigner, Web3Provider } from "zksync-web3";
 
+import useScreening from "@/composables/useScreening";
+
 import type { Api, TokenAmount } from "@/types";
 import type { BigNumberish } from "ethers";
 
@@ -16,6 +18,7 @@ export const useZkSyncWalletStore = defineStore("zkSyncWallet", () => {
   const { eraNetwork } = storeToRefs(providerStore);
   const { tokens } = storeToRefs(tokensStore);
   const { account, network } = storeToRefs(onboardStore);
+  const { validateAddress } = useScreening();
 
   const { execute: getSigner, reset: resetSigner } = usePromise(async () => {
     const walletNetworkId = network.value.chain?.id;
@@ -161,11 +164,18 @@ export const useZkSyncWalletStore = defineStore("zkSyncWallet", () => {
     await switchNetwork().catch(() => undefined);
   };
 
+  const { execute: walletAddressValidate, reload: reloadWalletAddressValidation } = usePromise(async () => {
+    if (!account.value.address) throw new Error("Account is not available");
+    await validateAddress(account.value.address); // Throws an error if the address is not valid
+  });
+  walletAddressValidate();
+
   onboardStore.subscribeOnAccountChange(() => {
     resetSigner();
     resetL1Signer();
     resetAccountState();
     resetBalance();
+    reloadWalletAddressValidation();
   });
 
   return {
@@ -183,5 +193,7 @@ export const useZkSyncWalletStore = defineStore("zkSyncWallet", () => {
     switchingNetworkInProgress,
     switchingNetworkError,
     setCorrectNetwork,
+
+    walletAddressValidate,
   };
 });

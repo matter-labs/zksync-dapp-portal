@@ -5,6 +5,7 @@ import useScreening from "@/composables/useScreening";
 import type { BigNumberish } from "ethers";
 import type { Provider, Signer } from "zksync-web3";
 
+import { useZkSyncWalletStore } from "@/store/zksync/wallet";
 import { formatError } from "@/utils/formatters";
 
 type TransactionParams = {
@@ -18,6 +19,7 @@ export default (getSigner: () => Promise<Signer | undefined>, getProvider: () =>
   const status = ref<"not-started" | "processing" | "waiting-for-signature" | "done">("not-started");
   const error = ref<Error | undefined>();
   const transactionHash = ref<string | undefined>();
+  const eraWalletStore = useZkSyncWalletStore();
 
   const retrieveBridgeAddresses = useMemoize(() => getProvider().getDefaultBridgeAddresses());
   const { validateAddress } = useScreening();
@@ -40,6 +42,7 @@ export default (getSigner: () => Promise<Signer | undefined>, getProvider: () =>
       };
       const bridgeAddress = transaction.type === "withdrawal" ? await getRequiredBridgeAddress() : undefined;
 
+      await eraWalletStore.walletAddressValidate();
       await validateAddress(transaction.to);
 
       status.value = "waiting-for-signature";
