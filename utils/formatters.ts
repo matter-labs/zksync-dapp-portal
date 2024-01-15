@@ -1,5 +1,6 @@
 import { BigNumber, type BigNumberish } from "ethers";
 import { formatUnits, getAddress, parseUnits } from "ethers/lib/utils";
+import { BaseError } from "viem";
 
 export function shortenAddress(address: string, chars = 3): string {
   return `${address.slice(0, chars + 2)}...${address.slice(-3)}`;
@@ -116,7 +117,8 @@ export function formatError(error?: Error) {
       message === "Network Error" ||
       message === "Failed to fetch ()" ||
       message.includes("<no response> Failed to fetch") ||
-      message.includes("noNetwork")
+      message.includes("noNetwork") ||
+      (error instanceof BaseError && error?.details?.startsWith("Failed to fetch"))
     ) {
       return new Error("Network error. Check your internet connection and try again.");
     }
