@@ -156,12 +156,12 @@ export const useZkSyncWalletStore = defineStore("zkSyncWallet", () => {
     execute: switchNetwork,
   } = usePromise(
     async () => {
-      await onboardStore.switchNetworkById(eraNetwork.value.id, eraNetwork.value.name);
+      return await onboardStore.switchNetworkById(eraNetwork.value.id, eraNetwork.value.name);
     },
     { cache: false }
   );
   const setCorrectNetwork = async () => {
-    await switchNetwork().catch(() => undefined);
+    return await switchNetwork().catch(() => undefined);
   };
 
   const { execute: walletAddressValidate, reload: reloadWalletAddressValidation } = usePromise(async () => {

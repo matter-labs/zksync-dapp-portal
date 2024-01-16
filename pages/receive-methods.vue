@@ -25,7 +25,18 @@
           :to="{ name: 'index', query: $route.query }"
         />
       </CommonCardWithLineButtons>
-      <CommonCardWithLineButtons v-if="eraNetwork.displaySettings?.showPartnerLinks">
+      <CommonCardWithLineButtons v-if="isTestnet">
+        <DestinationItem
+          label="Faucet"
+          description="Receive testnet funds"
+          icon-url="/img/faucet.svg"
+          as="a"
+          href="https://docs.zksync.io/build/tooling/network-faucets.html"
+          target="_blank"
+          :icon="ArrowTopRightOnSquareIcon"
+        />
+      </CommonCardWithLineButtons>
+      <CommonCardWithLineButtons v-if="isMainnet && eraNetwork.displaySettings?.showPartnerLinks">
         <DestinationItem
           label="Top-up with cash"
           description="Buy tokens using a card or another method for fiat"
@@ -41,7 +52,7 @@
           </template>
         </DestinationItem>
       </CommonCardWithLineButtons>
-      <CommonCardWithLineButtons v-if="eraNetwork.displaySettings?.showPartnerLinks">
+      <CommonCardWithLineButtons v-if="isMainnet && eraNetwork.displaySettings?.showPartnerLinks">
         <DestinationItem
           label="Bridge from other networks"
           description="Explore ecosystem of third party bridges"
@@ -62,6 +73,8 @@
 </template>
 
 <script lang="ts" setup>
+import { computed } from "vue";
+
 import { ArrowsUpDownIcon, ArrowTopRightOnSquareIcon, BanknotesIcon, QrCodeIcon } from "@heroicons/vue/24/outline";
 import { storeToRefs } from "pinia";
 
@@ -70,6 +83,8 @@ import { useZkSyncProviderStore } from "@/store/zksync/provider";
 
 const { destinations } = storeToRefs(useDestinationsStore());
 const { eraNetwork } = storeToRefs(useZkSyncProviderStore());
+const isMainnet = computed(() => eraNetwork.value.l1Network?.id === 1);
+const isTestnet = computed(() => eraNetwork.value.l1Network && eraNetwork.value.l1Network.id !== 1);
 </script>
 
 <style lang="scss" scoped></style>

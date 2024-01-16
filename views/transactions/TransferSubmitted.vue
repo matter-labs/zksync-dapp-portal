@@ -35,6 +35,7 @@
       :transaction-hash="transaction.transactionHash"
       :token="transaction.token"
       :completed="transaction.info.completed"
+      :expected-complete-timestamp="transaction.info.expectedCompleteTimestamp"
     />
 
     <CommonButton as="RouterLink" :to="{ name: 'assets' }" class="mt-block-gap" variant="primary">

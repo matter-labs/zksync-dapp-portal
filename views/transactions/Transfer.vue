@@ -156,6 +156,7 @@
               Insufficient <span class="font-medium">{{ feeToken?.symbol }}</span> balance on
               {{ destinations.era.label }} to cover the fee
             </p>
+            <NuxtLink :to="{ name: 'receive-methods' }" class="alert-link">Receive funds</NuxtLink>
           </CommonAlert>
         </transition>
 

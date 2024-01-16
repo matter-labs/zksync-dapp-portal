@@ -129,6 +129,7 @@
               Insufficient <span class="font-medium">{{ feeToken?.symbol }}</span> balance on
               <span class="font-medium">{{ destinations.ethereum.label }}</span> to cover the fee
             </p>
+            <NuxtLink :to="{ name: 'receive-methods' }" class="alert-link">Receive funds</NuxtLink>
           </CommonAlert>
         </transition>
         <transition v-bind="TransitionAlertScaleInOutTransition">
@@ -151,6 +152,7 @@
               >
               on {{ eraNetwork.l1Network?.name ?? "L1" }} for deposit.
             </p>
+            <NuxtLink :to="{ name: 'receive-methods' }" class="alert-link">Receive funds</NuxtLink>
           </CommonAlert>
         </transition>
         <CommonErrorBlock v-if="allowanceRequestError" class="mt-2" @try-again="requestAllowance">

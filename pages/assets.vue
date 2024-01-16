@@ -182,6 +182,22 @@ const depositMethods = computed(() => {
       },
     });
   }
+
+  const isMainnet = eraNetwork.value.l1Network?.id === 1;
+  const isTestnet = eraNetwork.value.l1Network && eraNetwork.value.l1Network.id !== 1;
+  if (isTestnet && eraNetwork.value.displaySettings?.showPartnerLinks) {
+    methods.push({
+      props: {
+        iconUrl: "/img/faucet.svg",
+        label: "Faucet",
+        description: "Receive testnet funds",
+        as: "a",
+        href: "https://docs.zksync.io/build/tooling/network-faucets.html",
+        target: "_blank",
+        icon: ArrowTopRightOnSquareIcon,
+      },
+    });
+  }
   methods.push({
     props: {
       label: "View your address",
@@ -193,7 +209,7 @@ const depositMethods = computed(() => {
     },
     icon: QrCodeIcon,
   });
-  if (eraNetwork.value.displaySettings?.showPartnerLinks) {
+  if (isMainnet && eraNetwork.value.displaySettings?.showPartnerLinks) {
     methods.push({
       props: {
         label: "Top-up with cash",

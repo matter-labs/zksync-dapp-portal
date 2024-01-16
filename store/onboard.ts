@@ -170,7 +170,7 @@ export const useOnboardStore = defineStore("onboard", () => {
   });
   const switchNetworkById = async (chainId: number, networkName?: string) => {
     try {
-      await switchWalletNetwork({ chainId });
+      return await switchWalletNetwork({ chainId });
     } catch (err) {
       if (err instanceof Error && err.message.includes("does not support programmatic chain switching")) {
         throw new Error(`Please switch network manually to "${networkName}" in your ${walletName.value} wallet`);
@@ -185,12 +185,12 @@ export const useOnboardStore = defineStore("onboard", () => {
   } = usePromise(
     async () => {
       if (!l1Network.value) throw new Error(`L1 network is not available on ${selectedNetwork.value.name}`);
-      await switchNetworkById(l1Network.value.id);
+      return await switchNetworkById(l1Network.value.id);
     },
     { cache: false }
   );
   const setCorrectNetwork = async () => {
-    await switchNetwork().catch(() => undefined);
+    return await switchNetwork().catch(() => undefined);
   };
 
   const { subscribe: subscribeOnAccountChange, notify: notifyOnAccountChange } = useObservable<string | undefined>();
