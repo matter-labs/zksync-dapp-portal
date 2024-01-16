@@ -34,8 +34,8 @@
               @trigger="closeOnBackgroundClick"
               @keydown.esc="closeOnBackgroundClick"
             >
-              <div class="modal-header">
-                <DialogTitle as="div" class="modal-title">{{ title }}</DialogTitle>
+              <div class="modal-header" :class="{ 'mb-4': title }">
+                <DialogTitle v-if="title" as="div" class="modal-title">{{ title }}</DialogTitle>
                 <button v-if="closable" @click="closeModal" data-testid="close-button">
                   <XMarkIcon class="modal-close-icon" aria-hidden="true" />
                 </button>
@@ -58,7 +58,6 @@ import { XMarkIcon } from "@heroicons/vue/24/outline";
 const props = defineProps({
   title: {
     type: String,
-    required: true,
   },
   opened: {
     type: Boolean,
@@ -130,7 +129,7 @@ const afterLeave = () => {
         max-height: calc(100dvh - 96px);
       }
       .modal-header {
-        @apply mb-4 flex items-center justify-between;
+        @apply flex items-center justify-between;
 
         .modal-title {
           @apply text-2xl;
