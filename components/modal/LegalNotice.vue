@@ -44,7 +44,7 @@ const proceed = () => {
   @apply mb-4 text-center text-2xl font-normal;
 }
 .modal-text {
-  @apply text-center text-sm leading-normal text-neutral-400;
+  @apply text-center text-sm leading-normal text-neutral-700 dark:text-neutral-400;
 }
 .checkbox-link {
   @apply underline underline-offset-2;

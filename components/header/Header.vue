@@ -7,6 +7,7 @@
       <NuxtLink :to="{ name: 'index' }">
         <IconsZkSync class="logo-icon" />
       </NuxtLink>
+      <span class="beta-label">Beta</span>
     </div>
     <div class="links-container">
       <NuxtLink
@@ -93,9 +94,12 @@ const { selectedColorMode, switchColorMode } = useColorMode();
   @apply z-50 flex w-full items-center gap-2 p-2 sm:gap-10 sm:p-4;
 
   .logo-container {
-    @apply w-full flex-shrink sm:w-max;
+    @apply flex w-full flex-shrink items-center gap-2 sm:w-max;
     .logo-icon {
       @apply h-auto w-full max-w-[140px] sm:max-w-[160px];
+    }
+    .beta-label {
+      @apply block rounded-lg bg-neutral-100 p-2 text-xs font-normal uppercase leading-none dark:bg-neutral-900;
     }
   }
   .links-container {
