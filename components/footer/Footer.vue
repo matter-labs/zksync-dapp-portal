@@ -1,7 +1,7 @@
 <template>
   <footer class="footer">
     <div>
-      <CommonButtonLabel v-if="!isCorrectNetworkSet && connectorName !== 'WalletConnect'" @click="addNetworkToWallet()">
+      <CommonButtonLabel v-if="showAddNetworkButton" @click="addNetworkToWallet()">
         Add {{ eraNetwork.name }} to your wallet
       </CommonButtonLabel>
     </div>
@@ -17,6 +17,8 @@
 </template>
 
 <script lang="ts" setup>
+import { computed } from "vue";
+
 import { storeToRefs } from "pinia";
 
 import { useOnboardStore } from "@/store/onboard";
@@ -25,11 +27,15 @@ import { useZkSyncWalletStore } from "@/store/zksync/wallet";
 
 const eraWalletStore = useZkSyncWalletStore();
 const { isCorrectNetworkSet } = storeToRefs(eraWalletStore);
-const { connectorName } = storeToRefs(useOnboardStore());
+const { isConnected, connectorName } = storeToRefs(useOnboardStore());
 const { eraNetwork } = storeToRefs(useZkSyncProviderStore());
 const addNetworkToWallet = async () => {
   await eraWalletStore.setCorrectNetwork();
 };
+
+const showAddNetworkButton = computed(() => {
+  return isConnected.value && !isCorrectNetworkSet.value && connectorName.value !== "WalletConnect";
+});
 </script>
 
 <style lang="scss" scoped>
