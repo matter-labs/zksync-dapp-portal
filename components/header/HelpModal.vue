@@ -8,6 +8,7 @@
         href="https://join.zksync.dev/"
         target="_blank"
         :icon="ArrowTopRightOnSquareIcon"
+        variant="light"
       >
         <template #image>
           <div class="flex h-full w-full items-center justify-center rounded-full bg-[#5865F2] text-white">
@@ -22,6 +23,7 @@
         href="https://matterlabs.gitbook.io/zksync-community-hub/support/faq"
         target="_blank"
         :icon="ArrowTopRightOnSquareIcon"
+        variant="light"
       >
         <template #image>
           <DestinationIconContainer>
@@ -36,6 +38,7 @@
         href="https://era.zksync.io"
         target="_blank"
         :icon="ArrowTopRightOnSquareIcon"
+        variant="light"
       >
         <template #image>
           <DestinationIconContainer>

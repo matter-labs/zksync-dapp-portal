@@ -4,7 +4,12 @@
       Make sure your wallet supports {{ selectedNetwork.name }} network before adding funds to your account. Otherwise,
       this can result in <span class="font-medium text-red-600">loss of funds</span>. See the list of supported wallets
       on the
-      <a class="link" href="https://zksync.dappradar.com/ecosystem?category-de=wallet" target="_blank">Ecosystem</a>
+      <a
+        class="underline underline-offset-2"
+        href="https://zksync.dappradar.com/ecosystem?category-de=wallet"
+        target="_blank"
+        >Ecosystem</a
+      >
       website.
     </p>
 
