@@ -125,7 +125,8 @@
           <p>
             You are withdrawing less than 0.01 ETH. Once your withdrawal is processed and available on
             {{ eraNetwork.l1Network?.name }}, you will need to manually claim your funds which requires paying another
-            transaction fee on {{ eraNetwork.l1Network?.name }}. Transactions over 0.01 ETH are finalized automatically.
+            transaction fee on {{ eraNetwork.l1Network?.name }}. Transactions of 0.01 ETH or more are finalized
+            automatically.
             <br />
             <br />
             To withdraw smaller amounts you can use
