@@ -2,6 +2,16 @@
   <div>
     <slot v-if="step === 'form'" name="title" />
     <PageTitle
+      v-else-if="step === 'withdrawal-finalization-warning'"
+      :back-function="
+        () => {
+          step = 'form';
+        }
+      "
+    >
+      Withdrawal claim required
+    </PageTitle>
+    <PageTitle
       v-else-if="step === 'confirm'"
       :back-function="
         () => {
@@ -107,6 +117,40 @@
           class="mt-4 w-full gap-1"
         >
           Open {{ tokenCustomBridge?.bridgeName }}
+          <ArrowTopRightOnSquareIcon class="h-6 w-6" aria-hidden="true" />
+        </CommonButton>
+      </template>
+      <template v-else-if="step === 'withdrawal-finalization-warning'">
+        <CommonAlert variant="warning" :icon="ExclamationTriangleIcon" class="mb-block-padding-1/2 sm:mb-block-gap">
+          <p>
+            You are withdrawing less than 0.01 ETH. Once your withdrawal is processed and available on
+            {{ eraNetwork.l1Network?.name }}, you will need to manually claim your funds which requires paying another
+            transaction fee on {{ eraNetwork.l1Network?.name }}. Transactions with higher value are finalized
+            automatically. We are actively working on making claiming available directly in the bridge UI.
+            <br />
+            <br />
+            To withdraw small amounts you can use
+            <span class="inline-flex items-center gap-1">
+              <a
+                href="https://zksync.dappradar.com/ecosystem?category-de=bridges"
+                target="_blank"
+                class="underline underline-offset-2"
+                >third-party bridges</a
+              >
+              <ArrowTopRightOnSquareIcon class="h-6 w-6" aria-hidden="true" />
+            </span>
+          </p>
+        </CommonAlert>
+        <CommonButton type="submit" variant="primary" class="mt-block-gap w-full" @click="buttonContinue()">
+          Continue
+        </CommonButton>
+        <CommonButton
+          size="sm"
+          as="a"
+          href="https://zksync.dappradar.com/ecosystem?category-de=bridges"
+          class="mx-auto mt-block-gap w-max gap-1"
+        >
+          See third party bridges
           <ArrowTopRightOnSquareIcon class="h-6 w-6" aria-hidden="true" />
         </CommonButton>
       </template>
@@ -239,7 +283,7 @@ import { computed, onBeforeUnmount, ref, watch } from "vue";
 import { ArrowTopRightOnSquareIcon, ExclamationTriangleIcon, InformationCircleIcon } from "@heroicons/vue/24/outline";
 import { useRouteQuery } from "@vueuse/router";
 import { BigNumber } from "ethers";
-import { isAddress } from "ethers/lib/utils";
+import { isAddress, parseEther } from "ethers/lib/utils";
 import { storeToRefs } from "pinia";
 
 import useInterval from "@/composables/useInterval";
@@ -265,6 +309,7 @@ import { WITHDRAWAL_DELAY } from "@/store/zksync/transactionStatus";
 import { useZkSyncTransactionStatusStore } from "@/store/zksync/transactionStatus";
 import { useZkSyncTransfersHistoryStore } from "@/store/zksync/transfersHistory";
 import { useZkSyncWalletStore } from "@/store/zksync/wallet";
+import { ETH_TOKEN } from "@/utils/constants";
 import { ZKSYNC_WITHDRAWAL_DELAY } from "@/utils/doc-links";
 import { checksumAddress, decimalToBigNumber, formatRawTokenPrice } from "@/utils/formatters";
 import { calculateFee } from "@/utils/helpers";
@@ -306,7 +351,7 @@ const fromNetworkSelected = (networkKey?: string) => {
   }
 };
 
-const step = ref<"form" | "confirm" | "submitted">("form");
+const step = ref<"form" | "withdrawal-finalization-warning" | "confirm" | "submitted">("form");
 const destination = computed(() => (props.type === "transfer" ? destinations.value.era : destinations.value.ethereum));
 
 const availableTokens = computed(() => {
@@ -479,6 +524,16 @@ const transaction = computed<
   };
 });
 
+const withdrawalManualFinalizationRequired = computed(() => {
+  if (!transaction.value) return false;
+  return (
+    props.type === "withdrawal" &&
+    eraNetwork.value.l1Network?.id === 1 &&
+    transaction.value.token.address === ETH_TOKEN.address &&
+    BigNumber.from(transaction.value.token.amount).lt(parseEther("0.01"))
+  );
+});
+
 const feeLoading = computed(() => feeInProgress.value || (!fee.value && balanceInProgress.value));
 const estimate = async () => {
   // estimation fails when token balance is 0
@@ -543,6 +598,13 @@ const buttonContinue = () => {
     return;
   }
   if (step.value === "form") {
+    if (withdrawalManualFinalizationRequired.value) {
+      step.value = "withdrawal-finalization-warning";
+      return;
+    } else {
+      step.value = "confirm";
+    }
+  } else if (step.value === "withdrawal-finalization-warning") {
     step.value = "confirm";
   } else if (step.value === "confirm") {
     makeTransaction();
