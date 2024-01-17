@@ -51,21 +51,25 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Download Dist package
-        uses: dsaltares/fetch-gh-release-asset@master
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
         with:
-          version: "tags/v${{ needs.publish.outputs.releaseVersion }}"
-          file: "dist.zip"
-          target: "dist.zip"
-          token: ${{ secrets.GITHUB_TOKEN }}
+          node-version: '18'
+          cache: 'npm'
 
-      - name: Unzip Dist package
+      - name: Install dependencies
         run: |
-          unzip dist.zip
+          npm ci --force
 
-      - name: Update config
+      - name: Setup .env
         run: |
-          echo "window[\"##runtimeConfig\"] = { firebaseProjectId: \"staging-zksync-dapp-wallet-v2\", appEnvironment: \"staging\" };" > dist/config.js
+          echo "WALLET_CONNECT_PROJECT_ID=${{ secrets.WALLET_CONNECT_PROJECT_ID }}" > .env
+          echo "ANKR_TOKEN=${{ secrets.ANKR_TOKEN }}" >> .env
+          echo "SCREENING_API_URL=${{ secrets.SCREENING_API_URL }}" >> .env
+
+      - name: Build
+        run: |
+          npm run generate
 
       - name: Deploy
         uses: matter-labs/action-hosting-deploy@main
