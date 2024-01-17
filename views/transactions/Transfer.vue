@@ -69,6 +69,7 @@
           v-model="address"
           label="To"
           :default-label="`To your account ${account.address ? shortenAddress(account.address) : ''}`"
+          :address-input-hidden="!!tokenCustomBridge"
           class="mt-6"
         >
           <template #dropdown>
@@ -85,8 +86,29 @@
               <span class="truncate">{{ destination.label }}</span>
             </CommonButtonDropdown>
           </template>
+          <template #input-body v-if="tokenCustomBridge">
+            <div class="mt-4">
+              Bridging {{ tokenCustomBridge.symbol }} token to {{ destination.label }} requires custom bridge. Please
+              use
+              <a :href="tokenCustomBridge.bridgeUrlWithdraw" target="_blank" class="underline underline-offset-2">
+                {{ tokenCustomBridge.bridgeName }} </a
+              >.
+            </div>
+          </template>
         </CommonInputTransactionAddress>
         <CommonInputTransactionAddress v-else v-model="address" class="mt-6" />
+        <CommonButton
+          v-if="tokenCustomBridge"
+          type="submit"
+          as="a"
+          target="_blank"
+          :href="tokenCustomBridge?.bridgeUrlDeposit"
+          variant="primary"
+          class="mt-4 w-full gap-1"
+        >
+          Open {{ tokenCustomBridge?.bridgeName }}
+          <ArrowTopRightOnSquareIcon class="h-6 w-6" aria-hidden="true" />
+        </CommonButton>
       </template>
       <template v-else-if="step === 'confirm'">
         <CommonAlert
@@ -123,7 +145,7 @@
         <TransferSubmitted :transaction="transactionInfo!" :make-another-transaction="resetForm" />
       </template>
 
-      <template v-if="step === 'form' || step === 'confirm'">
+      <template v-if="!tokenCustomBridge && (step === 'form' || step === 'confirm')">
         <CommonErrorBlock v-if="feeError" class="mt-2" @try-again="estimate">
           Fee estimation error: {{ feeError.message }}
         </CommonErrorBlock>
@@ -214,7 +236,7 @@
 <script lang="ts" setup>
 import { computed, onBeforeUnmount, ref, watch } from "vue";
 
-import { ExclamationTriangleIcon, InformationCircleIcon } from "@heroicons/vue/24/outline";
+import { ArrowTopRightOnSquareIcon, ExclamationTriangleIcon, InformationCircleIcon } from "@heroicons/vue/24/outline";
 import { useRouteQuery } from "@vueuse/router";
 import { BigNumber } from "ethers";
 import { isAddress } from "ethers/lib/utils";
@@ -227,12 +249,13 @@ import useTransaction from "@/composables/zksync/useTransaction";
 
 import type { FeeEstimationParams } from "@/composables/zksync/useFee";
 import type { TransactionDestination } from "@/store/destinations";
+import type { TransactionInfo } from "@/store/zksync/transactionStatus";
 import type { Token, TokenAmount } from "@/types";
 import type { BigNumberish } from "ethers";
 import type { PropType } from "vue";
-import type { TransactionInfo } from "~/store/zksync/transactionStatus";
 
 import { useRoute, useRouter } from "#app";
+import { customBridgeTokens } from "@/data/customBridgeTokens";
 import { useDestinationsStore } from "@/store/destinations";
 import { useOnboardStore } from "@/store/onboard";
 import { usePreferencesStore } from "@/store/preferences";
@@ -327,6 +350,14 @@ const selectedToken = computed<Token | undefined>(() => {
         availableBalances.value.find((e) => e.address === selectedTokenAddress.value) ||
         defaultToken.value
     : defaultToken.value;
+});
+const tokenCustomBridge = computed(() => {
+  if (props.type !== "withdrawal" && selectedToken.value) {
+    return undefined;
+  }
+  return customBridgeTokens.find(
+    (e) => eraNetwork.value.l1Network?.id === e.chainId && e.l1Address === selectedToken.value?.l1Address
+  );
 });
 const amountInputTokenAddress = computed({
   get: () => selectedToken.value?.address,

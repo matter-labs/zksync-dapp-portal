@@ -68,6 +68,7 @@
           v-model="address"
           label="To"
           :default-label="`To your account ${account.address ? shortenAddress(account.address) : ''}`"
+          :address-input-hidden="!!tokenCustomBridge"
         >
           <template #dropdown>
             <CommonButtonDropdown
@@ -82,7 +83,28 @@
               <span>{{ destination.label }}</span>
             </CommonButtonDropdown>
           </template>
+          <template #input-body v-if="tokenCustomBridge">
+            <div class="mt-4">
+              Bridging {{ tokenCustomBridge.symbol }} token to {{ destination.label }} requires custom bridge. Please
+              use
+              <a :href="tokenCustomBridge.bridgeUrlDeposit" target="_blank" class="underline underline-offset-2">
+                {{ tokenCustomBridge.bridgeName }} </a
+              >.
+            </div>
+          </template>
         </CommonInputTransactionAddress>
+        <CommonButton
+          v-if="tokenCustomBridge"
+          type="submit"
+          as="a"
+          target="_blank"
+          :href="tokenCustomBridge?.bridgeUrlDeposit"
+          variant="primary"
+          class="mt-4 w-full gap-1"
+        >
+          Open {{ tokenCustomBridge?.bridgeName }}
+          <ArrowTopRightOnSquareIcon class="h-6 w-6" aria-hidden="true" />
+        </CommonButton>
       </template>
       <template v-else-if="step === 'confirm'">
         <CommonCardWithLineButtons>
@@ -107,7 +129,7 @@
         <DepositSubmitted :transaction="transactionInfo!" :make-another-transaction="resetForm" />
       </template>
 
-      <template v-if="step === 'form' || step === 'confirm'">
+      <template v-if="!tokenCustomBridge && (step === 'form' || step === 'confirm')">
         <CommonErrorBlock v-if="feeError" class="mt-2" @try-again="estimate">
           Fee estimation error: {{ feeError.message }}
         </CommonErrorBlock>
@@ -337,6 +359,7 @@ import type { Token, TokenAmount } from "@/types";
 import type { BigNumberish } from "ethers";
 
 import { useRoute, useRouter } from "#app";
+import { customBridgeTokens } from "@/data/customBridgeTokens";
 import { useDestinationsStore } from "@/store/destinations";
 import { useNetworkStore } from "@/store/network";
 import { useOnboardStore } from "@/store/onboard";
@@ -418,6 +441,14 @@ const selectedToken = computed<Token | undefined>(() => {
     availableTokens.value.find((e) => e.address === selectedTokenAddress.value) ||
     availableBalances.value.find((e) => e.address === selectedTokenAddress.value) ||
     defaultToken.value
+  );
+});
+const tokenCustomBridge = computed(() => {
+  if (!selectedToken.value) {
+    return undefined;
+  }
+  return customBridgeTokens.find(
+    (e) => eraNetwork.value.l1Network?.id === e.chainId && e.l1Address === selectedToken.value?.address
   );
 });
 const amountInputTokenAddress = computed({

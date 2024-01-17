@@ -5,7 +5,7 @@
         <div class="font-bold">{{ label }}</div>
         <slot name="dropdown" />
       </div>
-      <div v-if="defaultLabel && isConnected">
+      <div v-if="!addressInputHidden && defaultLabel && isConnected">
         <span class="font-bold">{{ inputVisible ? "To another account" : defaultLabel }}</span>
         <CommonButtonLabel variant="light" class="ml-1" @click="toggleCustomValue()">
           {{ inputVisible ? "Use my account" : "Change" }}
@@ -50,6 +50,7 @@
         </CommonCardWithLineButtons>
       </transition>
     </div>
+    <slot name="input-body" />
     <CommonInputErrorMessage>
       <transition v-bind="TransitionOpacity()">
         <span v-if="addressError">
@@ -85,6 +86,10 @@ const props = defineProps({
   defaultLabel: {
     type: String,
   },
+  addressInputHidden: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const emit = defineEmits<{
@@ -113,7 +118,7 @@ const toggleCustomValue = () => {
 };
 
 const inputVisible = computed(() => {
-  return !props.defaultLabel || usingCustomValue.value || inputted.value;
+  return !props.addressInputHidden && (!props.defaultLabel || usingCustomValue.value || inputted.value);
 });
 
 const isAddressValid = computed(() => isAddress(inputted.value));
