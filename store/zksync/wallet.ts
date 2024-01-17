@@ -168,14 +168,14 @@ export const useZkSyncWalletStore = defineStore("zkSyncWallet", () => {
     if (!account.value.address) throw new Error("Account is not available");
     await validateAddress(account.value.address); // Throws an error if the address is not valid
   });
-  walletAddressValidate();
+  walletAddressValidate().catch(() => undefined);
 
   onboardStore.subscribeOnAccountChange(() => {
     resetSigner();
     resetL1Signer();
     resetAccountState();
     resetBalance();
-    reloadWalletAddressValidation();
+    reloadWalletAddressValidation().catch(() => undefined);
   });
 
   return {
