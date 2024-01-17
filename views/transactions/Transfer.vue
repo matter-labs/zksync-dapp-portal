@@ -148,6 +148,7 @@
           size="sm"
           as="a"
           href="https://zksync.dappradar.com/ecosystem?category-de=bridges"
+          target="_blank"
           class="mx-auto mt-block-gap w-max gap-1"
         >
           See third party bridges
