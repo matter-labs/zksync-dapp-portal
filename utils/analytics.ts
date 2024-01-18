@@ -1,40 +1,46 @@
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-let rudderanalytics: any = null;
+let analyticsLoaded = false;
+
+const isReady = (): Promise<void> => {
+  return new Promise((resolve, reject) => {
+    if (!window.rudderanalytics) {
+      reject(new Error("Rudder not loaded"));
+    }
+    window.rudderanalytics?.ready(() => {
+      resolve();
+    });
+  });
+};
 
 export async function initAnalytics(): Promise<boolean> {
   const runtimeConfig = useRuntimeConfig();
+  if (!runtimeConfig.public.rudderKey || !runtimeConfig.public.dataplaneUrl) {
+    return false;
+  }
 
-  if (runtimeConfig.public.rudderKey && runtimeConfig.public.dataplaneUrl) {
-    if (rudderanalytics) {
-      return true;
-    }
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    while (!(window as any).rudderanalytics) {
-      await setTimeout(() => {
-        return;
-      }, 500);
-    }
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    rudderanalytics = (window as any).rudderanalytics;
-
-    await rudderanalytics.load(runtimeConfig.public.rudderKey, runtimeConfig.public.dataplaneUrl);
-    await rudderanalytics.ready();
+  if (analyticsLoaded) {
+    await isReady();
     return true;
   }
-  return false;
+  await retry(async () => {
+    if (!window.rudderanalytics) {
+      await new Promise((resolve) => setTimeout(resolve, 250));
+      throw new Error("Rudder not loaded");
+    }
+  });
+  window.rudderanalytics?.load(runtimeConfig.public.rudderKey, runtimeConfig.public.dataplaneUrl);
+  analyticsLoaded = true;
+  await isReady();
+  return true;
 }
 
 export async function trackPage(): Promise<void> {
   if (await initAnalytics()) {
-    await rudderanalytics.page();
+    window.rudderanalytics?.page();
   }
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export async function trackEvent(eventName: string, params?: any): Promise<void> {
+export async function trackEvent(eventName: string, params?: unknown): Promise<void> {
   if (await initAnalytics()) {
-    await rudderanalytics.track(eventName, params);
+    window.rudderanalytics?.track(eventName, params);
   }
 }

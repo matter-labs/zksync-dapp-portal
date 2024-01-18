@@ -35,6 +35,8 @@ jobs:
           echo "WALLET_CONNECT_PROJECT_ID=${{ secrets.WALLET_CONNECT_PROJECT_ID }}" > .env
           echo "ANKR_TOKEN=${{ secrets.ANKR_TOKEN }}" >> .env
           echo "SCREENING_API_URL=${{ secrets.SCREENING_API_URL }}" >> .env
+          echo "DATAPLANE_URL=${{ secrets.DATAPLANE_URL }}" >> .env
+          echo "RUDDER_KEY=${{ secrets.RUDDER_KEY }}" >> .env
 
       - name: Build
         run: |

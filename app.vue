@@ -5,18 +5,17 @@
 </template>
 
 <script lang="ts" setup>
-import { trackPage } from "~/utils/analytics";
-trackPage();
-</script>
+import { watch } from "vue";
+import { useRoute } from "vue-router";
 
-<style lang="scss"></style>
+import { trackPage } from "@/utils/analytics";
 
-<script lang="ts">
-export default {
-  watch: {
-    $route() {
-      trackPage();
-    },
+const route = useRoute();
+watch(
+  () => route.path,
+  () => {
+    trackPage();
   },
-};
+  { immediate: true }
+);
 </script>

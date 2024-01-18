@@ -103,5 +103,12 @@ declare global {
       ) => string | undefined;
       reset: (widgetId: string) => void;
     };
+    rudderanalytics?: {
+      load: (key: string, url: string) => void;
+      ready: (callback: () => void) => void;
+      page: () => void;
+      track: (eventName: string, params?: unknown) => void;
+      initialized: boolean;
+    };
   }
 }

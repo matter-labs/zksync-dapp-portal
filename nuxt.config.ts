@@ -45,33 +45,6 @@ export default defineNuxtConfig({
           src: "http://cdn.rudderlabs.com/v1.1/rudder-analytics.min.js",
           defer: true,
         },
-        {
-          hid: "rudder-js",
-          innerHTML: `
-            rudderanalytics = window.rudderanalytics = [];
-            var  methods = [
-                'load',
-                'page',
-                'track',
-                'identify',
-                'alias',
-                'group',
-                'ready',
-                'reset',
-                'getAnonymousId',
-                'setAnonymousId'
-            ];
-            for (var i = 0; i < methods.length; i++) {
-                  var method = methods[i];
-                  rudderanalytics[method] = function (methodName) {
-                        return function () {
-                                           rudderanalytics.push([methodName].concat(Array.prototype.slice.call(arguments)));
-                        };
-                      }(method);
-            }
-            `,
-          type: "text/javascript",
-        },
       ],
     },
   },
