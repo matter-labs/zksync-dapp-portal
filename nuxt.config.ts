@@ -42,7 +42,7 @@ export default defineNuxtConfig({
         },
         {
           hid: "Rudder-JS",
-          src: "http://cdn.rudderlabs.com/v1.1/rudder-analytics.min.js",
+          src: "https://cdn.rudderlabs.com/v1.1/rudder-analytics.min.js",
           defer: true,
         },
       ],
