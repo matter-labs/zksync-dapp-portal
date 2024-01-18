@@ -22,6 +22,7 @@ export type TransactionInfo = {
   info: {
     toTransactionHash?: string;
     expectedCompleteTimestamp?: string;
+    withdrawalFinalizationAvailable?: boolean;
     completed: boolean;
   };
 };
@@ -80,8 +81,18 @@ export const useZkSyncTransactionStatusStore = defineStore("zkSyncTransactionSta
     return transaction;
   };
   const getWithdrawalStatus = async (transaction: TransactionInfo) => {
+    if (!transaction.info.withdrawalFinalizationAvailable) {
+      const transactionDetails = await providerStore
+        .requestProvider()
+        .getTransactionDetails(transaction.transactionHash);
+      if (transactionDetails.status === "verified") {
+        transaction.info.withdrawalFinalizationAvailable = true;
+      } else {
+        return transaction;
+      }
+    }
     const isFinalized = await useZkSyncWalletStore()
-      .getL1VoidSigner()
+      .getL1VoidSigner(true)
       ?.isWithdrawalFinalized(transaction.transactionHash)
       .catch(() => false);
     transaction.info.completed = isFinalized;
@@ -105,7 +116,7 @@ export const useZkSyncTransactionStatusStore = defineStore("zkSyncTransactionSta
     if (!transaction.info.completed) {
       const timeoutByType: Record<TransactionInfo["type"], number> = {
         deposit: 15_000,
-        withdrawal: 60_000,
+        withdrawal: 30_000,
         transfer: 2_000,
       };
       await new Promise((resolve) => setTimeout(resolve, timeoutByType[transaction.type]));

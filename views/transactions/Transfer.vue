@@ -125,11 +125,11 @@
           <p>
             You are withdrawing less than 0.01 ETH. Once your withdrawal is processed and available on
             {{ eraNetwork.l1Network?.name }}, you will need to manually claim your funds which requires paying another
-            transaction fee on {{ eraNetwork.l1Network?.name }}. Transactions with higher value are finalized
-            automatically. We are actively working on making claiming available directly in the bridge UI.
+            transaction fee on {{ eraNetwork.l1Network?.name }}. Transactions of 0.01 ETH or more are finalized
+            automatically.
             <br />
             <br />
-            To withdraw small amounts you can use
+            To withdraw smaller amounts you can use
             <span class="inline-flex items-center gap-1">
               <a
                 href="https://zksync.dappradar.com/ecosystem?category-de=bridges"
@@ -284,13 +284,13 @@ import { computed, onBeforeUnmount, ref, watch } from "vue";
 import { ArrowTopRightOnSquareIcon, ExclamationTriangleIcon, InformationCircleIcon } from "@heroicons/vue/24/outline";
 import { useRouteQuery } from "@vueuse/router";
 import { BigNumber } from "ethers";
-import { isAddress, parseEther } from "ethers/lib/utils";
+import { isAddress } from "ethers/lib/utils";
 import { storeToRefs } from "pinia";
 
 import useInterval from "@/composables/useInterval";
 import useNetworks from "@/composables/useNetworks";
 import useFee from "@/composables/zksync/useFee";
-import useTransaction from "@/composables/zksync/useTransaction";
+import useTransaction, { isWithdrawalManualFinalizationRequired } from "@/composables/zksync/useTransaction";
 
 import type { FeeEstimationParams } from "@/composables/zksync/useFee";
 import type { TransactionDestination } from "@/store/destinations";
@@ -529,9 +529,7 @@ const withdrawalManualFinalizationRequired = computed(() => {
   if (!transaction.value) return false;
   return (
     props.type === "withdrawal" &&
-    eraNetwork.value.l1Network?.id === 1 &&
-    transaction.value.token.address === ETH_TOKEN.address &&
-    BigNumber.from(transaction.value.token.amount).lt(parseEther("0.01"))
+    isWithdrawalManualFinalizationRequired(transaction.value.token, eraNetwork.value.l1Network?.id || -1)
   );
 });
 

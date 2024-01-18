@@ -77,14 +77,15 @@ import { computed } from "vue";
 
 import { ArrowsUpDownIcon, ArrowTopRightOnSquareIcon, BanknotesIcon, QrCodeIcon } from "@heroicons/vue/24/outline";
 import { storeToRefs } from "pinia";
+import { mainnet } from "viem/chains";
 
 import { useDestinationsStore } from "@/store/destinations";
 import { useZkSyncProviderStore } from "@/store/zksync/provider";
 
 const { destinations } = storeToRefs(useDestinationsStore());
 const { eraNetwork } = storeToRefs(useZkSyncProviderStore());
-const isMainnet = computed(() => eraNetwork.value.l1Network?.id === 1);
-const isTestnet = computed(() => eraNetwork.value.l1Network && eraNetwork.value.l1Network.id !== 1);
+const isMainnet = computed(() => eraNetwork.value.l1Network?.id === mainnet.id);
+const isTestnet = computed(() => eraNetwork.value.l1Network && eraNetwork.value.l1Network.id !== mainnet.id);
 </script>
 
 <style lang="scss" scoped></style>

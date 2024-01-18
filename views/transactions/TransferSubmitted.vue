@@ -19,13 +19,23 @@
           <span class="font-medium">{{ transaction.from.destination.label }}</span
           >. You are free to close this page.
         </template>
+        <template v-else-if="withdrawalManualFinalizationRequired && transaction.info.withdrawalFinalizationAvailable">
+          Your funds will be available on <span class="font-medium">{{ transaction.to.destination.label }}</span> after
+          you finalize the withdrawal.
+        </template>
         <template v-else>
           Your funds will be available on <span class="font-medium">{{ transaction.to.destination.label }}</span> after
           the <a class="underline underline-offset-2" :href="ZKSYNC_WITHDRAWAL_DELAY" target="_blank">24-hour delay</a>.
-          During this time, the transaction will be processed and finalized. You are free to close this page.
+          During this time, the transaction will be processed
+          {{
+            withdrawalManualFinalizationRequired
+              ? "and become available for claiming."
+              : "and finalized. You are free to close this page."
+          }}
         </template>
       </p>
     </CommonHeightTransition>
+    <TransactionWithdrawalFinalizationAlert v-if="withdrawalManualFinalizationRequired" :transaction="transaction" />
     <TransactionProgress
       :from-address="transaction.from.address"
       :from-destination="transaction.from.destination"
@@ -35,7 +45,9 @@
       :transaction-hash="transaction.transactionHash"
       :token="transaction.token"
       :completed="transaction.info.completed"
-      :expected-complete-timestamp="transaction.info.expectedCompleteTimestamp"
+      :expected-complete-timestamp="
+        transaction.info.withdrawalFinalizationAvailable ? undefined : transaction.info.expectedCompleteTimestamp
+      "
     />
 
     <CommonButton as="RouterLink" :to="{ name: 'assets' }" class="mt-block-gap" variant="primary">
@@ -54,14 +66,18 @@
 </template>
 
 <script lang="ts" setup>
+import { computed } from "vue";
+
 import { storeToRefs } from "pinia";
+
+import { isWithdrawalManualFinalizationRequired } from "@/composables/zksync/useTransaction";
 
 import type { TransactionInfo } from "@/store/zksync/transactionStatus";
 import type { PropType } from "vue";
 
 import { useZkSyncProviderStore } from "@/store/zksync/provider";
 
-defineProps({
+const props = defineProps({
   transaction: {
     type: Object as PropType<TransactionInfo>,
     required: true,
@@ -72,5 +88,13 @@ defineProps({
   },
 });
 
-const { blockExplorerUrl } = storeToRefs(useZkSyncProviderStore());
+const { eraNetwork, blockExplorerUrl } = storeToRefs(useZkSyncProviderStore());
+
+const withdrawalManualFinalizationRequired = computed(() => {
+  return (
+    props.transaction.type === "withdrawal" &&
+    !props.transaction.info.completed &&
+    isWithdrawalManualFinalizationRequired(props.transaction.token, eraNetwork.value.l1Network?.id || -1)
+  );
+});
 </script>

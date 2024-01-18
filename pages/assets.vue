@@ -131,6 +131,7 @@ import {
   QrCodeIcon,
 } from "@heroicons/vue/24/outline";
 import { storeToRefs } from "pinia";
+import { mainnet } from "viem/chains";
 
 import useInterval from "@/composables/useInterval";
 import useSingleLoading from "@/composables/useSingleLoading";
@@ -183,8 +184,8 @@ const depositMethods = computed(() => {
     });
   }
 
-  const isMainnet = eraNetwork.value.l1Network?.id === 1;
-  const isTestnet = eraNetwork.value.l1Network && eraNetwork.value.l1Network.id !== 1;
+  const isMainnet = eraNetwork.value.l1Network?.id === mainnet.id;
+  const isTestnet = eraNetwork.value.l1Network && eraNetwork.value.l1Network.id !== mainnet.id;
   if (isTestnet && eraNetwork.value.displaySettings?.showPartnerLinks) {
     methods.push({
       props: {

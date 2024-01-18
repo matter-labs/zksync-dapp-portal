@@ -1,8 +1,10 @@
 import { useMemoize } from "@vueuse/core";
+import { BigNumber, type BigNumberish } from "ethers";
+import { parseEther } from "ethers/lib/utils";
 
 import useScreening from "@/composables/useScreening";
 
-import type { BigNumberish } from "ethers";
+import type { TokenAmount } from "@/types";
 import type { Provider, Signer } from "zksync-web3";
 
 import { useZkSyncWalletStore } from "@/store/zksync/wallet";
@@ -13,6 +15,11 @@ type TransactionParams = {
   to: string;
   tokenAddress: string;
   amount: BigNumberish;
+};
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export const isWithdrawalManualFinalizationRequired = (token: TokenAmount, l1NetworkId: number) => {
+  return token.address === ETH_TOKEN.address && BigNumber.from(token.amount).lt(parseEther("0.01"));
 };
 
 export default (getSigner: () => Promise<Signer | undefined>, getProvider: () => Provider) => {

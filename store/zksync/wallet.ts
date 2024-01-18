@@ -48,12 +48,12 @@ export const useZkSyncWalletStore = defineStore("zkSyncWallet", () => {
     const eraL1Signer = L1Signer.from(web3Provider.getSigner(), providerStore.requestProvider());
     return eraL1Signer;
   });
-  const getL1VoidSigner = () => {
-    if (!account.value.address) throw new Error("Address is not available");
+  const getL1VoidSigner = (anyAddress = false) => {
+    if (!account.value.address && !anyAddress) throw new Error("Address is not available");
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const web3Provider = new ethers.providers.Web3Provider(onboardStore.getPublicClient() as any, "any");
-    const voidSigner = new VoidSigner(account.value.address, web3Provider);
+    const voidSigner = new VoidSigner(account.value.address || ETH_TOKEN.address, web3Provider);
     return L1VoidSigner.from(voidSigner, providerStore.requestProvider()) as unknown as L1Signer;
   };
 
