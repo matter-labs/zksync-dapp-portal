@@ -40,6 +40,38 @@ export default defineNuxtConfig({
         {
           src: "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit",
         },
+        {
+          hid: "Rudder-JS",
+          src: "http://cdn.rudderlabs.com/v1.1/rudder-analytics.min.js",
+          defer: true,
+        },
+        {
+          hid: "rudder-js",
+          innerHTML: `
+            rudderanalytics = window.rudderanalytics = [];
+            var  methods = [
+                'load',
+                'page',
+                'track',
+                'identify',
+                'alias',
+                'group',
+                'ready',
+                'reset',
+                'getAnonymousId',
+                'setAnonymousId'
+            ];
+            for (var i = 0; i < methods.length; i++) {
+                  var method = methods[i];
+                  rudderanalytics[method] = function (methodName) {
+                        return function () {
+                                           rudderanalytics.push([methodName].concat(Array.prototype.slice.call(arguments)));
+                        };
+                      }(method);
+            }
+            `,
+          type: "text/javascript",
+        },
       ],
     },
   },
@@ -70,6 +102,8 @@ export default defineNuxtConfig({
       nodeType: process.env.NODE_TYPE as undefined | "memory" | "dockerized" | "hyperchain",
       ankrToken: process.env.ANKR_TOKEN,
       screeningApiUrl: process.env.SCREENING_API_URL,
+      dataplaneUrl: process.env.DATAPLANE_URL,
+      rudderKey: process.env.RUDDER_KEY,
     },
   },
   pinia: {
