@@ -138,22 +138,22 @@
                 class="underline underline-offset-2"
                 >third-party bridges</a
               >
-              <ArrowTopRightOnSquareIcon class="h-6 w-6" aria-hidden="true" />
             </span>
           </p>
         </CommonAlert>
-        <CommonButton type="submit" variant="primary" class="mt-block-gap w-full" @click="buttonContinue()">
-          Continue
-        </CommonButton>
         <CommonButton
-          size="sm"
           as="a"
           href="https://zksync.dappradar.com/ecosystem?category-de=bridges"
           target="_blank"
-          class="mx-auto mt-block-gap w-max gap-1"
+          type="submit"
+          variant="primary"
+          class="mt-block-gap w-full gap-1"
         >
-          See third party bridges
+          See third-party bridges
           <ArrowTopRightOnSquareIcon class="h-6 w-6" aria-hidden="true" />
+        </CommonButton>
+        <CommonButton size="sm" class="mx-auto mt-block-gap w-max" @click="buttonContinue()">
+          I understand, proceed to withdrawal
         </CommonButton>
       </template>
       <template v-else-if="step === 'confirm'">
