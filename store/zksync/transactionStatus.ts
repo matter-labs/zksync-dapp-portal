@@ -33,6 +33,7 @@ export const WITHDRAWAL_DELAY = 24 * 60 * 60 * 1000; // 24 hours
 export const useZkSyncTransactionStatusStore = defineStore("zkSyncTransactionStatus", () => {
   const onboardStore = useOnboardStore();
   const providerStore = useZkSyncProviderStore();
+  const { account } = storeToRefs(onboardStore);
   const { eraNetwork } = storeToRefs(providerStore);
 
   const storageSavedTransactions = useStorage<{ [networkKey: string]: TransactionInfo[] }>(
@@ -47,9 +48,13 @@ export const useZkSyncTransactionStatusStore = defineStore("zkSyncTransactionSta
       storageSavedTransactions.value[eraNetwork.value.key] = transactions;
     },
   });
-  const saveTransaction = (transaction: TransactionInfo) => {
-    savedTransactions.value = [...savedTransactions.value, transaction];
-  };
+  const userTransactions = computed(() =>
+    savedTransactions.value.filter(
+      (tx) =>
+        tx.from.address === account.value.address ||
+        (tx.type === "withdrawal" && tx.to.address === account.value.address)
+    )
+  );
 
   const getDepositL2TransactionHash = async (l1TransactionHash: string) => {
     const publicClient = onboardStore.getPublicClient();
@@ -85,9 +90,7 @@ export const useZkSyncTransactionStatusStore = defineStore("zkSyncTransactionSta
       const transactionDetails = await providerStore
         .requestProvider()
         .getTransactionDetails(transaction.transactionHash);
-      if (transactionDetails.status === "verified") {
-        transaction.info.withdrawalFinalizationAvailable = true;
-      } else {
+      if (transactionDetails.status !== "verified") {
         return transaction;
       }
     }
@@ -95,6 +98,7 @@ export const useZkSyncTransactionStatusStore = defineStore("zkSyncTransactionSta
       .getL1VoidSigner(true)
       ?.isWithdrawalFinalized(transaction.transactionHash)
       .catch(() => false);
+    transaction.info.withdrawalFinalizationAvailable = true;
     transaction.info.completed = isFinalized;
     return transaction;
   };
@@ -125,9 +129,37 @@ export const useZkSyncTransactionStatusStore = defineStore("zkSyncTransactionSta
     return transaction;
   };
 
+  const saveTransaction = (transaction: TransactionInfo) => {
+    if (
+      savedTransactions.value.some(
+        (existingTransaction) => existingTransaction.transactionHash === transaction.transactionHash
+      )
+    ) {
+      updateTransactionData(transaction.transactionHash, transaction);
+    } else {
+      savedTransactions.value = [...savedTransactions.value, transaction];
+    }
+  };
+  const updateTransactionData = (transactionHash: string, replaceTransaction: TransactionInfo) => {
+    const transaction = savedTransactions.value.find((transaction) => transaction.transactionHash === transactionHash);
+    if (!transaction) throw new Error("Transaction not found");
+    const index = savedTransactions.value.indexOf(transaction);
+    const newSavedTransactions = [...savedTransactions.value];
+    newSavedTransactions[index] = replaceTransaction;
+    savedTransactions.value = newSavedTransactions;
+    return replaceTransaction;
+  };
+  const getTransaction = (transactionHash: string) => {
+    transactionHash = transactionHash.toLowerCase();
+    return savedTransactions.value.find((transaction) => transaction.transactionHash.toLowerCase() === transactionHash);
+  };
+
   return {
     savedTransactions,
-    saveTransaction,
+    userTransactions,
     waitForCompletion,
+    saveTransaction,
+    updateTransactionData,
+    getTransaction,
   };
 });

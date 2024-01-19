@@ -8,11 +8,31 @@
     <template v-else>
       <template v-if="!loading && recentBridgeOperations.length">
         <TypographyCategoryLabel>Recent bridge operations</TypographyCategoryLabel>
-        <CommonCardWithLineButtons>
+        <div v-if="actionRequiredBridgeTransactions.length" class="space-y-block-gap">
+          <CommonCardWithLineButtons v-for="(item, index) in actionRequiredBridgeTransactions" :key="index">
+            <TransactionTransferWithdrawalLineItem
+              :transfer="item"
+              :in-progress="!item.completed"
+              as="RouterLink"
+              :to="{
+                name: 'transaction-hash',
+                params: { hash: item.identifierTransactionHash },
+                query: { network: eraNetwork.key },
+              }"
+            />
+          </CommonCardWithLineButtons>
+        </div>
+
+        <CommonCardWithLineButtons
+          v-if="actionNotRequiredBridgeTransactions.length"
+          :class="{ 'mt-block-gap': actionRequiredBridgeTransactions.length }"
+        >
           <TransactionTransferLineItem
-            v-for="(item, index) in recentBridgeOperations"
+            v-for="(item, index) in actionNotRequiredBridgeTransactions"
             :key="index"
             :transfer="item"
+            :in-progress="!item.completed"
+            as="RouterLink"
             :to="{
               name: 'transaction-hash',
               params: { hash: item.identifierTransactionHash },
@@ -84,7 +104,7 @@ import { useZkSyncTransfersHistoryStore } from "@/store/zksync/transfersHistory"
 const onboardStore = useOnboardStore();
 const { eraNetwork } = storeToRefs(useZkSyncProviderStore());
 const transfersHistoryStore = useZkSyncTransfersHistoryStore();
-const { account, isConnected } = storeToRefs(onboardStore);
+const { isConnected } = storeToRefs(onboardStore);
 const {
   transfers,
   recentTransfersRequestInProgress,
@@ -94,17 +114,20 @@ const {
   previousTransfersRequestError,
 } = storeToRefs(transfersHistoryStore);
 const { destinations } = storeToRefs(useDestinationsStore());
-const { savedTransactions } = storeToRefs(useZkSyncTransactionStatusStore());
+const { userTransactions } = storeToRefs(useZkSyncTransactionStatusStore());
 
-type RecentBridgeOperation = Transfer & { identifierTransactionHash: string };
+type RecentBridgeOperation = Transfer & {
+  identifierTransactionHash: string;
+  completed: boolean;
+  finalizationAvailable?: boolean;
+};
 const recentBridgeOperations = computed<RecentBridgeOperation[]>(() => {
-  const recent = savedTransactions.value
-    .filter((tx) => tx.from.address === account.value.address)
-    .filter(
-      (tx) =>
-        (tx.type === "withdrawal" && new Date(tx.timestamp).getTime() + WITHDRAWAL_DELAY * 2 > new Date().getTime()) ||
-        (tx.type === "deposit" && new Date(tx.timestamp).getTime() + ESTIMATED_DEPOSIT_DELAY * 2 > new Date().getTime())
-    );
+  const recent = userTransactions.value.filter(
+    (tx) =>
+      (tx.type === "withdrawal" &&
+        (!tx.info.completed || new Date(tx.timestamp).getTime() + WITHDRAWAL_DELAY * 2 > new Date().getTime())) ||
+      (tx.type === "deposit" && new Date(tx.timestamp).getTime() + ESTIMATED_DEPOSIT_DELAY * 2 > new Date().getTime())
+  );
 
   return [
     ...recent.map((tx) => {
@@ -119,9 +142,19 @@ const recentBridgeOperations = computed<RecentBridgeOperation[]>(() => {
         amount: tx.token.amount,
         token: tx.token,
         timestamp: tx.timestamp,
+        completed: tx.info.completed,
+        finalizationAvailable:
+          tx.type === "withdrawal" ? !tx.info.completed && tx.info.withdrawalFinalizationAvailable : undefined,
       } as RecentBridgeOperation;
     }),
   ].sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+});
+const actionRequiredBridgeTransactions = computed(() =>
+  recentBridgeOperations.value.filter((e) => e.finalizationAvailable)
+);
+const actionNotRequiredBridgeTransactions = computed(() => {
+  const actionRequiredHashes = actionRequiredBridgeTransactions.value.map((e) => e.transactionHash);
+  return recentBridgeOperations.value.filter((e) => !actionRequiredHashes.includes(e.transactionHash));
 });
 
 const displayedTransfers = computed(() => {
@@ -130,7 +163,7 @@ const displayedTransfers = computed(() => {
   );
 });
 const hasOnlyRecentBridgeOperations = computed(() => {
-  return !displayedTransfers.value.length && recentBridgeOperations.value.length;
+  return !displayedTransfers.value.length && recentBridgeOperations.value.length && !recentTransfersRequestError.value;
 });
 const { loading, reset: resetSingleLoading } = useSingleLoading(recentTransfersRequestInProgress);
 

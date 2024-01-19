@@ -27,10 +27,14 @@
           class="w-full"
           @click="onboardStore.setCorrectNetwork"
         >
-          Change wallet network to {{ l1Network.name }}
+          <slot v-bind="{ l1Network, walletName }" name="change-network-auto">
+            Change wallet network to {{ l1Network.name }}
+          </slot>
         </CommonButton>
         <CommonButton v-else disabled variant="primary" class="w-full">
-          Change network manually to {{ l1Network.name }} in your {{ walletName }} wallet
+          <slot v-bind="{ l1Network, walletName }" name="change-network-manual">
+            Change network manually to {{ l1Network.name }} in your {{ walletName }} wallet
+          </slot>
         </CommonButton>
       </template>
       <template v-else>

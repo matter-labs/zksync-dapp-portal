@@ -1,7 +1,8 @@
 <template>
   <svg
     aria-hidden="true"
-    class="animate-spin fill-primary-300 text-transparent dark:fill-white"
+    class="spinner animate-spin text-transparent"
+    :class="`variant-${variant}`"
     viewBox="0 0 100 101"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
@@ -16,3 +17,27 @@
     />
   </svg>
 </template>
+
+<script lang="ts" setup>
+import type { PropType } from "vue";
+
+defineProps({
+  variant: String as PropType<"default" | "text-color" | "dark">,
+});
+</script>
+
+<style lang="scss" scoped>
+.spinner {
+  &.variant- {
+    &default {
+      @apply fill-primary-300 dark:fill-white;
+    }
+    &text-color {
+      @apply fill-neutral-950 dark:fill-white;
+    }
+    &dark {
+      @apply fill-neutral-950;
+    }
+  }
+}
+</style>

@@ -8,8 +8,13 @@
       class="transaction-hash-button"
       @click="copy()"
     >
-      Copy hash
-      <CommonSpinner v-if="!transactionHash" class="transaction-hash-button-icon" aria-hidden="true" />
+      Copy tx hash
+      <CommonSpinner
+        v-if="!transactionHash"
+        variant="text-color"
+        class="transaction-hash-button-icon"
+        aria-hidden="true"
+      />
       <DocumentDuplicateIcon v-else class="transaction-hash-button-icon" aria-hidden="true" />
     </CommonButton>
     <template v-else>
@@ -22,7 +27,7 @@
         class="transaction-hash-button"
       >
         Explorer
-        <CommonSpinner class="transaction-hash-button-icon" aria-hidden="true" />
+        <CommonSpinner variant="text-color" class="transaction-hash-button-icon" aria-hidden="true" />
       </CommonButton>
       <CommonButton
         v-else

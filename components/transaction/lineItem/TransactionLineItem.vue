@@ -2,8 +2,10 @@
   <CommonButtonLineWithImg v-bind="buttonProps" class="transaction-line-item" @click="handleClick()">
     <template #image>
       <DestinationIconContainer>
-        <XMarkIcon v-if="failed" class="failed-badge-icon" aria-hidden="true" />
-        <component v-else-if="icon" :is="icon" aria-hidden="true" />
+        <slot name="icon">
+          <XMarkIcon v-if="failed" class="failed-badge-icon" aria-hidden="true" />
+          <component v-else-if="icon" :is="icon" aria-hidden="true" />
+        </slot>
       </DestinationIconContainer>
     </template>
     <template #default>

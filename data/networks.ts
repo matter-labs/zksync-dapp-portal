@@ -29,6 +29,7 @@ export type ZkSyncNetwork = {
   l1Network?: L1Network;
   blockExplorerUrl?: string;
   blockExplorerApi?: string;
+  withdrawalFinalizerApi?: string;
   displaySettings?: {
     showPartnerLinks?: boolean;
   };
@@ -72,6 +73,7 @@ export const zkSyncNetworks: ZkSyncNetwork[] = [
     rpcUrl: "https://mainnet.era.zksync.io",
     blockExplorerUrl: "https://explorer.zksync.io",
     blockExplorerApi: "https://block-explorer-api.mainnet.zksync.io",
+    withdrawalFinalizerApi: "https://withdrawal-finalizer-api.zksync.io",
     displaySettings: {
       showPartnerLinks: true,
     },
@@ -84,6 +86,7 @@ export const zkSyncNetworks: ZkSyncNetwork[] = [
     rpcUrl: "https://sepolia.era.zksync.dev",
     blockExplorerUrl: "https://sepolia.explorer.zksync.io",
     blockExplorerApi: "https://block-explorer-api.sepolia.zksync.dev",
+    withdrawalFinalizerApi: "https://withdrawal-finalizer-api.sepolia.zksync.dev",
     displaySettings: {
       showPartnerLinks: true,
     },
@@ -96,6 +99,7 @@ export const zkSyncNetworks: ZkSyncNetwork[] = [
     rpcUrl: "https://testnet.era.zksync.dev",
     blockExplorerUrl: "https://goerli.explorer.zksync.io",
     blockExplorerApi: "https://block-explorer-api.testnets.zksync.dev",
+    withdrawalFinalizerApi: "https://withdrawal-finalizer-api.testnets.zksync.dev",
     displaySettings: {
       showPartnerLinks: true,
     },
@@ -108,6 +112,7 @@ export const zkSyncNetworks: ZkSyncNetwork[] = [
     rpcUrl: "https://z2-dev-api.zksync.dev",
     blockExplorerUrl: "https://goerli-beta.staging-scan-v2.zksync.dev",
     blockExplorerApi: "https://block-explorer-api.stage.zksync.dev",
+    withdrawalFinalizerApi: "https://withdrawal-finalizer-api.stage.zksync.dev",
     l1Network: l1Networks.sepolia,
     hidden: true,
   },

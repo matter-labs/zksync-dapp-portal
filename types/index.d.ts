@@ -83,6 +83,42 @@ export declare namespace Api {
       createdInBlockNumber: number;
       totalTransactions: number;
     };
+
+    type Transaction = {
+      hash: string;
+      to: string;
+      from: string;
+      transactionIndex: number;
+      data: string;
+      value: string;
+      fee: string;
+      nonce: number;
+      blockNumber: number;
+      blockHash: string;
+      gasPrice: string;
+      gasLimit: string;
+      gasUsed: string;
+      gasPerPubdata: string | null;
+      maxFeePerGas: string | null;
+      maxPriorityFeePerGas: string | null;
+      receivedAt: string;
+      commitTxHash: string | null;
+      proveTxHash: string | null;
+      executeTxHash: string | null;
+      isL1Originated: boolean;
+      l1BatchNumber: number | null;
+      isL1BatchSealed: boolean;
+      status: "included" | "committed" | "proved" | "verified" | "failed";
+      error: string | null;
+      revertReason: string | null;
+    };
+
+    type Finalizer_Withdrawal = {
+      tx_hash: string;
+      token: string;
+      amount: string;
+      status: "NotFinalized" | "Finalized";
+    };
   }
 }
 

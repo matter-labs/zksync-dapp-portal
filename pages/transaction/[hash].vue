@@ -1,7 +1,8 @@
 <template>
   <div v-if="transaction">
     <DepositSubmitted v-if="transaction.type === 'deposit'" :transaction="transaction" />
-    <TransferSubmitted v-else :transaction="transaction" />
+    <TransferSubmitted v-else-if="transaction.type === 'transfer'" :transaction="transaction" />
+    <WithdrawalSubmitted v-else-if="transaction.type === 'withdrawal'" :transaction="transaction" />
   </div>
   <div v-else>
     <h1 class="h1 mt-block-gap-1/2 text-center">Transaction not found</h1>
@@ -17,23 +18,22 @@
 <script lang="ts" setup>
 import { computed, ref, watch } from "vue";
 
-import { storeToRefs } from "pinia";
-
 import type { TransactionInfo } from "@/store/zksync/transactionStatus";
 
 import { useRoute } from "#app";
 import { useZkSyncTransactionStatusStore } from "@/store/zksync/transactionStatus";
 import DepositSubmitted from "@/views/transactions/DepositSubmitted.vue";
 import TransferSubmitted from "@/views/transactions/TransferSubmitted.vue";
+import WithdrawalSubmitted from "@/views/transactions/WithdrawalSubmitted.vue";
 
 const route = useRoute();
 
 const transactionStatusStore = useZkSyncTransactionStatusStore();
-const { savedTransactions } = storeToRefs(transactionStatusStore);
 
 const completedTransaction = ref<TransactionInfo | null>(null);
 const savedTransaction = computed(() => {
-  return savedTransactions.value.find((_transaction) => _transaction.transactionHash === route.params.hash);
+  if (typeof route.params.hash !== "string") return;
+  return transactionStatusStore.getTransaction(route.params.hash);
 });
 const transaction = computed(() => {
   return completedTransaction.value || savedTransaction.value;

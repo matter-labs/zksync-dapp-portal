@@ -29,6 +29,11 @@
       <NuxtLink class="link-item" :to="{ name: 'transfers' }">
         <ArrowsRightLeftIcon class="link-icon" aria-hidden="true" />
         Transfers
+        <transition v-bind="TransitionOpacity()">
+          <CommonBadge v-if="withdrawalsAvailableForClaiming.length">
+            {{ withdrawalsAvailableForClaiming.length }}
+          </CommonBadge>
+        </transition>
       </NuxtLink>
     </div>
     <div class="right-side">
@@ -50,6 +55,11 @@
       </CommonButton>
       <CommonButton class="hamburger-icon" @click="mobileMainNavigationOpened = true">
         <Bars3Icon class="h-6 w-6" aria-hidden="true" />
+        <transition v-bind="TransitionOpacity()">
+          <CommonBadge v-if="withdrawalsAvailableForClaiming.length" class="action-available-badge">
+            {{ withdrawalsAvailableForClaiming.length }}
+          </CommonBadge>
+        </transition>
       </CommonButton>
     </div>
   </header>
@@ -72,6 +82,7 @@ import useColorMode from "@/composables/useColorMode";
 
 import { useRoute } from "#imports";
 import { useOnboardStore } from "@/store/onboard";
+import { useZkSyncWithdrawalsStore } from "@/store/zksync/withdrawals";
 
 const route = useRoute();
 
@@ -82,6 +93,7 @@ const routes = {
 
 const onboardStore = useOnboardStore();
 const { isConnected } = storeToRefs(onboardStore);
+const { withdrawalsAvailableForClaiming } = storeToRefs(useZkSyncWithdrawalsStore());
 
 const mobileMainNavigationOpened = ref(false);
 const mobileAccountNavigationOpened = ref(false);
@@ -128,7 +140,11 @@ const { selectedColorMode, switchColorMode } = useColorMode();
       @apply hidden xl:block;
     }
     .hamburger-icon {
-      @apply xl:hidden;
+      @apply relative xl:hidden;
+
+      .action-available-badge {
+        @apply absolute -right-1 -top-1 lg:hidden;
+      }
     }
   }
 }

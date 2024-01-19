@@ -43,6 +43,7 @@
     </CommonErrorBlock>
     <form v-else @submit.prevent="">
       <template v-if="step === 'form'">
+        <TransactionWithdrawalsAvailableForClaimAlert />
         <CommonInputTransactionAmount
           v-model="amount"
           v-model:error="amountError"
@@ -162,7 +163,11 @@
           :icon="ExclamationTriangleIcon"
           class="mb-block-padding-1/2 sm:mb-block-gap"
         >
-          <p>
+          <p v-if="withdrawalManualFinalizationRequired">
+            You will be able to claim your withdrawal only after a 24-hour withdrawal delay.
+            <a class="underline underline-offset-2" :href="ZKSYNC_WITHDRAWAL_DELAY" target="_blank">Learn more</a>
+          </p>
+          <p v-else>
             You will receive funds only after a 24-hour withdrawal delay.
             <a class="underline underline-offset-2" :href="ZKSYNC_WITHDRAWAL_DELAY" target="_blank">Learn more</a>
           </p>
@@ -187,7 +192,16 @@
         </CommonErrorBlock>
       </template>
       <template v-else-if="step === 'submitted'">
-        <TransferSubmitted :transaction="transactionInfo!" :make-another-transaction="resetForm" />
+        <TransferSubmitted
+          v-if="transactionInfo!.type === 'transfer'"
+          :transaction="transactionInfo!"
+          :make-another-transaction="resetForm"
+        />
+        <WithdrawalSubmitted
+          v-else-if="transactionInfo!.type === 'withdrawal'"
+          :transaction="transactionInfo!"
+          :make-another-transaction="resetForm"
+        />
       </template>
 
       <template v-if="!tokenCustomBridge && (step === 'form' || step === 'confirm')">
@@ -317,6 +331,7 @@ import { calculateFee } from "@/utils/helpers";
 import { silentRouterChange } from "@/utils/helpers";
 import { TransitionAlertScaleInOutTransition, TransitionOpacity } from "@/utils/transitions";
 import TransferSubmitted from "@/views/transactions/TransferSubmitted.vue";
+import WithdrawalSubmitted from "@/views/transactions/WithdrawalSubmitted.vue";
 
 const props = defineProps({
   type: {

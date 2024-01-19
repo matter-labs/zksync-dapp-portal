@@ -6,6 +6,7 @@
       <ConnectWalletBlock>Connect wallet to view your balances on {{ eraNetwork.name }}</ConnectWalletBlock>
     </template>
     <template v-else>
+      <TransactionWithdrawalsAvailableForClaimAlert />
       <EcosystemBlock
         v-if="eraNetwork.displaySettings?.showPartnerLinks && ecosystemBannerVisible"
         show-close-button

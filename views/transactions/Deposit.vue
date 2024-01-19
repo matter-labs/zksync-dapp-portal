@@ -33,6 +33,7 @@
     </CommonErrorBlock>
     <form v-else @submit.prevent="">
       <template v-if="step === 'form'">
+        <TransactionWithdrawalsAvailableForClaimAlert />
         <EcosystemBlock
           v-if="eraNetwork.displaySettings?.showPartnerLinks && ecosystemBannerVisible"
           show-close-button

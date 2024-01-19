@@ -40,6 +40,14 @@
                 <ArrowsRightLeftIcon aria-hidden="true" />
               </DestinationIconContainer>
             </template>
+            <template #label>
+              <div class="flex items-center gap-2">
+                <span>Transfers</span>
+                <CommonBadge v-if="withdrawalsAvailableForClaiming.length">
+                  {{ withdrawalsAvailableForClaiming.length }}
+                </CommonBadge>
+              </div>
+            </template>
           </DestinationItem>
         </CommonCardWithLineButtons>
 
@@ -106,6 +114,7 @@ import type { ZkSyncNetwork } from "@/data/networks";
 
 import { useRoute } from "#imports";
 import { useNetworkStore } from "@/store/network";
+import { useZkSyncWithdrawalsStore } from "@/store/zksync/withdrawals";
 import { getNetworkUrl } from "@/utils/helpers";
 import { TransitionSlideOutToLeft, TransitionSlideOutToRight } from "@/utils/transitions";
 
@@ -121,6 +130,8 @@ const emit = defineEmits<{
 }>();
 
 const route = useRoute();
+
+const { withdrawalsAvailableForClaiming } = storeToRefs(useZkSyncWithdrawalsStore());
 
 const TabsTransition = computed(() =>
   openedTab.value === "main" ? TransitionSlideOutToRight : TransitionSlideOutToLeft

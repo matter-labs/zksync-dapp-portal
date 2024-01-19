@@ -54,13 +54,22 @@
         </div>
       </template>
 
-      <AnimationsTransactionProgress :completed="completed" class="transaction-animation" />
+      <AnimationsTransactionProgress
+        :state="animationState ?? (completed ? 'completed' : 'playing')"
+        class="transaction-animation"
+      />
 
       <div v-if="fromExplorerLink || fromTransactionHash" class="info-column bottom-left mt-block-gap-1/2">
         <TransactionHashButton :explorer-url="fromExplorerLink" :transaction-hash="fromTransactionHash" />
       </div>
+      <div v-else-if="$slots['from-button']" class="info-column bottom-left mt-block-gap-1/2">
+        <slot name="from-button" />
+      </div>
       <div v-if="toExplorerLink || toTransactionHash" class="info-column bottom-right mt-block-gap-1/2">
         <TransactionHashButton :explorer-url="toExplorerLink" :transaction-hash="toTransactionHash" />
+      </div>
+      <div v-else-if="$slots['to-button']" class="info-column bottom-right mt-block-gap-1/2">
+        <slot name="to-button" />
       </div>
     </div>
     <TransactionHashButton
@@ -97,6 +106,7 @@
 <script lang="ts" setup>
 import { computed } from "vue";
 
+import type { AnimationState } from "@/components/animations/TransactionProgress.vue";
 import type { TransactionDestination } from "@/store/destinations";
 import type { TokenAmount } from "@/types";
 import type { PropType } from "vue";
@@ -149,6 +159,9 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  animationState: {
+    type: String as PropType<AnimationState>,
+  },
 });
 
 const isSameAddress = computed(() => props.fromAddress === props.toAddress);
@@ -186,8 +199,6 @@ const isSameAddressDifferentDestination = computed(
 
     .airplane {
       @apply absolute h-8 w-8;
-      // create animation from left opacity 0 to center opacity 100 to right opacity 0
-      // it should also scale from 0 to 1 to 0
       animation: airplane 3s linear infinite;
       @keyframes airplane {
         0% {

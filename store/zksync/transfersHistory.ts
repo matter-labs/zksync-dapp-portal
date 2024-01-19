@@ -77,7 +77,7 @@ export const useZkSyncTransfersHistoryStore = defineStore("zkSyncTransfersHistor
         resetPaginatedRequest();
       }
       const response = await loadNext();
-      const mappedTransfers = response.items.map((e) => mapApiTransfer(e));
+      const mappedTransfers = response.items.map(mapApiTransfer);
       transfers.value = filterOutDuplicateTransfers(mappedTransfers);
     },
     { cache: 30000 }

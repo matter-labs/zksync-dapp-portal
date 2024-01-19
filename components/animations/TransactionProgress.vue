@@ -1,5 +1,8 @@
 <template>
-  <div class="transaction-progress-animation" :class="{ 'transaction-completed': completed }">
+  <div
+    class="transaction-progress-animation"
+    :class="{ 'transaction-completed': state === 'completed', 'stopped-in-the-end': state === 'stopped-in-the-end' }"
+  >
     <div class="no-overflow-container">
       <div class="lines-inner">
         <div v-for="index in 40" :key="index" class="line"></div>
@@ -23,10 +26,15 @@
 <script lang="ts" setup>
 import { CheckIcon } from "@heroicons/vue/24/outline";
 
+import type { PropType } from "vue";
+
+export type AnimationState = "playing" | "stopped-in-the-end" | "completed";
+
 defineProps({
-  completed: {
-    type: Boolean,
-    default: false,
+  state: {
+    type: String as PropType<AnimationState>,
+    default: "playing",
+    required: true,
   },
 });
 </script>
@@ -40,10 +48,10 @@ defineProps({
     content: "";
   }
   &::before {
-    @apply -left-px bg-gradient-to-r;
+    @apply -left-px bg-gradient-to-r transition;
   }
   &::after {
-    @apply -right-px bg-gradient-to-l;
+    @apply -right-px bg-gradient-to-l transition;
   }
   &.transaction-completed {
     .no-overflow-container {
@@ -55,6 +63,18 @@ defineProps({
       }
       .check-icon {
         animation: bounce-in 1s linear forwards;
+      }
+    }
+  }
+  &.stopped-in-the-end {
+    &::after {
+      @apply opacity-0;
+    }
+    .no-overflow-container {
+      .airplane {
+        animation: none;
+        left: 100%;
+        transform: translate(-100%, -50%);
       }
     }
   }

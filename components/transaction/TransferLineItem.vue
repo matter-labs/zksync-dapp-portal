@@ -4,6 +4,9 @@
     :explorer-url="blockExplorerUrl"
     :transaction-hash="transfer.transactionHash!"
   >
+    <template #icon v-if="inProgress">
+      <CommonSpinner variant="dark" aria-hidden="true" />
+    </template>
     <template #top-left>{{ label }}</template>
     <template #bottom-left>
       <template v-if="chainsLabel">
@@ -63,6 +66,10 @@ const props = defineProps({
   transfer: {
     type: Object as PropType<Transfer>,
     required: true,
+  },
+  inProgress: {
+    type: Boolean,
+    default: false,
   },
 });
 

@@ -11,7 +11,6 @@ import type { Hash } from "@/types";
 import { useOnboardStore } from "@/store/onboard";
 import { useZkSyncProviderStore } from "@/store/zksync/provider";
 import { useZkSyncTokensStore } from "@/store/zksync/tokens";
-import { useZkSyncWalletStore } from "@/store/zksync/wallet";
 import { formatError } from "@/utils/formatters";
 
 export default (transactionInfo: ComputedRef<TransactionInfo>) => {
@@ -19,12 +18,10 @@ export default (transactionInfo: ComputedRef<TransactionInfo>) => {
   const error = ref<Error | undefined>();
   const transactionHash = ref<Hash | undefined>();
   const onboardStore = useOnboardStore();
-  const eraWalletStore = useZkSyncWalletStore();
   const providerStore = useZkSyncProviderStore();
   const tokensStore = useZkSyncTokensStore();
   const { isCorrectNetworkSet } = storeToRefs(onboardStore);
   const { tokens } = storeToRefs(tokensStore);
-  const { balance } = storeToRefs(eraWalletStore);
 
   const retrieveBridgeAddress = useMemoize(() =>
     providerStore
@@ -60,7 +57,7 @@ export default (transactionInfo: ComputedRef<TransactionInfo>) => {
     const provider = providerStore.requestProvider();
     const wallet = new Wallet(
       // random private key cause we don't care about actual signer
-      // finalizeWithdrawalParams only exists on Wallet class
+      // finalizeWithdrawalParams method only exists on Wallet class
       "0x7726827caac94a7f9e1b160f7ea819f172f7b6f9d2a97f992c38edeab82d4110",
       provider
     );
@@ -104,14 +101,12 @@ export default (transactionInfo: ComputedRef<TransactionInfo>) => {
   } = usePromise(
     async () => {
       tokensStore.requestTokens();
-      eraWalletStore.requestBalance();
-      const provider = providerStore.requestProvider();
+      const publicClient = onboardStore.getPublicClient();
 
       const transactionParams = await getTransactionParams();
       const [price, limit] = await Promise.all([
-        retry(() => provider.getGasPrice()),
+        retry(async () => BigNumber.from((await publicClient.getGasPrice()).toString())),
         retry(async () => {
-          const publicClient = onboardStore.getPublicClient();
           return BigNumber.from(
             (
               await publicClient.estimateContractGas({
@@ -133,18 +128,6 @@ export default (transactionInfo: ComputedRef<TransactionInfo>) => {
     },
     { cache: 1000 * 8 }
   );
-
-  const enoughBalanceToCoverFee = computed(() => {
-    if (!feeToken.value || estimationInProgress.value) {
-      return true;
-    }
-    const feeTokenBalance = balance.value.find((e) => e.address === feeToken.value!.address);
-    if (!feeTokenBalance) return true;
-    if (totalFee.value && BigNumber.from(totalFee.value).gt(feeTokenBalance.amount)) {
-      return false;
-    }
-    return true;
-  });
 
   const commitTransaction = async () => {
     try {
@@ -184,7 +167,6 @@ export default (transactionInfo: ComputedRef<TransactionInfo>) => {
     estimationInProgress,
     totalFee,
     feeToken,
-    enoughBalanceToCoverFee,
     estimateFee,
 
     status,
