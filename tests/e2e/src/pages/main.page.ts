@@ -1,13 +1,12 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { expect } from "@playwright/test";
 
-import { BasePage } from "./base.page";
-import { MetamaskPage } from "./metamask.page";
 import { Routes } from "../data/data";
 import { Helper } from "../helpers/helper";
 import { config } from "../support/config";
 
 import type { ICustomWorld } from "../support/custom-world";
+import { MetamaskPage } from "./metamask.page";
+import { BasePage } from "./base.page";
 
 let metamaskPage: any;
 let result: any;
@@ -99,7 +98,7 @@ export class MainPage extends BasePage {
   }
 
   get amountInputErrorButton() {
-    return `//*[@class="amount-input-error"]//button`;
+    return '//*[@class="amount-input-error"]//button';
   }
 
   async getButton(buttonName: string) {

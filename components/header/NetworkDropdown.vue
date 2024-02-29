@@ -1,5 +1,5 @@
 <template>
-  <Menu as="div" class="network-dropdown-container" v-slot="{ open }">
+  <Menu v-slot="{ open }" as="div" class="network-dropdown-container">
     <MenuButton as="template">
       <CommonButtonDropdown :toggled="open">
         <template #left-icon>
@@ -41,15 +41,10 @@
 <script lang="ts" setup>
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/vue";
 import { CheckIcon } from "@heroicons/vue/24/outline";
-import { storeToRefs } from "pinia";
 
 import useNetworks from "@/composables/useNetworks";
 
 import type { ZkSyncNetwork } from "@/data/networks";
-
-import { useRoute } from "#app";
-import { useNetworkStore } from "@/store/network";
-import { getNetworkUrl } from "@/utils/helpers";
 
 const route = useRoute();
 

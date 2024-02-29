@@ -49,8 +49,17 @@ export default defineNuxtConfig({
     },
   },
   plugins: [],
-  modules: ["@kevinmarrec/nuxt-pwa", "@pinia/nuxt"],
+  modules: [
+    "@kevinmarrec/nuxt-pwa",
+    "@pinia/nuxt", // https://pinia.vuejs.org/ssr/nuxt.html
+    "@nuxtjs/eslint-module", // https://nuxt.com/modules/eslint
+    "@nuxtjs/tailwindcss", // https://nuxt.com/modules/tailwindcss
+  ],
+  css: ["@/assets/css/tailwind.css", "@/assets/css/style.scss", "web3-avatar-vue/dist/style.css"],
   ssr: false,
+  pinia: {
+    storesDirs: ["./store/**"],
+  },
   pwa: {
     meta: {
       name: portalMeta.title,
@@ -61,7 +70,6 @@ export default defineNuxtConfig({
       short_name: "Portal",
     },
   },
-  css: ["@/assets/css/tailwind.css", "@/assets/css/style.scss", "web3-avatar-vue/dist/style.css"],
   postcss: {
     plugins: {
       tailwindcss: {},
@@ -79,17 +87,11 @@ export default defineNuxtConfig({
       rudderKey: process.env.RUDDER_KEY,
     },
   },
-  pinia: {
-    autoImports: [
-      // automatically imports `defineStore` and `storeToRefs` typings
-      "defineStore",
-      "storeToRefs",
-    ],
-  },
   vite: {
     css: {
       preprocessorOptions: {
         scss: {
+          // eslint-disable-next-line quotes
           additionalData: '@use "@/assets/css/_mixins.scss" as *;',
         },
       },
@@ -103,4 +105,5 @@ export default defineNuxtConfig({
       },
     },
   },
+  devtools: { enabled: true },
 });

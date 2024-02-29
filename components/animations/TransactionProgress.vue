@@ -33,8 +33,6 @@
 <script lang="ts" setup>
 import { CheckIcon, XMarkIcon } from "@heroicons/vue/24/outline";
 
-import type { PropType } from "vue";
-
 export type AnimationState = "playing" | "stopped-in-the-end" | "failed" | "completed";
 
 defineProps({

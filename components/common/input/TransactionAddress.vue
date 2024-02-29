@@ -15,9 +15,9 @@
     <div v-if="inputVisible" class="mt-4">
       <div class="flex items-center gap-2">
         <CommonInputLine
+          id="transaction-address-input"
           v-model.trim="inputted"
           :has-error="!!addressError"
-          id="transaction-address-input"
           placeholder="Address or ENS"
           type="text"
           maxlength="42"
@@ -63,16 +63,9 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, nextTick, ref, watch } from "vue";
-
-import { storeToRefs } from "pinia";
 import { isAddress } from "viem";
 
 import useEns from "@/composables/useEnsName";
-
-import { useOnboardStore } from "@/store/onboard";
-import { usePreferencesStore } from "@/store/preferences";
-import { isMobile } from "@/utils/helpers";
 
 const props = defineProps({
   label: {

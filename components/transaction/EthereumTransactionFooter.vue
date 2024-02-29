@@ -52,14 +52,6 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from "vue";
-
-import { storeToRefs } from "pinia";
-
-import { useNetworkStore } from "@/store/network";
-import { useOnboardStore } from "@/store/onboard";
-import { TransitionAlertScaleInOutTransition } from "@/utils/transitions";
-
 const onboardStore = useOnboardStore();
 
 const {

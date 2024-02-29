@@ -73,14 +73,8 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from "vue";
-
 import { ArrowsUpDownIcon, ArrowTopRightOnSquareIcon, BanknotesIcon, QrCodeIcon } from "@heroicons/vue/24/outline";
-import { storeToRefs } from "pinia";
 import { mainnet } from "viem/chains";
-
-import { useDestinationsStore } from "@/store/destinations";
-import { useZkSyncProviderStore } from "@/store/zksync/provider";
 
 const { destinations } = storeToRefs(useDestinationsStore());
 const { eraNetwork } = storeToRefs(useZkSyncProviderStore());

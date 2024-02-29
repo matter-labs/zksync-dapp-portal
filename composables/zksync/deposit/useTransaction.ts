@@ -1,11 +1,8 @@
+import type { BigNumberish } from "ethers";
+import type { L1Signer } from "zksync-web3";
 import useScreening from "@/composables/useScreening";
 
 import type { DepositFeeValues } from "@/composables/zksync/deposit/useFee";
-import type { BigNumberish } from "ethers";
-import type { L1Signer } from "zksync-web3";
-
-import { useZkSyncWalletStore } from "@/store/zksync/wallet";
-import { formatError } from "@/utils/formatters";
 
 export default (getL1Signer: () => Promise<L1Signer | undefined>) => {
   const status = ref<"not-started" | "processing" | "waiting-for-signature" | "done">("not-started");

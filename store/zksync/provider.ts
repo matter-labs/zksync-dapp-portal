@@ -1,7 +1,5 @@
 import { Provider } from "zksync-web3";
 
-import { useNetworkStore } from "@/store/network";
-
 export const useZkSyncProviderStore = defineStore("zkSyncProvider", () => {
   const { selectedNetwork } = storeToRefs(useNetworkStore());
   let provider: Provider | undefined;

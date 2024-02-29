@@ -1,13 +1,12 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { setTimeout } from "timers/promises";
 
-import { BasePage } from "./base.page";
-import { MainPage } from "./main.page";
 import { Extension } from "../data/data";
 import { depositTag, Helper, resetAllowanceTag } from "../helpers/helper";
 import { config, wallet } from "../support/config";
 
 import type { ICustomWorld } from "../support/custom-world";
+import { MainPage } from "./main.page";
+import { BasePage } from "./base.page";
 
 let page: any;
 let element: any;
@@ -16,7 +15,7 @@ let metamaskWelcomeUrl: string;
 export let address: string;
 let selector: string;
 let testId: any;
-let logoutTrigger: any = undefined;
+let logoutTrigger: any;
 
 export class MetamaskPage extends BasePage {
   constructor(world: ICustomWorld) {
@@ -68,11 +67,11 @@ export class MetamaskPage extends BasePage {
   }
 
   get confirmTransaction() {
-    return `//*[@data-testid='page-container-footer-next'] | //button[contains(text(), 'Confirm')]`;
+    return "//*[@data-testid='page-container-footer-next'] | //button[contains(text(), 'Confirm')]";
   }
 
   get declineBtn() {
-    return `//*[@data-testid='page-container-footer-cancel'] | //button[contains(text(), 'Reject')]`;
+    return "//*[@data-testid='page-container-footer-cancel'] | //button[contains(text(), 'Reject')]";
   }
 
   get newPasswordField() {
@@ -123,7 +122,7 @@ export class MetamaskPage extends BasePage {
     return "//button[@class='selected-account__clickable']";
   }
 
-  //metamask home page
+  // metamask home page
   get headerIcon() {
     return "(//*[contains(@class,'app-header')]//div[contains(@class,'identicon')])[1]";
   }
@@ -279,7 +278,7 @@ export class MetamaskPage extends BasePage {
   async switchNetwork() {
     const switchNetworkBtnSelector = "//div[@class='transaction-footer-row']//button";
     const switchNetworkBtnElement: any = await this.world.page?.locator(switchNetworkBtnSelector);
-    //check that switchNetworkBtnSelector is switcher network button
+    // check that switchNetworkBtnSelector is switcher network button
     const buttonText = await switchNetworkBtnElement.innerText();
     const result = buttonText.includes("Change wallet network");
     if ((await switchNetworkBtnElement.isEnabled()) && result) {

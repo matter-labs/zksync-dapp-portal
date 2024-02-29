@@ -17,12 +17,8 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, watch } from "vue";
-
 import { Dialog, DialogPanel, DialogTitle } from "@headlessui/vue";
 import { XMarkIcon } from "@heroicons/vue/24/outline";
-
-import { useRoute } from "#imports";
 
 const props = defineProps({
   opened: {

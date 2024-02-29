@@ -85,21 +85,9 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, onBeforeUnmount, ref } from "vue";
-
 import { useIntersectionObserver } from "@vueuse/core";
-import { storeToRefs } from "pinia";
 
 import useSingleLoading from "@/composables/useSingleLoading";
-
-import type { Transfer } from "@/utils/mappers";
-
-import { useDestinationsStore } from "@/store/destinations";
-import { useOnboardStore } from "@/store/onboard";
-import { useZkSyncProviderStore } from "@/store/zksync/provider";
-import { ESTIMATED_DEPOSIT_DELAY, WITHDRAWAL_DELAY } from "@/store/zksync/transactionStatus";
-import { useZkSyncTransactionStatusStore } from "@/store/zksync/transactionStatus";
-import { useZkSyncTransfersHistoryStore } from "@/store/zksync/transfersHistory";
 
 const onboardStore = useOnboardStore();
 const { eraNetwork } = storeToRefs(useZkSyncProviderStore());

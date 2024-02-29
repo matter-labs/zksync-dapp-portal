@@ -1,5 +1,5 @@
 <template>
-  <Menu as="div" class="account-dropdown-container" v-slot="{ open }">
+  <Menu v-slot="{ open }" as="div" class="account-dropdown-container">
     <HeaderHelpModal v-model:opened="helpModalOpened" />
     <MenuButton as="div">
       <div ref="addressEl">
@@ -70,7 +70,6 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, watch } from "vue";
 import { useTippy } from "vue-tippy";
 
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/vue";
@@ -81,12 +80,8 @@ import {
   PowerIcon,
   Squares2X2Icon,
 } from "@heroicons/vue/24/outline";
-import { storeToRefs } from "pinia";
 
 import useCopy from "@/composables/useCopy";
-
-import { useNetworkStore } from "@/store/network";
-import { useOnboardStore } from "@/store/onboard";
 
 const onboardStore = useOnboardStore();
 const { account } = storeToRefs(onboardStore);

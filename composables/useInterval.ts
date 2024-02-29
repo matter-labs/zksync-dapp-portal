@@ -1,7 +1,5 @@
-import { ref } from "vue";
-
 export default <ResultType>(fn: () => ResultType, delay: number) => {
-  let interval: ReturnType<typeof setInterval> | undefined = undefined;
+  let interval: ReturnType<typeof setInterval> | undefined;
   const currentDelay = ref(delay);
 
   function stop() {

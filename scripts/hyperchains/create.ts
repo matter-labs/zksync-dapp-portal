@@ -58,7 +58,7 @@ const promptHyperchainInfo = async (): Promise<Network> => {
     },
   ]);
 
-  let l1Network: Network["l1Network"] | undefined = undefined;
+  let l1Network: Network["l1Network"] | undefined;
   if (connectedToL1) {
     const {
       l1NetworkId,
@@ -138,6 +138,6 @@ const promptHyperchainInfo = async (): Promise<Network> => {
 (async () => {
   const network = await promptHyperchainInfo();
   await promptNetworkReplacement(network);
-  await generateNetworkConfig(network, []);
+  generateNetworkConfig(network, []);
   logUserInfo();
 })();

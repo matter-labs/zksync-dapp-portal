@@ -84,7 +84,7 @@
               <span>{{ destination.label }}</span>
             </CommonButtonDropdown>
           </template>
-          <template #input-body v-if="tokenCustomBridge">
+          <template v-if="tokenCustomBridge" #input-body>
             <div class="mt-4">
               Bridging {{ tokenCustomBridge.symbol }} token to {{ destination.label }} requires custom bridge. Please
               use
@@ -144,7 +144,7 @@
               :loading="feeLoading"
             />
           </transition>
-          <CommonButtonLabel as="span" v-if="!isCustomNode" class="ml-auto text-right">~15 minutes</CommonButtonLabel>
+          <CommonButtonLabel v-if="!isCustomNode" as="span" class="ml-auto text-right">~15 minutes</CommonButtonLabel>
         </div>
         <transition v-bind="TransitionAlertScaleInOutTransition">
           <CommonAlert v-if="!enoughBalanceToCoverFee" class="mt-4" variant="error" :icon="ExclamationTriangleIcon">
@@ -264,7 +264,7 @@
                     <span v-else-if="setAllowanceStatus === 'waiting-for-signature'"
                       >Waiting for allowance approval confirmation</span
                     >
-                    <span class="flex items-center" v-else-if="setAllowanceStatus === 'sending'">
+                    <span v-else-if="setAllowanceStatus === 'sending'" class="flex items-center">
                       <CommonSpinner class="mr-2 h-6 w-6" />
                       Approving allowance...
                     </span>
@@ -332,8 +332,6 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, onBeforeUnmount, ref, watch } from "vue";
-
 import {
   ArrowTopRightOnSquareIcon,
   CheckIcon,
@@ -343,8 +341,8 @@ import {
 import { useRouteQuery } from "@vueuse/router";
 import { BigNumber } from "ethers";
 import { isAddress } from "ethers/lib/utils";
-import { storeToRefs } from "pinia";
 
+import type { BigNumberish } from "ethers";
 import EthereumTransactionFooter from "@/components/transaction/EthereumTransactionFooter.vue";
 
 import useAllowance from "@/composables/transaction/useAllowance";
@@ -354,28 +352,9 @@ import useEcosystemBanner from "@/composables/zksync/deposit/useEcosystemBanner"
 import useFee from "@/composables/zksync/deposit/useFee";
 import useTransaction from "@/composables/zksync/deposit/useTransaction";
 
-import type { TransactionDestination } from "@/store/destinations";
-import type { TransactionInfo } from "@/store/zksync/transactionStatus";
 import type { Token, TokenAmount } from "@/types";
-import type { BigNumberish } from "ethers";
 
-import { useRoute, useRouter } from "#app";
 import { customBridgeTokens } from "@/data/customBridgeTokens";
-import { useDestinationsStore } from "@/store/destinations";
-import { useNetworkStore } from "@/store/network";
-import { useOnboardStore } from "@/store/onboard";
-import { usePreferencesStore } from "@/store/preferences";
-import { useZkSyncEthereumBalanceStore } from "@/store/zksync/ethereumBalance";
-import { useZkSyncProviderStore } from "@/store/zksync/provider";
-import { useZkSyncTokensStore } from "@/store/zksync/tokens";
-import { ESTIMATED_DEPOSIT_DELAY, useZkSyncTransactionStatusStore } from "@/store/zksync/transactionStatus";
-import { useZkSyncTransfersHistoryStore } from "@/store/zksync/transfersHistory";
-import { useZkSyncWalletStore } from "@/store/zksync/wallet";
-import { ETH_TOKEN } from "@/utils/constants";
-import { TOKEN_ALLOWANCE } from "@/utils/doc-links";
-import { checksumAddress, decimalToBigNumber, parseTokenAmount } from "@/utils/formatters";
-import { silentRouterChange } from "@/utils/helpers";
-import { TransitionAlertScaleInOutTransition, TransitionOpacity } from "@/utils/transitions";
 import DepositSubmitted from "@/views/transactions/DepositSubmitted.vue";
 
 const route = useRoute();
@@ -703,7 +682,7 @@ const makeTransaction = async () => {
       }).href
     );
     waitForCompletion(transactionInfo.value)
-      .then(async (completedTransaction) => {
+      .then((completedTransaction) => {
         transactionInfo.value = completedTransaction;
         setTimeout(() => {
           transfersHistoryStore.reloadRecentTransfers().catch(() => undefined);

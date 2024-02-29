@@ -3,10 +3,6 @@ import { fetchBalance } from "@wagmi/core";
 import type { Hash, TokenAmount } from "@/types";
 
 import { l1Networks } from "@/data/networks";
-import { useEthereumBalanceStore } from "@/store/ethereumBalance";
-import { useNetworkStore } from "@/store/network";
-import { useOnboardStore } from "@/store/onboard";
-import { useZkSyncTokensStore } from "@/store/zksync/tokens";
 
 export const useZkSyncEthereumBalanceStore = defineStore("zkSyncEthereumBalances", () => {
   const runtimeConfig = useRuntimeConfig();

@@ -54,12 +54,12 @@
           :max-amount="maxAmount"
           :loading="tokensRequestInProgress || balanceInProgress"
         >
-          <template #token-dropdown-bottom v-if="type === 'withdrawal' && account.address">
+          <template v-if="type === 'withdrawal' && account.address" #token-dropdown-bottom>
             <CommonAlert class="sticky bottom-0 mt-3" variant="neutral" :icon="InformationCircleIcon">
               <p>Only tokens available for withdrawal are displayed</p>
             </CommonAlert>
           </template>
-          <template #dropdown v-if="type === 'withdrawal'">
+          <template v-if="type === 'withdrawal'" #dropdown>
             <CommonButtonDropdown
               :toggled="fromNetworkModalOpened"
               size="xs"
@@ -97,7 +97,7 @@
               <span class="truncate">{{ destination.label }}</span>
             </CommonButtonDropdown>
           </template>
-          <template #input-body v-if="tokenCustomBridge">
+          <template v-if="tokenCustomBridge" #input-body>
             <div class="mt-4">
               Bridging {{ tokenCustomBridge.symbol }} token to {{ destination.label }} requires custom bridge. Please
               use
@@ -293,43 +293,21 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, onBeforeUnmount, ref, watch } from "vue";
-
 import { ArrowTopRightOnSquareIcon, ExclamationTriangleIcon, InformationCircleIcon } from "@heroicons/vue/24/outline";
 import { useRouteQuery } from "@vueuse/router";
 import { BigNumber } from "ethers";
 import { isAddress } from "ethers/lib/utils";
-import { storeToRefs } from "pinia";
 
-import useInterval from "@/composables/useInterval";
-import useNetworks from "@/composables/useNetworks";
+import type { BigNumberish } from "ethers";
+
+import type { Token, TokenAmount } from "@/types";
+
 import useFee from "@/composables/zksync/useFee";
 import useTransaction, { isWithdrawalManualFinalizationRequired } from "@/composables/zksync/useTransaction";
-
 import type { FeeEstimationParams } from "@/composables/zksync/useFee";
-import type { TransactionDestination } from "@/store/destinations";
-import type { TransactionInfo } from "@/store/zksync/transactionStatus";
-import type { Token, TokenAmount } from "@/types";
-import type { BigNumberish } from "ethers";
-import type { PropType } from "vue";
 
-import { useRoute, useRouter } from "#app";
 import { customBridgeTokens } from "@/data/customBridgeTokens";
-import { useDestinationsStore } from "@/store/destinations";
-import { useOnboardStore } from "@/store/onboard";
-import { usePreferencesStore } from "@/store/preferences";
-import { useZkSyncProviderStore } from "@/store/zksync/provider";
-import { useZkSyncTokensStore } from "@/store/zksync/tokens";
-import { WITHDRAWAL_DELAY } from "@/store/zksync/transactionStatus";
-import { useZkSyncTransactionStatusStore } from "@/store/zksync/transactionStatus";
-import { useZkSyncTransfersHistoryStore } from "@/store/zksync/transfersHistory";
-import { useZkSyncWalletStore } from "@/store/zksync/wallet";
-import { ETH_TOKEN } from "@/utils/constants";
-import { ZKSYNC_WITHDRAWAL_DELAY } from "@/utils/doc-links";
-import { checksumAddress, decimalToBigNumber } from "@/utils/formatters";
-import { calculateFee } from "@/utils/helpers";
-import { silentRouterChange } from "@/utils/helpers";
-import { TransitionAlertScaleInOutTransition, TransitionOpacity } from "@/utils/transitions";
+
 import TransferSubmitted from "@/views/transactions/TransferSubmitted.vue";
 import WithdrawalSubmitted from "@/views/transactions/WithdrawalSubmitted.vue";
 
@@ -607,7 +585,6 @@ const buttonContinue = () => {
   if (step.value === "form") {
     if (withdrawalManualFinalizationRequired.value) {
       step.value = "withdrawal-finalization-warning";
-      return;
     } else {
       step.value = "confirm";
     }
@@ -684,7 +661,7 @@ const makeTransaction = async () => {
       }).href
     );
     waitForCompletion(transactionInfo.value)
-      .then(async (completedTransaction) => {
+      .then((completedTransaction) => {
         transactionInfo.value = completedTransaction;
         setTimeout(() => {
           transfersHistoryStore.reloadRecentTransfers().catch(() => undefined);

@@ -1,8 +1,4 @@
-import { computed } from "vue";
-
 import { fetchEnsAvatar, fetchEnsName } from "@wagmi/core";
-
-import { useOnboardStore } from "@/store/onboard";
 
 export const useEnsStore = defineStore("ens", () => {
   const onboardStore = useOnboardStore();

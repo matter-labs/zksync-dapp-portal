@@ -4,7 +4,7 @@
     :explorer-url="blockExplorerUrl"
     :transaction-hash="transfer.transactionHash!"
   >
-    <template #icon v-if="inProgress">
+    <template v-if="inProgress" #icon>
       <CommonSpinner variant="dark" aria-hidden="true" />
     </template>
     <template #top-left>{{ label }}</template>
@@ -34,8 +34,6 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from "vue";
-
 import {
   ArrowDownLeftIcon,
   ArrowRightIcon,
@@ -46,17 +44,9 @@ import {
 } from "@heroicons/vue/24/outline";
 import { useTimeAgo } from "@vueuse/core";
 import { BigNumber } from "ethers";
-import { storeToRefs } from "pinia";
 
 import TokenAmount from "@/components/transaction/lineItem/TokenAmount.vue";
 import TotalPrice from "@/components/transaction/lineItem/TotalPrice.vue";
-
-import type { NetworkLayer, Transfer } from "@/utils/mappers";
-import type { Component, PropType } from "vue";
-
-import { useOnboardStore } from "@/store/onboard";
-import { useZkSyncProviderStore } from "@/store/zksync/provider";
-import { shortenAddress } from "@/utils/formatters";
 
 const props = defineProps({
   as: {

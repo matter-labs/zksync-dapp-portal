@@ -33,12 +33,8 @@
 
 <script lang="ts" setup>
 import { ArrowTopRightOnSquareIcon } from "@heroicons/vue/24/outline";
-import { storeToRefs } from "pinia";
 
 import type { TokenPrice } from "@/types";
-import type { Component, PropType } from "vue";
-
-import { useZkSyncProviderStore } from "@/store/zksync/provider";
 
 defineProps({
   as: {

@@ -54,7 +54,7 @@
         withdrawalFinalizationAvailable ? undefined : transaction.info.expectedCompleteTimestamp
       "
     >
-      <template #to-button v-if="withdrawalFinalizationAvailable">
+      <template v-if="withdrawalFinalizationAvailable" #to-button>
         <template v-if="!isCorrectNetworkSet">
           <CommonButton
             size="xs"
@@ -142,22 +142,10 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, watch } from "vue";
-
 import { ExclamationTriangleIcon } from "@heroicons/vue/24/outline";
-import { storeToRefs } from "pinia";
 
-import useNetworks from "@/composables/useNetworks";
 import { isWithdrawalManualFinalizationRequired } from "@/composables/zksync/useTransaction";
 import useWithdrawalFinalization from "@/composables/zksync/useWithdrawalFinalization";
-
-import type { TransactionInfo } from "@/store/zksync/transactionStatus";
-import type { PropType } from "vue";
-
-import { useNetworkStore } from "@/store/network";
-import { useOnboardStore } from "@/store/onboard";
-import { useZkSyncProviderStore } from "@/store/zksync/provider";
-import { useZkSyncTransactionStatusStore } from "@/store/zksync/transactionStatus";
 
 const props = defineProps({
   transaction: {

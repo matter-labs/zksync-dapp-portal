@@ -1,6 +1,5 @@
-import { BasePage } from "./base.page";
-
 import type { ICustomWorld } from "../support/custom-world";
+import { BasePage } from "./base.page";
 
 export class ContactsPage extends BasePage {
   constructor(world: ICustomWorld) {

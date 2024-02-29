@@ -1,7 +1,7 @@
 import { goerli, mainnet, sepolia } from "@wagmi/core/chains";
 
-import type { Token } from "@/types";
 import type { Chain } from "@wagmi/core/chains";
+import type { Token } from "@/types";
 
 export const l1Networks = {
   mainnet: {

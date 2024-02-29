@@ -17,14 +17,6 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from "vue";
-
-import { storeToRefs } from "pinia";
-
-import { useOnboardStore } from "@/store/onboard";
-import { useZkSyncProviderStore } from "@/store/zksync/provider";
-import { useZkSyncWalletStore } from "@/store/zksync/wallet";
-
 const eraWalletStore = useZkSyncWalletStore();
 const { isCorrectNetworkSet } = storeToRefs(eraWalletStore);
 const { isConnected, connectorName } = storeToRefs(useOnboardStore());

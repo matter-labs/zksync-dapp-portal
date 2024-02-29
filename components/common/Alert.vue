@@ -10,9 +10,6 @@
 </template>
 
 <script lang="ts" setup>
-import type { Component } from "vue";
-import type { PropType } from "vue";
-
 defineProps({
   variant: {
     type: String as PropType<"info" | "neutral" | "success" | "warning" | "error">,

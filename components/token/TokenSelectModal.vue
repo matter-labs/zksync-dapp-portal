@@ -15,7 +15,7 @@
       <div class="-mx-block-padding-1/2 h-full overflow-auto px-block-padding-1/2">
         <template v-if="loading">
           <div class="-mx-block-padding-1/2">
-            <TokenBalanceLoader v-for="index in 2" variant="light" :key="index" />
+            <TokenBalanceLoader v-for="index in 2" :key="index" variant="light" />
           </div>
         </template>
         <template v-else-if="error">
@@ -27,8 +27,8 @@
           <div class="category -mx-block-padding-1/4 sm:-mx-block-padding-1/2">
             <TokenLine
               v-for="item in displayedTokens"
-              class="token-line"
               :key="item.address"
+              class="token-line"
               v-bind="item"
               @click="selectedToken = item"
             />
@@ -43,9 +43,9 @@
               <TokenBalance
                 v-for="item in group.balances"
                 v-bind="item"
+                :key="item.address"
                 size="sm"
                 variant="light"
-                :key="item.address"
                 @click="selectedToken = item"
               />
             </div>
@@ -66,17 +66,10 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref } from "vue";
-
 import { Combobox } from "@headlessui/vue";
 import { MagnifyingGlassIcon } from "@heroicons/vue/24/outline";
-import { storeToRefs } from "pinia";
 
 import type { Token, TokenAmount } from "@/types";
-import type { PropType } from "vue";
-
-import { useOnboardStore } from "@/store/onboard";
-import { groupBalancesByAmount } from "@/utils/mappers";
 
 const props = defineProps({
   title: {

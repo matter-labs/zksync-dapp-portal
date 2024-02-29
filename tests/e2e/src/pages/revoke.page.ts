@@ -1,12 +1,11 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { setTimeout } from "timers/promises";
 
-import { BasePage } from "./base.page";
-import { address, MetamaskPage } from "./metamask.page";
 import { Helper } from "../helpers/helper";
 import { config } from "../support/config";
 
 import type { ICustomWorld } from "../support/custom-world";
+import { address, MetamaskPage } from "./metamask.page";
+import { BasePage } from "./base.page";
 
 let metamaskPage: any;
 let result: any;
@@ -28,7 +27,7 @@ export class RevokePage extends BasePage {
   }
 
   get metamaskButton() {
-    return `//button[contains(text(),'MetaMask')]`;
+    return "//button[contains(text(),'MetaMask')]";
   }
 
   get revokeURL() {

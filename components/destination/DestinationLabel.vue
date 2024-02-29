@@ -6,8 +6,6 @@
 </template>
 
 <script lang="ts" setup>
-import type { Component, PropType } from "vue";
-
 defineProps({
   label: {
     type: String,

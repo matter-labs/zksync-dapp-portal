@@ -39,15 +39,8 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref } from "vue";
-
 import { Combobox } from "@headlessui/vue";
 import { CheckIcon } from "@heroicons/vue/24/outline";
-import { storeToRefs } from "pinia";
-
-import type { TransactionDestination } from "@/store/destinations";
-
-import { useDestinationsStore } from "@/store/destinations";
 
 const props = defineProps({
   title: {

@@ -1,19 +1,12 @@
-import { computed, ref } from "vue";
-
 import { BigNumber } from "ethers";
 import { parseEther } from "ethers/lib/utils";
 import { L1_RECOMMENDED_MIN_ERC20_DEPOSIT_GAS_LIMIT } from "zksync-web3/build/src/utils";
 
-import useTimedCache from "@/composables/useTimedCache";
-
-import type { Token, TokenAmount } from "@/types";
 import type { PublicClient } from "@wagmi/core";
 import type { BigNumberish } from "ethers";
-import type { Ref } from "vue";
 import type { L1Signer } from "zksync-web3";
-
-import { retry } from "@/utils/helpers";
-import { calculateFee } from "@/utils/helpers";
+import type { Token, TokenAmount } from "@/types";
+import useTimedCache from "@/composables/useTimedCache";
 
 export type DepositFeeValues = {
   maxFeePerGas?: BigNumber;
@@ -71,7 +64,7 @@ export default (
     const signer = getL1VoidSigner();
     if (!signer) throw new Error("Signer is not available");
 
-    return retry(async () => {
+    return await retry(async () => {
       try {
         return await signer.getFullRequiredDepositFee({
           token: ETH_TOKEN.l1Address!,
@@ -90,7 +83,7 @@ export default (
       }
     });
   };
-  const getERC20TransactionFee = async () => {
+  const getERC20TransactionFee = () => {
     return {
       l1GasLimit: BigNumber.from(L1_RECOMMENDED_MIN_ERC20_DEPOSIT_GAS_LIMIT),
     };
@@ -113,7 +106,7 @@ export default (
       if (params.tokenAddress === feeToken.value?.address) {
         fee.value = await getEthTransactionFee();
       } else {
-        fee.value = await getERC20TransactionFee();
+        fee.value = getERC20TransactionFee();
       }
       /* It can be either maxFeePerGas or gasPrice */
       if (fee.value && !fee.value?.maxFeePerGas) {

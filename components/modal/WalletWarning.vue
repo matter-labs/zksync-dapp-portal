@@ -1,5 +1,5 @@
 <template>
-  <CommonModal :initialFocus="checkbox" v-model:opened="walletWarningModal" :closable="false" title="Wallet warning">
+  <CommonModal v-model:opened="walletWarningModal" :initial-focus="checkbox" :closable="false" title="Wallet warning">
     <p class="leading-normal">
       Make sure your wallet supports {{ selectedNetwork.name }} network before adding funds to your account. Otherwise,
       this can result in <span class="font-medium text-red-600">loss of funds</span>. See the list of supported wallets
@@ -27,13 +27,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, watch } from "vue";
-
 import { useStorage } from "@vueuse/core";
-import { storeToRefs } from "pinia";
-
-import { useNetworkStore } from "@/store/network";
-import { useOnboardStore } from "@/store/onboard";
 
 const { selectedNetwork } = storeToRefs(useNetworkStore());
 const { walletNotSupported } = storeToRefs(useOnboardStore());

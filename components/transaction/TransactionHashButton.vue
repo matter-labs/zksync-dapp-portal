@@ -1,5 +1,5 @@
 <template>
-  <div class="w-max" ref="el">
+  <div ref="el" class="w-max">
     <CommonButton
       v-if="!explorerUrl"
       size="xs"
@@ -46,7 +46,6 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, watch } from "vue";
 import { useTippy } from "vue-tippy";
 
 import { ArrowTopRightOnSquareIcon, DocumentDuplicateIcon } from "@heroicons/vue/24/outline";

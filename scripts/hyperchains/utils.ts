@@ -1,6 +1,7 @@
-import { prompt } from "enquirer";
+/* eslint-disable no-console */
 import { readFileSync, writeFileSync } from "fs";
 import { join as pathJoin } from "path";
+import { prompt } from "enquirer";
 
 import { ETH_TOKEN } from "../../utils/constants";
 
@@ -46,7 +47,7 @@ export const promptNetworkReplacement = async (network: Network) => {
   }
 };
 
-export const generateNetworkConfig = async (network: Network, tokens: Token[]) => {
+export const generateNetworkConfig = (network: Network, tokens: Token[]) => {
   const config = getConfig();
 
   // Add ETH token if it's not in the list

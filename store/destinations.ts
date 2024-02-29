@@ -1,8 +1,3 @@
-import { computed } from "vue";
-
-import { useNetworkStore } from "@/store/network";
-import { useZkSyncProviderStore } from "@/store/zksync/provider";
-
 export type TransactionDestination = {
   key?: string;
   label: string;

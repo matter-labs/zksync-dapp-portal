@@ -1,0 +1,10 @@
+node_modules
+*.log*
+.idea
+.nuxt
+.nitro
+.cache
+.output
+dist
+tests
+tailwind.config.js

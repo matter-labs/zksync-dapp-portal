@@ -16,7 +16,7 @@ export default function useTimedCache<ResultType, ParamsType extends unknown[]>(
       const promise = fn(...args);
       cache = {
         params: args,
-        promise: promise,
+        promise,
         timestamp: now,
       };
       return promise;

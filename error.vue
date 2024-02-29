@@ -11,7 +11,12 @@
 
 <script lang="ts">
 export default {
-  props: ["error"],
+  props: {
+    error: {
+      type: Object as PropType<any>,
+      required: true,
+    },
+  },
 };
 </script>
 

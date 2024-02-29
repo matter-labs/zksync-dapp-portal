@@ -1,16 +1,17 @@
+/* eslint-disable no-console */
 /* 
   This file will look for hyperchain configuration files on the zksync-era repo
   and generate a /hyperchains/config.json file for the Portal.
 */
-import { parse as envParse } from "dotenv";
-import { prompt } from "enquirer";
 import { existsSync, readdirSync, readFileSync } from "fs";
 import { join as pathJoin, parse as pathParse } from "path";
+import { parse as envParse } from "dotenv";
+import { prompt } from "enquirer";
 
+import type { Token } from "../../types";
 import { generateNetworkConfig, logUserInfo, promptNetworkReplacement } from "./utils";
 
 import type { Network } from "./utils";
-import type { Token } from "../../types";
 
 const rootPath = process.env.ZKSYNC_HOME;
 if (!rootPath) {
@@ -29,7 +30,7 @@ const configureHyperchainInfo = async () => {
   await promptNetworkInfo(network);
   await promptNetworkReplacement(network);
 
-  await generateNetworkConfig(network, getTokensFromDirectory(pathJoin(tokensDirectory, `${envName}.json`)));
+  generateNetworkConfig(network, getTokensFromDirectory(pathJoin(tokensDirectory, `${envName}.json`)));
 
   logUserInfo();
 };

@@ -94,7 +94,6 @@ export function checksumAddress(address: string) {
 
 export function formatError(error?: Error) {
   if (!error?.message) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     if (typeof error === "object" && (error as any).code === 4001) {
       return undefined;
     }
@@ -106,6 +105,7 @@ export function formatError(error?: Error) {
       message.includes("User denied") ||
       message.includes("User rejected") ||
       message.includes("Rejected by user") ||
+      // eslint-disable-next-line quotes
       message.includes('"Request rejected"') ||
       message.includes("user rejected transaction") ||
       message.includes("not configured for connector")

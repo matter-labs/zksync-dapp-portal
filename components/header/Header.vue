@@ -66,8 +66,6 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue";
-
 import {
   ArrowsRightLeftIcon,
   ArrowsUpDownIcon,
@@ -76,13 +74,8 @@ import {
   SunIcon,
   WalletIcon,
 } from "@heroicons/vue/24/outline";
-import { storeToRefs } from "pinia";
 
 import useColorMode from "@/composables/useColorMode";
-
-import { useRoute } from "#imports";
-import { useOnboardStore } from "@/store/onboard";
-import { useZkSyncWithdrawalsStore } from "@/store/zksync/withdrawals";
 
 const route = useRoute();
 

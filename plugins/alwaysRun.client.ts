@@ -1,7 +1,5 @@
 import useColorMode from "@/composables/useColorMode";
 
-import { useRouter } from "#app";
-
 export default defineNuxtPlugin(() => {
   useColorMode();
 

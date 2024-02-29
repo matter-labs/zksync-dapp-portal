@@ -16,16 +16,14 @@ import { WalletConnectConnector } from "@wagmi/core/connectors/walletConnect";
 import { publicProvider } from "@wagmi/core/providers/public";
 import { createWeb3Modal } from "@web3modal/wagmi";
 
+import type { Chain } from "@wagmi/core";
 import useColorMode from "@/composables/useColorMode";
 import useNetworks from "@/composables/useNetworks";
 import useObservable from "@/composables/useObservable";
 
 import type { ZkSyncNetwork } from "@/data/networks";
-import type { Chain } from "@wagmi/core";
 
-import { useRuntimeConfig } from "#imports";
 import { confirmedSupportedWallets, disabledWallets } from "@/data/wallets";
-import { useNetworkStore } from "@/store/network";
 
 export const useOnboardStore = defineStore("onboard", () => {
   const { zkSyncNetworks } = useNetworks();

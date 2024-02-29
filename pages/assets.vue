@@ -61,8 +61,8 @@
           <template v-else-if="displayedBalances.length">
             <TokenBalance
               v-for="item in displayedBalances"
-              as="div"
               :key="item.address"
+              as="div"
               show-name-link
               :send-route-name="eraNetwork.l1Network ? 'send-methods' : 'send'"
               v-bind="item"
@@ -94,7 +94,7 @@
 
           <CommonCardWithLineButtons v-for="(item, index) in depositMethods" :key="index">
             <DestinationItem v-bind="item.props">
-              <template #image v-if="item.icon">
+              <template v-if="item.icon" #image>
                 <DestinationIconContainer>
                   <component :is="item.icon" aria-hidden="true" />
                 </DestinationIconContainer>
@@ -108,7 +108,7 @@
 
         <CommonCardWithLineButtons>
           <DestinationItem v-for="(item, index) in depositMethods" :key="index" v-bind="item.props">
-            <template #image v-if="item.icon">
+            <template v-if="item.icon" #image>
               <DestinationIconContainer>
                 <component :is="item.icon" aria-hidden="true" />
               </DestinationIconContainer>
@@ -121,8 +121,6 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, onBeforeUnmount } from "vue";
-
 import {
   ArrowDownLeftIcon,
   ArrowsUpDownIcon,
@@ -131,21 +129,12 @@ import {
   BanknotesIcon,
   QrCodeIcon,
 } from "@heroicons/vue/24/outline";
-import { storeToRefs } from "pinia";
 import { mainnet } from "viem/chains";
 
+import type { FunctionalComponent } from "vue";
 import useInterval from "@/composables/useInterval";
 import useSingleLoading from "@/composables/useSingleLoading";
 import useEcosystemBanner from "@/composables/zksync/deposit/useEcosystemBanner";
-
-import type { FunctionalComponent } from "vue";
-
-import { useDestinationsStore } from "@/store/destinations";
-import { useOnboardStore } from "@/store/onboard";
-import { useZkSyncProviderStore } from "@/store/zksync/provider";
-import { useZkSyncWalletStore } from "@/store/zksync/wallet";
-import { parseTokenAmount, removeSmallAmount } from "@/utils/formatters";
-import { isOnlyZeroes } from "@/utils/helpers";
 
 const onboardStore = useOnboardStore();
 const walletStore = useZkSyncWalletStore();

@@ -1,5 +1,5 @@
 <template>
-  <CommonModal :initialFocus="checkbox" v-model:opened="modalDisplayed" :closable="false">
+  <CommonModal v-model:opened="modalDisplayed" :initial-focus="checkbox" :closable="false">
     <DialogTitle as="div" class="modal-title">zkSync Bridge is live on beta</DialogTitle>
     <p class="modal-text">
       Nothing on this website should be construed as an invitation, inducement, or solicitation to engage in investment
@@ -19,8 +19,6 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue";
-
 import { DialogTitle } from "@headlessui/vue";
 import { useStorage } from "@vueuse/core";
 

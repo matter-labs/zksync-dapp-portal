@@ -11,15 +11,10 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from "vue";
-
 import { BigNumber } from "ethers";
 
-import type { Token } from "@/types";
 import type { BigNumberish } from "ethers";
-import type { PropType } from "vue";
-
-import { formatTokenPrice } from "@/utils/formatters";
+import type { Token } from "@/types";
 
 const props = defineProps({
   token: {

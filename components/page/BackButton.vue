@@ -3,10 +3,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { PropType } from "vue";
 import type { RouteLocationRaw } from "vue-router";
-
-import { useRouter } from "#app";
 
 const props = defineProps({
   fallback: {

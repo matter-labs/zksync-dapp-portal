@@ -10,7 +10,5 @@
 </template>
 
 <script lang="ts" setup>
-import { useOnboardStore } from "@/store/onboard";
-
 const onboardStore = useOnboardStore();
 </script>

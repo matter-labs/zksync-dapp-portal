@@ -14,12 +14,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from "vue";
-
 import type { TokenAmount } from "@/types";
-import type { PropType } from "vue";
-
-import { parseTokenAmount } from "@/utils/formatters";
 
 const props = defineProps({
   label: {

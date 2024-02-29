@@ -1,9 +1,11 @@
+/* eslint-disable no-console */
+/* eslint-disable quotes */
 /*
   Problem: Since the build was done in SPA mode, the meta tags are same for all pages (taken from nuxt.config.ts)
   Solution: This script is used to replace meta tags for Bridge pages after the build was done
 */
-import { load } from "cheerio";
 import { readFile, writeFile } from "fs";
+import { load } from "cheerio";
 
 import { bridge as bridgeMeta } from "../data/meta";
 

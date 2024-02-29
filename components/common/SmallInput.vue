@@ -22,15 +22,8 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref } from "vue";
-
 import { XMarkIcon } from "@heroicons/vue/24/outline";
 import { useFocus } from "@vueuse/core";
-
-import type { Component, PropType } from "vue";
-
-import { isMobile } from "@/utils/helpers";
-import { TransitionOpacity } from "@/utils/transitions";
 
 const props = defineProps({
   as: {

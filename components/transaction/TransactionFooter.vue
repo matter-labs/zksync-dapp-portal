@@ -41,15 +41,6 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from "vue";
-
-import { storeToRefs } from "pinia";
-
-import { useOnboardStore } from "@/store/onboard";
-import { useZkSyncProviderStore } from "@/store/zksync/provider";
-import { useZkSyncWalletStore } from "@/store/zksync/wallet";
-import { TransitionAlertScaleInOutTransition } from "@/utils/transitions";
-
 const onboardStore = useOnboardStore();
 const eraWalletStore = useZkSyncWalletStore();
 

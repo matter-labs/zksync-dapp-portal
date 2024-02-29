@@ -1,5 +1,3 @@
-import { computed } from "vue";
-
 import type { Api } from "@/types";
 
 export default <T>(resource: () => URL) => {

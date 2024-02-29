@@ -5,8 +5,6 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, onBeforeMount, onBeforeUnmount, ref, watch } from "vue";
-
 const props = defineProps({
   futureDate: {
     type: String,
@@ -35,7 +33,7 @@ watch(
   { immediate: true }
 );
 
-let intervalId: ReturnType<typeof setInterval> | undefined = undefined;
+let intervalId: ReturnType<typeof setInterval> | undefined;
 
 const formatTimeDiff = (diff: number): string => {
   const hours = Math.floor(diff / (1000 * 60 * 60));
@@ -64,7 +62,6 @@ const updateTimer = () => {
 
   if (diff.value === 0) {
     clearInterval(intervalId);
-    return;
   }
 };
 

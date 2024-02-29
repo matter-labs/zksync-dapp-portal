@@ -2,14 +2,10 @@ import { BigNumber, ethers, VoidSigner } from "ethers";
 import { $fetch } from "ofetch";
 import { L1Signer, L1VoidSigner, Web3Provider } from "zksync-web3";
 
+import type { BigNumberish } from "ethers";
 import useScreening from "@/composables/useScreening";
 
 import type { Api, TokenAmount } from "@/types";
-import type { BigNumberish } from "ethers";
-
-import { useOnboardStore } from "@/store/onboard";
-import { useZkSyncProviderStore } from "@/store/zksync/provider";
-import { useZkSyncTokensStore } from "@/store/zksync/tokens";
 
 export const useZkSyncWalletStore = defineStore("zkSyncWallet", () => {
   const onboardStore = useOnboardStore();
@@ -28,7 +24,6 @@ export const useZkSyncWalletStore = defineStore("zkSyncWallet", () => {
       );
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const web3Provider = new Web3Provider((await onboardStore.getWallet(eraNetwork.value.id)) as any, "any");
     const eraL2Signer = web3Provider.getSigner();
     return eraL2Signer;
@@ -43,7 +38,6 @@ export const useZkSyncWalletStore = defineStore("zkSyncWallet", () => {
       );
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const web3Provider = new ethers.providers.Web3Provider((await onboardStore.getWallet()) as any, "any");
     const eraL1Signer = L1Signer.from(web3Provider.getSigner(), providerStore.requestProvider());
     return eraL1Signer;
@@ -51,7 +45,6 @@ export const useZkSyncWalletStore = defineStore("zkSyncWallet", () => {
   const getL1VoidSigner = (anyAddress = false) => {
     if (!account.value.address && !anyAddress) throw new Error("Address is not available");
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const web3Provider = new ethers.providers.Web3Provider(onboardStore.getPublicClient() as any, "any");
     const voidSigner = new VoidSigner(account.value.address || ETH_TOKEN.address, web3Provider);
     return L1VoidSigner.from(voidSigner, providerStore.requestProvider()) as unknown as L1Signer;

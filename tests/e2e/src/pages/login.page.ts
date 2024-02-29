@@ -1,9 +1,9 @@
-import { BasePage } from "./base.page";
-import { MetamaskPage } from "./metamask.page";
 import { Helper } from "../helpers/helper";
 import { config, wallet } from "../support/config";
 
 import type { ICustomWorld } from "../support/custom-world";
+import { MetamaskPage } from "./metamask.page";
+import { BasePage } from "./base.page";
 
 export class LoginPage extends BasePage {
   constructor(world: ICustomWorld) {
@@ -31,7 +31,7 @@ export class LoginPage extends BasePage {
       const metamaskPage = await new MetamaskPage(this.world);
 
       await this.world.page?.waitForSelector(this.loginBtn);
-      await this.world.page?.locator(this.loginBtn).click(config.increasedTimeout); //click a login button
+      await this.world.page?.locator(this.loginBtn).click(config.increasedTimeout); // click a login button
 
       const popUp = await new MetamaskPage(this.world).catchPopUpByClick(":text('Browser Wallet')");
       await popUp?.locator(metamaskPage.unlockPasswordField).isVisible(config.defaultTimeout);
@@ -51,7 +51,7 @@ export class LoginPage extends BasePage {
           await popUp?.locator(this.notificationBtn).click();
 
           if ((await popUp?.locator(this.notificationBtn)) !== undefined) {
-            await popUp?.locator(this.notificationBtn).click(); //change network
+            await popUp?.locator(this.notificationBtn).click(); // change network
           }
         } catch {
           return false;
@@ -82,7 +82,7 @@ export class LoginPage extends BasePage {
   }
 
   async actualNetworkIsGoerli() {
-    let result = await this.world.page?.evaluate(() => window.localStorage["lastSelectedEthereumNetwork"]);
+    let result = await this.world.page?.evaluate(() => window.localStorage.lastSelectedEthereumNetwork);
 
     if (result == "goerli") {
       result = true;

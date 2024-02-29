@@ -101,12 +101,8 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from "vue";
-
 import type { AnimationState } from "@/components/animations/TransactionProgress.vue";
-import type { TransactionDestination } from "@/store/destinations";
 import type { TokenAmount } from "@/types";
-import type { PropType } from "vue";
 
 const props = defineProps({
   fromAddress: {

@@ -19,8 +19,6 @@
 </template>
 
 <script lang="ts" setup>
-import type { PropType } from "vue";
-
 defineProps({
   variant: String as PropType<"default" | "text-color" | "dark">,
 });

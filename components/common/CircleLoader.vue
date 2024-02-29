@@ -15,8 +15,6 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, onBeforeUnmount, watchEffect } from "vue";
-
 const props = defineProps({
   duration: {
     type: Number,

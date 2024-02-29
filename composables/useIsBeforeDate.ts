@@ -1,7 +1,3 @@
-import { onUnmounted, ref, watch } from "vue";
-
-import type { Ref } from "vue";
-
 export default (dateRef: Ref<string | undefined>) => {
   const isBefore = ref(false);
   let intervalId: ReturnType<typeof setInterval> | undefined;

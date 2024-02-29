@@ -4,13 +4,7 @@ import { decodeEventLog } from "viem";
 import ZkSyncContractInterface from "zksync-web3/abi/IZkSync.json";
 
 import type { FeeEstimationParams } from "@/composables/zksync/useFee";
-import type { TransactionDestination } from "@/store/destinations";
-import type { TokenAmount } from "@/types";
-import type { Hash } from "@/types";
-
-import { useOnboardStore } from "@/store/onboard";
-import { useZkSyncProviderStore } from "@/store/zksync/provider";
-import { useZkSyncWalletStore } from "@/store/zksync/wallet";
+import type { TokenAmount, Hash } from "@/types";
 
 export type TransactionInfo = {
   type: FeeEstimationParams["type"] | "deposit";

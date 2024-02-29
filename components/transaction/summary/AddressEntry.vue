@@ -24,15 +24,6 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from "vue";
-
-import { storeToRefs } from "pinia";
-
-import type { TransactionDestination } from "@/store/destinations";
-import type { PropType } from "vue";
-
-import { useOnboardStore } from "@/store/onboard";
-
 const props = defineProps({
   label: {
     type: String,
