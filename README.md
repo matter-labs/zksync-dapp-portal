@@ -2,7 +2,7 @@ n![zkSync Portal](public/preview.png)
 
 # zkSync Portal 🚀
 
-**zkSync Portal** is a state-of-the-art wallet dapp, merging the power of **zkSync Era∎** and **zkSync Lite** into one user-friendly interface. Designed with a stress on effortless user experience, it simplifies token management, making it your premier interface for interacting with both zkSync versions - every interaction smooth and efficient.
+**zkSync Portal** is a state-of-the-art wallet dapp, merging the power of **zkSync Era∎** and **zkSync Lite** into one user-friendly interface. Designed with a stress on effortless user experience, it simplifies token management, making it your premier interface for interacting with both **zkSync versions** - every interaction smooth and efficient.
 
 ## ✨ Features
 
