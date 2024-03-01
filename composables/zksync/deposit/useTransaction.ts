@@ -1,5 +1,5 @@
 import type { BigNumberish } from "ethers";
-import type { L1Signer } from "zksync-web3";
+import type { L1Signer } from "zksync-ethers";
 import useScreening from "@/composables/useScreening";
 
 import type { DepositFeeValues } from "@/composables/zksync/deposit/useFee";

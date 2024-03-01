@@ -1,6 +1,6 @@
 import { BigNumber, ethers, VoidSigner } from "ethers";
 import { $fetch } from "ofetch";
-import { L1Signer, L1VoidSigner, Web3Provider } from "zksync-web3";
+import { L1Signer, L1VoidSigner, Web3Provider } from "zksync-ethers";
 
 import type { BigNumberish } from "ethers";
 import useScreening from "@/composables/useScreening";

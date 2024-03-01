@@ -1,7 +1,7 @@
 import { useStorage } from "@vueuse/core";
 import { decodeEventLog } from "viem";
 
-import ZkSyncContractInterface from "zksync-web3/abi/IZkSync.json";
+import ZkSyncContractInterface from "zksync-ethers/abi/IZkSync.json";
 
 import type { FeeEstimationParams } from "@/composables/zksync/useFee";
 import type { TokenAmount, Hash } from "@/types";
@@ -59,7 +59,7 @@ export const useZkSyncTransactionStatusStore = defineStore("zkSyncTransactionSta
     for (const log of transaction.logs) {
       try {
         const { args, eventName } = decodeEventLog({
-          abi: ZkSyncContractInterface.abi,
+          abi: ZkSyncContractInterface,
           data: log.data,
           topics: log.topics,
         });

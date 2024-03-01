@@ -1,7 +1,7 @@
 import { BigNumber } from "ethers";
 
 import type { BigNumberish } from "ethers";
-import type { Provider } from "zksync-web3";
+import type { Provider } from "zksync-ethers";
 import useTimedCache from "@/composables/useTimedCache";
 
 import type { Token, TokenAmount } from "@/types";
