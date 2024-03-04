@@ -6,17 +6,19 @@ import {
   getPublicClient,
   getWalletClient,
   InjectedConnector,
-  switchNetwork as switchWalletNetwork,
+  switchChain,
   disconnect as walletDisconnect,
   watchAccount,
   watchNetwork,
+  reconnect,
+  getClient
 } from "@wagmi/core";
 import { zkSync, zkSyncSepoliaTestnet, zkSyncTestnet } from "@wagmi/core/chains";
 import { WalletConnectConnector } from "@wagmi/core/connectors/walletConnect";
 import { publicProvider } from "@wagmi/core/providers/public";
-import { createWeb3Modal } from "@web3modal/wagmi";
+import { createWeb3Modal, defaultWagmiConfig } from "@web3modal/wagmi";
 
-import type { Chain } from "@wagmi/core";
+import type { Chain } from "viem";
 import useColorMode from "@/composables/useColorMode";
 import useNetworks from "@/composables/useNetworks";
 import useObservable from "@/composables/useObservable";
@@ -73,8 +75,7 @@ export const useOnboardStore = defineStore("onboard", () => {
     url: "https://portal.zksync.io",
     icons: ["https://portal.zksync.io/icon.png"],
   };
-  const wagmiConfig = createConfig({
-    autoConnect: true,
+  const wagmiConfig = defaultWagmiConfig({
     connectors: [
       new WalletConnectConnector({
         chains: extendedChains,
@@ -168,7 +169,7 @@ export const useOnboardStore = defineStore("onboard", () => {
   });
   const switchNetworkById = async (chainId: number, networkName?: string) => {
     try {
-      return await switchWalletNetwork({ chainId });
+      return await switchChain({ chainId });
     } catch (err) {
       if (err instanceof Error && err.message.includes("does not support programmatic chain switching")) {
         throw new Error(`Please switch network manually to "${networkName}" in your ${walletName.value} wallet`);

@@ -20,7 +20,6 @@ export type DepositFeeValues = {
 export default (
   tokens: Ref<Token[]>,
   balances: Ref<TokenAmount[] | undefined>,
-  getL1VoidSigner: () => L1Signer,
   getPublicClient: () => PublicClient
 ) => {
   let params = {
