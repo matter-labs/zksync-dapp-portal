@@ -450,9 +450,7 @@ const {
 } = useAllowance(
   computed(() => account.value.address),
   computed(() => selectedToken.value?.address),
-  async () => (await providerStore.requestProvider().getDefaultBridgeAddresses()).erc20L1,
-  onboardStore.getWallet,
-  onboardStore.getPublicClient
+  async () => (await providerStore.requestProvider().getDefaultBridgeAddresses()).erc20L1
 );
 const enoughAllowance = computed(() => {
   if (!allowance.value || !selectedToken.value) {
@@ -486,7 +484,7 @@ const {
   enoughBalanceToCoverFee,
   estimateFee,
   resetFee,
-} = useFee(availableTokens, balance, eraWalletStore.getL1VoidSigner, onboardStore.getPublicClient);
+} = useFee(availableTokens, balance);
 
 const queryAddress = useRouteQuery<string | undefined>("address", undefined, {
   transform: String,

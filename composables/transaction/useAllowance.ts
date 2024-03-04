@@ -2,17 +2,15 @@ import { BigNumber } from "ethers";
 
 import IERC20 from "zksync-ethers/abi/IERC20.json";
 
-import type { PublicClient, WalletClient } from "@wagmi/core";
 import type { BigNumberish } from "ethers";
 import type { Hash } from "@/types";
 
 export default (
   accountAddress: Ref<string | undefined>,
   tokenAddress: Ref<string | undefined>,
-  getContractAddress: () => Promise<string | undefined>,
-  getWallet: () => Promise<WalletClient>,
-  getPublicClient: () => PublicClient
+  getContractAddress: () => Promise<string | undefined>
 ) => {
+  const { getPublicClient, getWallet } = useOnboardStore();
   const {
     result,
     inProgress,
@@ -27,7 +25,7 @@ export default (
       if (!contractAddress) throw new Error("Contract address is not available");
 
       const publicClient = getPublicClient();
-      const allowance = (await publicClient.readContract({
+      const allowance = (await publicClient!.readContract({
         address: tokenAddress.value as Hash,
         abi: IERC20,
         functionName: "allowance",
@@ -77,7 +75,7 @@ export default (
         });
 
         setAllowanceStatus.value = "sending";
-        const receipt = await getPublicClient().waitForTransactionReceipt({
+        const receipt = await getPublicClient()!.waitForTransactionReceipt({
           hash: setAllowanceTransactionHash.value!,
           onReplaced: (replacement) => {
             setAllowanceTransactionHash.value = replacement.transaction.hash;

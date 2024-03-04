@@ -1,4 +1,4 @@
-import { fetchBalance } from "@wagmi/core";
+import { getBalance, type Config } from "@wagmi/core";
 
 import type { Hash, TokenAmount } from "@/types";
 
@@ -50,7 +50,7 @@ export const useZkSyncEthereumBalanceStore = defineStore("zkSyncEthereumBalances
 
     return await Promise.all(
       Object.values(l1Tokens.value ?? []).map(async (token) => {
-        const amount = await fetchBalance({
+        const amount = await getBalance(onboardStore.wagmiConfig as Config, {
           address: account.value.address!,
           chainId: l1Network.value!.id,
           token: token.address === ETH_TOKEN.l1Address ? undefined : (token.address! as Hash),

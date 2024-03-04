@@ -2,9 +2,7 @@ import { BigNumber } from "ethers";
 import { parseEther } from "ethers/lib/utils";
 import { L1_RECOMMENDED_MIN_ERC20_DEPOSIT_GAS_LIMIT } from "zksync-ethers/src/utils";
 
-import type { PublicClient } from "@wagmi/core";
 import type { BigNumberish } from "ethers";
-import type { L1Signer } from "zksync-ethers";
 import type { Token, TokenAmount } from "@/types";
 import useTimedCache from "@/composables/useTimedCache";
 
@@ -17,11 +15,10 @@ export type DepositFeeValues = {
   l2GasLimit?: BigNumber;
 };
 
-export default (
-  tokens: Ref<Token[]>,
-  balances: Ref<TokenAmount[] | undefined>,
-  getPublicClient: () => PublicClient
-) => {
+export default (tokens: Ref<Token[]>, balances: Ref<TokenAmount[] | undefined>) => {
+  const { getPublicClient } = useOnboardStore();
+  const { getL1VoidSigner } = useZkSyncWalletStore();
+
   let params = {
     to: undefined as string | undefined,
     tokenAddress: undefined as string | undefined,
@@ -88,7 +85,7 @@ export default (
     };
   };
   const getGasPrice = async () => {
-    return BigNumber.from(await retry(() => getPublicClient().getGasPrice()))
+    return BigNumber.from(await retry(() => getPublicClient()!.getGasPrice()))
       .mul(110)
       .div(100);
   };

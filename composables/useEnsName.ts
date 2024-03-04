@@ -1,9 +1,10 @@
 import { useMemoize } from "@vueuse/core";
-import { fetchEnsAddress } from "@wagmi/core";
-
-const getEnsAddress = useMemoize((name: string) => fetchEnsAddress({ name, chainId: 1 }));
+import { getEnsAddress, type Config } from "@wagmi/core";
 
 export default (ensName: Ref<string>) => {
+  const { wagmiConfig } = useOnboardStore();
+  const fetchEnsAddress = useMemoize((name: string) => getEnsAddress(wagmiConfig as Config, { name, chainId: 1 }));
+
   const nameToAddress = ref<{ [name: string]: string }>({});
   const {
     inProgress,
@@ -12,7 +13,7 @@ export default (ensName: Ref<string>) => {
   } = usePromise(
     async () => {
       const name = ensName.value;
-      const result = await getEnsAddress(name);
+      const result = await fetchEnsAddress(name);
       if (result) {
         nameToAddress.value[name] = result;
       }

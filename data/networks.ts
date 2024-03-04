@@ -56,7 +56,6 @@ export const dockerizedNode: ZkSyncNetwork = {
   l1Network: {
     id: 9,
     name: "Ethereum Local Node",
-    network: "ethereum-node",
     nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 },
     rpcUrls: {
       default: { http: ["http://localhost:8545"] },
