@@ -2,9 +2,8 @@ import { BigNumber } from "ethers";
 import { parseEther } from "ethers/lib/utils";
 import { L1_RECOMMENDED_MIN_ERC20_DEPOSIT_GAS_LIMIT } from "zksync-ethers/src/utils";
 
-import type { BigNumberish } from "ethers";
 import type { Token, TokenAmount } from "@/types";
-import useTimedCache from "@/composables/useTimedCache";
+import type { BigNumberish } from "ethers";
 
 export type DepositFeeValues = {
   maxFeePerGas?: BigNumber;

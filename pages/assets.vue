@@ -131,10 +131,9 @@ import {
 } from "@heroicons/vue/24/outline";
 import { mainnet } from "viem/chains";
 
-import type { FunctionalComponent } from "vue";
-import useInterval from "@/composables/useInterval";
-import useSingleLoading from "@/composables/useSingleLoading";
 import useEcosystemBanner from "@/composables/zksync/deposit/useEcosystemBanner";
+
+import type { FunctionalComponent } from "vue";
 
 const onboardStore = useOnboardStore();
 const walletStore = useZkSyncWalletStore();

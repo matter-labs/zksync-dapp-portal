@@ -3,15 +3,15 @@
   This file will look for hyperchain configuration files on the zksync-era repo
   and generate a /hyperchains/config.json file for the Portal.
 */
-import { existsSync, readdirSync, readFileSync } from "fs";
-import { join as pathJoin, parse as pathParse } from "path";
 import { parse as envParse } from "dotenv";
 import { prompt } from "enquirer";
+import { existsSync, readdirSync, readFileSync } from "fs";
+import { join as pathJoin, parse as pathParse } from "path";
 
-import type { Token } from "../../types";
 import { generateNetworkConfig, logUserInfo, promptNetworkReplacement } from "./utils";
 
 import type { Network } from "./utils";
+import type { Token } from "../../types";
 
 const rootPath = process.env.ZKSYNC_HOME;
 if (!rootPath) {
@@ -49,7 +49,6 @@ const createNetworkFromEnv = (envPath: string): Network => {
     l1Network: {
       id: Number(env.ETH_CLIENT_CHAIN_ID),
       name: l1ChainName === "Localhost" ? "Localhost L1" : l1ChainName,
-      network: env.CHAIN_ETH_NETWORK,
       nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 },
       rpcUrls: {
         default: { http: [env.ETH_CLIENT_WEB3_URL] },

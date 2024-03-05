@@ -100,8 +100,8 @@
 import { LockClosedIcon } from "@heroicons/vue/24/outline";
 import { BigNumber } from "ethers";
 
-import type { BigNumberish } from "ethers";
 import type { Token, TokenAmount } from "@/types";
+import type { BigNumberish } from "ethers";
 
 const props = defineProps({
   modelValue: {

@@ -1,6 +1,5 @@
 import { useStorage } from "@vueuse/core";
 import { decodeEventLog } from "viem";
-
 import ZkSyncContractInterface from "zksync-ethers/abi/IZkSync.json";
 
 import type { FeeEstimationParams } from "@/composables/zksync/useFee";

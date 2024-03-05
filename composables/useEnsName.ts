@@ -1,5 +1,6 @@
 import { useMemoize } from "@vueuse/core";
 import { getEnsAddress } from "@wagmi/core";
+
 import { wagmiConfig } from "@/data/wagmi";
 
 export default (ensName: Ref<string>) => {

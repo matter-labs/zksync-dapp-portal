@@ -104,8 +104,8 @@ import {
   WalletIcon,
 } from "@heroicons/vue/24/outline";
 
-import useColorMode from "@/composables/useColorMode";
 import { chainList } from "@/data/networks";
+
 import type { ZkSyncNetwork } from "@/data/networks";
 
 const props = defineProps({

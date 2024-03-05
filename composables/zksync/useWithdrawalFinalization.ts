@@ -1,7 +1,6 @@
 import { useMemoize } from "@vueuse/core";
 import { BigNumber, type BigNumberish } from "ethers";
 import { Wallet } from "zksync-ethers";
-
 import ZkSyncL1BridgeAbi from "zksync-ethers/abi/IL1Bridge.json";
 import ZkSyncContractAbi from "zksync-ethers/abi/IZkSync.json";
 

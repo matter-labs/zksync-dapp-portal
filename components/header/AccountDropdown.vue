@@ -70,8 +70,6 @@
 </template>
 
 <script lang="ts" setup>
-import { useTippy } from "vue-tippy";
-
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/vue";
 import {
   ArrowTopRightOnSquareIcon,
@@ -80,8 +78,7 @@ import {
   PowerIcon,
   Squares2X2Icon,
 } from "@heroicons/vue/24/outline";
-
-import useCopy from "@/composables/useCopy";
+import { useTippy } from "vue-tippy";
 
 const onboardStore = useOnboardStore();
 const { account } = storeToRefs(onboardStore);

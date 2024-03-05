@@ -78,7 +78,6 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     public: {
-      walletConnectProjectID: process.env.WALLET_CONNECT_PROJECT_ID,
       ankrToken: process.env.ANKR_TOKEN,
       screeningApiUrl: process.env.SCREENING_API_URL,
       dataplaneUrl: process.env.DATAPLANE_URL,

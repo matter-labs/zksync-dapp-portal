@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
+import { prompt } from "enquirer";
 import { readFileSync, writeFileSync } from "fs";
 import { join as pathJoin } from "path";
-import { prompt } from "enquirer";
 
 import { ETH_TOKEN } from "../../utils/constants";
 

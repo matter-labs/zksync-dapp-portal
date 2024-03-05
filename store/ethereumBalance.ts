@@ -1,10 +1,10 @@
 import { AnkrProvider } from "@ankr.com/ankr.js";
 import { BigNumber } from "ethers";
 
-import type { Blockchain as AnkrSupportedChains } from "@ankr.com/ankr.js";
-import type { TokenAmount } from "@/types";
-
 import { l1Networks } from "@/data/networks";
+
+import type { TokenAmount } from "@/types";
+import type { Blockchain as AnkrSupportedChains } from "@ankr.com/ankr.js";
 
 export const useEthereumBalanceStore = defineStore("ethereumBalance", () => {
   const runtimeConfig = useRuntimeConfig();

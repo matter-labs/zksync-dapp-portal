@@ -46,11 +46,8 @@
 </template>
 
 <script lang="ts" setup>
-import { useTippy } from "vue-tippy";
-
 import { ArrowTopRightOnSquareIcon, DocumentDuplicateIcon } from "@heroicons/vue/24/outline";
-
-import useCopy from "@/composables/useCopy";
+import { useTippy } from "vue-tippy";
 
 const props = defineProps({
   explorerUrl: {

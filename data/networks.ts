@@ -1,8 +1,9 @@
 import { goerli, mainnet, sepolia } from "@wagmi/core/chains";
-import type { Chain } from "@wagmi/core/chains";
 
 import Hyperchains from "@/hyperchains/config.json";
+
 import type { Token } from "@/types";
+import type { Chain } from "@wagmi/core/chains";
 
 export const l1Networks = {
   mainnet: {

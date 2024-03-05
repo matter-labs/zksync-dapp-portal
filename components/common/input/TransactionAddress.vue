@@ -65,8 +65,6 @@
 <script lang="ts" setup>
 import { isAddress } from "viem";
 
-import useEns from "@/composables/useEnsName";
-
 const props = defineProps({
   label: {
     type: String,
@@ -122,7 +120,7 @@ const {
   inProgress: ensParseInProgress,
   error: ensParseError,
   parseEns,
-} = useEns(inputted);
+} = useEnsName(inputted);
 
 const { previousTransactionAddress } = storeToRefs(usePreferencesStore());
 

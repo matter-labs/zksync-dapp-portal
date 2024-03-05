@@ -1,5 +1,5 @@
-import { defaultWagmiConfig } from "@web3modal/wagmi";
 import { zkSync, type Chain, zkSyncSepoliaTestnet, zkSyncTestnet } from "@wagmi/core/chains";
+import { defaultWagmiConfig } from "@web3modal/wagmi";
 
 import { chainList, type ZkSyncNetwork } from "@/data/networks";
 

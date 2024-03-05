@@ -146,7 +146,6 @@ import { ExclamationTriangleIcon } from "@heroicons/vue/24/outline";
 
 import { isWithdrawalManualFinalizationRequired } from "@/composables/zksync/useTransaction";
 import useWithdrawalFinalization from "@/composables/zksync/useWithdrawalFinalization";
-
 import { isCustomNode } from "@/data/networks";
 
 const props = defineProps({

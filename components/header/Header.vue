@@ -75,8 +75,6 @@ import {
   WalletIcon,
 } from "@heroicons/vue/24/outline";
 
-import useColorMode from "@/composables/useColorMode";
-
 const route = useRoute();
 
 const routes = {
