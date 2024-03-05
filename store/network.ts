@@ -1,12 +1,10 @@
 import { useStorage } from "@vueuse/core";
 
-import useNetworks from "@/composables/useNetworks";
+import { chainList, defaultNetwork } from "@/data/networks";
 
 import type { L1Network, ZkSyncNetwork } from "@/data/networks";
 
 export const useNetworkStore = defineStore("network", () => {
-  const { zkSyncNetworks, defaultNetwork } = useNetworks();
-
   const networkUsesLocalStorage = useStorage<boolean>("networkUsesLocalStorage", false);
   const selectedNetworkKey = useStorage<string>(
     "selectedNetwork",
@@ -14,7 +12,7 @@ export const useNetworkStore = defineStore("network", () => {
     networkUsesLocalStorage.value ? window.localStorage : window.sessionStorage
   );
   const selectedNetwork = computed<ZkSyncNetwork>(() => {
-    return zkSyncNetworks.find((e) => e.key === selectedNetworkKey.value) ?? defaultNetwork;
+    return chainList.find((e) => e.key === selectedNetworkKey.value) ?? defaultNetwork;
   });
 
   const l1Network = computed<L1Network | undefined>(() => selectedNetwork.value.l1Network);
@@ -23,7 +21,7 @@ export const useNetworkStore = defineStore("network", () => {
   const networkChangedWarningDisabled = useStorage<boolean>("networkChangedWarningDisabled", false);
   const lastSelectedNetworkKey = useStorage<string | undefined>("lastSelectedNetworkKey", undefined);
   const lastSelectedNetwork = computed<ZkSyncNetwork | undefined>(() => {
-    return zkSyncNetworks.find((network) => network.key === lastSelectedNetworkKey.value);
+    return chainList.find((network) => network.key === lastSelectedNetworkKey.value);
   });
   const networkChangedWarning = computed(
     () =>
@@ -45,7 +43,7 @@ export const useNetworkStore = defineStore("network", () => {
   const identifyNetworkByQueryParam = () => {
     const windowLocation = window.location;
     const networkFromQueryParam = new URLSearchParams(windowLocation.search).get("network");
-    if (networkFromQueryParam && zkSyncNetworks.some((e) => e.key === networkFromQueryParam)) {
+    if (networkFromQueryParam && chainList.some((e) => e.key === networkFromQueryParam)) {
       selectedNetworkKey.value = networkFromQueryParam;
       resetNetworkChangeWarning();
     }

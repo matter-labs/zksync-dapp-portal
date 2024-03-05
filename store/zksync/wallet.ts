@@ -13,11 +13,11 @@ export const useZkSyncWalletStore = defineStore("zkSyncWallet", () => {
   const tokensStore = useZkSyncTokensStore();
   const { eraNetwork } = storeToRefs(providerStore);
   const { tokens } = storeToRefs(tokensStore);
-  const { account, network } = storeToRefs(onboardStore);
+  const { account } = storeToRefs(onboardStore);
   const { validateAddress } = useScreening();
 
   const { execute: getSigner, reset: resetSigner } = usePromise(async () => {
-    const walletNetworkId = network.value?.id;
+    const walletNetworkId = account.value.chain?.id;
     if (walletNetworkId !== eraNetwork.value.id) {
       throw new Error(
         `Incorrect wallet network selected: #${walletNetworkId} (expected: ${eraNetwork.value.name} #${eraNetwork.value.id})`
@@ -31,7 +31,7 @@ export const useZkSyncWalletStore = defineStore("zkSyncWallet", () => {
   const { execute: getL1Signer, reset: resetL1Signer } = usePromise(async () => {
     if (!eraNetwork.value.l1Network) throw new Error(`L1 network is not available on ${eraNetwork.value.name}`);
 
-    const walletNetworkId = network.value?.id;
+    const walletNetworkId = account.value.chain?.id;
     if (walletNetworkId !== eraNetwork.value.l1Network.id) {
       throw new Error(
         `Incorrect wallet network selected: #${walletNetworkId} (expected: ${eraNetwork.value.l1Network.name} #${eraNetwork.value.l1Network.id})`
@@ -148,7 +148,7 @@ export const useZkSyncWalletStore = defineStore("zkSyncWallet", () => {
   };
 
   const isCorrectNetworkSet = computed(() => {
-    const walletNetworkId = network.value?.id;
+    const walletNetworkId = account.value.chain?.id;
     return walletNetworkId === eraNetwork.value.id;
   });
   const {

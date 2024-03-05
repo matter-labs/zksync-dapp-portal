@@ -74,7 +74,7 @@
         </div>
         <CommonCardWithLineButtons>
           <DestinationItem
-            v-for="item in zkSyncNetworks.filter((e) => !e.hidden)"
+            v-for="item in chainList.filter((e) => !e.hidden)"
             :key="item.key"
             :label="item.name"
             :icon="isNetworkSelected(item) ? CheckIcon : undefined"
@@ -105,8 +105,7 @@ import {
 } from "@heroicons/vue/24/outline";
 
 import useColorMode from "@/composables/useColorMode";
-import useNetworks from "@/composables/useNetworks";
-
+import { chainList } from "@/data/networks";
 import type { ZkSyncNetwork } from "@/data/networks";
 
 const props = defineProps({
@@ -144,7 +143,6 @@ watch(
 
 const { switchColorMode, selectedColorMode } = useColorMode();
 
-const { zkSyncNetworks } = useNetworks();
 const { selectedNetwork } = storeToRefs(useNetworkStore());
 const isNetworkSelected = (network: ZkSyncNetwork) => selectedNetwork.value.key === network.key;
 const buttonClicked = (network: ZkSyncNetwork) => {

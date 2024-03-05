@@ -22,9 +22,7 @@
 import { DialogTitle } from "@headlessui/vue";
 import { useStorage } from "@vueuse/core";
 
-import useNetworks from "@/composables/useNetworks";
-
-const { isCustomNode } = useNetworks();
+import { isCustomNode } from "@/data/networks";
 
 const checkbox = ref<HTMLInputElement | undefined>();
 const legalNoticeAccepted = useStorage("zksync-bridge-legal-notice-accepted", false);

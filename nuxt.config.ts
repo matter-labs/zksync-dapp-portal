@@ -79,7 +79,6 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       walletConnectProjectID: process.env.WALLET_CONNECT_PROJECT_ID,
-      nodeType: process.env.NODE_TYPE as undefined | "memory" | "dockerized" | "hyperchain",
       ankrToken: process.env.ANKR_TOKEN,
       screeningApiUrl: process.env.SCREENING_API_URL,
       dataplaneUrl: process.env.DATAPLANE_URL,
@@ -87,6 +86,11 @@ export default defineNuxtConfig({
     },
   },
   vite: {
+    define: {
+      // make these env available even outside of the Nuxt context
+      "process.env.NODE_TYPE": JSON.stringify(process.env.NODE_TYPE),
+      "process.env.WALLET_CONNECT_PROJECT_ID": JSON.stringify(process.env.WALLET_CONNECT_PROJECT_ID),
+    },
     css: {
       preprocessorOptions: {
         scss: {

@@ -307,6 +307,7 @@ import useTransaction, { isWithdrawalManualFinalizationRequired } from "@/compos
 import type { FeeEstimationParams } from "@/composables/zksync/useFee";
 
 import { customBridgeTokens } from "@/data/customBridgeTokens";
+import { isCustomNode } from "@/data/networks";
 
 import TransferSubmitted from "@/views/transactions/TransferSubmitted.vue";
 import WithdrawalSubmitted from "@/views/transactions/WithdrawalSubmitted.vue";
@@ -330,7 +331,6 @@ const { eraNetwork } = storeToRefs(providerStore);
 const { destinations } = storeToRefs(useDestinationsStore());
 const { tokens, tokensRequestInProgress, tokensRequestError } = storeToRefs(tokensStore);
 const { balance, balanceInProgress, balanceError } = storeToRefs(walletStore);
-const { isCustomNode } = useNetworks();
 
 const toNetworkModalOpened = ref(false);
 const toNetworkSelected = (networkKey?: string) => {

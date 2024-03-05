@@ -347,11 +347,11 @@ import EthereumTransactionFooter from "@/components/transaction/EthereumTransact
 
 import useAllowance from "@/composables/transaction/useAllowance";
 import useInterval from "@/composables/useInterval";
-import useNetworks from "@/composables/useNetworks";
 import useEcosystemBanner from "@/composables/zksync/deposit/useEcosystemBanner";
 import useFee from "@/composables/zksync/deposit/useFee";
 import useTransaction from "@/composables/zksync/deposit/useTransaction";
 
+import { isCustomNode } from "@/data/networks";
 import type { Token, TokenAmount } from "@/types";
 
 import { customBridgeTokens } from "@/data/customBridgeTokens";
@@ -371,7 +371,6 @@ const { destinations } = storeToRefs(useDestinationsStore());
 const { l1BlockExplorerUrl } = storeToRefs(useNetworkStore());
 const { l1Tokens, tokensRequestInProgress, tokensRequestError } = storeToRefs(tokensStore);
 const { balance, balanceInProgress, balanceError } = storeToRefs(zkSyncEthereumBalance);
-const { isCustomNode } = useNetworks();
 
 const toNetworkModalOpened = ref(false);
 const toNetworkSelected = (networkKey?: string) => {

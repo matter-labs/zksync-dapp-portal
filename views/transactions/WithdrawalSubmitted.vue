@@ -147,6 +147,8 @@ import { ExclamationTriangleIcon } from "@heroicons/vue/24/outline";
 import { isWithdrawalManualFinalizationRequired } from "@/composables/zksync/useTransaction";
 import useWithdrawalFinalization from "@/composables/zksync/useWithdrawalFinalization";
 
+import { isCustomNode } from "@/data/networks";
+
 const props = defineProps({
   transaction: {
     type: Object as PropType<TransactionInfo>,
@@ -160,7 +162,6 @@ const props = defineProps({
 
 const onboardStore = useOnboardStore();
 const transactionStatusStore = useZkSyncTransactionStatusStore();
-const { isCustomNode } = useNetworks();
 const { eraNetwork, blockExplorerUrl } = storeToRefs(useZkSyncProviderStore());
 const { l1BlockExplorerUrl } = storeToRefs(useNetworkStore());
 const { connectorName, isCorrectNetworkSet } = storeToRefs(onboardStore);

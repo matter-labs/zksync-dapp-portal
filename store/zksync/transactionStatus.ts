@@ -64,7 +64,7 @@ export const useZkSyncTransactionStatusStore = defineStore("zkSyncTransactionSta
           topics: log.topics,
         });
         if (eventName === "NewPriorityRequest") {
-          return (args as { txHash: Hash }).txHash;
+          return (args as unknown as { txHash: Hash }).txHash;
         }
       } catch {
         // ignore failed decoding

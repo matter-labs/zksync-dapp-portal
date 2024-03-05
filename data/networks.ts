@@ -1,6 +1,7 @@
 import { goerli, mainnet, sepolia } from "@wagmi/core/chains";
-
 import type { Chain } from "@wagmi/core/chains";
+
+import Hyperchains from "@/hyperchains/config.json";
 import type { Token } from "@/types";
 
 export const l1Networks = {
@@ -64,7 +65,7 @@ export const dockerizedNode: ZkSyncNetwork = {
   },
 };
 
-export const zkSyncNetworks: ZkSyncNetwork[] = [
+const publicChains: ZkSyncNetwork[] = [
   {
     id: 324,
     key: "mainnet",
@@ -116,3 +117,23 @@ export const zkSyncNetworks: ZkSyncNetwork[] = [
     hidden: true,
   },
 ];
+
+const determineChainList = (): ZkSyncNetwork[] => {
+  switch (nodeType) {
+    case "memory":
+      return [inMemoryNode];
+    case "dockerized":
+      return [dockerizedNode];
+    case "hyperchain":
+      return (Hyperchains as unknown as Array<{ network: ZkSyncNetwork; tokens: Token[] }>).map((e) => ({
+        ...e.network,
+        getTokens: () => e.tokens,
+      }));
+    default:
+      return [...publicChains];
+  }
+};
+const nodeType = process.env.NODE_TYPE as undefined | "memory" | "dockerized" | "hyperchain";
+export const isCustomNode = !!nodeType;
+export const chainList: ZkSyncNetwork[] = determineChainList();
+export const defaultNetwork = chainList[0];

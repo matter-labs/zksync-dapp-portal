@@ -88,13 +88,13 @@ export const useZkSyncWithdrawalsStore = defineStore("zkSyncWithdrawals", () => 
     await updateWithdrawals();
   };
   const { reset: resetAutoUpdate, stop: stopAutoUpdate } = useInterval(() => {
-    updateWithdrawals();
+    updateWithdrawalsIfPossible();
   }, 60_000);
 
   onboardStore.subscribeOnAccountChange((account) => {
     if (account) {
       resetAutoUpdate();
-      updateWithdrawals();
+      updateWithdrawalsIfPossible();
     } else {
       stopAutoUpdate();
     }

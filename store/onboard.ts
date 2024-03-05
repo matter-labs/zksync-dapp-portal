@@ -7,83 +7,28 @@ import {
   disconnect as walletDisconnect,
   watchAccount,
 } from "@wagmi/core";
-import { zkSync, zkSyncSepoliaTestnet, zkSyncTestnet } from "@wagmi/core/chains";
-import { createWeb3Modal, defaultWagmiConfig } from "@web3modal/wagmi";
+import { createWeb3Modal } from "@web3modal/wagmi";
 
-import type { Chain } from "viem";
 import useColorMode from "@/composables/useColorMode";
-import useNetworks from "@/composables/useNetworks";
 import useObservable from "@/composables/useObservable";
 
-import type { ZkSyncNetwork } from "@/data/networks";
-
 import { confirmedSupportedWallets, disabledWallets } from "@/data/wallets";
+import { wagmiConfig } from "@/data/wagmi";
 
 export const useOnboardStore = defineStore("onboard", () => {
-  const { zkSyncNetworks } = useNetworks();
-  const useExistingEraChain = (network: ZkSyncNetwork) => {
-    const existingNetworks = [zkSync, zkSyncSepoliaTestnet, zkSyncTestnet];
-    return existingNetworks.find((existingNetwork) => existingNetwork.id === network.id);
-  };
-  const createEraChain = (network: ZkSyncNetwork) => {
-    return {
-      id: network.id,
-      name: network.name,
-      network: network.key,
-      nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 },
-      rpcUrls: {
-        default: { http: [network.rpcUrl] },
-        public: { http: [network.rpcUrl] },
-      },
-    };
-  };
-  const getAllChains = () => {
-    const chains: Chain[] = [];
-    const addUniqueChain = (chain: Chain) => {
-      if (!chains.find((existingChain) => existingChain.id === chain.id)) {
-        chains.push(chain);
-      }
-    };
-    for (const network of zkSyncNetworks) {
-      if (network.l1Network) {
-        addUniqueChain(network.l1Network);
-      }
-      addUniqueChain(useExistingEraChain(network) ?? createEraChain(network));
-    }
-
-    return chains;
-  };
-
-  const extendedChains = [...getAllChains()];
-
   const { public: env } = useRuntimeConfig();
   const { selectedColorMode } = useColorMode();
   const { selectedNetwork, l1Network } = storeToRefs(useNetworkStore());
 
-  const metadata = {
-    name: "zkSync Portal",
-    description: "zkSync Portal - view balances, transfer and bridge tokens",
-    url: "https://portal.zksync.io",
-    icons: ["https://portal.zksync.io/icon.png"],
-  };
-  const wagmiConfig = defaultWagmiConfig({
-    chains: extendedChains as Chain[],
-    projectId: env.walletConnectProjectID,
-    metadata,
-  });
   reconnect(wagmiConfig);
 
   const account = ref(getAccount(wagmiConfig));
-  const network = ref(account.value.chain);
   const connectingWalletError = ref<string | undefined>();
   const connectorName = ref(account.value.connector?.name);
   const walletName = ref<string | undefined>();
   const walletNotSupported = computed(() => {
-    if (!walletName.value || !account.value.connector) return false;
-    const isWalletNotSupported = !confirmedSupportedWallets.find(
-      (wallet) => wallet.walletName === walletName.value && wallet.type === account.value.connector?.id
-    );
-    return isWalletNotSupported;
+    if (!walletName.value) return false;
+    return !confirmedSupportedWallets.find((wallet) => wallet === walletName.value);
   });
   const identifyWalletName = async () => {
     const { connector } = getAccount(wagmiConfig);
@@ -96,9 +41,7 @@ export const useOnboardStore = defineStore("onboard", () => {
     }
 
     if (walletName.value && connector) {
-      const isWalletDisabled = !!disabledWallets.find(
-        (wallet) => wallet.walletName === walletName.value && wallet.type === connector?.id
-      );
+      const isWalletDisabled = !!disabledWallets.find((wallet) => wallet === walletName.value);
       if (isWalletDisabled) throw new Error(`Unfortunately ${walletName.value} wallet is not supported at the moment!`);
     }
   };
@@ -106,7 +49,6 @@ export const useOnboardStore = defineStore("onboard", () => {
   const web3modal = createWeb3Modal({
     wagmiConfig,
     projectId: env.walletConnectProjectID,
-    chains: extendedChains,
     excludeWalletIds: ["bc949c5d968ae81310268bf9193f9c9fb7bb4e1283e1284af8f2bd4992535fd6"],
     featuredWalletIds: [
       "971e689d0a5be527bac79629b4ee9b925e82208e5168b733496a09c0faed0709",
@@ -120,13 +62,6 @@ export const useOnboardStore = defineStore("onboard", () => {
 
   watchAccount(wagmiConfig, {
     onChange: async (updatedAccount) => {
-      network.value = updatedAccount.chain;
-      // There is a bug in @wagmi/core@0.10.11 or @web3modal/ethereum@^2.3.7
-      // On page update or after using `ethereumClient.disconnect` method
-      // the account state is replaced with "connecting" state
-      if (updatedAccount.status === "connecting" && !updatedAccount.connector) {
-        return;
-      }
       try {
         await identifyWalletName();
         account.value = updatedAccount;
@@ -152,7 +87,7 @@ export const useOnboardStore = defineStore("onboard", () => {
   };
 
   const isCorrectNetworkSet = computed(() => {
-    const walletNetworkId = network.value?.id;
+    const walletNetworkId = account.value.chain?.id;
     return walletNetworkId === l1Network.value?.id;
   });
   const switchNetworkById = async (chainId: number, networkName?: string) => {
@@ -196,11 +131,8 @@ export const useOnboardStore = defineStore("onboard", () => {
   };
 
   return {
-    wagmiConfig,
-
     account: computed(() => account.value),
     isConnected: computed(() => !!account.value.address),
-    network: computed(() => network.value),
     isConnectingWallet: computed(() => account.value.isReconnecting || account.value.isConnecting),
     connectingWalletError,
     connectorName,
@@ -218,7 +150,11 @@ export const useOnboardStore = defineStore("onboard", () => {
     getWallet,
     getPublicClient: () => {
       if (!l1Network.value) throw new Error(`L1 network is not available on ${selectedNetwork.value.name}`);
-      return getPublicClient(wagmiConfig, { chainId: l1Network.value?.id });
+      const publicClient = getPublicClient(wagmiConfig, { chainId: l1Network.value?.id });
+      if (!publicClient) {
+        throw new Error("Public client is not available");
+      }
+      return publicClient;
     },
 
     subscribeOnAccountChange,
