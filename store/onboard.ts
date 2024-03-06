@@ -1,3 +1,4 @@
+import { useStorage } from "@vueuse/core";
 import {
   getAccount,
   getPublicClient,
@@ -22,7 +23,9 @@ export const useOnboardStore = defineStore("onboard", () => {
   const connectingWalletError = ref<string | undefined>();
   const connectorName = ref(account.value.connector?.name);
   const walletName = ref<string | undefined>();
+  const walletWarningDisabled = useStorage("zksync-bridge-wallet-warning-disabled", false);
   const walletNotSupported = computed(() => {
+    if (walletWarningDisabled.value) return false;
     if (!walletName.value) return false;
     return !confirmedSupportedWallets.find((wallet) => wallet === walletName.value);
   });
@@ -135,6 +138,7 @@ export const useOnboardStore = defineStore("onboard", () => {
     connectingWalletError,
     connectorName,
     walletName,
+    walletWarningDisabled,
     walletNotSupported,
     openModal,
     disconnect,

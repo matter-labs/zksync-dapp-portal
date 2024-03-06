@@ -4,7 +4,6 @@
     <ModalConnectingWalletError />
     <ModalNetworkChangedWarning v-if="!isConnectingWallet" />
     <ModalLegalNotice />
-    <ModalWalletWarning />
 
     <Header />
     <main class="app-layout-main">

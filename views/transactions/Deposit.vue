@@ -1,6 +1,7 @@
 <template>
   <div>
     <PageTitle v-if="step === 'form'">Bridge</PageTitle>
+    <PageTitle v-else-if="step === 'wallet-warning'">Wallet warning</PageTitle>
     <PageTitle
       v-else-if="step === 'confirm'"
       :back-function="
@@ -105,6 +106,35 @@
         >
           Open {{ tokenCustomBridge?.bridgeName }}
           <ArrowTopRightOnSquareIcon class="h-6 w-6" aria-hidden="true" />
+        </CommonButton>
+      </template>
+      <template v-else-if="step === 'wallet-warning'">
+        <CommonAlert variant="warning" :icon="ExclamationTriangleIcon" class="mb-block-padding-1/2 sm:mb-block-gap">
+          <p>
+            Make sure your wallet supports {{ eraNetwork.name }} network before adding funds to your account. Otherwise,
+            this can result in <span class="font-medium text-red-600">loss of funds</span>. See the list of supported
+            wallets on the
+            <a
+              class="underline underline-offset-2"
+              href="https://zksync.dappradar.com/ecosystem?category-de=wallet"
+              target="_blank"
+              >Ecosystem</a
+            >
+            website.
+          </p>
+        </CommonAlert>
+        <CommonButton type="submit" variant="primary" class="mt-block-gap w-full gap-1" @click="buttonContinue()">
+          I understand, proceed to bridge
+        </CommonButton>
+        <CommonButton
+          as="a"
+          href="https://zksync.dappradar.com/ecosystem?category-de=bridges"
+          target="_blank"
+          size="sm"
+          class="mx-auto mt-block-gap w-max"
+          @click="disableWalletWarning()"
+        >
+          Don't show again
         </CommonButton>
       </template>
       <template v-else-if="step === 'confirm'">
@@ -362,7 +392,7 @@ const tokensStore = useZkSyncTokensStore();
 const providerStore = useZkSyncProviderStore();
 const zkSyncEthereumBalance = useZkSyncEthereumBalanceStore();
 const eraWalletStore = useZkSyncWalletStore();
-const { account, isConnected } = storeToRefs(onboardStore);
+const { account, isConnected, walletNotSupported, walletWarningDisabled } = storeToRefs(onboardStore);
 const { eraNetwork } = storeToRefs(providerStore);
 const { destinations } = storeToRefs(useDestinationsStore());
 const { l1BlockExplorerUrl } = storeToRefs(useNetworkStore());
@@ -382,7 +412,7 @@ const fromNetworkSelected = (networkKey?: string) => {
   }
 };
 
-const step = ref<"form" | "confirm" | "submitted">("form");
+const step = ref<"form" | "wallet-warning" | "confirm" | "submitted">("form");
 const destination = computed(() => destinations.value.era);
 
 const availableTokens = computed<Token[]>(() => {
@@ -610,10 +640,20 @@ const buttonContinue = () => {
     return;
   }
   if (step.value === "form") {
+    if (walletNotSupported.value) {
+      step.value = "wallet-warning";
+    } else {
+      step.value = "confirm";
+    }
+  } else if (step.value === "wallet-warning") {
     step.value = "confirm";
   } else if (step.value === "confirm") {
     makeTransaction();
   }
+};
+const disableWalletWarning = () => {
+  walletWarningDisabled.value = true;
+  step.value = "confirm";
 };
 
 /* Transaction signing and submitting */
