@@ -97,14 +97,6 @@ export default defineNuxtConfig({
         },
       },
     },
-    build: {
-      target: "es2020",
-    },
-    optimizeDeps: {
-      esbuildOptions: {
-        target: "es2020",
-      },
-    },
   },
   devtools: { enabled: true },
 });

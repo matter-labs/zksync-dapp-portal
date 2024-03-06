@@ -1,6 +1,6 @@
 import { BigNumber } from "ethers";
 import { parseEther } from "ethers/lib/utils";
-import { L1_RECOMMENDED_MIN_ERC20_DEPOSIT_GAS_LIMIT } from "zksync-ethers/src/utils";
+import { utils } from "zksync-ethers";
 
 import type { Token, TokenAmount } from "@/types";
 import type { BigNumberish } from "ethers";
@@ -80,7 +80,7 @@ export default (tokens: Ref<Token[]>, balances: Ref<TokenAmount[] | undefined>) 
   };
   const getERC20TransactionFee = () => {
     return {
-      l1GasLimit: BigNumber.from(L1_RECOMMENDED_MIN_ERC20_DEPOSIT_GAS_LIMIT),
+      l1GasLimit: BigNumber.from(utils.L1_RECOMMENDED_MIN_ERC20_DEPOSIT_GAS_LIMIT),
     };
   };
   const getGasPrice = async () => {
