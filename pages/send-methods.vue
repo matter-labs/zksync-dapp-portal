@@ -17,7 +17,7 @@
           v-bind="destinations.ethereum"
           :label="`Bridge to ${destinations.ethereum.label}`"
           as="RouterLink"
-          :to="{ name: 'withdraw', query: $route.query }"
+          :to="{ name: 'bridge-withdraw', query: $route.query }"
         />
       </CommonCardWithLineButtons>
       <CommonCardWithLineButtons>

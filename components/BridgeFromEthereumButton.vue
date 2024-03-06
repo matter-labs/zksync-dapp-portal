@@ -7,7 +7,7 @@
     <DestinationItem
       :icon-url="destinations.ethereum.iconUrl"
       as="RouterLink"
-      :to="{ name: 'index' }"
+      :to="{ name: 'bridge' }"
       variant="primary"
     >
       <template #label>

@@ -132,7 +132,7 @@
       <CommonButton
         size="xs"
         :as="makeAnotherTransaction ? undefined : 'RouterLink'"
-        :to="{ name: 'withdraw' }"
+        :to="{ name: 'bridge-withdraw' }"
         @click="makeAnotherTransaction && makeAnotherTransaction()"
       >
         Make another transaction

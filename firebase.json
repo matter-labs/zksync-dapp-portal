@@ -6,7 +6,7 @@
       "ignore": ["firebase.json", "**/.*", "**/node_modules/**", "**/*.map"],
       "rewrites": [
         {
-          "source": "/bridge/**",
+          "source": "**",
           "destination": "/index.html"
         }
       ],

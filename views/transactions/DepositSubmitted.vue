@@ -30,7 +30,7 @@
     <CommonButton
       size="sm"
       :as="makeAnotherTransaction ? undefined : 'RouterLink'"
-      :to="{ name: 'index' }"
+      :to="{ name: 'bridge' }"
       class="mx-auto mt-block-gap w-max"
       @click="makeAnotherTransaction && makeAnotherTransaction()"
     >

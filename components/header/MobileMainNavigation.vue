@@ -20,7 +20,7 @@
 
         <TypographyCategoryLabel size="sm">Portal</TypographyCategoryLabel>
         <CommonCardWithLineButtons>
-          <DestinationItem label="Bridge" as="RouterLink" :to="{ name: 'index' }" size="sm">
+          <DestinationItem label="Bridge" as="RouterLink" :to="{ name: 'bridge' }" size="sm">
             <template #image>
               <DestinationIconContainer>
                 <ArrowsUpDownIcon aria-hidden="true" />

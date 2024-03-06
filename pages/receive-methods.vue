@@ -22,7 +22,7 @@
           :description="`Receive from your ${destinations.ethereum.label} account`"
           :icon-url="destinations.ethereum.iconUrl"
           as="RouterLink"
-          :to="{ name: 'index', query: $route.query }"
+          :to="{ name: 'bridge', query: $route.query }"
         />
       </CommonCardWithLineButtons>
       <CommonCardWithLineButtons v-if="isTestnet">

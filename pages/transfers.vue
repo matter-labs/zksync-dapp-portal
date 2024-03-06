@@ -57,16 +57,14 @@
       <div v-else-if="displayedTransfers.length">
         <CommonCardWithLineButtons>
           <TransactionTransferLineItem v-for="(item, index) in displayedTransfers" :key="index" :transfer="item" />
+          <template v-if="canLoadMore && previousTransfersRequestInProgress">
+            <TokenBalanceLoader v-for="index in 5" :key="index" />
+          </template>
         </CommonCardWithLineButtons>
 
         <!-- Load more -->
-        <template v-if="canLoadMore">
-          <div v-if="previousTransfersRequestInProgress" class="mt-block-gap">
-            <CommonCardWithLineButtons>
-              <TokenBalanceLoader v-for="index in 5" :key="index" />
-            </CommonCardWithLineButtons>
-          </div>
-          <CommonCardWithLineButtons v-else-if="previousTransfersRequestError">
+        <template v-if="canLoadMore && !previousTransfersRequestInProgress">
+          <CommonCardWithLineButtons v-if="previousTransfersRequestError">
             <CommonErrorBlock @try-again="fetchMore">
               Loading transfers error: {{ previousTransfersRequestError.message }}
             </CommonErrorBlock>

@@ -30,7 +30,9 @@ export const useOnboardStore = defineStore("onboard", () => {
     const { connector } = getAccount(wagmiConfig);
     const provider = await connector?.getProvider?.();
     const name = (provider as any)?.session?.peer?.metadata?.name;
-    if (!name && connector?.name !== "WalletConnect") {
+    if ((provider as any)?.isMetaMask) {
+      walletName.value = "MetaMask";
+    } else if (!name && connector?.name !== "WalletConnect") {
       walletName.value = connector?.name.replace(/ Wallet$/, "").trim();
     } else {
       walletName.value = name?.replace(/ Wallet$/, "").trim();

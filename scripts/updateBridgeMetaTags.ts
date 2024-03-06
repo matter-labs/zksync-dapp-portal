@@ -9,7 +9,7 @@ import { readFile, writeFile } from "fs";
 
 import { bridge as bridgeMeta } from "../data/meta";
 
-const filePaths = ["./dist/index.html", "./dist/withdraw/index.html"];
+const filePaths = ["./dist/index.html", "./dist/bridge/index.html", "./dist/bridge/withdraw/index.html"];
 
 filePaths.forEach((filePath) => {
   readFile(filePath, "utf8", function (err, data) {

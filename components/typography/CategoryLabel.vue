@@ -38,7 +38,7 @@ defineProps({
         @apply my-block-gap;
       }
       &sm {
-        @apply my-block-padding-1/2;
+        @apply my-block-padding;
       }
     }
   }

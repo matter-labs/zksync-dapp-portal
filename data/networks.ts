@@ -72,7 +72,7 @@ const publicChains: ZkSyncNetwork[] = [
     key: "mainnet",
     name: "zkSync",
     rpcUrl: "https://mainnet.era.zksync.io",
-    blockExplorerUrl: "https://explorer.zksync.io",
+    blockExplorerUrl: "https://era.zksync.network",
     blockExplorerApi: "https://block-explorer-api.mainnet.zksync.io",
     withdrawalFinalizerApi: "https://withdrawal-finalizer-api.zksync.io",
     displaySettings: {
@@ -85,7 +85,7 @@ const publicChains: ZkSyncNetwork[] = [
     key: "sepolia",
     name: "zkSync Sepolia Testnet",
     rpcUrl: "https://sepolia.era.zksync.dev",
-    blockExplorerUrl: "https://sepolia.explorer.zksync.io",
+    blockExplorerUrl: "https://sepolia-era.zksync.network",
     blockExplorerApi: "https://block-explorer-api.sepolia.zksync.dev",
     withdrawalFinalizerApi: "https://withdrawal-finalizer-api.sepolia.zksync.dev",
     displaySettings: {
