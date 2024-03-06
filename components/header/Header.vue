@@ -4,7 +4,7 @@
     <HeaderMobileAccountNavigation v-model:opened="mobileAccountNavigationOpened" />
 
     <div class="logo-container">
-      <NuxtLink :to="{ name: 'bridge' }">
+      <NuxtLink :to="{ name: 'index' }">
         <IconsZkSync class="logo-icon" />
       </NuxtLink>
       <span class="beta-label">Beta</span>
@@ -12,7 +12,7 @@
     <div class="links-container">
       <NuxtLink
         class="link-item"
-        :to="{ name: 'bridge' }"
+        :to="{ name: 'index' }"
         :class="{ 'router-link-exact-active': routes.bridge.includes(route.name?.toString() || '') }"
       >
         <ArrowsUpDownIcon class="link-icon" aria-hidden="true" />
@@ -78,7 +78,7 @@ import {
 const route = useRoute();
 
 const routes = {
-  bridge: ["bridge", "bridge-withdraw"],
+  bridge: ["index", "withdraw"],
   assets: ["assets", "balances", "receive-methods", "receive", "send-methods", "send"],
 };
 

@@ -12,21 +12,22 @@
           <MagnifyingGlassIcon aria-hidden="true" />
         </template>
       </CommonInputSearch> -->
-      <div>
+      <div class="-mx-block-padding-1/2 h-full overflow-auto px-block-padding-1/2">
         <div v-for="(group, groupIndex) in displayedGroups" :key="groupIndex" class="category">
           <!-- <TypographyCategoryLabel size="sm" variant="darker" class="group-category-label">
             {{ group.title }}
           </TypographyCategoryLabel> -->
-          <CommonLineButtonsGroup :margin-y="false" :gap="false">
+          <div class="-mx-block-padding-1/4 sm:-mx-block-padding-1/2">
             <DestinationItem
               v-for="(item, itemIndex) in group.destinations"
               v-bind="item"
               :key="itemIndex"
               :icon="item.key === selectedNetworkKey ? CheckIcon : undefined"
               variant="light"
+              size="sm"
               @click="selectedNetworkKey = item.key!"
             />
-          </CommonLineButtonsGroup>
+          </div>
         </div>
         <p v-if="search && !displayedGroups.length" class="mt-block-padding-1/2 text-center">
           No chains found for "{{ search }}"
@@ -110,7 +111,7 @@ const closeModal = () => {
     @apply grid h-full grid-rows-[max-content_max-content_1fr];
   }
   .category:first-child .group-category-label {
-    @apply mt-block-padding-1/2;
+    @apply pt-0;
   }
 }
 </style>

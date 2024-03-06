@@ -24,7 +24,7 @@
           </CommonErrorBlock>
         </template>
         <template v-else-if="!hasBalances && (!search || displayedTokens.length)">
-          <CommonLineButtonsGroup class="category" :gap="false" :margin-y="false">
+          <div class="category -mx-block-padding-1/4 sm:-mx-block-padding-1/2">
             <TokenLine
               v-for="item in displayedTokens"
               :key="item.address"
@@ -32,22 +32,23 @@
               v-bind="item"
               @click="selectedToken = item"
             />
-          </CommonLineButtonsGroup>
+          </div>
         </template>
         <template v-else-if="balanceGroups.length || !search">
           <div v-for="(group, index) in balanceGroups" :key="index" class="category">
             <TypographyCategoryLabel size="sm" variant="darker" class="group-category-label">
               {{ group.title || "Your assets" }}
             </TypographyCategoryLabel>
-            <CommonLineButtonsGroup :gap="false">
+            <div class="-mx-block-padding-1/4 sm:-mx-block-padding-1/2">
               <TokenBalance
                 v-for="item in group.balances"
                 v-bind="item"
                 :key="item.address"
+                size="sm"
                 variant="light"
                 @click="selectedToken = item"
               />
-            </CommonLineButtonsGroup>
+            </div>
           </div>
         </template>
         <p v-else class="mt-block-padding-1/2 text-center">
@@ -157,7 +158,7 @@ const closeModal = () => {
     @apply grid h-full grid-rows-[max-content_max-content_1fr];
   }
   .category:first-child .group-category-label {
-    @apply mt-block-padding-1/2;
+    @apply pt-0;
   }
 }
 </style>

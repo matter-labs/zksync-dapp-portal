@@ -13,6 +13,7 @@
 ## 🎉 Try it out!
 
 - 🌐 Dive in now at [portal.zksync.io](https://portal.zksync.io/).
+- 🌉 Also, explore the zkSync Era Bridge at [bridge.zksync.io](https://bridge.zksync.io).
 
 ---
 

@@ -167,7 +167,7 @@ const depositMethods = computed(() => {
         description: `Receive tokens from your ${eraNetwork.value.l1Network?.name} account`,
         as: "RouterLink",
         to: {
-          name: "bridge",
+          name: "index",
         },
       },
     });
