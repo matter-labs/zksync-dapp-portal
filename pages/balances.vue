@@ -24,7 +24,6 @@
               v-for="item in group.balances"
               :key="item.address"
               as="div"
-              show-name-link
               :send-route-name="
                 item.amount === '0' ? 'receive-methods' : eraNetwork.l1Network ? 'send-methods' : 'send'
               "

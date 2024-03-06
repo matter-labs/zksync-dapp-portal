@@ -63,7 +63,6 @@
               v-for="item in displayedBalances"
               :key="item.address"
               as="div"
-              show-name-link
               :send-route-name="eraNetwork.l1Network ? 'send-methods' : 'send'"
               v-bind="item"
             />

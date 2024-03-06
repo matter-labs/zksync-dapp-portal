@@ -67,7 +67,7 @@ const addressParts = computed<[string, string, string]>(() => {
       @apply text-right;
 
       .account-address {
-        @apply break-all;
+        @apply break-all text-sm;
       }
     }
     .account-avatar {
