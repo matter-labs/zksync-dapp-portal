@@ -61,6 +61,24 @@ export const useOnboardStore = defineStore("onboard", () => {
     themeMode: selectedColorMode.value,
   });
 
+  web3modal.subscribeState((state) => {
+    if (!state.open && account.value.isConnecting) {
+      // when user closes the modal after selecting one of the options to connect
+      // account is still in connecting state, so we need to reset it
+      account.value = {
+        address: undefined,
+        addresses: undefined,
+        chain: undefined,
+        chainId: undefined,
+        connector: undefined,
+        isConnected: false,
+        isConnecting: false,
+        isDisconnected: true,
+        isReconnecting: false,
+        status: "disconnected",
+      };
+    }
+  });
   watchAccount(wagmiConfig, {
     onChange: async (updatedAccount) => {
       try {
@@ -134,7 +152,7 @@ export const useOnboardStore = defineStore("onboard", () => {
   return {
     account: computed(() => account.value),
     isConnected: computed(() => !!account.value.address),
-    isConnectingWallet: computed(() => account.value.isReconnecting || account.value.isConnecting),
+    isConnectingWallet: computed(() => account.value.isReconnecting), // isConnecting already has a web3modal overlay
     connectingWalletError,
     connectorName,
     walletName,
