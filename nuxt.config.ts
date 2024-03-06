@@ -83,9 +83,6 @@ export default defineNuxtConfig({
       rudderKey: process.env.RUDDER_KEY,
     },
   },
-  build: {
-    transpile: ["zksync-web3"],
-  },
   vite: {
     define: {
       // make these env available even outside of the Nuxt context
