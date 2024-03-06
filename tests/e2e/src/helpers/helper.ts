@@ -3,7 +3,7 @@ import https from "https";
 import { Status } from "@cucumber/cucumber";
 import * as dotenv from "dotenv";
 import { ethers } from "ethers";
-import { Provider } from "zksync-ethers";
+import { Provider } from "zksync-web3";
 
 import type { Pickle } from "@cucumber/messages";
 import { MainPage } from "../pages/main.page";

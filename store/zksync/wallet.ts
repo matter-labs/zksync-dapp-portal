@@ -1,6 +1,6 @@
-import { BigNumber, ethers } from "ethers";
+import { BigNumber, ethers, VoidSigner } from "ethers";
 import { $fetch } from "ofetch";
-import { L1Signer, L1VoidSigner, Web3Provider } from "zksync-ethers";
+import { L1Signer, L1VoidSigner, Web3Provider } from "zksync-web3";
 
 import type { Api, TokenAmount } from "@/types";
 import type { BigNumberish } from "ethers";
@@ -44,11 +44,8 @@ export const useZkSyncWalletStore = defineStore("zkSyncWallet", () => {
     if (!account.value.address && !anyAddress) throw new Error("Address is not available");
 
     const web3Provider = new ethers.providers.Web3Provider(onboardStore.getPublicClient() as any, "any");
-    return new L1VoidSigner(
-      account.value.address || ETH_TOKEN.address,
-      web3Provider,
-      providerStore.requestProvider()
-    ) as unknown as L1Signer;
+    const voidSigner = new VoidSigner(account.value.address || ETH_TOKEN.address, web3Provider);
+    return L1VoidSigner.from(voidSigner, providerStore.requestProvider()) as unknown as L1Signer;
   };
 
   const {

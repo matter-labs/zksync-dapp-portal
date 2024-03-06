@@ -1,5 +1,5 @@
 import { BigNumber } from "ethers";
-import IERC20 from "zksync-ethers/abi/IERC20.json";
+import IERC20 from "zksync-web3/abi/IERC20.json";
 
 import type { Hash } from "@/types";
 import type { BigNumberish } from "ethers";
@@ -26,7 +26,7 @@ export default (
       const publicClient = getPublicClient();
       const allowance = (await publicClient!.readContract({
         address: tokenAddress.value as Hash,
-        abi: IERC20,
+        abi: IERC20.abi,
         functionName: "allowance",
         args: [accountAddress.value, contractAddress],
       })) as bigint;
@@ -68,7 +68,7 @@ export default (
         setAllowanceStatus.value = "waiting-for-signature";
         setAllowanceTransactionHash.value = await wallet.writeContract({
           address: tokenAddress.value as Hash,
-          abi: IERC20,
+          abi: IERC20.abi,
           functionName: "approve",
           args: [contractAddress, approvalAmount!.toString()],
         });
