@@ -1,6 +1,6 @@
 import { BigNumber } from "ethers";
 import { parseEther } from "ethers/lib/utils";
-import { L1_RECOMMENDED_MIN_ERC20_DEPOSIT_GAS_LIMIT } from "zksync-web3/src/utils";
+import { L1_RECOMMENDED_MIN_ERC20_DEPOSIT_GAS_LIMIT } from "zksync-ethers/src/utils";
 
 import type { Token, TokenAmount } from "@/types";
 import type { BigNumberish } from "ethers";

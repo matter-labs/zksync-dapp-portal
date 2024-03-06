@@ -1,8 +1,8 @@
 import { useMemoize } from "@vueuse/core";
 import { BigNumber, type BigNumberish } from "ethers";
-import { Wallet } from "zksync-web3";
-import ZkSyncL1BridgeAbi from "zksync-web3/abi/IL1Bridge.json";
-import ZkSyncContractAbi from "zksync-web3/abi/IZkSync.json";
+import { Wallet } from "zksync-ethers";
+import ZkSyncL1BridgeAbi from "zksync-ethers/abi/IL1Bridge.json";
+import ZkSyncContractAbi from "zksync-ethers/abi/IZkSync.json";
 
 import type { Hash } from "@/types";
 
@@ -71,7 +71,7 @@ export default (transactionInfo: ComputedRef<TransactionInfo>) => {
     if (usingMainContract.value) {
       return {
         address: (await retrieveMainContractAddress()) as Hash,
-        abi: ZkSyncContractAbi.abi,
+        abi: ZkSyncContractAbi,
         account: onboardStore.account.address!,
         functionName: "finalizeEthWithdrawal",
         args: Object.values(finalizeWithdrawalParams.value!),
@@ -79,7 +79,7 @@ export default (transactionInfo: ComputedRef<TransactionInfo>) => {
     } else {
       return {
         address: (await retrieveBridgeAddress()) as Hash,
-        abi: ZkSyncL1BridgeAbi.abi,
+        abi: ZkSyncL1BridgeAbi,
         account: onboardStore.account.address!,
         functionName: "finalizeWithdrawal",
         args: Object.values(finalizeWithdrawalParams.value!),

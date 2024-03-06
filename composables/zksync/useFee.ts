@@ -2,7 +2,7 @@ import { BigNumber } from "ethers";
 
 import type { Token, TokenAmount } from "@/types";
 import type { BigNumberish } from "ethers";
-import type { Provider } from "zksync-web3";
+import type { Provider } from "zksync-ethers";
 
 export type FeeEstimationParams = {
   type: "transfer" | "withdrawal";
