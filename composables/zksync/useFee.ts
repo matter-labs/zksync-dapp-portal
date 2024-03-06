@@ -1,8 +1,10 @@
 import { BigNumber } from "ethers";
 
-import type { Token, TokenAmount } from "@/types";
 import type { BigNumberish } from "ethers";
 import type { Provider } from "zksync-ethers";
+import useTimedCache from "@/composables/useTimedCache";
+
+import type { Token, TokenAmount } from "@/types";
 
 export type FeeEstimationParams = {
   type: "transfer" | "withdrawal";

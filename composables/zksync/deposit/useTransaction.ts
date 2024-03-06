@@ -1,6 +1,8 @@
-import type { DepositFeeValues } from "@/composables/zksync/deposit/useFee";
 import type { BigNumberish } from "ethers";
 import type { L1Signer } from "zksync-ethers";
+import useScreening from "@/composables/useScreening";
+
+import type { DepositFeeValues } from "@/composables/zksync/deposit/useFee";
 
 export default (getL1Signer: () => Promise<L1Signer | undefined>) => {
   const status = ref<"not-started" | "processing" | "waiting-for-signature" | "done">("not-started");

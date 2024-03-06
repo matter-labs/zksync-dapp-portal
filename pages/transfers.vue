@@ -87,6 +87,8 @@
 <script lang="ts" setup>
 import { useIntersectionObserver } from "@vueuse/core";
 
+import useSingleLoading from "@/composables/useSingleLoading";
+
 const onboardStore = useOnboardStore();
 const { eraNetwork } = storeToRefs(useZkSyncProviderStore());
 const transfersHistoryStore = useZkSyncTransfersHistoryStore();

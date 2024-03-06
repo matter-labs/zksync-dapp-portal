@@ -38,6 +38,9 @@
 </template>
 
 <script lang="ts" setup>
+import useInterval from "@/composables/useInterval";
+import useSingleLoading from "@/composables/useSingleLoading";
+
 const onboardStore = useOnboardStore();
 const walletEraStore = useZkSyncWalletStore();
 const { isConnected } = storeToRefs(onboardStore);

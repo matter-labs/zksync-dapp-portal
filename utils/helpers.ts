@@ -1,8 +1,8 @@
 import { BigNumber } from "ethers";
 
+import type { BigNumberish } from "ethers";
 import type { ZkSyncNetwork } from "@/data/networks";
 import type { TokenAmount } from "@/types";
-import type { BigNumberish } from "ethers";
 
 export function isOnlyZeroes(value: string) {
   return value.replace(/0/g, "").replace(/\./g, "").length === 0;

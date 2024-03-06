@@ -9,10 +9,14 @@ import {
 } from "@wagmi/core";
 import { createWeb3Modal } from "@web3modal/wagmi";
 
-import { wagmiConfig } from "@/data/wagmi";
+import useColorMode from "@/composables/useColorMode";
+import useObservable from "@/composables/useObservable";
+
 import { confirmedSupportedWallets, disabledWallets } from "@/data/wallets";
+import { wagmiConfig } from "@/data/wagmi";
 
 export const useOnboardStore = defineStore("onboard", () => {
+  const { public: env } = useRuntimeConfig();
   const { selectedColorMode } = useColorMode();
   const { selectedNetwork, l1Network } = storeToRefs(useNetworkStore());
 
@@ -44,7 +48,7 @@ export const useOnboardStore = defineStore("onboard", () => {
 
   const web3modal = createWeb3Modal({
     wagmiConfig,
-    projectId: process.env.WALLET_CONNECT_PROJECT_ID!,
+    projectId: env.walletConnectProjectID,
     excludeWalletIds: ["bc949c5d968ae81310268bf9193f9c9fb7bb4e1283e1284af8f2bd4992535fd6"],
     featuredWalletIds: [
       "971e689d0a5be527bac79629b4ee9b925e82208e5168b733496a09c0faed0709",

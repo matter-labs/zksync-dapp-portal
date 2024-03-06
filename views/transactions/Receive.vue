@@ -34,6 +34,8 @@
 <script lang="ts" setup>
 import { DocumentDuplicateIcon, ExclamationTriangleIcon } from "@heroicons/vue/24/outline";
 
+import useCopy from "@/composables/useCopy";
+
 const props = defineProps({
   address: {
     type: String,

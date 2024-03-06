@@ -124,6 +124,8 @@ import {
   Squares2X2Icon,
 } from "@heroicons/vue/24/outline";
 
+import useCopy from "@/composables/useCopy";
+
 const props = defineProps({
   opened: {
     type: Boolean,

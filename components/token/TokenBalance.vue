@@ -32,8 +32,8 @@
 <script lang="ts" setup>
 import { BigNumber } from "ethers";
 
-import type { TokenPrice } from "@/types";
 import type { BigNumberish } from "ethers";
+import type { TokenPrice } from "@/types";
 
 const props = defineProps({
   as: {

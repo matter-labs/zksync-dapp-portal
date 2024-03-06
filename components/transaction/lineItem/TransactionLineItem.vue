@@ -39,15 +39,17 @@
 </template>
 
 <script lang="ts" setup>
+import { useTippy } from "vue-tippy";
+
 import {
   ArrowTopRightOnSquareIcon,
   DocumentDuplicateIcon,
   InformationCircleIcon,
   XMarkIcon,
 } from "@heroicons/vue/24/outline";
-import { useTippy } from "vue-tippy";
 
 import type { RouteLocation } from "vue-router";
+import useCopy from "@/composables/useCopy";
 
 const props = defineProps({
   icon: {

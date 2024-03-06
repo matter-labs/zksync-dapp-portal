@@ -2,6 +2,8 @@ import { useMemoize } from "@vueuse/core";
 import { BigNumber, type BigNumberish } from "ethers";
 import { parseEther } from "ethers/lib/utils";
 
+import useScreening from "@/composables/useScreening";
+
 import type { TokenAmount } from "@/types";
 
 type TransactionParams = {

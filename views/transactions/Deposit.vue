@@ -342,17 +342,20 @@ import { useRouteQuery } from "@vueuse/router";
 import { BigNumber } from "ethers";
 import { isAddress } from "ethers/lib/utils";
 
+import type { BigNumberish } from "ethers";
 import EthereumTransactionFooter from "@/components/transaction/EthereumTransactionFooter.vue";
+
 import useAllowance from "@/composables/transaction/useAllowance";
+import useInterval from "@/composables/useInterval";
 import useEcosystemBanner from "@/composables/zksync/deposit/useEcosystemBanner";
 import useFee from "@/composables/zksync/deposit/useFee";
 import useTransaction from "@/composables/zksync/deposit/useTransaction";
-import { customBridgeTokens } from "@/data/customBridgeTokens";
-import { isCustomNode } from "@/data/networks";
-import DepositSubmitted from "@/views/transactions/DepositSubmitted.vue";
 
+import { isCustomNode } from "@/data/networks";
 import type { Token, TokenAmount } from "@/types";
-import type { BigNumberish } from "ethers";
+
+import { customBridgeTokens } from "@/data/customBridgeTokens";
+import DepositSubmitted from "@/views/transactions/DepositSubmitted.vue";
 
 const route = useRoute();
 const router = useRouter();

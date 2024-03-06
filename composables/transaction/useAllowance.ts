@@ -1,8 +1,9 @@
 import { BigNumber } from "ethers";
+
 import IERC20 from "zksync-ethers/abi/IERC20.json";
 
-import type { Hash } from "@/types";
 import type { BigNumberish } from "ethers";
+import type { Hash } from "@/types";
 
 export default (
   accountAddress: Ref<string | undefined>,

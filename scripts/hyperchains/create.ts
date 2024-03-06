@@ -63,11 +63,13 @@ const promptHyperchainInfo = async (): Promise<Network> => {
     const {
       l1NetworkId,
       l1NetworkName,
+      l1NetworkKey,
       l1NetworkRpcUrl,
       l1NetworkBlockExplorerUrl,
     }: {
       l1NetworkId: number;
       l1NetworkName: string;
+      l1NetworkKey: string;
       l1NetworkRpcUrl: string;
       l1NetworkBlockExplorerUrl: string;
     } = await prompt([
@@ -81,6 +83,12 @@ const promptHyperchainInfo = async (): Promise<Network> => {
       {
         message: "Displayed L1 chain name",
         name: "l1NetworkName",
+        type: "input",
+        required: true,
+      },
+      {
+        message: "L1 chain key (eg. mainnet, goerli, localhost)",
+        name: "l1NetworkKey",
         type: "input",
         required: true,
       },
@@ -100,6 +108,7 @@ const promptHyperchainInfo = async (): Promise<Network> => {
     l1Network = {
       id: l1NetworkId,
       name: l1NetworkName,
+      network: l1NetworkKey,
       nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 },
       rpcUrls: {
         default: { http: [l1NetworkRpcUrl] },

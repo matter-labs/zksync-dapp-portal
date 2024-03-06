@@ -298,16 +298,19 @@ import { useRouteQuery } from "@vueuse/router";
 import { BigNumber } from "ethers";
 import { isAddress } from "ethers/lib/utils";
 
+import type { BigNumberish } from "ethers";
+
+import type { Token, TokenAmount } from "@/types";
+
 import useFee from "@/composables/zksync/useFee";
 import useTransaction, { isWithdrawalManualFinalizationRequired } from "@/composables/zksync/useTransaction";
+import type { FeeEstimationParams } from "@/composables/zksync/useFee";
+
 import { customBridgeTokens } from "@/data/customBridgeTokens";
 import { isCustomNode } from "@/data/networks";
+
 import TransferSubmitted from "@/views/transactions/TransferSubmitted.vue";
 import WithdrawalSubmitted from "@/views/transactions/WithdrawalSubmitted.vue";
-
-import type { FeeEstimationParams } from "@/composables/zksync/useFee";
-import type { Token, TokenAmount } from "@/types";
-import type { BigNumberish } from "ethers";
 
 const props = defineProps({
   type: {

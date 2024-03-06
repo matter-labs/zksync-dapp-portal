@@ -40,8 +40,8 @@
 </template>
 
 <script lang="ts" setup>
-import type { Token } from "@/types";
 import type { BigNumberish } from "ethers";
+import type { Token } from "@/types";
 
 const props = defineProps({
   label: {
