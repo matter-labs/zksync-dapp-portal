@@ -4,7 +4,7 @@
     <HeaderMobileAccountNavigation v-model:opened="mobileAccountNavigationOpened" />
 
     <div class="logo-container">
-      <NuxtLink :to="{ name: 'index' }">
+      <NuxtLink :to="{ name: 'bridge' }">
         <IconsZkSync class="logo-icon" />
       </NuxtLink>
       <span class="beta-label">Beta</span>
@@ -12,7 +12,7 @@
     <div class="links-container">
       <NuxtLink
         class="link-item"
-        :to="{ name: 'index' }"
+        :to="{ name: 'bridge' }"
         :class="{ 'router-link-exact-active': routes.bridge.includes(route.name?.toString() || '') }"
       >
         <ArrowsUpDownIcon class="link-icon" aria-hidden="true" />
@@ -66,8 +66,6 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue";
-
 import {
   ArrowsRightLeftIcon,
   ArrowsUpDownIcon,
@@ -76,18 +74,11 @@ import {
   SunIcon,
   WalletIcon,
 } from "@heroicons/vue/24/outline";
-import { storeToRefs } from "pinia";
-
-import useColorMode from "@/composables/useColorMode";
-
-import { useRoute } from "#imports";
-import { useOnboardStore } from "@/store/onboard";
-import { useZkSyncWithdrawalsStore } from "@/store/zksync/withdrawals";
 
 const route = useRoute();
 
 const routes = {
-  bridge: ["index", "withdraw"],
+  bridge: ["bridge", "bridge-withdraw"],
   assets: ["assets", "balances", "receive-methods", "receive", "send-methods", "send"],
 };
 

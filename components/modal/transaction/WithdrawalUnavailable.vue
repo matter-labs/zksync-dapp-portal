@@ -11,9 +11,5 @@
 </template>
 
 <script lang="ts" setup>
-import { storeToRefs } from "pinia";
-
-import { useZkSyncProviderStore } from "@/store/zksync/provider";
-
 const { eraNetwork } = storeToRefs(useZkSyncProviderStore());
 </script>

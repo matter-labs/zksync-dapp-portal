@@ -4,14 +4,21 @@
     <div class="error-info-container">
       <h1 class="error-status-code">{{ error.statusCode }}</h1>
       <p class="error-message">{{ error.message }}</p>
-      <CommonButton as="RouterLink" :to="{ name: 'index' }" class="mt-4" variant="primary">Back to Bridge</CommonButton>
+      <CommonButton as="RouterLink" :to="{ name: 'bridge' }" class="mt-4" variant="primary">
+        Back to Bridge
+      </CommonButton>
     </div>
   </div>
 </template>
 
 <script lang="ts">
 export default {
-  props: ["error"],
+  props: {
+    error: {
+      type: Object as PropType<any>,
+      required: true,
+    },
+  },
 };
 </script>
 

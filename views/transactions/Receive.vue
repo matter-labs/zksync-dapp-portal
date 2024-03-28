@@ -32,17 +32,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from "vue";
-
 import { DocumentDuplicateIcon, ExclamationTriangleIcon } from "@heroicons/vue/24/outline";
-import { storeToRefs } from "pinia";
-
-import useCopy from "@/composables/useCopy";
-
-import type { TransactionDestination } from "@/store/destinations";
-import type { PropType } from "vue";
-
-import { useZkSyncProviderStore } from "@/store/zksync/provider";
 
 const props = defineProps({
   address: {

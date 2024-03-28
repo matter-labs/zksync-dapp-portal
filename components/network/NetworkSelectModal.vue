@@ -12,22 +12,21 @@
           <MagnifyingGlassIcon aria-hidden="true" />
         </template>
       </CommonInputSearch> -->
-      <div class="-mx-block-padding-1/2 h-full overflow-auto px-block-padding-1/2">
+      <div>
         <div v-for="(group, groupIndex) in displayedGroups" :key="groupIndex" class="category">
           <!-- <TypographyCategoryLabel size="sm" variant="darker" class="group-category-label">
             {{ group.title }}
           </TypographyCategoryLabel> -->
-          <div class="-mx-block-padding-1/4 sm:-mx-block-padding-1/2">
+          <CommonLineButtonsGroup :margin-y="false" :gap="false">
             <DestinationItem
               v-for="(item, itemIndex) in group.destinations"
               v-bind="item"
               :key="itemIndex"
               :icon="item.key === selectedNetworkKey ? CheckIcon : undefined"
               variant="light"
-              size="sm"
               @click="selectedNetworkKey = item.key!"
             />
-          </div>
+          </CommonLineButtonsGroup>
         </div>
         <p v-if="search && !displayedGroups.length" class="mt-block-padding-1/2 text-center">
           No chains found for "{{ search }}"
@@ -39,15 +38,8 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref } from "vue";
-
 import { Combobox } from "@headlessui/vue";
 import { CheckIcon } from "@heroicons/vue/24/outline";
-import { storeToRefs } from "pinia";
-
-import type { TransactionDestination } from "@/store/destinations";
-
-import { useDestinationsStore } from "@/store/destinations";
 
 const props = defineProps({
   title: {
@@ -118,7 +110,7 @@ const closeModal = () => {
     @apply grid h-full grid-rows-[max-content_max-content_1fr];
   }
   .category:first-child .group-category-label {
-    @apply pt-0;
+    @apply mt-block-padding-1/2;
   }
 }
 </style>

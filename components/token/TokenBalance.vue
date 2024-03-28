@@ -30,15 +30,10 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from "vue";
-
 import { BigNumber } from "ethers";
 
 import type { TokenPrice } from "@/types";
 import type { BigNumberish } from "ethers";
-import type { Component, PropType } from "vue";
-
-import { formatTokenPrice, parseTokenAmount, removeSmallAmountPretty } from "@/utils/formatters";
 
 const props = defineProps({
   as: {

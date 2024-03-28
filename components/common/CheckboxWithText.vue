@@ -1,7 +1,7 @@
 <template>
   <label class="checkbox-with-text" tabindex="0" @keyup.enter="checked = !checked">
     <div class="relative">
-      <input type="checkbox" v-model="checked" class="sr-only" tabindex="-1" />
+      <input v-model="checked" type="checkbox" class="sr-only" tabindex="-1" />
       <div class="checkbox-input" :class="{ checked }">
         <svg v-if="checked" class="checkbox-icon" viewBox="0 0 20 20" fill="currentColor">
           <path
@@ -19,8 +19,6 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from "vue";
-
 const props = defineProps({
   modelValue: {
     type: Boolean,

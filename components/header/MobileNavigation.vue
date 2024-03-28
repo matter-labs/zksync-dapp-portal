@@ -17,12 +17,8 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, watch } from "vue";
-
 import { Dialog, DialogPanel, DialogTitle } from "@headlessui/vue";
 import { XMarkIcon } from "@heroicons/vue/24/outline";
-
-import { useRoute } from "#imports";
 
 const props = defineProps({
   opened: {
@@ -72,7 +68,7 @@ const close = () => {
   height: 100dvh;
 
   .navigation-header {
-    @apply sticky top-0 flex items-center justify-between p-2 sm:p-4;
+    @apply sticky top-0 flex items-center justify-between bg-neutral-50/70 p-2 backdrop-blur dark:bg-black/70 sm:p-4;
 
     .navigation-title {
       @apply mb-0;

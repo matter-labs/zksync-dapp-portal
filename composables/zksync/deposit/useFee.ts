@@ -1,19 +1,9 @@
-import { computed, ref } from "vue";
-
 import { BigNumber } from "ethers";
 import { parseEther } from "ethers/lib/utils";
-import { L1_RECOMMENDED_MIN_ERC20_DEPOSIT_GAS_LIMIT } from "zksync-web3/build/src/utils";
-
-import useTimedCache from "@/composables/useTimedCache";
+import { utils } from "zksync-ethers";
 
 import type { Token, TokenAmount } from "@/types";
-import type { PublicClient } from "@wagmi/core";
 import type { BigNumberish } from "ethers";
-import type { Ref } from "vue";
-import type { L1Signer } from "zksync-web3";
-
-import { retry } from "@/utils/helpers";
-import { calculateFee } from "@/utils/helpers";
 
 export type DepositFeeValues = {
   maxFeePerGas?: BigNumber;
@@ -24,12 +14,10 @@ export type DepositFeeValues = {
   l2GasLimit?: BigNumber;
 };
 
-export default (
-  tokens: Ref<Token[]>,
-  balances: Ref<TokenAmount[] | undefined>,
-  getL1VoidSigner: () => L1Signer,
-  getPublicClient: () => PublicClient
-) => {
+export default (tokens: Ref<Token[]>, balances: Ref<TokenAmount[] | undefined>) => {
+  const { getPublicClient } = useOnboardStore();
+  const { getL1VoidSigner } = useZkSyncWalletStore();
+
   let params = {
     to: undefined as string | undefined,
     tokenAddress: undefined as string | undefined,
@@ -71,14 +59,14 @@ export default (
     const signer = getL1VoidSigner();
     if (!signer) throw new Error("Signer is not available");
 
-    return retry(async () => {
+    return await retry(async () => {
       try {
         return await signer.getFullRequiredDepositFee({
           token: ETH_TOKEN.l1Address!,
           to: params.to,
         });
       } catch (err) {
-        if (err instanceof Error && err.message.startsWith("Not enough balance for deposit.")) {
+        if (err instanceof Error && err.message.startsWith("Not enough balance for deposit!")) {
           const match = err.message.match(/([\d\\.]+) ETH/);
           if (feeToken.value && match?.length) {
             const ethAmount = match[1].split(" ")?.[0];
@@ -90,9 +78,9 @@ export default (
       }
     });
   };
-  const getERC20TransactionFee = async () => {
+  const getERC20TransactionFee = () => {
     return {
-      l1GasLimit: BigNumber.from(L1_RECOMMENDED_MIN_ERC20_DEPOSIT_GAS_LIMIT),
+      l1GasLimit: BigNumber.from(utils.L1_RECOMMENDED_MIN_ERC20_DEPOSIT_GAS_LIMIT),
     };
   };
   const getGasPrice = async () => {
@@ -113,7 +101,7 @@ export default (
       if (params.tokenAddress === feeToken.value?.address) {
         fee.value = await getEthTransactionFee();
       } else {
-        fee.value = await getERC20TransactionFee();
+        fee.value = getERC20TransactionFee();
       }
       /* It can be either maxFeePerGas or gasPrice */
       if (fee.value && !fee.value?.maxFeePerGas) {

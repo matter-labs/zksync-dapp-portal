@@ -5,7 +5,7 @@
     @keyup.enter="checked = !checked"
   >
     <div class="relative">
-      <input type="checkbox" v-model="checked" class="sr-only" tabindex="-1" />
+      <input v-model="checked" type="checkbox" class="sr-only" tabindex="-1" />
       <div
         class="flex h-6 w-6 items-center justify-center rounded-md border-2"
         :class="checked ? 'border-primary-400 bg-primary-400' : 'border-neutral-300 bg-white'"
@@ -26,8 +26,6 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from "vue";
-
 const props = defineProps({
   modelValue: {
     type: Boolean,

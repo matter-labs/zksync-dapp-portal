@@ -1,10 +1,6 @@
 import { $fetch } from "ofetch";
 
-import type { Api } from "@/types";
-import type { Token } from "@/types";
-
-import { useZkSyncProviderStore } from "@/store/zksync/provider";
-import { mapApiToken } from "@/utils/mappers";
+import type { Api, Token } from "@/types";
 
 export const useZkSyncTokensStore = defineStore("zkSyncTokens", () => {
   const providerStore = useZkSyncProviderStore();

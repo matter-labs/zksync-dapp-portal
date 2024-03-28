@@ -1,11 +1,6 @@
 import usePaginatedRequest from "@/composables/zksync/usePaginatedRequest";
 
 import type { Api } from "@/types";
-import type { Transfer } from "@/utils/mappers";
-
-import { useOnboardStore } from "@/store/onboard";
-import { useZkSyncProviderStore } from "@/store/zksync/provider";
-import { mapApiTransfer } from "@/utils/mappers";
 
 const TRANSACTIONS_FETCH_LIMIT = 50;
 

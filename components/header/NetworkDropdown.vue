@@ -1,5 +1,5 @@
 <template>
-  <Menu as="div" class="network-dropdown-container" v-slot="{ open }">
+  <Menu v-slot="{ open }" as="div" class="network-dropdown-container">
     <MenuButton as="template">
       <CommonButtonDropdown :toggled="open">
         <template #left-icon>
@@ -11,12 +11,7 @@
 
     <transition v-bind="TransitionAlertScaleInOutTransition">
       <MenuItems class="network-options-container">
-        <MenuItem
-          v-for="item in zkSyncNetworks.filter((e) => !e.hidden)"
-          :key="item.key"
-          v-slot="{ active }"
-          as="template"
-        >
+        <MenuItem v-for="item in chainList.filter((e) => !e.hidden)" :key="item.key" v-slot="{ active }" as="template">
           <CommonButtonDropdown
             size="sm"
             no-chevron
@@ -41,19 +36,13 @@
 <script lang="ts" setup>
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/vue";
 import { CheckIcon } from "@heroicons/vue/24/outline";
-import { storeToRefs } from "pinia";
 
-import useNetworks from "@/composables/useNetworks";
+import { chainList } from "@/data/networks";
 
 import type { ZkSyncNetwork } from "@/data/networks";
 
-import { useRoute } from "#app";
-import { useNetworkStore } from "@/store/network";
-import { getNetworkUrl } from "@/utils/helpers";
-
 const route = useRoute();
 
-const { zkSyncNetworks } = useNetworks();
 const { selectedNetwork } = storeToRefs(useNetworkStore());
 
 const isNetworkSelected = (network: ZkSyncNetwork) => selectedNetwork.value.key === network.key;

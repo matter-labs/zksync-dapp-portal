@@ -1,6 +1,8 @@
 <template>
   <div>
+    <NetworkDeprecationAlert v-if="step === 'form'" />
     <PageTitle v-if="step === 'form'">Bridge</PageTitle>
+    <PageTitle v-else-if="step === 'wallet-warning'">Wallet warning</PageTitle>
     <PageTitle
       v-else-if="step === 'confirm'"
       :back-function="
@@ -84,7 +86,7 @@
               <span>{{ destination.label }}</span>
             </CommonButtonDropdown>
           </template>
-          <template #input-body v-if="tokenCustomBridge">
+          <template v-if="tokenCustomBridge" #input-body>
             <div class="mt-4">
               Bridging {{ tokenCustomBridge.symbol }} token to {{ destination.label }} requires custom bridge. Please
               use
@@ -105,6 +107,35 @@
         >
           Open {{ tokenCustomBridge?.bridgeName }}
           <ArrowTopRightOnSquareIcon class="h-6 w-6" aria-hidden="true" />
+        </CommonButton>
+      </template>
+      <template v-else-if="step === 'wallet-warning'">
+        <CommonAlert variant="warning" :icon="ExclamationTriangleIcon" class="mb-block-padding-1/2 sm:mb-block-gap">
+          <p>
+            Make sure your wallet supports {{ eraNetwork.name }} network before adding funds to your account. Otherwise,
+            this can result in <span class="font-medium text-red-600">loss of funds</span>. See the list of supported
+            wallets on the
+            <a
+              class="underline underline-offset-2"
+              href="https://zksync.dappradar.com/ecosystem?category-de=wallet"
+              target="_blank"
+              >Ecosystem</a
+            >
+            website.
+          </p>
+        </CommonAlert>
+        <CommonButton type="submit" variant="primary" class="mt-block-gap w-full gap-1" @click="buttonContinue()">
+          I understand, proceed to bridge
+        </CommonButton>
+        <CommonButton
+          as="a"
+          href="https://zksync.dappradar.com/ecosystem?category-de=bridges"
+          target="_blank"
+          size="sm"
+          class="mx-auto mt-block-gap w-max"
+          @click="disableWalletWarning()"
+        >
+          Don't show again
         </CommonButton>
       </template>
       <template v-else-if="step === 'confirm'">
@@ -144,7 +175,7 @@
               :loading="feeLoading"
             />
           </transition>
-          <CommonButtonLabel as="span" v-if="!isCustomNode" class="ml-auto text-right">~15 minutes</CommonButtonLabel>
+          <CommonButtonLabel v-if="!isCustomNode" as="span" class="ml-auto text-right">~15 minutes</CommonButtonLabel>
         </div>
         <transition v-bind="TransitionAlertScaleInOutTransition">
           <CommonAlert v-if="!enoughBalanceToCoverFee" class="mt-4" variant="error" :icon="ExclamationTriangleIcon">
@@ -264,7 +295,7 @@
                     <span v-else-if="setAllowanceStatus === 'waiting-for-signature'"
                       >Waiting for allowance approval confirmation</span
                     >
-                    <span class="flex items-center" v-else-if="setAllowanceStatus === 'sending'">
+                    <span v-else-if="setAllowanceStatus === 'sending'" class="flex items-center">
                       <CommonSpinner class="mr-2 h-6 w-6" />
                       Approving allowance...
                     </span>
@@ -332,8 +363,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, onBeforeUnmount, ref, watch } from "vue";
-
+import { useRoute, useRouter } from "#app";
 import {
   ArrowTopRightOnSquareIcon,
   CheckIcon,
@@ -343,24 +373,14 @@ import {
 import { useRouteQuery } from "@vueuse/router";
 import { BigNumber } from "ethers";
 import { isAddress } from "ethers/lib/utils";
-import { storeToRefs } from "pinia";
 
 import EthereumTransactionFooter from "@/components/transaction/EthereumTransactionFooter.vue";
-
 import useAllowance from "@/composables/transaction/useAllowance";
-import useInterval from "@/composables/useInterval";
-import useNetworks from "@/composables/useNetworks";
 import useEcosystemBanner from "@/composables/zksync/deposit/useEcosystemBanner";
 import useFee from "@/composables/zksync/deposit/useFee";
 import useTransaction from "@/composables/zksync/deposit/useTransaction";
-
-import type { TransactionDestination } from "@/store/destinations";
-import type { TransactionInfo } from "@/store/zksync/transactionStatus";
-import type { Token, TokenAmount } from "@/types";
-import type { BigNumberish } from "ethers";
-
-import { useRoute, useRouter } from "#app";
 import { customBridgeTokens } from "@/data/customBridgeTokens";
+import { isCustomNode } from "@/data/networks";
 import { useDestinationsStore } from "@/store/destinations";
 import { useNetworkStore } from "@/store/network";
 import { useOnboardStore } from "@/store/onboard";
@@ -379,6 +399,9 @@ import { silentRouterChange } from "@/utils/helpers";
 import { TransitionAlertScaleInOutTransition, TransitionOpacity } from "@/utils/transitions";
 import DepositSubmitted from "@/views/transactions/DepositSubmitted.vue";
 
+import type { Token, TokenAmount } from "@/types";
+import type { BigNumberish } from "ethers";
+
 const route = useRoute();
 const router = useRouter();
 
@@ -387,28 +410,27 @@ const tokensStore = useZkSyncTokensStore();
 const providerStore = useZkSyncProviderStore();
 const zkSyncEthereumBalance = useZkSyncEthereumBalanceStore();
 const eraWalletStore = useZkSyncWalletStore();
-const { account, isConnected } = storeToRefs(onboardStore);
+const { account, isConnected, walletNotSupported, walletWarningDisabled } = storeToRefs(onboardStore);
 const { eraNetwork } = storeToRefs(providerStore);
 const { destinations } = storeToRefs(useDestinationsStore());
 const { l1BlockExplorerUrl } = storeToRefs(useNetworkStore());
 const { l1Tokens, tokensRequestInProgress, tokensRequestError } = storeToRefs(tokensStore);
 const { balance, balanceInProgress, balanceError } = storeToRefs(zkSyncEthereumBalance);
-const { isCustomNode } = useNetworks();
 
 const toNetworkModalOpened = ref(false);
 const toNetworkSelected = (networkKey?: string) => {
   if (destinations.value.ethereum.key === networkKey) {
-    router.replace({ name: "withdraw", query: route.query });
+    router.replace({ name: "bridge-withdraw", query: route.query });
   }
 };
 const fromNetworkModalOpened = ref(false);
 const fromNetworkSelected = (networkKey?: string) => {
   if (destinations.value.era.key === networkKey) {
-    router.replace({ name: "withdraw", query: route.query });
+    router.replace({ name: "bridge-withdraw", query: route.query });
   }
 };
 
-const step = ref<"form" | "confirm" | "submitted">("form");
+const step = ref<"form" | "wallet-warning" | "confirm" | "submitted">("form");
 const destination = computed(() => destinations.value.era);
 
 const availableTokens = computed<Token[]>(() => {
@@ -472,9 +494,7 @@ const {
 } = useAllowance(
   computed(() => account.value.address),
   computed(() => selectedToken.value?.address),
-  async () => (await providerStore.requestProvider().getDefaultBridgeAddresses()).erc20L1,
-  onboardStore.getWallet,
-  onboardStore.getPublicClient
+  async () => (await providerStore.requestProvider().getDefaultBridgeAddresses()).erc20L1
 );
 const enoughAllowance = computed(() => {
   if (!allowance.value || !selectedToken.value) {
@@ -508,7 +528,7 @@ const {
   enoughBalanceToCoverFee,
   estimateFee,
   resetFee,
-} = useFee(availableTokens, balance, eraWalletStore.getL1VoidSigner, onboardStore.getPublicClient);
+} = useFee(availableTokens, balance);
 
 const queryAddress = useRouteQuery<string | undefined>("address", undefined, {
   transform: String,
@@ -638,10 +658,20 @@ const buttonContinue = () => {
     return;
   }
   if (step.value === "form") {
+    if (walletNotSupported.value) {
+      step.value = "wallet-warning";
+    } else {
+      step.value = "confirm";
+    }
+  } else if (step.value === "wallet-warning") {
     step.value = "confirm";
   } else if (step.value === "confirm") {
     makeTransaction();
   }
+};
+const disableWalletWarning = () => {
+  walletWarningDisabled.value = true;
+  step.value = "confirm";
 };
 
 /* Transaction signing and submitting */
@@ -704,7 +734,7 @@ const makeTransaction = async () => {
       }).href
     );
     waitForCompletion(transactionInfo.value)
-      .then(async (completedTransaction) => {
+      .then((completedTransaction) => {
         transactionInfo.value = completedTransaction;
         trackEvent("deposit", {
           token: transaction.value!.token.symbol,

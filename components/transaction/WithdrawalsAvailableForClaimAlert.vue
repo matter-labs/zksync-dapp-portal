@@ -11,10 +11,6 @@
 
 <script lang="ts" setup>
 import { ExclamationTriangleIcon } from "@heroicons/vue/24/outline";
-import { storeToRefs } from "pinia";
-
-import { useZkSyncProviderStore } from "@/store/zksync/provider";
-import { useZkSyncWithdrawalsStore } from "@/store/zksync/withdrawals";
 
 const { eraNetwork } = storeToRefs(useZkSyncProviderStore());
 const { withdrawalsAvailableForClaiming } = storeToRefs(useZkSyncWithdrawalsStore());

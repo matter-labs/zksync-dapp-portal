@@ -4,16 +4,16 @@
       <DestinationIconContainer>
         <slot name="icon">
           <XMarkIcon v-if="failed" class="failed-badge-icon" aria-hidden="true" />
-          <component v-else-if="icon" :is="icon" aria-hidden="true" />
+          <component :is="icon" v-else-if="icon" aria-hidden="true" />
         </slot>
       </DestinationIconContainer>
     </template>
     <template #default>
       <CommonButtonLineBodyInfo class="text-left">
-        <template #label v-if="$slots['top-left']">
+        <template v-if="$slots['top-left']" #label>
           <slot name="top-left" />
         </template>
-        <template #underline v-if="failed || $slots['bottom-left']">
+        <template v-if="failed || $slots['bottom-left']" #underline>
           <div v-if="failed" class="failed-underline">Failed</div>
           <slot v-else name="bottom-left" />
         </template>
@@ -27,10 +27,10 @@
     </template>
     <template #right>
       <CommonButtonLineBodyInfo ref="el" class="hidden text-right sm:block">
-        <template #secondary v-if="$slots['top-right']">
+        <template v-if="$slots['top-right']" #secondary>
           <slot name="top-right" />
         </template>
-        <template #underline v-if="$slots['bottom-right']">
+        <template v-if="$slots['bottom-right']" #underline>
           <slot name="bottom-right" />
         </template>
       </CommonButtonLineBodyInfo>
@@ -39,20 +39,15 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, watch } from "vue";
-import { useTippy } from "vue-tippy";
-
 import {
   ArrowTopRightOnSquareIcon,
   DocumentDuplicateIcon,
   InformationCircleIcon,
   XMarkIcon,
 } from "@heroicons/vue/24/outline";
+import { useTippy } from "vue-tippy";
 
-import useCopy from "@/composables/useCopy";
-
-import type { RouteLocation } from "#vue-router";
-import type { Component, PropType } from "vue";
+import type { RouteLocation } from "vue-router";
 
 const props = defineProps({
   icon: {

@@ -30,7 +30,7 @@
     <CommonButton
       size="sm"
       :as="makeAnotherTransaction ? undefined : 'RouterLink'"
-      :to="{ name: 'index' }"
+      :to="{ name: 'bridge' }"
       class="mx-auto mt-block-gap w-max"
       @click="makeAnotherTransaction && makeAnotherTransaction()"
     >
@@ -40,14 +40,6 @@
 </template>
 
 <script lang="ts" setup>
-import { storeToRefs } from "pinia";
-
-import type { TransactionInfo } from "@/store/zksync/transactionStatus";
-import type { PropType } from "vue";
-
-import { useNetworkStore } from "@/store/network";
-import { useZkSyncProviderStore } from "@/store/zksync/provider";
-
 defineProps({
   transaction: {
     type: Object as PropType<TransactionInfo>,

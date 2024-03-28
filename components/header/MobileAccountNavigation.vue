@@ -112,8 +112,6 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, watch } from "vue";
-
 import {
   ArrowTopRightOnSquareIcon,
   BookOpenIcon,
@@ -125,13 +123,6 @@ import {
   QuestionMarkCircleIcon,
   Squares2X2Icon,
 } from "@heroicons/vue/24/outline";
-import { storeToRefs } from "pinia";
-
-import useCopy from "@/composables/useCopy";
-
-import { useNetworkStore } from "@/store/network";
-import { useOnboardStore } from "@/store/onboard";
-import { TransitionSlideOutToLeft, TransitionSlideOutToRight } from "@/utils/transitions";
 
 const props = defineProps({
   opened: {

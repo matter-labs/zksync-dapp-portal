@@ -36,7 +36,7 @@
             >
               <div class="modal-header" :class="{ 'mb-4': title }">
                 <DialogTitle v-if="title" as="div" class="modal-title">{{ title }}</DialogTitle>
-                <button v-if="closable" @click="closeModal" data-testid="close-button">
+                <button v-if="closable" data-testid="close-button" @click="closeModal">
                   <XMarkIcon class="modal-close-icon" aria-hidden="true" />
                 </button>
               </div>
@@ -50,8 +50,6 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from "vue";
-
 import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from "@headlessui/vue";
 import { XMarkIcon } from "@heroicons/vue/24/outline";
 

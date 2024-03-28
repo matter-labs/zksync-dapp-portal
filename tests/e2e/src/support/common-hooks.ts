@@ -1,15 +1,14 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+import path from "path";
 import { After, AfterAll, Before, BeforeAll, setDefaultTimeout } from "@cucumber/cucumber";
 import { chromium } from "@playwright/test";
-import path from "path";
 
+import type { ITestCaseHookParameter } from "@cucumber/cucumber/lib/support_code_library_builder/types";
 import { Helper } from "../helpers/helper";
 import { BasePage } from "../pages/base.page";
 import { MetamaskPage } from "../pages/metamask.page";
 import { config } from "../support/config";
 
 import type { ICustomWorld } from "./custom-world";
-import type { ITestCaseHookParameter } from "@cucumber/cucumber/lib/support_code_library_builder/types";
 
 const pathToExtension = path.join(__dirname, "../support/extension/metamask-chrome-" + config.METAMASK_VERSION);
 const userDataDir = "";
@@ -22,7 +21,7 @@ BeforeAll(async function (this: ICustomWorld) {
     browser = await chromium.launchPersistentContext(userDataDir, {
       slowMo: config.slowMo,
       headless: config.headless,
-      args: [`--disable-extensions`],
+      args: ["--disable-extensions"],
       viewport: config.mainWindowSize,
     });
   } else {

@@ -1,8 +1,8 @@
 <template>
   <CommonContentBlock>
-    <div class="-mx-block-padding-1/4 -my-block-padding-1/2 sm:-mx-block-padding-1/2">
+    <CommonLineButtonsGroup>
       <slot />
-    </div>
+    </CommonLineButtonsGroup>
   </CommonContentBlock>
 </template>
 

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Given, Then, When } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
 

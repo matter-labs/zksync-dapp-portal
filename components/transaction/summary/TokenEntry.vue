@@ -14,12 +14,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from "vue";
-
 import type { TokenAmount } from "@/types";
-import type { PropType } from "vue";
-
-import { parseTokenAmount } from "@/utils/formatters";
 
 const props = defineProps({
   label: {
@@ -49,7 +44,7 @@ const displayedAmount = computed(() => parseTokenAmount(props.token.amount, prop
       @apply flex flex-col justify-center text-right;
 
       .token-price {
-        @apply text-neutral-600 dark:text-neutral-400;
+        @apply text-sm text-neutral-600 dark:text-neutral-400;
       }
     }
     .token-image {

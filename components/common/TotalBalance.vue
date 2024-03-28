@@ -10,12 +10,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from "vue";
-
 import type { TokenAmount } from "@/types";
-import type { PropType } from "vue";
-
-import { calculateTotalTokensPrice } from "@/utils/helpers";
 
 const props = defineProps({
   balance: {

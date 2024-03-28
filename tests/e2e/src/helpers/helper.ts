@@ -1,20 +1,19 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { Status } from "@cucumber/cucumber";
 import crypto from "crypto";
+import https from "https";
+import { Status } from "@cucumber/cucumber";
 import * as dotenv from "dotenv";
 import { ethers } from "ethers";
-import https from "https";
-import { Provider } from "zksync-web3";
+import { Provider } from "zksync-ethers";
 
+import type { Pickle } from "@cucumber/messages";
 import { MainPage } from "../pages/main.page";
 import { config, wallet } from "../support/config";
 
 import type { ICustomWorld } from "../support/custom-world";
-import type { Pickle } from "@cucumber/messages";
 const tracesDir = "./artifacts/";
 const algorithm = "aes-256-cbc";
 const key = Buffer.from(wallet.secret, "hex"); // crypto.randomBytes(32);
-const iv = Buffer.from(wallet.salt, "hex"); //crypto.randomBytes(16);
+const iv = Buffer.from(wallet.salt, "hex"); // crypto.randomBytes(16);
 
 let result: any;
 export let depositTag: boolean;
@@ -138,7 +137,7 @@ export class Helper {
   async closeBrowserTabs(browserContext: any) {
     const pages = browserContext?.pages();
     for (let i = 0; i < pages.length - 1; i++) {
-      //workaround for CI running
+      // workaround for CI running
       await pages[i].close();
     }
   }
@@ -184,7 +183,7 @@ export class Helper {
   async notifyQAIfLowBalance(layer: string, walletAddress: string, currentBalance: number) {
     let preThresholdBalance = config.preThresholdBalance;
     if (transferTag) {
-      //transfer transaction require less fee and less balance, it helps us to avoid double informing using transaction Tag
+      // transfer transaction require less fee and less balance, it helps us to avoid double informing using transaction Tag
       preThresholdBalance = preThresholdBalance - preThresholdBalance * 0.1; // -10% from minimal balance of withdrawal transaction
     }
     if (currentBalance < preThresholdBalance) {

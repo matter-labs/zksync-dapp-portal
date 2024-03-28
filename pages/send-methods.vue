@@ -17,7 +17,7 @@
           v-bind="destinations.ethereum"
           :label="`Bridge to ${destinations.ethereum.label}`"
           as="RouterLink"
-          :to="{ name: 'withdraw', query: $route.query }"
+          :to="{ name: 'bridge-withdraw', query: $route.query }"
         />
       </CommonCardWithLineButtons>
       <CommonCardWithLineButtons>
@@ -43,10 +43,6 @@
 
 <script lang="ts" setup>
 import { ArrowTopRightOnSquareIcon, Squares2X2Icon } from "@heroicons/vue/24/outline";
-import { storeToRefs } from "pinia";
-
-import { useDestinationsStore } from "@/store/destinations";
-import { useZkSyncProviderStore } from "@/store/zksync/provider";
 
 const { destinations } = storeToRefs(useDestinationsStore());
 const { eraNetwork } = storeToRefs(useZkSyncProviderStore());

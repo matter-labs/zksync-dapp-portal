@@ -1,17 +1,10 @@
 import { useMemoize } from "@vueuse/core";
 import { BigNumber, type BigNumberish } from "ethers";
-import { Wallet } from "zksync-web3";
+import { Wallet } from "zksync-ethers";
+import ZkSyncL1BridgeAbi from "zksync-ethers/abi/IL1Bridge.json";
+import ZkSyncContractAbi from "zksync-ethers/abi/IZkSync.json";
 
-import ZkSyncL1BridgeInterface from "zksync-web3/abi/IL1Bridge.json";
-import ZkSyncContractInterface from "zksync-web3/abi/IZkSync.json";
-
-import type { TransactionInfo } from "@/store/zksync/transactionStatus";
 import type { Hash } from "@/types";
-
-import { useOnboardStore } from "@/store/onboard";
-import { useZkSyncProviderStore } from "@/store/zksync/provider";
-import { useZkSyncTokensStore } from "@/store/zksync/tokens";
-import { formatError } from "@/utils/formatters";
 
 export default (transactionInfo: ComputedRef<TransactionInfo>) => {
   const status = ref<"not-started" | "processing" | "waiting-for-signature" | "sending" | "done">("not-started");
@@ -78,7 +71,7 @@ export default (transactionInfo: ComputedRef<TransactionInfo>) => {
     if (usingMainContract.value) {
       return {
         address: (await retrieveMainContractAddress()) as Hash,
-        abi: ZkSyncContractInterface.abi,
+        abi: ZkSyncContractAbi,
         account: onboardStore.account.address!,
         functionName: "finalizeEthWithdrawal",
         args: Object.values(finalizeWithdrawalParams.value!),
@@ -86,7 +79,7 @@ export default (transactionInfo: ComputedRef<TransactionInfo>) => {
     } else {
       return {
         address: (await retrieveBridgeAddress()) as Hash,
-        abi: ZkSyncL1BridgeInterface.abi,
+        abi: ZkSyncL1BridgeAbi,
         account: onboardStore.account.address!,
         functionName: "finalizeWithdrawal",
         args: Object.values(finalizeWithdrawalParams.value!),
@@ -116,7 +109,7 @@ export default (transactionInfo: ComputedRef<TransactionInfo>) => {
           );
         }),
       ]);
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
       gasPrice.value = price;
       gasLimit.value = limit;
 

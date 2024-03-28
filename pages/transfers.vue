@@ -1,5 +1,6 @@
 <template>
   <div>
+    <NetworkDeprecationAlert />
     <PageTitle>Transfers</PageTitle>
 
     <template v-if="!isConnected">
@@ -57,16 +58,14 @@
       <div v-else-if="displayedTransfers.length">
         <CommonCardWithLineButtons>
           <TransactionTransferLineItem v-for="(item, index) in displayedTransfers" :key="index" :transfer="item" />
+          <template v-if="canLoadMore && previousTransfersRequestInProgress">
+            <TokenBalanceLoader v-for="index in 5" :key="index" />
+          </template>
         </CommonCardWithLineButtons>
 
         <!-- Load more -->
-        <template v-if="canLoadMore">
-          <div v-if="previousTransfersRequestInProgress" class="mt-block-gap">
-            <CommonCardWithLineButtons>
-              <TokenBalanceLoader v-for="index in 5" :key="index" />
-            </CommonCardWithLineButtons>
-          </div>
-          <CommonCardWithLineButtons v-else-if="previousTransfersRequestError">
+        <template v-if="canLoadMore && !previousTransfersRequestInProgress">
+          <CommonCardWithLineButtons v-if="previousTransfersRequestError">
             <CommonErrorBlock @try-again="fetchMore">
               Loading transfers error: {{ previousTransfersRequestError.message }}
             </CommonErrorBlock>
@@ -85,21 +84,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, onBeforeUnmount, ref } from "vue";
-
 import { useIntersectionObserver } from "@vueuse/core";
-import { storeToRefs } from "pinia";
-
-import useSingleLoading from "@/composables/useSingleLoading";
-
-import type { Transfer } from "@/utils/mappers";
-
-import { useDestinationsStore } from "@/store/destinations";
-import { useOnboardStore } from "@/store/onboard";
-import { useZkSyncProviderStore } from "@/store/zksync/provider";
-import { ESTIMATED_DEPOSIT_DELAY, WITHDRAWAL_DELAY } from "@/store/zksync/transactionStatus";
-import { useZkSyncTransactionStatusStore } from "@/store/zksync/transactionStatus";
-import { useZkSyncTransfersHistoryStore } from "@/store/zksync/transfersHistory";
 
 const onboardStore = useOnboardStore();
 const { eraNetwork } = storeToRefs(useZkSyncProviderStore());

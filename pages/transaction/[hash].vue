@@ -16,12 +16,6 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, watch } from "vue";
-
-import type { TransactionInfo } from "@/store/zksync/transactionStatus";
-
-import { useRoute } from "#app";
-import { useZkSyncTransactionStatusStore } from "@/store/zksync/transactionStatus";
 import DepositSubmitted from "@/views/transactions/DepositSubmitted.vue";
 import TransferSubmitted from "@/views/transactions/TransferSubmitted.vue";
 import WithdrawalSubmitted from "@/views/transactions/WithdrawalSubmitted.vue";

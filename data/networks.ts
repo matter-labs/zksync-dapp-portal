@@ -1,5 +1,7 @@
 import { goerli, mainnet, sepolia } from "@wagmi/core/chains";
 
+import Hyperchains from "@/hyperchains/config.json";
+
 import type { Token } from "@/types";
 import type { Chain } from "@wagmi/core/chains";
 
@@ -26,10 +28,10 @@ export type ZkSyncNetwork = {
   name: string;
   rpcUrl: string;
   hidden?: boolean; // If set to true, the network will not be shown in the network selector
+  deprecated?: boolean;
   l1Network?: L1Network;
   blockExplorerUrl?: string;
   blockExplorerApi?: string;
-  withdrawalFinalizerApi?: string;
   displaySettings?: {
     showPartnerLinks?: boolean;
   };
@@ -56,7 +58,6 @@ export const dockerizedNode: ZkSyncNetwork = {
   l1Network: {
     id: 9,
     name: "Ethereum Local Node",
-    network: "ethereum-node",
     nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 },
     rpcUrls: {
       default: { http: ["http://localhost:8545"] },
@@ -65,15 +66,14 @@ export const dockerizedNode: ZkSyncNetwork = {
   },
 };
 
-export const zkSyncNetworks: ZkSyncNetwork[] = [
+const publicChains: ZkSyncNetwork[] = [
   {
     id: 324,
     key: "mainnet",
     name: "zkSync",
     rpcUrl: "https://mainnet.era.zksync.io",
-    blockExplorerUrl: "https://explorer.zksync.io",
+    blockExplorerUrl: "https://era.zksync.network",
     blockExplorerApi: "https://block-explorer-api.mainnet.zksync.io",
-    withdrawalFinalizerApi: "https://withdrawal-finalizer-api.zksync.io",
     displaySettings: {
       showPartnerLinks: true,
     },
@@ -84,9 +84,8 @@ export const zkSyncNetworks: ZkSyncNetwork[] = [
     key: "sepolia",
     name: "zkSync Sepolia Testnet",
     rpcUrl: "https://sepolia.era.zksync.dev",
-    blockExplorerUrl: "https://sepolia.explorer.zksync.io",
+    blockExplorerUrl: "https://sepolia-era.zksync.network",
     blockExplorerApi: "https://block-explorer-api.sepolia.zksync.dev",
-    withdrawalFinalizerApi: "https://withdrawal-finalizer-api.sepolia.zksync.dev",
     displaySettings: {
       showPartnerLinks: true,
     },
@@ -99,7 +98,7 @@ export const zkSyncNetworks: ZkSyncNetwork[] = [
     rpcUrl: "https://testnet.era.zksync.dev",
     blockExplorerUrl: "https://goerli.explorer.zksync.io",
     blockExplorerApi: "https://block-explorer-api.testnets.zksync.dev",
-    withdrawalFinalizerApi: "https://withdrawal-finalizer-api.testnets.zksync.dev",
+    deprecated: true,
     displaySettings: {
       showPartnerLinks: true,
     },
@@ -112,8 +111,27 @@ export const zkSyncNetworks: ZkSyncNetwork[] = [
     rpcUrl: "https://z2-dev-api.zksync.dev",
     blockExplorerUrl: "https://goerli-beta.staging-scan-v2.zksync.dev",
     blockExplorerApi: "https://block-explorer-api.stage.zksync.dev",
-    withdrawalFinalizerApi: "https://withdrawal-finalizer-api.stage.zksync.dev",
     l1Network: l1Networks.sepolia,
     hidden: true,
   },
 ];
+
+const determineChainList = (): ZkSyncNetwork[] => {
+  switch (nodeType) {
+    case "memory":
+      return [inMemoryNode];
+    case "dockerized":
+      return [dockerizedNode];
+    case "hyperchain":
+      return (Hyperchains as unknown as Array<{ network: ZkSyncNetwork; tokens: Token[] }>).map((e) => ({
+        ...e.network,
+        getTokens: () => e.tokens,
+      }));
+    default:
+      return [...publicChains];
+  }
+};
+const nodeType = process.env.NODE_TYPE as undefined | "memory" | "dockerized" | "hyperchain";
+export const isCustomNode = !!nodeType;
+export const chainList: ZkSyncNetwork[] = determineChainList();
+export const defaultNetwork = chainList[0];

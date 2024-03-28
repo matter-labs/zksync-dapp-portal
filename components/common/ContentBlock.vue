@@ -1,12 +1,10 @@
 <template>
-  <component class="content-block-container" :class="`variant-${variant}`" :is="as">
+  <component :is="as" class="content-block-container" :class="`variant-${variant}`">
     <slot />
   </component>
 </template>
 
 <script lang="ts" setup>
-import type { Component, PropType } from "vue";
-
 defineProps({
   as: {
     type: [String, Object] as PropType<string | Component>,

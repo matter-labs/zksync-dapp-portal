@@ -47,13 +47,6 @@
 </template>
 
 <script lang="ts" setup>
-import { storeToRefs } from "pinia";
-
-import type { TransactionInfo } from "@/store/zksync/transactionStatus";
-import type { PropType } from "vue";
-
-import { useZkSyncProviderStore } from "@/store/zksync/provider";
-
 defineProps({
   transaction: {
     type: Object as PropType<TransactionInfo>,

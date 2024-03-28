@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { expect } from "@playwright/test";
 
 import { NetworkSwitcher } from "../data/data";
@@ -130,7 +129,7 @@ export class BasePage {
   }
 
   async getElementByHrefAndText(hrefAndText: string) {
-    const regex = /'([^']+)'/g; //extract href and text
+    const regex = /'([^']+)'/g; // extract href and text
     const matches = hrefAndText.match(regex);
     let href;
     let text;
@@ -146,7 +145,7 @@ export class BasePage {
   }
 
   async getElementByPartialHrefAndText(partialHrefAndText: string) {
-    const regex = /'([^']+)'/g; //extract href and text
+    const regex = /'([^']+)'/g; // extract href and text
     const matches = partialHrefAndText.match(regex);
     let href;
     let text;

@@ -20,7 +20,7 @@
 
         <TypographyCategoryLabel size="sm">Portal</TypographyCategoryLabel>
         <CommonCardWithLineButtons>
-          <DestinationItem label="Bridge" as="RouterLink" :to="{ name: 'index' }" size="sm">
+          <DestinationItem label="Bridge" as="RouterLink" :to="{ name: 'bridge' }" size="sm">
             <template #image>
               <DestinationIconContainer>
                 <ArrowsUpDownIcon aria-hidden="true" />
@@ -74,7 +74,7 @@
         </div>
         <CommonCardWithLineButtons>
           <DestinationItem
-            v-for="item in zkSyncNetworks.filter((e) => !e.hidden)"
+            v-for="item in chainList.filter((e) => !e.hidden)"
             :key="item.key"
             :label="item.name"
             :icon="isNetworkSelected(item) ? CheckIcon : undefined"
@@ -94,8 +94,6 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, watch } from "vue";
-
 import {
   ArrowsRightLeftIcon,
   ArrowsUpDownIcon,
@@ -105,18 +103,10 @@ import {
   SunIcon,
   WalletIcon,
 } from "@heroicons/vue/24/outline";
-import { storeToRefs } from "pinia";
 
-import useColorMode from "@/composables/useColorMode";
-import useNetworks from "@/composables/useNetworks";
+import { chainList } from "@/data/networks";
 
 import type { ZkSyncNetwork } from "@/data/networks";
-
-import { useRoute } from "#imports";
-import { useNetworkStore } from "@/store/network";
-import { useZkSyncWithdrawalsStore } from "@/store/zksync/withdrawals";
-import { getNetworkUrl } from "@/utils/helpers";
-import { TransitionSlideOutToLeft, TransitionSlideOutToRight } from "@/utils/transitions";
 
 const props = defineProps({
   opened: {
@@ -153,7 +143,6 @@ watch(
 
 const { switchColorMode, selectedColorMode } = useColorMode();
 
-const { zkSyncNetworks } = useNetworks();
 const { selectedNetwork } = storeToRefs(useNetworkStore());
 const isNetworkSelected = (network: ZkSyncNetwork) => selectedNetwork.value.key === network.key;
 const buttonClicked = (network: ZkSyncNetwork) => {

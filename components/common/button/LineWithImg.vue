@@ -9,14 +9,12 @@
     <div v-if="$slots.right" class="line-button-with-img-right">
       <slot name="right" />
     </div>
-    <component v-if="icon" :is="icon" class="line-button-with-img-icon" aria-hidden="true" />
+    <component :is="icon" v-if="icon" class="line-button-with-img-icon" aria-hidden="true" />
     <CommonContentLoader v-else-if="iconLoading" :length="0" class="line-button-with-img-icon-loading" />
   </CommonButtonLine>
 </template>
 
 <script lang="ts" setup>
-import type { Component, PropType } from "vue";
-
 defineProps({
   as: {
     type: [String, Object] as PropType<string | Component>,

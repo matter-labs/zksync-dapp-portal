@@ -1,16 +1,9 @@
 import { useStorage } from "@vueuse/core";
 import { decodeEventLog } from "viem";
-
-import ZkSyncContractInterface from "zksync-web3/abi/IZkSync.json";
+import ZkSyncContractInterface from "zksync-ethers/abi/IZkSync.json";
 
 import type { FeeEstimationParams } from "@/composables/zksync/useFee";
-import type { TransactionDestination } from "@/store/destinations";
-import type { TokenAmount } from "@/types";
-import type { Hash } from "@/types";
-
-import { useOnboardStore } from "@/store/onboard";
-import { useZkSyncProviderStore } from "@/store/zksync/provider";
-import { useZkSyncWalletStore } from "@/store/zksync/wallet";
+import type { TokenAmount, Hash } from "@/types";
 
 export type TransactionInfo = {
   type: FeeEstimationParams["type"] | "deposit";
@@ -65,12 +58,12 @@ export const useZkSyncTransactionStatusStore = defineStore("zkSyncTransactionSta
     for (const log of transaction.logs) {
       try {
         const { args, eventName } = decodeEventLog({
-          abi: ZkSyncContractInterface.abi,
+          abi: ZkSyncContractInterface,
           data: log.data,
           topics: log.topics,
         });
         if (eventName === "NewPriorityRequest") {
-          return (args as { txHash: Hash }).txHash;
+          return (args as unknown as { txHash: Hash }).txHash;
         }
       } catch {
         // ignore failed decoding

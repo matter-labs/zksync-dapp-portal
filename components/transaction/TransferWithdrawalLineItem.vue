@@ -48,22 +48,12 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from "vue";
-
 import { ArrowRightIcon, MinusIcon } from "@heroicons/vue/24/outline";
 import { useTimeAgo } from "@vueuse/core";
 import { BigNumber } from "ethers";
-import { storeToRefs } from "pinia";
 
 import TokenAmount from "@/components/transaction/lineItem/TokenAmount.vue";
 import TotalPrice from "@/components/transaction/lineItem/TotalPrice.vue";
-
-import type { NetworkLayer, Transfer } from "@/utils/mappers";
-import type { PropType } from "vue";
-
-import { useOnboardStore } from "@/store/onboard";
-import { useZkSyncProviderStore } from "@/store/zksync/provider";
-import { shortenAddress } from "@/utils/formatters";
 
 const props = defineProps({
   transfer: {
@@ -132,7 +122,7 @@ const timeAgo = useTimeAgo(props.transfer.timestamp);
     }
 
     .withdrawal-line-top {
-      @apply flex w-full items-center gap-4;
+      @apply grid w-full grid-cols-[1fr_max-content] items-center sm:gap-4;
 
       .line-button-with-img-body {
         @apply w-full overflow-hidden;

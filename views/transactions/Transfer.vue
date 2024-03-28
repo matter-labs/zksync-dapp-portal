@@ -1,5 +1,6 @@
 <template>
   <div>
+    <NetworkDeprecationAlert v-if="step === 'form'" />
     <slot v-if="step === 'form'" name="title" />
     <PageTitle
       v-else-if="step === 'withdrawal-finalization-warning'"
@@ -44,6 +45,18 @@
     <form v-else @submit.prevent="">
       <template v-if="step === 'form'">
         <TransactionWithdrawalsAvailableForClaimAlert />
+        <CommonAlert
+          v-if="type === 'withdrawal' && eraNetwork.l1Network?.id === 1 && !isCustomNode"
+          variant="warning"
+          :icon="ExclamationTriangleIcon"
+          class="mb-block-gap"
+        >
+          <p>
+            Starting from {{ manualFinalizationFormattedLocalDate }} you will need to manually claim your funds after a
+            24 hour withdrawal delay. This requires paying another transaction fee on
+            {{ eraNetwork.l1Network?.name }} network.
+          </p>
+        </CommonAlert>
         <CommonInputTransactionAmount
           v-model="amount"
           v-model:error="amountError"
@@ -54,12 +67,12 @@
           :max-amount="maxAmount"
           :loading="tokensRequestInProgress || balanceInProgress"
         >
-          <template #token-dropdown-bottom v-if="type === 'withdrawal' && account.address">
+          <template v-if="type === 'withdrawal' && account.address" #token-dropdown-bottom>
             <CommonAlert class="sticky bottom-0 mt-3" variant="neutral" :icon="InformationCircleIcon">
               <p>Only tokens available for withdrawal are displayed</p>
             </CommonAlert>
           </template>
-          <template #dropdown v-if="type === 'withdrawal'">
+          <template v-if="type === 'withdrawal'" #dropdown>
             <CommonButtonDropdown
               :toggled="fromNetworkModalOpened"
               size="xs"
@@ -97,7 +110,7 @@
               <span class="truncate">{{ destination.label }}</span>
             </CommonButtonDropdown>
           </template>
-          <template #input-body v-if="tokenCustomBridge">
+          <template v-if="tokenCustomBridge" #input-body>
             <div class="mt-4">
               Bridging {{ tokenCustomBridge.symbol }} token to {{ destination.label }} requires custom bridge. Please
               use
@@ -293,46 +306,47 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, onBeforeUnmount, ref, watch } from "vue";
-
 import { ArrowTopRightOnSquareIcon, ExclamationTriangleIcon, InformationCircleIcon } from "@heroicons/vue/24/outline";
 import { useRouteQuery } from "@vueuse/router";
 import { BigNumber } from "ethers";
 import { isAddress } from "ethers/lib/utils";
-import { storeToRefs } from "pinia";
 
-import useInterval from "@/composables/useInterval";
-import useNetworks from "@/composables/useNetworks";
 import useFee from "@/composables/zksync/useFee";
 import useTransaction, { isWithdrawalManualFinalizationRequired } from "@/composables/zksync/useTransaction";
-
-import type { FeeEstimationParams } from "@/composables/zksync/useFee";
-import type { TransactionDestination } from "@/store/destinations";
-import type { TransactionInfo } from "@/store/zksync/transactionStatus";
-import type { Token, TokenAmount } from "@/types";
-import type { BigNumberish } from "ethers";
-import type { PropType } from "vue";
-
-import { useRoute, useRouter } from "#app";
 import { customBridgeTokens } from "@/data/customBridgeTokens";
+import { isCustomNode } from "@/data/networks";
 import { useDestinationsStore } from "@/store/destinations";
 import { useOnboardStore } from "@/store/onboard";
 import { usePreferencesStore } from "@/store/preferences";
 import { useZkSyncProviderStore } from "@/store/zksync/provider";
 import { useZkSyncTokensStore } from "@/store/zksync/tokens";
-import { WITHDRAWAL_DELAY } from "@/store/zksync/transactionStatus";
-import { useZkSyncTransactionStatusStore } from "@/store/zksync/transactionStatus";
+import { WITHDRAWAL_DELAY, useZkSyncTransactionStatusStore } from "@/store/zksync/transactionStatus";
 import { useZkSyncTransfersHistoryStore } from "@/store/zksync/transfersHistory";
 import { useZkSyncWalletStore } from "@/store/zksync/wallet";
 import { trackEvent } from "@/utils/analytics";
 import { ETH_TOKEN } from "@/utils/constants";
 import { ZKSYNC_WITHDRAWAL_DELAY } from "@/utils/doc-links";
 import { checksumAddress, decimalToBigNumber } from "@/utils/formatters";
-import { calculateFee } from "@/utils/helpers";
-import { silentRouterChange } from "@/utils/helpers";
+import { calculateFee, silentRouterChange } from "@/utils/helpers";
 import { TransitionAlertScaleInOutTransition, TransitionOpacity } from "@/utils/transitions";
 import TransferSubmitted from "@/views/transactions/TransferSubmitted.vue";
 import WithdrawalSubmitted from "@/views/transactions/WithdrawalSubmitted.vue";
+
+import type { FeeEstimationParams } from "@/composables/zksync/useFee";
+import type { Token, TokenAmount } from "@/types";
+import type { BigNumberish } from "ethers";
+
+const manualWithdrawalFinalizationStartDate = new Date(Date.UTC(2024, 3, 1, 0, 0, 0)); // 1st of April 2024 00:00:00 UTC
+const manualFinalizationFormattedLocalDate =
+  manualWithdrawalFinalizationStartDate.toLocaleDateString(undefined, {
+    month: "long",
+    day: "numeric",
+  }) +
+  " " +
+  manualWithdrawalFinalizationStartDate.toLocaleTimeString(undefined, {
+    hour: "numeric",
+    minute: "2-digit",
+  });
 
 const props = defineProps({
   type: {
@@ -353,18 +367,17 @@ const { eraNetwork } = storeToRefs(providerStore);
 const { destinations } = storeToRefs(useDestinationsStore());
 const { tokens, tokensRequestInProgress, tokensRequestError } = storeToRefs(tokensStore);
 const { balance, balanceInProgress, balanceError } = storeToRefs(walletStore);
-const { isCustomNode } = useNetworks();
 
 const toNetworkModalOpened = ref(false);
 const toNetworkSelected = (networkKey?: string) => {
   if (destinations.value.era.key === networkKey) {
-    router.replace({ name: "index", query: route.query });
+    router.replace({ name: "bridge", query: route.query });
   }
 };
 const fromNetworkModalOpened = ref(false);
 const fromNetworkSelected = (networkKey?: string) => {
   if (destinations.value.ethereum.key === networkKey) {
-    router.replace({ name: "index", query: route.query });
+    router.replace({ name: "bridge", query: route.query });
   }
 };
 
@@ -421,12 +434,6 @@ const amountInputTokenAddress = computed({
 });
 const tokenBalance = computed<BigNumberish | undefined>(() => {
   return balance.value.find((e) => e.address === selectedToken.value?.address)?.amount;
-});
-const selectedTokenZeroBalance = computed(() => {
-  if (!tokenBalance.value) {
-    return true;
-  }
-  return BigNumber.from(tokenBalance.value).isZero();
 });
 
 const unsubscribe = onboardStore.subscribeOnAccountChange(() => {
@@ -549,8 +556,7 @@ const estimate = async () => {
     !transaction.value?.from.address ||
     !transaction.value?.to.address ||
     !selectedToken.value ||
-    !tokenBalance.value ||
-    selectedTokenZeroBalance.value
+    !tokenBalance.value
   ) {
     return;
   }
@@ -562,7 +568,7 @@ const estimate = async () => {
   });
 };
 watch(
-  [() => selectedToken.value?.address, () => selectedTokenZeroBalance.value],
+  [() => selectedToken.value?.address, () => tokenBalance.value?.toString()],
   () => {
     resetFee();
     estimate();
@@ -608,7 +614,6 @@ const buttonContinue = () => {
   if (step.value === "form") {
     if (withdrawalManualFinalizationRequired.value) {
       step.value = "withdrawal-finalization-warning";
-      return;
     } else {
       step.value = "confirm";
     }
@@ -685,7 +690,7 @@ const makeTransaction = async () => {
       }).href
     );
     waitForCompletion(transactionInfo.value)
-      .then(async (completedTransaction) => {
+      .then((completedTransaction) => {
         transactionInfo.value = completedTransaction;
         trackEvent(transaction.value!.type, {
           token: transaction.value!.token.symbol,

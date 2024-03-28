@@ -1,13 +1,11 @@
-import { watch } from "vue";
-
 import { useMemoize } from "@vueuse/core";
-import { fetchEnsAddress } from "@wagmi/core";
+import { getEnsAddress } from "@wagmi/core";
 
-import type { Ref } from "vue";
-
-const getEnsAddress = useMemoize((name: string) => fetchEnsAddress({ name: name, chainId: 1 }));
+import { wagmiConfig } from "@/data/wagmi";
 
 export default (ensName: Ref<string>) => {
+  const fetchEnsAddress = useMemoize((name: string) => getEnsAddress(wagmiConfig, { name, chainId: 1 }));
+
   const nameToAddress = ref<{ [name: string]: string }>({});
   const {
     inProgress,
@@ -16,7 +14,7 @@ export default (ensName: Ref<string>) => {
   } = usePromise(
     async () => {
       const name = ensName.value;
-      const result = await getEnsAddress(name);
+      const result = await fetchEnsAddress(name);
       if (result) {
         nameToAddress.value[name] = result;
       }

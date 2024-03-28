@@ -1,7 +1,5 @@
 import { useClipboard, useThrottleFn } from "@vueuse/core";
 
-import type { Ref } from "vue";
-
 export default (text: Ref<string>, copiedDuring = 1000) => {
   const { copy: clipboardCopy, copied: isCopied } = useClipboard({
     source: text,

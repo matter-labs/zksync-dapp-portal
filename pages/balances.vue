@@ -22,9 +22,8 @@
           <CommonCardWithLineButtons>
             <TokenBalance
               v-for="item in group.balances"
-              as="div"
               :key="item.address"
-              show-name-link
+              as="div"
               :send-route-name="
                 item.amount === '0' ? 'receive-methods' : eraNetwork.l1Network ? 'send-methods' : 'send'
               "
@@ -38,18 +37,6 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, onBeforeUnmount } from "vue";
-
-import { storeToRefs } from "pinia";
-
-import useInterval from "@/composables/useInterval";
-import useSingleLoading from "@/composables/useSingleLoading";
-
-import { useOnboardStore } from "@/store/onboard";
-import { useZkSyncProviderStore } from "@/store/zksync/provider";
-import { useZkSyncWalletStore } from "@/store/zksync/wallet";
-import { groupBalancesByAmount } from "@/utils/mappers";
-
 const onboardStore = useOnboardStore();
 const walletEraStore = useZkSyncWalletStore();
 const { isConnected } = storeToRefs(onboardStore);

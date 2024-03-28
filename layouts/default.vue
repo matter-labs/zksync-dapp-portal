@@ -1,11 +1,9 @@
 <template>
-  <LoadersConnecting />
-  <ModalConnectingWalletError />
-  <ModalNetworkChangedWarning v-if="!isConnectingWallet" />
-  <ModalLegalNotice />
-
   <div class="app-layout">
-    <ModalWalletWarning />
+    <LoadersConnecting />
+    <ModalConnectingWalletError />
+    <ModalNetworkChangedWarning v-if="!isConnectingWallet" />
+    <ModalLegalNotice />
 
     <Header />
     <main class="app-layout-main">
@@ -16,10 +14,6 @@
 </template>
 
 <script lang="ts" setup>
-import { storeToRefs } from "pinia";
-
-import { useOnboardStore } from "@/store/onboard";
-
 const { isConnectingWallet } = storeToRefs(useOnboardStore());
 </script>
 

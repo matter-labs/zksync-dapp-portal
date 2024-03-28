@@ -25,13 +25,6 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from "vue";
-
-import { storeToRefs } from "pinia";
-
-import { useOnboardStore } from "@/store/onboard";
-import { TransitionOpacity } from "@/utils/transitions";
-
 const { account, isConnectingWallet, walletName } = storeToRefs(useOnboardStore());
 
 const title = computed(() => {

@@ -22,7 +22,7 @@
           :description="`Receive from your ${destinations.ethereum.label} account`"
           :icon-url="destinations.ethereum.iconUrl"
           as="RouterLink"
-          :to="{ name: 'index', query: $route.query }"
+          :to="{ name: 'bridge', query: $route.query }"
         />
       </CommonCardWithLineButtons>
       <CommonCardWithLineButtons v-if="isTestnet">
@@ -73,14 +73,8 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from "vue";
-
 import { ArrowsUpDownIcon, ArrowTopRightOnSquareIcon, BanknotesIcon, QrCodeIcon } from "@heroicons/vue/24/outline";
-import { storeToRefs } from "pinia";
 import { mainnet } from "viem/chains";
-
-import { useDestinationsStore } from "@/store/destinations";
-import { useZkSyncProviderStore } from "@/store/zksync/provider";
 
 const { destinations } = storeToRefs(useDestinationsStore());
 const { eraNetwork } = storeToRefs(useZkSyncProviderStore());

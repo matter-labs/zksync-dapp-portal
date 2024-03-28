@@ -16,11 +16,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue";
-
 import { isAddress } from "ethers/lib/utils";
-
-import { checksumAddress } from "@/utils/formatters";
 
 defineProps({
   id: {

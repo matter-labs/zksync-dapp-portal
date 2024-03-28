@@ -7,10 +7,10 @@
           <CommonContentLoader :length="30" />
         </template>
         <component
-          type="button"
           :is="canDisplayFeeAsFiat ? 'button' : 'span'"
           v-else-if="feeToken && feeAmount"
           v-tooltip="canDisplayFeeAsFiat ? 'Click to toggle how amount is displayed' : ''"
+          type="button"
           class="flex items-center"
           :class="{ 'cursor-pointer': canDisplayFeeAsFiat }"
           @click="displayFeeAsFiat = !displayFeeAsFiat"
@@ -40,13 +40,8 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref } from "vue";
-
 import type { Token } from "@/types";
 import type { BigNumberish } from "ethers";
-import type { PropType } from "vue";
-
-import { formatTokenPrice, parseTokenAmount } from "@/utils/formatters";
 
 const props = defineProps({
   label: {
@@ -66,7 +61,7 @@ const props = defineProps({
 });
 
 const displayFeeAsFiat = ref(true);
-const canDisplayFeeAsFiat = computed(() => (props.feeToken?.price ? true : false));
+const canDisplayFeeAsFiat = computed(() => !!props.feeToken?.price);
 
 const totalPrice = computed(() => {
   if (typeof props.feeToken?.price !== "number" || !props.feeAmount) {

@@ -6,12 +6,6 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, watch } from "vue";
-
-import { storeToRefs } from "pinia";
-
-import { useOnboardStore } from "@/store/onboard";
-
 const { connectingWalletError } = storeToRefs(useOnboardStore());
 
 const modalShown = ref(!!connectingWalletError.value);

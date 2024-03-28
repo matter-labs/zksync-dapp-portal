@@ -23,7 +23,7 @@
     @apply inline min-h-[1.5rem] overflow-hidden text-ellipsis align-middle;
   }
   .button-line-body-info-underline {
-    @apply text-neutral-700 dark:text-neutral-400;
+    @apply text-sm text-neutral-700 dark:text-neutral-400;
   }
 }
 </style>

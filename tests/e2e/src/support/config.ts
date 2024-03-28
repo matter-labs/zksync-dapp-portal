@@ -1,9 +1,8 @@
-import * as dotenv from "dotenv";
 import path from "path";
-
-import { NetworkSwitcher } from "../data/data";
+import * as dotenv from "dotenv";
 
 import type { LaunchOptions } from "@playwright/test";
+import { NetworkSwitcher } from "../data/data";
 
 dotenv.config({ path: path.resolve(__dirname, ".env.local") });
 

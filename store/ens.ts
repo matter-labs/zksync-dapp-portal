@@ -1,8 +1,6 @@
-import { computed } from "vue";
+import { getEnsAvatar, getEnsName } from "@wagmi/core";
 
-import { fetchEnsAvatar, fetchEnsName } from "@wagmi/core";
-
-import { useOnboardStore } from "@/store/onboard";
+import { wagmiConfig } from "@/data/wagmi";
 
 export const useEnsStore = defineStore("ens", () => {
   const onboardStore = useOnboardStore();
@@ -20,14 +18,14 @@ export const useEnsStore = defineStore("ens", () => {
     }
 
     const initialAddress = account.value.address;
-    const name = await fetchEnsName({ address: account.value.address, chainId: 1 });
+    const name = await getEnsName(wagmiConfig, { address: account.value.address, chainId: 1 });
     if (account.value.address === initialAddress) {
       ensName.value = name;
     } else {
       return;
     }
     if (name) {
-      const avatar = await fetchEnsAvatar({ name, chainId: 1 }).catch(() => null);
+      const avatar = await getEnsAvatar(wagmiConfig, { name, chainId: 1 }).catch(() => null);
       if (account.value.address === initialAddress) {
         ensAvatar.value = avatar;
       }

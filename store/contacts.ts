@@ -1,7 +1,5 @@
 import { useStorage } from "@vueuse/core";
 
-import { useOnboardStore } from "@/store/onboard";
-
 export type Contact = {
   name: string;
   address: string;

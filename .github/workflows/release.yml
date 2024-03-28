@@ -73,11 +73,6 @@ jobs:
         run: |
           npm run generate
 
-      - name: Reorganize Files
-        run: |
-          mkdir -p dist/bridge
-          mv dist/_nuxt dist/bridge/_nuxt
-
       - name: Deploy
         uses: matter-labs/action-hosting-deploy@main
         id: deploy

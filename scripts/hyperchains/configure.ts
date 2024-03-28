@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /* 
   This file will look for hyperchain configuration files on the zksync-era repo
   and generate a /hyperchains/config.json file for the Portal.
@@ -29,7 +30,7 @@ const configureHyperchainInfo = async () => {
   await promptNetworkInfo(network);
   await promptNetworkReplacement(network);
 
-  await generateNetworkConfig(network, getTokensFromDirectory(pathJoin(tokensDirectory, `${envName}.json`)));
+  generateNetworkConfig(network, getTokensFromDirectory(pathJoin(tokensDirectory, `${envName}.json`)));
 
   logUserInfo();
 };
@@ -48,7 +49,6 @@ const createNetworkFromEnv = (envPath: string): Network => {
     l1Network: {
       id: Number(env.ETH_CLIENT_CHAIN_ID),
       name: l1ChainName === "Localhost" ? "Localhost L1" : l1ChainName,
-      network: env.CHAIN_ETH_NETWORK,
       nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 },
       rpcUrls: {
         default: { http: [env.ETH_CLIENT_WEB3_URL] },

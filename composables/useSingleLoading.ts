@@ -1,7 +1,3 @@
-import { ref, watch } from "vue";
-
-import type { Ref } from "vue";
-
 export default (loading: Ref<boolean>) => {
   const loaded = ref(false);
 

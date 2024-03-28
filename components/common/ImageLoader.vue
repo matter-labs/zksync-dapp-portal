@@ -16,8 +16,6 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from "vue";
-
 import { useImage } from "@vueuse/core";
 
 const props = defineProps({

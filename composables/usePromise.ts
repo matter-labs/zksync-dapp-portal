@@ -1,5 +1,3 @@
-import { formatError } from "@/utils/formatters";
-
 const defaultOptions: {
   cache?: number | boolean;
 } = {
@@ -17,7 +15,7 @@ type UsePromiseExecuteOptions = typeof defaultExecuteOptions;
 export default <ResultType, ErrorType = Error>(fn: () => Promise<ResultType>, options?: UsePromiseOptions) => {
   const opts = Object.assign({}, defaultExecuteOptions, options);
 
-  let promise: Promise<ResultType> | undefined = undefined;
+  let promise: Promise<ResultType> | undefined;
   const result = ref<ResultType | undefined>();
   const inProgress = ref(false);
   const error = ref<ErrorType | undefined>();

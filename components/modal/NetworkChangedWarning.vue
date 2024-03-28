@@ -28,14 +28,6 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, watch } from "vue";
-
-import { storeToRefs } from "pinia";
-
-import { useRoute } from "#app";
-import { useNetworkStore } from "@/store/network";
-import { getNetworkUrl } from "@/utils/helpers";
-
 const networkStore = useNetworkStore();
 const {
   selectedNetwork,

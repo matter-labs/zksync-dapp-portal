@@ -7,7 +7,7 @@
       :tokens="tokens"
       :balances="balances"
     >
-      <template #body-bottom v-if="$slots['token-dropdown-bottom']">
+      <template v-if="$slots['token-dropdown-bottom']" #body-bottom>
         <slot name="token-dropdown-bottom" />
       </template>
     </TokenSelectModal>
@@ -36,10 +36,10 @@
       <div class="mt-4 flex gap-2">
         <div class="w-full">
           <CommonInputLine
-            :has-error="!!amountError"
             id="transaction-amount-input"
-            class="text-[40px]"
             v-model.trim="inputted"
+            :has-error="!!amountError"
+            class="text-[40px]"
             placeholder="0"
             type="text"
             maxlength="25"
@@ -97,16 +97,11 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, watch } from "vue";
-
 import { LockClosedIcon } from "@heroicons/vue/24/outline";
 import { BigNumber } from "ethers";
 
 import type { Token, TokenAmount } from "@/types";
 import type { BigNumberish } from "ethers";
-import type { PropType } from "vue";
-
-import { decimalToBigNumber, formatTokenPrice, parseTokenAmount, removeSmallAmountPretty } from "@/utils/formatters";
 
 const props = defineProps({
   modelValue: {

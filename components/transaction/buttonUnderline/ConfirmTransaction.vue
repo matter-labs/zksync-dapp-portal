@@ -5,10 +5,6 @@
 </template>
 
 <script lang="ts" setup>
-import { storeToRefs } from "pinia";
-
-import { useOnboardStore } from "@/store/onboard";
-
 defineProps({
   opened: {
     type: Boolean,

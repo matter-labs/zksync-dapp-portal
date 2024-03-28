@@ -15,7 +15,7 @@
       <div class="-mx-block-padding-1/2 h-full overflow-auto px-block-padding-1/2">
         <template v-if="loading">
           <div class="-mx-block-padding-1/2">
-            <TokenBalanceLoader v-for="index in 2" variant="light" :key="index" />
+            <TokenBalanceLoader v-for="index in 2" :key="index" variant="light" />
           </div>
         </template>
         <template v-else-if="error">
@@ -24,31 +24,30 @@
           </CommonErrorBlock>
         </template>
         <template v-else-if="!hasBalances && (!search || displayedTokens.length)">
-          <div class="category -mx-block-padding-1/4 sm:-mx-block-padding-1/2">
+          <CommonLineButtonsGroup class="category" :gap="false" :margin-y="false">
             <TokenLine
               v-for="item in displayedTokens"
-              class="token-line"
               :key="item.address"
+              class="token-line"
               v-bind="item"
               @click="selectedToken = item"
             />
-          </div>
+          </CommonLineButtonsGroup>
         </template>
         <template v-else-if="balanceGroups.length || !search">
           <div v-for="(group, index) in balanceGroups" :key="index" class="category">
             <TypographyCategoryLabel size="sm" variant="darker" class="group-category-label">
               {{ group.title || "Your assets" }}
             </TypographyCategoryLabel>
-            <div class="-mx-block-padding-1/4 sm:-mx-block-padding-1/2">
+            <CommonLineButtonsGroup :gap="false">
               <TokenBalance
                 v-for="item in group.balances"
                 v-bind="item"
-                size="sm"
-                variant="light"
                 :key="item.address"
+                variant="light"
                 @click="selectedToken = item"
               />
-            </div>
+            </CommonLineButtonsGroup>
           </div>
         </template>
         <p v-else class="mt-block-padding-1/2 text-center">
@@ -66,17 +65,10 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref } from "vue";
-
 import { Combobox } from "@headlessui/vue";
 import { MagnifyingGlassIcon } from "@heroicons/vue/24/outline";
-import { storeToRefs } from "pinia";
 
 import type { Token, TokenAmount } from "@/types";
-import type { PropType } from "vue";
-
-import { useOnboardStore } from "@/store/onboard";
-import { groupBalancesByAmount } from "@/utils/mappers";
 
 const props = defineProps({
   title: {
@@ -165,7 +157,7 @@ const closeModal = () => {
     @apply grid h-full grid-rows-[max-content_max-content_1fr];
   }
   .category:first-child .group-category-label {
-    @apply pt-0;
+    @apply mt-block-padding-1/2;
   }
 }
 </style>

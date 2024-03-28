@@ -1,11 +1,10 @@
 <template>
-  <ModalTransactionDepositUnavailable />
-
-  <DepositView />
+  <div></div>
 </template>
 
 <script lang="ts" setup>
-import DepositView from "@/views/transactions/Deposit.vue";
+const router = useRouter();
+const newUrl = new URL(window.location.href);
+newUrl.pathname = "/bridge";
+await router.replace(newUrl.href.slice(newUrl.origin.length));
 </script>
-
-<style lang="scss" scoped></style>

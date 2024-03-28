@@ -1,7 +1,4 @@
-import { computed } from "vue";
-
 import type { Api, Token, TokenAmount } from "@/types";
-import type { Ref } from "vue";
 
 export const groupBalancesByAmount = <T = TokenAmount>(balances: Ref<T[]>) =>
   computed(() => {

@@ -9,21 +9,19 @@
     </template>
     <template #default>
       <CommonButtonLineBodyInfo class="text-left">
-        <template #label v-if="name">{{ name }}</template>
+        <template v-if="name" #label>{{ name }}</template>
         <template #underline>
           <span class="block break-all" :title="address">{{ address }}</span>
         </template>
       </CommonButtonLineBodyInfo>
     </template>
-    <template #right v-if="$slots.right">
+    <template v-if="$slots.right" #right>
       <slot name="right" />
     </template>
   </CommonButtonLineWithImg>
 </template>
 
 <script lang="ts" setup>
-import type { Component, PropType } from "vue";
-
 defineProps({
   as: {
     type: [String, Object] as PropType<string | Component>,

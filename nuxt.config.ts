@@ -3,7 +3,6 @@ import { portal as portalMeta } from "./data/meta";
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   app: {
-    baseURL: "/bridge",
     head: {
       htmlAttrs: {
         lang: "en",
@@ -54,8 +53,17 @@ export default defineNuxtConfig({
     },
   },
   plugins: [],
-  modules: ["@kevinmarrec/nuxt-pwa", "@pinia/nuxt"],
+  modules: [
+    "@kevinmarrec/nuxt-pwa",
+    "@pinia/nuxt", // https://pinia.vuejs.org/ssr/nuxt.html
+    "@nuxtjs/eslint-module", // https://nuxt.com/modules/eslint
+    "@nuxtjs/tailwindcss", // https://nuxt.com/modules/tailwindcss
+  ],
+  css: ["@/assets/css/tailwind.css", "@/assets/css/style.scss", "web3-avatar-vue/dist/style.css"],
   ssr: false,
+  pinia: {
+    storesDirs: ["./store/**"],
+  },
   pwa: {
     meta: {
       name: portalMeta.title,
@@ -66,7 +74,6 @@ export default defineNuxtConfig({
       short_name: "Portal",
     },
   },
-  css: ["@/assets/css/tailwind.css", "@/assets/css/style.scss", "web3-avatar-vue/dist/style.css"],
   postcss: {
     plugins: {
       tailwindcss: {},
@@ -75,9 +82,6 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     public: {
-      walletConnectProjectID: process.env.WALLET_CONNECT_PROJECT_ID,
-      turnstileKey: process.env.TURNSTILE_KEY,
-      nodeType: process.env.NODE_TYPE as undefined | "memory" | "dockerized" | "hyperchain",
       ankrToken: process.env.ANKR_TOKEN,
       screeningApiUrl: process.env.SCREENING_API_URL,
       dataplaneUrl: process.env.DATAPLANE_URL,
@@ -85,28 +89,20 @@ export default defineNuxtConfig({
       masaKey: process.env.MASA_KEY,
     },
   },
-  pinia: {
-    autoImports: [
-      // automatically imports `defineStore` and `storeToRefs` typings
-      "defineStore",
-      "storeToRefs",
-    ],
-  },
   vite: {
+    define: {
+      // make these env available even outside of the Nuxt context
+      "process.env.NODE_TYPE": JSON.stringify(process.env.NODE_TYPE),
+      "process.env.WALLET_CONNECT_PROJECT_ID": JSON.stringify(process.env.WALLET_CONNECT_PROJECT_ID),
+    },
     css: {
       preprocessorOptions: {
         scss: {
+          // eslint-disable-next-line quotes
           additionalData: '@use "@/assets/css/_mixins.scss" as *;',
         },
       },
     },
-    build: {
-      target: "es2020",
-    },
-    optimizeDeps: {
-      esbuildOptions: {
-        target: "es2020",
-      },
-    },
   },
+  devtools: { enabled: true },
 });
