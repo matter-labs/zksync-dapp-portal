@@ -45,6 +45,11 @@ export default defineNuxtConfig({
           src: "https://cdn.rudderlabs.com/v1.1/rudder-analytics.min.js",
           defer: true,
         },
+        {
+          hid: "MASA-JS",
+          src: "https://cdn.jsdelivr.net/npm/@masa-finance/analytics-sdk@latest/dist/browser/masa-analytics.min.js",
+          defer: true,
+        },
       ],
     },
   },
@@ -77,6 +82,7 @@ export default defineNuxtConfig({
       screeningApiUrl: process.env.SCREENING_API_URL,
       dataplaneUrl: process.env.DATAPLANE_URL,
       rudderKey: process.env.RUDDER_KEY,
+      masaKey: process.env.MASA_KEY,
     },
   },
   pinia: {
