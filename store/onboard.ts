@@ -26,6 +26,7 @@ import type { Chain } from "@wagmi/core";
 import { useRuntimeConfig } from "#imports";
 import { confirmedSupportedWallets, disabledWallets } from "@/data/wallets";
 import { useNetworkStore } from "@/store/network";
+import { identifyWallet } from "~/utils/analytics";
 
 export const useOnboardStore = defineStore("onboard", () => {
   const { zkSyncNetworks } = useNetworks();
@@ -144,6 +145,8 @@ export const useOnboardStore = defineStore("onboard", () => {
       await identifyWalletName();
       account.value = updatedAccount;
       connectorName.value = wagmiConfig.connector?.name;
+
+      identifyWallet(updatedAccount.address, walletName.value);
     } catch (err) {
       disconnect();
       const error = formatError(err as Error);

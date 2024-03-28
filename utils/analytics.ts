@@ -72,3 +72,13 @@ export async function trackEvent(eventName: string, params?: object): Promise<vo
     window.masaAnalytics?.trackCustomEvent({ eventName, additionalEventData: { appId: "zksync-portal", ...params } });
   }
 }
+
+export async function identifyWallet(userAddress: `0x${string}` | undefined, walletType?: string): Promise<void> {
+  if (await initAnalytics()) {
+    window.masaAnalytics?.fireConnectWalletEvent({
+      user_address: userAddress,
+      wallet_type: walletType,
+      additionalEventData: { appId: "zksync-portal" },
+    });
+  }
+}

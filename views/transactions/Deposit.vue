@@ -371,6 +371,7 @@ import { useZkSyncTokensStore } from "@/store/zksync/tokens";
 import { ESTIMATED_DEPOSIT_DELAY, useZkSyncTransactionStatusStore } from "@/store/zksync/transactionStatus";
 import { useZkSyncTransfersHistoryStore } from "@/store/zksync/transfersHistory";
 import { useZkSyncWalletStore } from "@/store/zksync/wallet";
+import { trackEvent } from "@/utils/analytics";
 import { ETH_TOKEN } from "@/utils/constants";
 import { TOKEN_ALLOWANCE } from "@/utils/doc-links";
 import { checksumAddress, decimalToBigNumber, parseTokenAmount } from "@/utils/formatters";
@@ -705,6 +706,11 @@ const makeTransaction = async () => {
     waitForCompletion(transactionInfo.value)
       .then(async (completedTransaction) => {
         transactionInfo.value = completedTransaction;
+        trackEvent("deposit", {
+          token: transaction.value!.token.symbol,
+          amount: transaction.value!.token.amount,
+          to: transaction.value!.to.address,
+        });
         setTimeout(() => {
           transfersHistoryStore.reloadRecentTransfers().catch(() => undefined);
           eraWalletStore.requestBalance({ force: true }).catch(() => undefined);

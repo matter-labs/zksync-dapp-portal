@@ -324,6 +324,7 @@ import { WITHDRAWAL_DELAY } from "@/store/zksync/transactionStatus";
 import { useZkSyncTransactionStatusStore } from "@/store/zksync/transactionStatus";
 import { useZkSyncTransfersHistoryStore } from "@/store/zksync/transfersHistory";
 import { useZkSyncWalletStore } from "@/store/zksync/wallet";
+import { trackEvent } from "@/utils/analytics";
 import { ETH_TOKEN } from "@/utils/constants";
 import { ZKSYNC_WITHDRAWAL_DELAY } from "@/utils/doc-links";
 import { checksumAddress, decimalToBigNumber } from "@/utils/formatters";
@@ -686,6 +687,11 @@ const makeTransaction = async () => {
     waitForCompletion(transactionInfo.value)
       .then(async (completedTransaction) => {
         transactionInfo.value = completedTransaction;
+        trackEvent(transaction.value!.type, {
+          token: transaction.value!.token.symbol,
+          amount: transaction.value!.token.amount,
+          to: transaction.value!.to.address,
+        });
         setTimeout(() => {
           transfersHistoryStore.reloadRecentTransfers().catch(() => undefined);
           walletStore.requestBalance({ force: true }).catch(() => undefined);
