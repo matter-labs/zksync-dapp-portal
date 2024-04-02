@@ -49,6 +49,6 @@ jobs:
     secrets: inherit
     with:
       targetUrl: ${{ needs.deploy.outputs.dappUrl }}
-      network: Goerli
+      network: Sepolia
       publish_to_allure: true
       environmentTags: ""

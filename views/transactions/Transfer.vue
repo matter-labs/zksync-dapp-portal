@@ -45,18 +45,6 @@
     <form v-else @submit.prevent="">
       <template v-if="step === 'form'">
         <TransactionWithdrawalsAvailableForClaimAlert />
-        <CommonAlert
-          v-if="type === 'withdrawal' && eraNetwork.l1Network?.id === 1 && !isCustomNode"
-          variant="warning"
-          :icon="ExclamationTriangleIcon"
-          class="mb-block-gap"
-        >
-          <p>
-            Starting from {{ manualFinalizationFormattedLocalDate }} you will need to manually claim your funds after a
-            24 hour withdrawal delay. This requires paying another transaction fee on
-            {{ eraNetwork.l1Network?.name }} network.
-          </p>
-        </CommonAlert>
         <CommonInputTransactionAmount
           v-model="amount"
           v-model:error="amountError"
@@ -137,26 +125,22 @@
       <template v-else-if="step === 'withdrawal-finalization-warning'">
         <CommonAlert variant="warning" :icon="ExclamationTriangleIcon" class="mb-block-padding-1/2 sm:mb-block-gap">
           <p>
-            You are withdrawing less than 0.01 ETH. Once your withdrawal is processed and available on
-            {{ eraNetwork.l1Network?.name }}, you will need to manually claim your funds which requires paying another
-            transaction fee on {{ eraNetwork.l1Network?.name }}. Transactions of 0.01 ETH or more are finalized
-            automatically.
-            <br />
-            <br />
-            To withdraw smaller amounts you can use
-            <span class="inline-flex items-center gap-1">
-              <a
-                href="https://zksync.dappradar.com/ecosystem?category-de=bridges"
-                target="_blank"
-                class="underline underline-offset-2"
-                >third-party bridges</a
-              >
-            </span>
+            After a
+            <a class="underline underline-offset-2" :href="ZKSYNC_WITHDRAWAL_DELAY" target="_blank"
+              >24-hour withdrawal delay</a
+            >, you will need to manually claim your funds which requires paying another transaction fee on
+            {{ eraNetwork.l1Network?.name }}. Alternatively you can use
+            <a
+              href="https://zksync.dappradar.com/ecosystem?category=defi_bridge"
+              target="_blank"
+              class="underline underline-offset-2"
+              >third-party bridges</a
+            >.
           </p>
         </CommonAlert>
         <CommonButton
           as="a"
-          href="https://zksync.dappradar.com/ecosystem?category-de=bridges"
+          href="https://zksync.dappradar.com/ecosystem?category=defi_bridge"
           target="_blank"
           type="submit"
           variant="primary"
@@ -335,18 +319,6 @@ import WithdrawalSubmitted from "@/views/transactions/WithdrawalSubmitted.vue";
 import type { FeeEstimationParams } from "@/composables/zksync/useFee";
 import type { Token, TokenAmount } from "@/types";
 import type { BigNumberish } from "ethers";
-
-const manualWithdrawalFinalizationStartDate = new Date(Date.UTC(2024, 3, 1, 0, 0, 0)); // 1st of April 2024 00:00:00 UTC
-const manualFinalizationFormattedLocalDate =
-  manualWithdrawalFinalizationStartDate.toLocaleDateString(undefined, {
-    month: "long",
-    day: "numeric",
-  }) +
-  " " +
-  manualWithdrawalFinalizationStartDate.toLocaleTimeString(undefined, {
-    hour: "numeric",
-    minute: "2-digit",
-  });
 
 const props = defineProps({
   type: {

@@ -1,6 +1,7 @@
 import { useMemoize } from "@vueuse/core";
-import { BigNumber, type BigNumberish } from "ethers";
-import { parseEther } from "ethers/lib/utils";
+import { type BigNumberish } from "ethers";
+
+import { isCustomNode } from "@/data/networks";
 
 import type { TokenAmount } from "@/types";
 import type { Provider, Signer } from "zksync-ethers";
@@ -12,10 +13,8 @@ type TransactionParams = {
   amount: BigNumberish;
 };
 
-export const isWithdrawalManualFinalizationRequired = (token: TokenAmount, l1NetworkId: number) => {
-  return (
-    token.address === ETH_TOKEN.address && BigNumber.from(token.amount).lt(parseEther("0.01")) && l1NetworkId === 1
-  );
+export const isWithdrawalManualFinalizationRequired = (_token: TokenAmount, l1NetworkId: number) => {
+  return l1NetworkId === 1 || isCustomNode;
 };
 
 export default (getSigner: () => Promise<Signer | undefined>, getProvider: () => Provider) => {

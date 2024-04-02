@@ -27,7 +27,7 @@
           :description="`Explore ecosystem of third party bridges`"
           :icon="ArrowTopRightOnSquareIcon"
           as="a"
-          href="https://zksync.dappradar.com/ecosystem?category-de=bridges"
+          href="https://zksync.dappradar.com/ecosystem?category=defi_bridge"
           target="_blank"
         >
           <template #image>

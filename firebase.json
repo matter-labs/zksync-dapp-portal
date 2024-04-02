@@ -50,12 +50,12 @@
         },
         {
           "source": "https://goerli.staging-portal.zksync.dev/*",
-          "destination": "https://staging-portal.zksync.dev/?network=goerli",
+          "destination": "https://staging-portal.zksync.dev/?network=sepolia",
           "type": 301
         },
         {
           "source": "https://goerli.portal.zksync.io/*",
-          "destination": "https://portal.zksync.io/?network=goerli",
+          "destination": "https://portal.zksync.io/?network=sepolia",
           "type": 301
         }
       ]

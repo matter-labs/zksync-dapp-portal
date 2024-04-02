@@ -117,7 +117,7 @@
             wallets on the
             <a
               class="underline underline-offset-2"
-              href="https://zksync.dappradar.com/ecosystem?category-de=wallet"
+              href="https://zksync.dappradar.com/ecosystem?category=non_dapps_wallets"
               target="_blank"
               >Ecosystem</a
             >
@@ -129,7 +129,7 @@
         </CommonButton>
         <CommonButton
           as="a"
-          href="https://zksync.dappradar.com/ecosystem?category-de=bridges"
+          href="https://zksync.dappradar.com/ecosystem?category=defi_bridge"
           target="_blank"
           size="sm"
           class="mx-auto mt-block-gap w-max"

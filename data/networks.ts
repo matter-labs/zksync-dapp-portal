@@ -1,4 +1,4 @@
-import { goerli, mainnet, sepolia } from "@wagmi/core/chains";
+import { mainnet, sepolia } from "@wagmi/core/chains";
 
 import Hyperchains from "@/hyperchains/config.json";
 
@@ -10,10 +10,6 @@ export const l1Networks = {
     ...mainnet,
     name: "Ethereum",
     network: "mainnet",
-  },
-  goerli: {
-    ...goerli,
-    name: "Ethereum Goerli Testnet",
   },
   sepolia: {
     ...sepolia,
@@ -92,24 +88,11 @@ const publicChains: ZkSyncNetwork[] = [
     l1Network: l1Networks.sepolia,
   },
   {
-    id: 280,
-    key: "goerli",
-    name: "zkSync Goerli Testnet",
-    rpcUrl: "https://testnet.era.zksync.dev",
-    blockExplorerUrl: "https://goerli.explorer.zksync.io",
-    blockExplorerApi: "https://block-explorer-api.testnets.zksync.dev",
-    deprecated: true,
-    displaySettings: {
-      showPartnerLinks: true,
-    },
-    l1Network: l1Networks.goerli,
-  },
-  {
     id: 270,
     key: "stage",
     name: "zkSync Stage",
     rpcUrl: "https://z2-dev-api.zksync.dev",
-    blockExplorerUrl: "https://goerli-beta.staging-scan-v2.zksync.dev",
+    blockExplorerUrl: "https://sepolia-beta.staging-scan-v2.zksync.dev",
     blockExplorerApi: "https://block-explorer-api.stage.zksync.dev",
     l1Network: l1Networks.sepolia,
     hidden: true,

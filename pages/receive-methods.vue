@@ -41,7 +41,7 @@
           label="Top-up with cash"
           description="Buy tokens using a card or another method for fiat"
           as="a"
-          href="https://zksync.dappradar.com/ecosystem?category-de=gateways"
+          href="https://zksync.dappradar.com/ecosystem?category=non_dapps_on_off_ramps"
           target="_blank"
           :icon="ArrowTopRightOnSquareIcon"
         >
@@ -57,7 +57,7 @@
           label="Bridge from other networks"
           description="Explore ecosystem of third party bridges"
           as="a"
-          href="https://zksync.dappradar.com/ecosystem?category-de=bridges"
+          href="https://zksync.dappradar.com/ecosystem?category=defi_bridge"
           target="_blank"
           :icon="ArrowTopRightOnSquareIcon"
         >
