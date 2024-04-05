@@ -606,7 +606,7 @@ const makeTransaction = async () => {
     {
       type: props.type,
       to: transaction.value!.to.address,
-      tokenAddress: transaction.value!.token.address,
+      token: transaction.value!.token,
       amount: transaction.value!.token.amount,
     },
     {

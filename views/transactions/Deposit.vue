@@ -461,6 +461,17 @@ const tokenBalance = computed<BigNumberish | undefined>(() => {
   return balance.value?.find((e) => e.address === selectedToken.value?.address)?.amount;
 });
 
+const getContractAddress = async () => {
+  if (selectedToken.value) {
+    const isExternalBridge = isExternalBridgeToken(selectedToken.value);
+    if (isExternalBridge) {
+      return EXTERNAL_BRIDGES[selectedToken.value.address];
+    } else {
+      return (await providerStore.requestProvider().getDefaultBridgeAddresses()).erc20L1;
+    }
+  }
+};
+
 const {
   result: allowance,
   inProgress: allowanceRequestInProgress,
@@ -477,7 +488,7 @@ const {
 } = useAllowance(
   computed(() => account.value.address),
   computed(() => selectedToken.value?.address),
-  async () => (await providerStore.requestProvider().getDefaultBridgeAddresses()).erc20L1
+  getContractAddress
 );
 const enoughAllowance = computed(() => {
   if (!allowance.value || !selectedToken.value) {
@@ -681,7 +692,7 @@ const makeTransaction = async () => {
   const tx = await commitTransaction(
     {
       to: transaction.value!.to.address,
-      tokenAddress: transaction.value!.token.address,
+      token: transaction.value!.token,
       amount: transaction.value!.token.amount,
     },
     feeValues.value!

@@ -1,7 +1,9 @@
 import { BigNumber } from "ethers";
 
+import { EXTERNAL_BRIDGES } from "./constants";
+
 import type { ZkSyncNetwork } from "@/data/networks";
-import type { TokenAmount } from "@/types";
+import type { Token, TokenAmount } from "@/types";
 import type { BigNumberish } from "ethers";
 
 export function isOnlyZeroes(value: string) {
@@ -52,3 +54,7 @@ export async function retry<T>(func: () => Promise<T>, options: RetryOptions = {
     }
   }
 }
+
+export const isExternalBridgeToken = (token: Token) => {
+  return Object.hasOwn(EXTERNAL_BRIDGES, token.address);
+};

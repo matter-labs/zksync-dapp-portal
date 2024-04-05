@@ -3,13 +3,13 @@ import { type BigNumberish } from "ethers";
 
 import { isCustomNode } from "@/data/networks";
 
-import type { TokenAmount } from "@/types";
+import type { Token, TokenAmount } from "@/types";
 import type { Provider, Signer } from "zksync-ethers";
 
 type TransactionParams = {
   type: "transfer" | "withdrawal";
   to: string;
-  tokenAddress: string;
+  token: Token;
   amount: BigNumberish;
 };
 
@@ -38,7 +38,9 @@ export default (getSigner: () => Promise<Signer | undefined>, getProvider: () =>
       if (!signer) throw new Error("zkSync Signer is not available");
 
       const getRequiredBridgeAddress = async () => {
-        if (transaction.tokenAddress === ETH_TOKEN.address) return undefined;
+        if (transaction.token.address === ETH_TOKEN.address) return undefined;
+        const isCustomBridge = isExternalBridgeToken(transaction.token);
+        if (isCustomBridge) return EXTERNAL_BRIDGES[transaction.token.address];
         const bridgeAddresses = await retrieveBridgeAddresses();
         return bridgeAddresses.erc20L2;
       };
@@ -50,7 +52,7 @@ export default (getSigner: () => Promise<Signer | undefined>, getProvider: () =>
       status.value = "waiting-for-signature";
       const tx = await signer[transaction.type === "transfer" ? "transfer" : "withdraw"]({
         to: transaction.to,
-        token: transaction.tokenAddress === ETH_TOKEN.address ? ETH_TOKEN.l1Address! : transaction.tokenAddress,
+        token: transaction.token.address === ETH_TOKEN.address ? ETH_TOKEN.l1Address! : transaction.token.address,
         amount: transaction.amount,
         bridgeAddress,
         overrides: {

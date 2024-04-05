@@ -40,6 +40,12 @@ export const mapApiToken = (token: Api.Response.Token): Token => {
     };
   }
 
+  // TODO: Update the address on the Block explorer API side
+  // Update the old wstETH address with new one
+  if (token.l1Address === WST_ETH_TOKEN.l1Address) {
+    token.l2Address = WST_ETH_TOKEN.address;
+  }
+
   return {
     l1Address: token.l1Address || undefined,
     address: token.l2Address,
