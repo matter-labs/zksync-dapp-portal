@@ -16,12 +16,16 @@ export default (transactionInfo: ComputedRef<TransactionInfo>) => {
   const { isCorrectNetworkSet } = storeToRefs(onboardStore);
   const { tokens } = storeToRefs(tokensStore);
 
-  const retrieveBridgeAddress = useMemoize(() =>
-    providerStore
+  const retrieveBridgeAddress = useMemoize(() => {
+    const isCustomBridge = isExternalBridgeToken(transactionInfo.value.token);
+    if (isCustomBridge) {
+      return EXTERNAL_BRIDGES[transactionInfo.value.token.address];
+    }
+    return providerStore
       .requestProvider()
       .getDefaultBridgeAddresses()
-      .then((e) => e.erc20L1)
-  );
+      .then((e) => e.erc20L1);
+  });
   const retrieveMainContractAddress = useMemoize(() => providerStore.requestProvider().getMainContractAddress());
 
   const gasLimit = ref<BigNumberish | undefined>();
