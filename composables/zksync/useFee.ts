@@ -8,7 +8,7 @@ export type FeeEstimationParams = {
   type: "transfer" | "withdrawal";
   from: string;
   to: string;
-  tokenAddress: string;
+  token: Token;
 };
 
 export default (
@@ -51,15 +51,18 @@ export default (
       if (!params) throw new Error("Params are not available");
 
       const provider = getProvider();
-      const tokenBalance = balances.value.find((e) => e.address === params!.tokenAddress)?.amount || "1";
+      const tokenBalance = balances.value.find((e) => e.address === params!.token.address)?.amount || "1";
       const [price, limit] = await Promise.all([
         retry(() => provider.getGasPrice()),
         retry(() => {
+          const isCustomBridge = isExternalBridgeToken(params!.token);
+          const bridgeAddress = isCustomBridge ? EXTERNAL_BRIDGES[params!.token.address] : "";
           return provider[params!.type === "transfer" ? "estimateGasTransfer" : "estimateGasWithdraw"]({
             from: params!.from,
             to: params!.to,
-            token: params!.tokenAddress === ETH_TOKEN.address ? ETH_TOKEN.l1Address! : params!.tokenAddress,
+            token: params!.token.address === ETH_TOKEN.address ? ETH_TOKEN.l1Address! : params!.token.address,
             amount: tokenBalance,
+            ...(isCustomBridge ? { bridgeAddress } : {}),
           });
         }),
       ]);
