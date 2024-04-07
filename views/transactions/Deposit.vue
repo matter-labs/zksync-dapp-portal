@@ -730,6 +730,11 @@ const makeTransaction = async () => {
     waitForCompletion(transactionInfo.value)
       .then((completedTransaction) => {
         transactionInfo.value = completedTransaction;
+        trackEvent("deposit", {
+          token: transaction.value!.token.symbol,
+          amount: transaction.value!.token.amount,
+          to: transaction.value!.to.address,
+        });
         setTimeout(() => {
           transfersHistoryStore.reloadRecentTransfers().catch(() => undefined);
           eraWalletStore.requestBalance({ force: true }).catch(() => undefined);

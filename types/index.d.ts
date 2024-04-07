@@ -146,5 +146,16 @@ declare global {
       track: (eventName: string, params?: unknown) => void;
       initialized: boolean;
     };
+    MA?: {
+      MasaAnalytics: {
+        new ({ clientId });
+      };
+    };
+    masaAnalytics?: {
+      trackCustomEvent: ({ eventName, additionalEventData }) => void;
+      firePageViewEvent: ({ page, additionalEventData }) => void;
+      fireConnectWalletEvent: ({ user_address, wallet_type, additionalEventData }) => void;
+      initialized: boolean;
+    };
   }
 }

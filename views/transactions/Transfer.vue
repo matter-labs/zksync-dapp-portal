@@ -650,6 +650,11 @@ const makeTransaction = async () => {
     waitForCompletion(transactionInfo.value)
       .then((completedTransaction) => {
         transactionInfo.value = completedTransaction;
+        trackEvent(transaction.value!.type, {
+          token: transaction.value!.token.symbol,
+          amount: transaction.value!.token.amount,
+          to: transaction.value!.to.address,
+        });
         setTimeout(() => {
           transfersHistoryStore.reloadRecentTransfers().catch(() => undefined);
           walletStore.requestBalance({ force: true }).catch(() => undefined);

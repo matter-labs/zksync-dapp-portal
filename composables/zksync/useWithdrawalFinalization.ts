@@ -151,6 +151,12 @@ export default (transactionInfo: ComputedRef<TransactionInfo>) => {
         },
       });
 
+      trackEvent("withdrawal-finalized", {
+        token: transactionInfo.value!.token.symbol,
+        amount: transactionInfo.value!.token.amount,
+        to: transactionInfo.value!.to.address,
+      });
+
       status.value = "done";
       return receipt;
     } catch (err) {
