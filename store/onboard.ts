@@ -12,7 +12,6 @@ import { createWeb3Modal } from "@web3modal/wagmi";
 
 import { wagmiConfig } from "@/data/wagmi";
 import { confirmedSupportedWallets, disabledWallets } from "@/data/wallets";
-import { identifyWallet } from "~/utils/analytics";
 
 export const useOnboardStore = defineStore("onboard", () => {
   const { selectedColorMode } = useColorMode();

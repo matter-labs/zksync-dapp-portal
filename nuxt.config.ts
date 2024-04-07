@@ -84,9 +84,16 @@ export default defineNuxtConfig({
     public: {
       ankrToken: process.env.ANKR_TOKEN,
       screeningApiUrl: process.env.SCREENING_API_URL,
-      dataplaneUrl: process.env.DATAPLANE_URL,
-      rudderKey: process.env.RUDDER_KEY,
-      masaKey: process.env.MASA_KEY,
+      analytics: {
+        rudder: {
+          key: process.env.RUDDER_KEY,
+          dataplaneUrl: process.env.DATAPLANE_URL,
+        },
+        masa: {
+          clientId: process.env.MASA_KEY,
+          appId: process.env.MASA_APP_ID,
+        },
+      },
     },
   },
   vite: {

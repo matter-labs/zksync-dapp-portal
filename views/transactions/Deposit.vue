@@ -363,7 +363,6 @@
 </template>
 
 <script lang="ts" setup>
-import { useRoute, useRouter } from "#app";
 import {
   ArrowTopRightOnSquareIcon,
   CheckIcon,
@@ -381,22 +380,6 @@ import useFee from "@/composables/zksync/deposit/useFee";
 import useTransaction from "@/composables/zksync/deposit/useTransaction";
 import { customBridgeTokens } from "@/data/customBridgeTokens";
 import { isCustomNode } from "@/data/networks";
-import { useDestinationsStore } from "@/store/destinations";
-import { useNetworkStore } from "@/store/network";
-import { useOnboardStore } from "@/store/onboard";
-import { usePreferencesStore } from "@/store/preferences";
-import { useZkSyncEthereumBalanceStore } from "@/store/zksync/ethereumBalance";
-import { useZkSyncProviderStore } from "@/store/zksync/provider";
-import { useZkSyncTokensStore } from "@/store/zksync/tokens";
-import { ESTIMATED_DEPOSIT_DELAY, useZkSyncTransactionStatusStore } from "@/store/zksync/transactionStatus";
-import { useZkSyncTransfersHistoryStore } from "@/store/zksync/transfersHistory";
-import { useZkSyncWalletStore } from "@/store/zksync/wallet";
-import { trackEvent } from "@/utils/analytics";
-import { ETH_TOKEN } from "@/utils/constants";
-import { TOKEN_ALLOWANCE } from "@/utils/doc-links";
-import { checksumAddress, decimalToBigNumber, parseTokenAmount } from "@/utils/formatters";
-import { silentRouterChange } from "@/utils/helpers";
-import { TransitionAlertScaleInOutTransition, TransitionOpacity } from "@/utils/transitions";
 import DepositSubmitted from "@/views/transactions/DepositSubmitted.vue";
 
 import type { Token, TokenAmount } from "@/types";
