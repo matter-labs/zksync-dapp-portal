@@ -32,7 +32,7 @@ export async function initAnalytics(): Promise<boolean> {
   const useRudder = Boolean(
     runtimeConfig.public.analytics.rudder.key && runtimeConfig.public.analytics.rudder.dataplaneUrl
   );
-  const useMasa = Boolean(runtimeConfig.public.analytics.masa.clientId);
+  const useMasa = Boolean(runtimeConfig.public.analytics.masa.clientId && runtimeConfig.public.analytics.masa.appId);
   if ((!useRudder && !useMasa) || analyticsLoaded) {
     return false;
   }
