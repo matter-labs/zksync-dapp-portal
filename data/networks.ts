@@ -8,6 +8,11 @@ import type { Chain } from "@wagmi/core/chains";
 export const l1Networks = {
   mainnet: {
     ...mainnet,
+    rpcUrls: {
+      default: {
+        http: ["https://rpc.ankr.com/eth/f66261f3ba4647abb11fc7a7048110ecc2a470590cab52e8ee81b01a0f9006ab"],
+      },
+    },
     name: "Ethereum",
     network: "mainnet",
   },
