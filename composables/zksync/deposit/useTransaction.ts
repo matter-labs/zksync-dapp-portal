@@ -1,4 +1,5 @@
 import type { DepositFeeValues } from "@/composables/zksync/deposit/useFee";
+import type { Token } from "@/types";
 import type { BigNumberish } from "ethers";
 import type { L1Signer } from "zksync-ethers";
 
@@ -13,7 +14,7 @@ export default (getL1Signer: () => Promise<L1Signer | undefined>) => {
   const commitTransaction = async (
     transaction: {
       to: string;
-      tokenAddress: string;
+      token: Token;
       amount: BigNumberish;
     },
     fee: DepositFeeValues
@@ -39,11 +40,14 @@ export default (getL1Signer: () => Promise<L1Signer | undefined>) => {
       }
 
       status.value = "waiting-for-signature";
+      const isCustomBridge = isExternalBridgeToken(transaction.token);
+      const bridgeAddress = isCustomBridge ? EXTERNAL_BRIDGES[transaction.token.address] : "";
       const depositResponse = await wallet.deposit({
         to: transaction.to,
-        token: transaction.tokenAddress,
+        token: transaction.token.address,
         amount: transaction.amount,
         l2GasLimit: fee.l2GasLimit,
+        ...(isCustomBridge ? { bridgeAddress } : {}),
         overrides,
       });
 

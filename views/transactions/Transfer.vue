@@ -522,7 +522,7 @@ const estimate = async () => {
     type: props.type,
     from: transaction.value.from.address,
     to: transaction.value.to.address,
-    tokenAddress: selectedToken.value.address,
+    token: selectedToken.value,
   });
 };
 watch(
@@ -606,7 +606,7 @@ const makeTransaction = async () => {
     {
       type: props.type,
       to: transaction.value!.to.address,
-      tokenAddress: transaction.value!.token.address,
+      token: transaction.value!.token,
       amount: transaction.value!.token.amount,
     },
     {
