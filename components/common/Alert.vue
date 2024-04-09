@@ -1,5 +1,5 @@
 <template>
-  <div class="alert-container" :class="[`variant-${variant}`, { 'has-icon': !!icon }]">
+  <div class="alert-container" :class="[`variant-${variant}`, `size-${size}`, { 'has-icon': !!icon }]">
     <div v-if="icon" class="alert-icon-container">
       <component :is="icon" class="alert-icon" aria-hidden="true" />
     </div>
@@ -14,6 +14,10 @@ defineProps({
   variant: {
     type: String as PropType<"info" | "neutral" | "success" | "warning" | "error">,
   },
+  size: {
+    type: String as PropType<"md" | "sm">,
+    default: "md",
+  },
   icon: {
     type: [Object, Function] as PropType<Component>,
   },
@@ -26,6 +30,14 @@ defineProps({
   &.has-icon {
     @apply grid grid-cols-[max-content_1fr] gap-block-padding-1/2;
   }
+  /* &.size- {
+    &md {
+      @apply p-4;
+    }
+    &sm {
+      @apply p-2;
+    }
+  } */
   &.variant- {
     &info {
       @apply border bg-primary-300 text-primary-700;
@@ -64,16 +76,25 @@ defineProps({
       }
     }
     &warning {
-      @apply border p-block-padding-1/2 sm:p-block-padding;
+      @apply border p-block-padding-1/2;
       @apply border-warning-400/30 bg-warning-400/10;
+      &.size-md {
+        .alert-icon-container {
+          @apply h-12 w-12 bg-warning-400;
 
-      .alert-icon-container {
-        @apply h-12 w-12 bg-warning-400;
+          .alert-icon {
+            @apply text-neutral-950;
+          }
+        }
 
+        @apply sm:p-block-padding;
+      }
+      &.size-sm {
         .alert-icon {
-          @apply text-neutral-950;
+          @apply text-warning-400;
         }
       }
+
       .alert-body {
         .alert-link {
           @apply hover:text-orange-600 dark:text-warning-400 dark:hover:text-warning-600;

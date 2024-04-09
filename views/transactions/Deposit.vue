@@ -86,28 +86,13 @@
               <span>{{ destination.label }}</span>
             </CommonButtonDropdown>
           </template>
-          <template v-if="tokenCustomBridge" #input-body>
-            <div class="mt-4">
-              Bridging {{ tokenCustomBridge.symbol }} token to {{ destination.label }} requires custom bridge. Please
-              use
-              <a :href="tokenCustomBridge.bridgeUrlDeposit" target="_blank" class="underline underline-offset-2">
-                {{ tokenCustomBridge.bridgeName }} </a
-              >.
-            </div>
-          </template>
         </CommonInputTransactionAddress>
-        <CommonButton
+        <TransactionCustomBridge
           v-if="tokenCustomBridge"
-          type="submit"
-          as="a"
-          target="_blank"
-          :href="tokenCustomBridge?.bridgeUrlDeposit"
-          variant="primary"
-          class="mt-4 w-full gap-1"
-        >
-          Open {{ tokenCustomBridge?.bridgeName }}
-          <ArrowTopRightOnSquareIcon class="h-6 w-6" aria-hidden="true" />
-        </CommonButton>
+          type="deposit"
+          class="mt-6"
+          :custom-bridge-token="tokenCustomBridge"
+        />
       </template>
       <template v-else-if="step === 'wallet-warning'">
         <CommonAlert variant="warning" :icon="ExclamationTriangleIcon" class="mb-block-padding-1/2 sm:mb-block-gap">
