@@ -1,7 +1,7 @@
 <template>
   <div>
     <CommonAlert variant="warning" size="sm" :icon="ExclamationTriangleIcon" class="mb-block-gap">
-      <p>{{ customBridgeToken.symbol }} token requires use of a custom bridge</p>
+      <p>Bridging {{ customBridgeToken.symbol }} is not supported by zkSync Portal.</p>
     </CommonAlert>
     <TypographyCategoryLabel>
       Use 3rd party bridges or CEXs to bridge {{ customBridgeToken.symbol }} to
