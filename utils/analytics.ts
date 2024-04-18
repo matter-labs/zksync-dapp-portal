@@ -70,11 +70,20 @@ export async function trackEvent(eventName: string, params?: object): Promise<vo
 
 export async function identifyWallet(userAddress: Hash | undefined, walletType?: string): Promise<void> {
   if (await initAnalytics()) {
+    // Check if wallet identification has already been performed
+    const isWalletIdentified = localStorage.getItem("walletIdentified");
+    if (isWalletIdentified === "true") {
+      return; // Skip if already identified
+    }
+
     const runtimeConfig = useRuntimeConfig();
     window.masaAnalytics?.fireConnectWalletEvent({
       user_address: userAddress,
       wallet_type: walletType,
       additionalEventData: { appId: runtimeConfig.public.analytics.masa.appId },
     });
+
+    // Mark wallet as identified in localStorage
+    localStorage.setItem("walletIdentified", "true");
   }
 }
