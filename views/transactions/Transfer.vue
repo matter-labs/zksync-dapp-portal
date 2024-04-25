@@ -110,30 +110,12 @@
       <template v-else-if="step === 'withdrawal-finalization-warning'">
         <CommonAlert variant="warning" :icon="ExclamationTriangleIcon" class="mb-block-padding-1/2 sm:mb-block-gap">
           <p>
-            After a
-            <a class="underline underline-offset-2" :href="ZKSYNC_WITHDRAWAL_DELAY" target="_blank"
-              >24-hour withdrawal delay</a
-            >, you will need to manually claim your funds which requires paying another transaction fee on
-            {{ eraNetwork.l1Network?.name }}. Alternatively you can use
-            <a
-              href="https://zksync.dappradar.com/ecosystem?category=defi_bridge"
-              target="_blank"
-              class="underline underline-offset-2"
-              >third-party bridges</a
-            >.
+            Once your withdrawal is processed and available on
+            {{ eraNetwork.l1Network?.name }}, you will need to manually claim your funds which requires paying another
+            transaction fee on {{ eraNetwork.l1Network?.name }}.
+            <br />
           </p>
         </CommonAlert>
-        <CommonButton
-          as="a"
-          href="https://zksync.dappradar.com/ecosystem?category=defi_bridge"
-          target="_blank"
-          type="submit"
-          variant="primary"
-          class="mt-block-gap w-full gap-1"
-        >
-          See third-party bridges
-          <ArrowTopRightOnSquareIcon class="h-6 w-6" aria-hidden="true" />
-        </CommonButton>
         <CommonButton size="sm" class="mx-auto mt-block-gap w-max" @click="buttonContinue()">
           I understand, proceed to withdrawal
         </CommonButton>
@@ -146,8 +128,9 @@
           class="mb-block-padding-1/2 sm:mb-block-gap"
         >
           <p v-if="withdrawalManualFinalizationRequired">
-            You will be able to claim your withdrawal only after a 24-hour withdrawal delay.
-            <a class="underline underline-offset-2" :href="ZKSYNC_WITHDRAWAL_DELAY" target="_blank">Learn more</a>
+            You will be able to claim your withdrawal once the transaction has been verified on
+            <span class="font-medium">{{ transaction.to.destination.label }}</span
+            >.
           </p>
           <p v-else>
             You will receive funds only after a 24-hour withdrawal delay.
