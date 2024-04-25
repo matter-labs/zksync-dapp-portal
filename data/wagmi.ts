@@ -5,10 +5,10 @@ import { defaultWagmiConfig } from "@web3modal/wagmi";
 import { chainList, type ZkSyncNetwork } from "@/data/networks";
 
 const metadata = {
-  name: "zkSync Portal",
-  description: "zkSync Portal - view balances, transfer and bridge tokens",
-  url: "https://portal.zksync.io",
-  icons: ["https://portal.zksync.io/icon.png"],
+  name: "PlayFi Portal",
+  description: "PlayFi Portal - view balances, transfer and bridge tokens",
+  url: process.env.APP_DOMAIN || "",
+  icons: [`${process.env.APP_DOMAIN || ""}/icon.png`],
 };
 
 if (!process.env.WALLET_CONNECT_PROJECT_ID) {

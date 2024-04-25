@@ -8,6 +8,6 @@
 
 <style lang="scss" scoped>
 .input-error-message {
-  @apply -mb-6 mt-1 text-sm text-error-300;
+  @apply -mb-6 mt-1 text-sm text-customError;
 }
 </style>

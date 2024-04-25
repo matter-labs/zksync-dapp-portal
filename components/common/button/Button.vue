@@ -43,7 +43,7 @@ defineProps({
   }
   &.variant- {
     &default {
-      @apply bg-neutral-100 dark:bg-neutral-900;
+      @apply bg-white dark:bg-neutral-900;
       &:enabled,
       &:is(a, label) {
         &:not([aria-disabled="true"]) {
@@ -52,7 +52,7 @@ defineProps({
       }
     }
     &light {
-      @apply bg-neutral-200 transition disabled:opacity-70 dark:bg-neutral-800;
+      @apply bg-customGreyButton transition disabled:opacity-70 dark:bg-neutral-800;
       &:enabled,
       &:is(a, label) {
         &:not([aria-disabled="true"]) {
@@ -61,20 +61,20 @@ defineProps({
       }
     }
     &primary {
-      @apply bg-primary-400 px-6 text-white;
+      @apply bg-primary-custom px-6 text-white;
       &:enabled,
       &:is(a, label) {
         &:not([aria-disabled="true"]) {
-          @apply hover:bg-primary-300;
+          @apply hover:bg-primary-custom;
         }
       }
       &:disabled,
       &[aria-disabled="true"] {
-        @apply bg-opacity-50 dark:bg-neutral-800 dark:bg-opacity-50;
+        @apply bg-grayButtons dark:bg-neutral-800 dark:bg-opacity-50;
       }
     }
     &error {
-      @apply bg-red-100/50 text-red-400 dark:bg-red-700 dark:text-white;
+      @apply bg-customError/10 text-red-400 dark:bg-customError dark:text-white;
       &:enabled,
       &:is(a, label) {
         &:not([aria-disabled="true"]) {

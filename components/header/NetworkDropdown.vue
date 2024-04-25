@@ -3,7 +3,13 @@
     <MenuButton as="template">
       <CommonButtonDropdown :toggled="open">
         <template #left-icon>
-          <IconsEra />
+          <img
+              v-if="selectedNetwork.imageUrl"
+              :src="selectedNetwork.imageUrl"
+              :alt="selectedNetwork.name"
+              style="width: 24px; height: auto"
+          />
+          <IconsEra v-else />
         </template>
         <span>{{ selectedNetwork.name }}</span>
       </CommonButtonDropdown>
@@ -21,6 +27,8 @@
           >
             <template #left-icon>
               <IconsEra />
+              <img v-if="item.imageUrl" :src="item.imageUrl" :alt="item.name" style="width: 24px; height: auto" />
+              <IconsEra v-else />
             </template>
             <span>{{ item.name }}</span>
             <template #right-icon>
@@ -60,7 +68,7 @@ const buttonClicked = (network: ZkSyncNetwork) => {
   @apply relative;
 
   .network-options-container {
-    @apply absolute right-0 top-full z-10 mt-0.5 h-max w-max min-w-full rounded-3xl bg-neutral-100 p-1 shadow-lg dark:bg-neutral-900;
+    @apply absolute right-0 top-full z-10 mt-0.5 h-max w-max min-w-full rounded-3xl bg-white p-1 shadow-lg dark:bg-neutral-900;
 
     .options-item {
       @apply w-full;

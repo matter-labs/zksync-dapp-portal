@@ -71,7 +71,7 @@ onMounted(() => {
   }
   &::before {
     content: "";
-    @apply absolute inset-0 z-[-1] h-full w-full rounded-3xl bg-primary-400;
+    @apply absolute inset-0 z-[-1] h-full w-full rounded-3xl bg-primary-custom;
   }
 }
 </style>

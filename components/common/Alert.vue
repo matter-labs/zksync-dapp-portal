@@ -102,7 +102,7 @@ defineProps({
       }
     }
     &error {
-      @apply border border-red-100 bg-red-100 text-red-700;
+      @apply border border-red-100 bg-red-100 text-customError;
       @apply dark:border-red-400/50 dark:bg-red-400/10 dark:text-white;
 
       .alert-icon {

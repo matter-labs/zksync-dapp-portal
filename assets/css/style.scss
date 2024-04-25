@@ -1,9 +1,14 @@
 html.dark {
   @apply bg-neutral-950;
 }
+html.light {
+  body {
+    background-image: linear-gradient(0deg, hsl(205deg 100% 97%) 0%, hsl(282deg 94% 97%) 50%, hsl(0deg 87% 97%) 100%);
+  }
+}
 html,
 body {
-  @apply min-h-full text-neutral-950 w-full bg-neutral-50 font-sans antialiased dark:bg-black dark:text-white;
+  @apply min-h-full text-customDarkText w-full bg-neutral-50 font-sans antialiased dark:bg-black dark:text-white;
   -webkit-text-size-adjust: 100%;
 
   .tippy-box {
