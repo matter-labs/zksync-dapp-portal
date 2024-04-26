@@ -30,7 +30,7 @@ const inputted = computed({
   @apply border-neutral-200 hover:border-neutral-300 focus:border-neutral-950;
   @apply dark:border-neutral-800 dark:hover:border-neutral-600 dark:focus:border-white;
   &.has-error {
-    @apply border-error-300;
+    @apply border-customError;
   }
 }
 </style>

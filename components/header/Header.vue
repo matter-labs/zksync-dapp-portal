@@ -99,17 +99,17 @@ const { selectedColorMode, switchColorMode } = useColorMode();
   .logo-container {
     @apply flex w-full flex-shrink items-center gap-2 sm:w-max;
     .logo-icon {
-      @apply h-auto w-full max-w-[140px] sm:max-w-[160px];
+      @apply h-auto w-[58px] min-w-[30px];
     }
     .beta-label {
-      @apply block rounded-lg bg-neutral-100 p-2 text-xs font-normal uppercase leading-none dark:bg-neutral-900;
+      @apply block rounded-lg bg-customGreyButton p-2 text-xs font-normal uppercase leading-none dark:bg-neutral-900;
     }
   }
   .links-container {
     @apply hidden items-center gap-10 lg:flex;
 
     .link-item {
-      @apply flex items-center gap-1 text-lg text-neutral-600 dark:text-neutral-500;
+      @apply flex items-center gap-1 text-lg text-greyText dark:text-neutral-500;
       &.router-link-exact-active {
         @apply text-black dark:text-white;
 
@@ -119,7 +119,7 @@ const { selectedColorMode, switchColorMode } = useColorMode();
       }
 
       .link-icon {
-        @apply h-6 w-6 text-neutral-400 dark:text-neutral-500;
+        @apply h-6 w-6 text-greyText dark:text-neutral-500;
       }
     }
   }

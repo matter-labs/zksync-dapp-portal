@@ -10,9 +10,8 @@
           you claim the withdrawal.
         </template>
         <template v-else>
-          Your funds will be available on <span class="font-medium">{{ transaction.to.destination.label }}</span> after
-          the <a class="underline underline-offset-2" :href="ZKSYNC_WITHDRAWAL_DELAY" target="_blank">24-hour delay</a>.
-          During this time, the transaction will be processed
+          Your funds will be available on <span class="font-medium">{{ transaction.to.destination.label }}</span> once
+          the transaction is verified and claimed. During this time, the transaction will be processed
           {{
             withdrawalManualFinalizationRequired
               ? "and become available for claiming."

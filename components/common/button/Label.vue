@@ -28,7 +28,7 @@ defineProps({
   }
   &.variant- {
     &default {
-      @apply text-neutral-600 dark:text-neutral-500;
+      @apply text-greyText dark:text-neutral-500;
       @include interactiveStyles {
         @apply hover:text-neutral-950 dark:hover:text-white;
       }

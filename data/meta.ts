@@ -1,18 +1,18 @@
 export const portal = {
-  title: "zkSync Portal | View balances, transfer and bridge tokens",
+  title: "PlayFi Portal | View balances, transfer and bridge tokens",
   description:
-    "zkSync Portal allows you to view your balances, transfer tokens and bridge assets between zkSync and Ethereum",
+    "PlayFi Portal allows you to view your balances, transfer tokens and bridge assets between zkSync and Ethereum",
   previewImg: {
-    src: "https://portal.zksync.io/preview.png",
-    alt: "zkSync Portal",
+    src: `${process.env.APP_DOMAIN}/preview.png`,
+    alt: "PlayFi Portal",
   },
 };
 export const bridge = {
-  title: "zkSync Bridge | Transfer funds between zkSync and Ethereum",
+  title: "PlayFi Bridge | Transfer funds between zkSync and Ethereum",
   description:
-    "With the zkSync Bridge you can easily deposit tokens to zkSync. Enjoy faster, cheaper and more efficient transactions with the future proof zkEVM scaling Ethereum's security and values.",
+    "With the PlayFi Bridge you can easily deposit tokens to zkSync. Enjoy faster, cheaper and more efficient transactions with the future proof zkEVM scaling Ethereum's security and values.",
   previewImg: {
-    src: "https://portal.zksync.io/preview.png",
-    alt: "zkSync Bridge",
+    src: `${process.env.APP_DOMAIN}/preview.png`,
+    alt: "PlayFi Bridge",
   },
 };

@@ -21,7 +21,7 @@ Feature: External Redirection on the Login Page
       | Selector type | Selector value      | url                                                               |
       | id            | zk-sync-white-total | https://zksync.io/                                                |
       | aria-label    | Blog                | https://zksync.mirror.xyz/                                        |
-      | aria-label    | Discord Community   | https://join.zksync.dev/                                          |
+      | aria-label    | Discord Community   | https://discord.gg/q6jUq5fn32                                           |
       | aria-label    | Telegram Support    | https://t.me/zksync                                               |
       | aria-label    | Twitter Community   | https://twitter.com/i/flow/login?redirect_after_login=%2Fzksync   |
       | aria-label    | Email               | https://zksync.io/contact                                         |

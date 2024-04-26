@@ -22,6 +22,7 @@ export type ZkSyncNetwork = {
   id: number;
   key: string;
   name: string;
+  imageUrl?: string;
   rpcUrl: string;
   hidden?: boolean; // If set to true, the network will not be shown in the network selector
   deprecated?: boolean;

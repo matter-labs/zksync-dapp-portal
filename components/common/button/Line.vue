@@ -45,12 +45,12 @@ defineProps({
   }
   &.variant- {
     &default {
-      @apply bg-neutral-100 dark:bg-neutral-900;
+      @apply bg-white dark:bg-neutral-900;
 
       &:enabled,
       &:is(a) {
         &:not([aria-disabled="true"]) {
-          @apply hover:bg-white dark:hover:bg-neutral-800;
+          @apply hover:bg-neutral-100 dark:hover:bg-neutral-800;
         }
       }
     }
@@ -65,12 +65,12 @@ defineProps({
       }
     }
     &primary {
-      @apply bg-primary-400;
+      @apply bg-primary-custom;
 
       &:enabled,
       &:is(a) {
         &:not([aria-disabled="true"]) {
-          @apply hover:bg-primary-300;
+          @apply hover:bg-primary-custom2;
         }
       }
     }

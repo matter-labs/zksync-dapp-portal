@@ -5,14 +5,14 @@
         Add {{ eraNetwork.name }} to your wallet
       </CommonButtonLabel>
     </div>
-    <div class="links-container">
-      <CommonButtonLabel as="a" href="https://zksync.io/terms" target="_blank" class="footer-link">
-        Terms of Service
-      </CommonButtonLabel>
-      <CommonButtonLabel as="a" href="https://zksync.io/privacy" target="_blank" class="footer-link">
-        Privacy Policy
-      </CommonButtonLabel>
-    </div>
+<!--    <div class="links-container">-->
+<!--      <CommonButtonLabel as="a" href="https://zksync.io/terms" target="_blank" class="footer-link">-->
+<!--        Terms of Service-->
+<!--      </CommonButtonLabel>-->
+<!--      <CommonButtonLabel as="a" href="https://zksync.io/privacy" target="_blank" class="footer-link">-->
+<!--        Privacy Policy-->
+<!--      </CommonButtonLabel>-->
+<!--    </div>-->
   </footer>
 </template>
 

@@ -22,10 +22,10 @@ defineProps({
   @apply block h-max w-full rounded-3xl px-block-padding-1/2 py-block-padding sm:px-block-padding;
   &.variant- {
     &default {
-      @apply bg-neutral-100 dark:bg-neutral-900;
+      @apply bg-white dark:bg-neutral-900;
     }
     &primary {
-      @apply bg-primary-400;
+      @apply bg-primary-custom;
     }
   }
 }
