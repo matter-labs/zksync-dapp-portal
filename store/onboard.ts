@@ -79,7 +79,6 @@ export const useOnboardStore = defineStore("onboard", () => {
         await identifyWalletName();
         account.value = updatedAccount;
         connectorName.value = updatedAccount.connector?.name;
-        identifyWallet(updatedAccount.address, walletName.value);
       } catch (err) {
         disconnect();
         const error = formatError(err as Error);
