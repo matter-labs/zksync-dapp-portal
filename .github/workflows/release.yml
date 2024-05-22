@@ -68,8 +68,6 @@ jobs:
           echo "SCREENING_API_URL=${{ secrets.SCREENING_API_URL }}" >> .env
           echo "DATAPLANE_URL=${{ secrets.DATAPLANE_URL }}" >> .env
           echo "RUDDER_KEY=${{ secrets.RUDDER_KEY }}" >> .env
-          echo "MASA_KEY=${{ secrets.MASA_KEY }}" >> .env
-          echo "MASA_APP_ID=${{ secrets.MASA_APP_ID }}" >> .env
 
       - name: Build
         run: |

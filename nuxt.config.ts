@@ -37,16 +37,8 @@ export default defineNuxtConfig({
       ],
       script: [
         {
-          src: "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit",
-        },
-        {
           hid: "Rudder-JS",
           src: "https://cdn.rudderlabs.com/v1.1/rudder-analytics.min.js",
-          defer: true,
-        },
-        {
-          hid: "MASA-JS",
-          src: "https://cdn.jsdelivr.net/npm/@masa-finance/analytics-sdk@latest/dist/browser/masa-analytics.min.js",
           defer: true,
         },
       ],
@@ -88,10 +80,6 @@ export default defineNuxtConfig({
         rudder: {
           key: process.env.RUDDER_KEY,
           dataplaneUrl: process.env.DATAPLANE_URL,
-        },
-        masa: {
-          clientId: process.env.MASA_KEY,
-          appId: process.env.MASA_APP_ID,
         },
       },
     },
