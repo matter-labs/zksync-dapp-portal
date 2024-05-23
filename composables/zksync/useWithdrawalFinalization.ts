@@ -2,7 +2,7 @@ import { useMemoize } from "@vueuse/core";
 import { BigNumber, type BigNumberish } from "ethers";
 import { Wallet } from "zksync-ethers";
 import ZkSyncL1BridgeAbi from "zksync-ethers/abi/IL1Bridge.json";
-import ZkSyncContractAbi from "zksync-ethers/abi/IZkSync.json";
+import ZkSyncContractAbi from "zksync-ethers/abi/IZkSyncStateTransition.json";
 
 import type { Hash } from "@/types";
 
@@ -22,7 +22,6 @@ export default (transactionInfo: ComputedRef<TransactionInfo>) => {
       .getDefaultBridgeAddresses()
       .then((e) => e.erc20L1)
   );
-  const retrieveMainContractAddress = useMemoize(() => providerStore.requestProvider().getMainContractAddress());
 
   const gasLimit = ref<BigNumberish | undefined>();
   const gasPrice = ref<BigNumberish | undefined>();
@@ -70,7 +69,7 @@ export default (transactionInfo: ComputedRef<TransactionInfo>) => {
     finalizeWithdrawalParams.value = await getFinalizationParams();
     if (usingMainContract.value) {
       return {
-        address: (await retrieveMainContractAddress()) as Hash,
+        address: (await retrieveBridgeAddress()) as Hash,
         abi: ZkSyncContractAbi,
         account: onboardStore.account.address!,
         functionName: "finalizeEthWithdrawal",
@@ -145,12 +144,6 @@ export default (transactionInfo: ComputedRef<TransactionInfo>) => {
         onReplaced: (replacement) => {
           transactionHash.value = replacement.transaction.hash;
         },
-      });
-
-      trackEvent("withdrawal-finalized", {
-        token: transactionInfo.value!.token.symbol,
-        amount: transactionInfo.value!.token.amount,
-        to: transactionInfo.value!.to.address,
       });
 
       status.value = "done";
