@@ -121,6 +121,8 @@ export function formatError(error?: Error) {
       (error instanceof BaseError && error?.details?.startsWith("Failed to fetch"))
     ) {
       return new Error("Network error. Check your internet connection and try again.");
+    } else if (message.includes("missing response")) {
+      return new Error("Server error. Please try again later.");
     } else if (
       // eslint-disable-next-line prettier/prettier
       message.includes("\"finalizeEthWithdrawal\" reverted with the following reason: xx") ||
