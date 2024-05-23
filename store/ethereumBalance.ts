@@ -7,7 +7,8 @@ import type { TokenAmount } from "@/types";
 import type { Blockchain as AnkrSupportedChains } from "@ankr.com/ankr.js";
 
 export const useEthereumBalanceStore = defineStore("ethereumBalance", () => {
-  const runtimeConfig = useRuntimeConfig();
+  const portalRuntimeConfig = usePortalRuntimeConfig();
+
   const onboardStore = useOnboardStore();
   const { account } = storeToRefs(onboardStore);
   const { eraNetwork } = storeToRefs(useZkSyncProviderStore());
@@ -22,9 +23,9 @@ export const useEthereumBalanceStore = defineStore("ethereumBalance", () => {
     async () => {
       if (!account.value.address) throw new Error("Account is not available");
       if (!eraNetwork.value.l1Network) throw new Error(`L1 network is not available on ${eraNetwork.value.name}`);
-      if (!runtimeConfig.public.ankrToken) throw new Error("Ankr token is not available");
+      if (!portalRuntimeConfig.ankrToken) throw new Error("Ankr token is not available");
 
-      const ankrProvider = new AnkrProvider(`https://rpc.ankr.com/multichain/${runtimeConfig.public.ankrToken}`);
+      const ankrProvider = new AnkrProvider(`https://rpc.ankr.com/multichain/${portalRuntimeConfig.ankrToken}`);
       const networkIdToAnkr = new Map<number, AnkrSupportedChains>([[l1Networks.mainnet.id, "eth"]]);
       if (!networkIdToAnkr.has(eraNetwork.value.l1Network.id)) {
         throw new Error(`Ankr does not support ${eraNetwork.value.l1Network.name}`);

@@ -1,3 +1,4 @@
+const portalRuntimeConfig = usePortalRuntimeConfig();
 let analyticsLoaded = false;
 
 async function loadRudder() {
@@ -5,29 +6,21 @@ async function loadRudder() {
     await new Promise((resolve) => setTimeout(resolve, 250));
     throw new Error("Rudder not loaded");
   }
-  const runtimeConfig = useRuntimeConfig();
   window.rudderanalytics.load(
-    runtimeConfig.public.analytics.rudder.key,
-    runtimeConfig.public.analytics.rudder.dataplaneUrl
+    portalRuntimeConfig.analytics.rudder!.key,
+    portalRuntimeConfig.analytics.rudder!.dataplaneUrl
   );
 }
 
 export async function initAnalytics(): Promise<boolean> {
   if (analyticsLoaded) return true;
 
-  const runtimeConfig = useRuntimeConfig();
-  const useRudder = Boolean(
-    runtimeConfig.public.analytics.rudder.key && runtimeConfig.public.analytics.rudder.dataplaneUrl
-  );
-
+  const useRudder = Boolean(portalRuntimeConfig.analytics.rudder);
   if (!useRudder || analyticsLoaded) {
     return false;
   }
 
-  const services = [];
-  if (useRudder) services.push(loadRudder());
-
-  await Promise.all(services);
+  await loadRudder();
   analyticsLoaded = true;
   return true;
 }

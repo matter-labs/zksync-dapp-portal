@@ -37,10 +37,15 @@ export default defineNuxtConfig({
       ],
       script: [
         {
-          hid: "Rudder-JS",
-          src: "https://cdn.rudderlabs.com/v1.1/rudder-analytics.min.js",
-          defer: true,
+          src: "/config.js",
         },
+        process.env.RUDDER_KEY
+          ? {
+              hid: "Rudder-JS",
+              src: "https://cdn.rudderlabs.com/v1.1/rudder-analytics.min.js",
+              defer: true,
+            }
+          : undefined,
       ],
     },
   },
@@ -70,18 +75,6 @@ export default defineNuxtConfig({
     plugins: {
       tailwindcss: {},
       autoprefixer: {},
-    },
-  },
-  runtimeConfig: {
-    public: {
-      ankrToken: process.env.ANKR_TOKEN,
-      screeningApiUrl: process.env.SCREENING_API_URL,
-      analytics: {
-        rudder: {
-          key: process.env.RUDDER_KEY,
-          dataplaneUrl: process.env.DATAPLANE_URL,
-        },
-      },
     },
   },
   vite: {
