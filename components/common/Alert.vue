@@ -30,14 +30,6 @@ defineProps({
   &.has-icon {
     @apply grid grid-cols-[max-content_1fr] gap-block-padding-1/2;
   }
-  /* &.size- {
-    &md {
-      @apply p-4;
-    }
-    &sm {
-      @apply p-2;
-    }
-  } */
   &.variant- {
     &info {
       @apply border bg-primary-300 text-primary-700;
@@ -76,8 +68,7 @@ defineProps({
       }
     }
     &warning {
-      @apply border p-block-padding-1/2;
-      @apply border-warning-400/30 bg-warning-400/10;
+      @apply border border-warning-400/30 bg-warning-400/10;
       &.size-md {
         .alert-icon-container {
           @apply h-12 w-12 bg-warning-400;
@@ -90,6 +81,8 @@ defineProps({
         @apply sm:p-block-padding;
       }
       &.size-sm {
+        @apply p-block-padding-1/2;
+
         .alert-icon {
           @apply text-warning-400;
         }
