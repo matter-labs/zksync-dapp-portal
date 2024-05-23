@@ -19,7 +19,7 @@ const useExistingEraChain = (network: ZkSyncNetwork) => {
   const existingNetworks = [zkSync, zkSyncSepoliaTestnet, zkSyncTestnet];
   return existingNetworks.find((existingNetwork) => existingNetwork.id === network.id);
 };
-const createEraChain = (network: ZkSyncNetwork) => {
+const createZKChain = (network: ZkSyncNetwork) => {
   return {
     id: network.id,
     name: network.name,
@@ -29,8 +29,17 @@ const createEraChain = (network: ZkSyncNetwork) => {
       default: { http: [network.rpcUrl] },
       public: { http: [network.rpcUrl] },
     },
+    blockExplorers: network.blockExplorerUrl
+      ? {
+          default: {
+            name: "Explorer",
+            url: network.blockExplorerUrl,
+          },
+        }
+      : undefined,
   };
 };
+
 const getAllChains = () => {
   const chains: Chain[] = [];
   const addUniqueChain = (chain: Chain) => {
@@ -42,7 +51,7 @@ const getAllChains = () => {
     if (network.l1Network) {
       addUniqueChain(network.l1Network);
     }
-    addUniqueChain(useExistingEraChain(network) ?? createEraChain(network));
+    addUniqueChain(useExistingEraChain(network) ?? createZKChain(network));
   }
 
   return chains;
