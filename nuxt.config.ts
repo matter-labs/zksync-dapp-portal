@@ -37,10 +37,15 @@ export default defineNuxtConfig({
       ],
       script: [
         {
-          hid: "Rudder-JS",
-          src: "https://cdn.rudderlabs.com/v1.1/rudder-analytics.min.js",
-          defer: true,
+          src: "/config.js",
         },
+        process.env.RUDDER_KEY
+          ? {
+              hid: "Rudder-JS",
+              src: "https://cdn.rudderlabs.com/v1.1/rudder-analytics.min.js",
+              defer: true,
+            }
+          : undefined,
       ],
     },
   },
@@ -72,24 +77,13 @@ export default defineNuxtConfig({
       autoprefixer: {},
     },
   },
-  runtimeConfig: {
-    public: {
-      ankrToken: process.env.ANKR_TOKEN,
-      screeningApiUrl: process.env.SCREENING_API_URL,
-      analytics: {
-        rudder: {
-          key: process.env.RUDDER_KEY,
-          dataplaneUrl: process.env.DATAPLANE_URL,
-        },
-      },
-    },
-  },
   vite: {
-    define: {
-      // make these env available even outside of the Nuxt context
-      "process.env.NODE_TYPE": JSON.stringify(process.env.NODE_TYPE),
-      "process.env.WALLET_CONNECT_PROJECT_ID": JSON.stringify(process.env.WALLET_CONNECT_PROJECT_ID),
-    },
+    // Make listed envs public and accessible in the runtime
+    define: Object.fromEntries(
+      ["NODE_TYPE", "WALLET_CONNECT_PROJECT_ID", "ANKR_TOKEN", "SCREENING_API_URL", "RUDDER_KEY", "DATAPLANE_URL"].map(
+        (key) => [`process.env.${key}`, JSON.stringify(process.env[key])]
+      )
+    ),
     css: {
       preprocessorOptions: {
         scss: {

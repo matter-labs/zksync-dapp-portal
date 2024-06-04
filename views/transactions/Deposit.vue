@@ -49,7 +49,7 @@
           :tokens="availableTokens"
           :balances="availableBalances"
           :max-amount="maxAmount"
-          :approve-required="!enoughAllowance && !tokenCustomBridge"
+          :approve-required="!enoughAllowance && (!tokenCustomBridge || !tokenCustomBridge.bridgingDisabled)"
           :loading="tokensRequestInProgress || balanceInProgress"
           class="mb-block-padding-1/2 sm:mb-block-gap"
         >
@@ -67,11 +67,29 @@
             </CommonButtonDropdown>
           </template>
         </CommonInputTransactionAmount>
+        <CommonHeightTransition :opened="!!tokenCustomBridge && !tokenCustomBridge.bridgingDisabled">
+          <div class="mb-block-padding-1/2 sm:mb-block-gap">
+            <CommonAlert variant="warning" size="sm">
+              <p>
+                Bridged {{ tokenCustomBridge?.symbol }} ({{ tokenCustomBridge?.bridgedSymbol }}) will work but is
+                different from native {{ tokenCustomBridge?.symbol }}.
+              </p>
+              <a
+                v-if="tokenCustomBridge?.learnMoreUrl"
+                class="underline underline-offset-2"
+                target="_blank"
+                :href="tokenCustomBridge.learnMoreUrl"
+              >
+                Learn more
+              </a>
+            </CommonAlert>
+          </div>
+        </CommonHeightTransition>
         <CommonInputTransactionAddress
           v-model="address"
           label="To"
           :default-label="`To your account ${account.address ? shortenAddress(account.address) : ''}`"
-          :address-input-hidden="!!tokenCustomBridge"
+          :address-input-hidden="tokenCustomBridge?.bridgingDisabled"
         >
           <template #dropdown>
             <CommonButtonDropdown
@@ -88,7 +106,7 @@
           </template>
         </CommonInputTransactionAddress>
         <TransactionCustomBridge
-          v-if="tokenCustomBridge"
+          v-if="tokenCustomBridge?.bridgingDisabled"
           type="deposit"
           class="mt-6"
           :custom-bridge-token="tokenCustomBridge"
@@ -146,7 +164,9 @@
         <DepositSubmitted :transaction="transactionInfo!" :make-another-transaction="resetForm" />
       </template>
 
-      <template v-if="!tokenCustomBridge && (step === 'form' || step === 'confirm')">
+      <template
+        v-if="(!tokenCustomBridge || !tokenCustomBridge?.bridgingDisabled) && (step === 'form' || step === 'confirm')"
+      >
         <CommonErrorBlock v-if="feeError" class="mt-2" @try-again="estimate">
           Fee estimation error: {{ feeError.message }}
         </CommonErrorBlock>
@@ -162,16 +182,7 @@
           </transition>
           <CommonButtonLabel v-if="!isCustomNode" as="span" class="ml-auto text-right">~15 minutes</CommonButtonLabel>
         </div>
-        <transition v-bind="TransitionAlertScaleInOutTransition">
-          <CommonAlert v-if="!enoughBalanceToCoverFee" class="mt-4" variant="error" :icon="ExclamationTriangleIcon">
-            <p>
-              Insufficient <span class="font-medium">{{ feeToken?.symbol }}</span> balance on
-              <span class="font-medium">{{ destinations.ethereum.label }}</span> to cover the fee
-            </p>
-            <NuxtLink :to="{ name: 'receive-methods' }" class="alert-link">Receive funds</NuxtLink>
-          </CommonAlert>
-        </transition>
-        <transition v-bind="TransitionAlertScaleInOutTransition">
+        <transition v-bind="TransitionAlertScaleInOutTransition" mode="out-in">
           <CommonAlert
             v-if="recommendedBalance && feeToken"
             class="mt-4"
@@ -190,6 +201,18 @@
                 {{ feeToken?.symbol }}</span
               >
               on {{ eraNetwork.l1Network?.name ?? "L1" }} for deposit.
+            </p>
+            <NuxtLink :to="{ name: 'receive-methods' }" class="alert-link">Receive funds</NuxtLink>
+          </CommonAlert>
+          <CommonAlert
+            v-else-if="!enoughBalanceToCoverFee"
+            class="mt-4"
+            variant="error"
+            :icon="ExclamationTriangleIcon"
+          >
+            <p>
+              Insufficient <span class="font-medium">{{ feeToken?.symbol }}</span> balance on
+              <span class="font-medium">{{ destinations.ethereum.label }}</span> to cover the fee
             </p>
             <NuxtLink :to="{ name: 'receive-methods' }" class="alert-link">Receive funds</NuxtLink>
           </CommonAlert>
@@ -435,9 +458,6 @@ const tokenCustomBridge = computed(() => {
   const customBridgeToken = customBridgeTokens.find(
     (e) => eraNetwork.value.l1Network?.id === e.chainId && e.l1Address === selectedToken.value?.address
   );
-  if (!customBridgeToken?.bridges.some((e) => e.depositUrl)) {
-    return undefined;
-  }
   return customBridgeToken;
 });
 const amountInputTokenAddress = computed({

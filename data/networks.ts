@@ -5,6 +5,8 @@ import Hyperchains from "@/hyperchains/config.json";
 import type { Token } from "@/types";
 import type { Chain } from "@wagmi/core/chains";
 
+const portalRuntimeConfig = usePortalRuntimeConfig();
+
 export const l1Networks = {
   mainnet: {
     ...mainnet,
@@ -99,6 +101,7 @@ const publicChains: ZkSyncNetwork[] = [
   },
 ];
 
+const nodeType = portalRuntimeConfig.nodeType;
 const determineChainList = (): ZkSyncNetwork[] => {
   switch (nodeType) {
     case "memory":
@@ -114,7 +117,6 @@ const determineChainList = (): ZkSyncNetwork[] => {
       return [...publicChains];
   }
 };
-const nodeType = process.env.NODE_TYPE as undefined | "memory" | "dockerized" | "hyperchain";
 export const isCustomNode = !!nodeType;
 export const chainList: ZkSyncNetwork[] = determineChainList();
 export const defaultNetwork = chainList[0];

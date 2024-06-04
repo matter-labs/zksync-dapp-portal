@@ -4,6 +4,8 @@ import { defaultWagmiConfig } from "@web3modal/wagmi";
 
 import { chainList, type ZkSyncNetwork } from "@/data/networks";
 
+const portalRuntimeConfig = usePortalRuntimeConfig();
+
 const metadata = {
   name: "zkSync Portal",
   description: "zkSync Portal - view balances, transfer and bridge tokens",
@@ -11,7 +13,7 @@ const metadata = {
   icons: ["https://portal.zksync.io/icon.png"],
 };
 
-if (!process.env.WALLET_CONNECT_PROJECT_ID) {
+if (!portalRuntimeConfig.walletConnectProjectId) {
   throw new Error("WALLET_CONNECT_PROJECT_ID is not set. Please set it in .env file");
 }
 
@@ -19,7 +21,7 @@ const useExistingEraChain = (network: ZkSyncNetwork) => {
   const existingNetworks = [zkSync, zkSyncSepoliaTestnet, zkSyncTestnet];
   return existingNetworks.find((existingNetwork) => existingNetwork.id === network.id);
 };
-const createZKChain = (network: ZkSyncNetwork) => {
+const formatZkSyncChain = (network: ZkSyncNetwork) => {
   return {
     id: network.id,
     name: network.name,
@@ -48,10 +50,10 @@ const getAllChains = () => {
     }
   };
   for (const network of chainList) {
+    addUniqueChain(useExistingEraChain(network) ?? formatZkSyncChain(network));
     if (network.l1Network) {
       addUniqueChain(network.l1Network);
     }
-    addUniqueChain(useExistingEraChain(network) ?? createZKChain(network));
   }
 
   return chains;
@@ -63,7 +65,7 @@ export const wagmiConfig = defaultWagmiConfig({
   transports: Object.fromEntries(
     chains.map((chain) => [chain.id, fallback(chain.rpcUrls.default.http.map((e) => http(e)))])
   ),
-  projectId: process.env.WALLET_CONNECT_PROJECT_ID,
+  projectId: portalRuntimeConfig.walletConnectProjectId,
   metadata,
   enableCoinbase: false,
 });

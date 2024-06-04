@@ -6,7 +6,8 @@ import { wagmiConfig } from "@/data/wagmi";
 import type { Hash, TokenAmount } from "@/types";
 
 export const useZkSyncEthereumBalanceStore = defineStore("zkSyncEthereumBalances", () => {
-  const runtimeConfig = useRuntimeConfig();
+  const portalRuntimeConfig = usePortalRuntimeConfig();
+
   const onboardStore = useOnboardStore();
   const ethereumBalancesStore = useEthereumBalanceStore();
   const tokensStore = useZkSyncTokensStore();
@@ -73,7 +74,7 @@ export const useZkSyncEthereumBalanceStore = defineStore("zkSyncEthereumBalances
     async () => {
       if (!l1Network.value) throw new Error(`L1 network is not available on ${selectedNetwork.value.name}`);
 
-      if (([l1Networks.mainnet.id] as number[]).includes(l1Network.value?.id) && runtimeConfig.public.ankrToken) {
+      if (([l1Networks.mainnet.id] as number[]).includes(l1Network.value?.id) && portalRuntimeConfig.ankrToken) {
         return await getBalancesFromApi();
       } else {
         return await getBalancesFromRPC();

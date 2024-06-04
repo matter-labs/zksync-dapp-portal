@@ -1,10 +1,16 @@
 <template>
   <div>
-    <CommonAlert variant="warning" size="sm" :icon="ExclamationTriangleIcon" class="mb-block-gap">
+    <CommonAlert
+      v-if="customBridgeToken.bridgingDisabled"
+      variant="warning"
+      size="sm"
+      :icon="ExclamationTriangleIcon"
+      class="mb-block-gap"
+    >
       <p>Bridging {{ customBridgeToken.symbol }} is not supported by zkSync Portal.</p>
     </CommonAlert>
     <TypographyCategoryLabel>
-      Use 3rd party bridges or CEXs to bridge {{ customBridgeToken.symbol }} to
+      Use 3rd party bridges to get native {{ customBridgeToken.symbol }} on
       {{ type === "deposit" ? eraNetwork.name : eraNetwork.l1Network?.name }}.
     </TypographyCategoryLabel>
     <CommonCardWithLineButtons>

@@ -14,6 +14,7 @@ import { wagmiConfig } from "@/data/wagmi";
 import { confirmedSupportedWallets, disabledWallets } from "@/data/wallets";
 
 export const useOnboardStore = defineStore("onboard", () => {
+  const portalRuntimeConfig = usePortalRuntimeConfig();
   const { selectedColorMode } = useColorMode();
   const { selectedNetwork, l1Network } = storeToRefs(useNetworkStore());
 
@@ -49,7 +50,7 @@ export const useOnboardStore = defineStore("onboard", () => {
 
   const web3modal = createWeb3Modal({
     wagmiConfig,
-    projectId: process.env.WALLET_CONNECT_PROJECT_ID!,
+    projectId: portalRuntimeConfig.walletConnectProjectId!,
     termsConditionsUrl: "https://zksync.io/terms",
     privacyPolicyUrl: "https://zksync.io/privacy",
     themeMode: selectedColorMode.value,
