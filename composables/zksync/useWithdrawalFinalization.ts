@@ -44,7 +44,6 @@ export default (transactionInfo: ComputedRef<TransactionInfo>) => {
   const feeToken = computed(() => {
     return tokens.value?.[ETH_TOKEN.address];
   });
-  const usingMainContract = computed(() => transactionInfo.value.token.address === ETH_TOKEN.address);
 
   const getFinalizationParams = async () => {
     const provider = providerStore.requestProvider();
@@ -69,23 +68,13 @@ export default (transactionInfo: ComputedRef<TransactionInfo>) => {
 
   const getTransactionParams = async () => {
     finalizeWithdrawalParams.value = await getFinalizationParams();
-    if (usingMainContract.value) {
-      return {
-        address: (await retrieveBridgeAddresses()).sharedL1 as Hash,
-        abi: IL1SharedBridge,
-        account: onboardStore.account.address!,
-        functionName: "finalizeWithdrawal",
-        args: Object.values(finalizeWithdrawalParams.value!),
-      };
-    } else {
-      return {
-        address: (await retrieveBridgeAddresses()).sharedL1 as Hash,
-        abi: IL1SharedBridge,
-        account: onboardStore.account.address!,
-        functionName: "finalizeWithdrawal",
-        args: Object.values(finalizeWithdrawalParams.value!),
-      };
-    }
+    return {
+      address: (await retrieveBridgeAddresses()).sharedL1 as Hash,
+      abi: IL1SharedBridge,
+      account: onboardStore.account.address!,
+      functionName: "finalizeWithdrawal",
+      args: Object.values(finalizeWithdrawalParams.value!),
+    };
   };
 
   const {
