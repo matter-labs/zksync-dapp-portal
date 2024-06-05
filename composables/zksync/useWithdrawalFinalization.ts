@@ -1,7 +1,6 @@
 import { useMemoize } from "@vueuse/core";
 import { BigNumber, type BigNumberish } from "ethers";
 import { Wallet } from "zksync-ethers";
-import ZkSyncL1BridgeAbi from "zksync-ethers/abi/IL1Bridge.json";
 import IL1SharedBridge from "zksync-ethers/abi/IL1SharedBridge.json";
 
 import type { Hash } from "@/types";
@@ -80,8 +79,8 @@ export default (transactionInfo: ComputedRef<TransactionInfo>) => {
       };
     } else {
       return {
-        address: (await retrieveBridgeAddresses()).erc20L1 as Hash,
-        abi: ZkSyncL1BridgeAbi,
+        address: (await retrieveBridgeAddresses()).sharedL1 as Hash,
+        abi: IL1SharedBridge,
         account: onboardStore.account.address!,
         functionName: "finalizeWithdrawal",
         args: Object.values(finalizeWithdrawalParams.value!),
