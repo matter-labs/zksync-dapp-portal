@@ -130,14 +130,7 @@
         <CommonButton type="submit" variant="primary" class="mt-block-gap w-full gap-1" @click="buttonContinue()">
           I understand, proceed to bridge
         </CommonButton>
-        <CommonButton
-          as="a"
-          href="https://zksync.dappradar.com/ecosystem?category=defi_bridge"
-          target="_blank"
-          size="sm"
-          class="mx-auto mt-block-gap w-max"
-          @click="disableWalletWarning()"
-        >
+        <CommonButton size="sm" class="mx-auto mt-block-gap w-max" @click="disableWalletWarning()">
           Don't show again
         </CommonButton>
       </template>
