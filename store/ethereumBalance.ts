@@ -26,12 +26,15 @@ export const useEthereumBalanceStore = defineStore("ethereumBalance", () => {
       if (!portalRuntimeConfig.ankrToken) throw new Error("Ankr token is not available");
 
       const ankrProvider = new AnkrProvider(`https://rpc.ankr.com/multichain/${portalRuntimeConfig.ankrToken}`);
-      const networkIdToAnkr = new Map<number, AnkrSupportedChains>([[l1Networks.mainnet.id, "eth"]]);
+      const networkIdToAnkr = new Map<number, AnkrSupportedChains | "eth_sepolia">([
+        [l1Networks.mainnet.id, "eth"],
+        [l1Networks.sepolia.id, "eth_sepolia"],
+      ]);
       if (!networkIdToAnkr.has(eraNetwork.value.l1Network.id)) {
         throw new Error(`Ankr does not support ${eraNetwork.value.l1Network.name}`);
       }
       const balances = await ankrProvider.getAccountBalance({
-        blockchain: [networkIdToAnkr.get(eraNetwork.value.l1Network.id)!],
+        blockchain: [networkIdToAnkr.get(eraNetwork.value.l1Network.id)!] as AnkrSupportedChains[],
         walletAddress: account.value.address,
         onlyWhitelisted: false,
       });
