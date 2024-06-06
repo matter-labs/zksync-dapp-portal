@@ -5,8 +5,8 @@
     <PageTitle>Bridge</PageTitle>
     <CommonAlert variant="warning" :icon="ExclamationTriangleIcon" class="mb-block-gap">
       <p>
-        Bridging from {{ eraNetwork.name }} is temporarily disabled because of undergoing upgrade, expected to be
-        completed by June 7th, 15:00 UTC. Please check back later. For more details, visit the
+        Bridging to {{ eraNetwork.name }} is temporarily disabled because of undergoing upgrade, expected to be
+        completed by June 6th, 22:00 UTC. Please check back later. For more details, visit the
         <a
           href="https://github.com/zkSync-Community-Hub/zksync-developers/discussions/519"
           target="_blank"
