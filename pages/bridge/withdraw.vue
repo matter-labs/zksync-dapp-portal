@@ -5,8 +5,14 @@
     <PageTitle>Bridge</PageTitle>
     <CommonAlert variant="warning" :icon="ExclamationTriangleIcon" class="mb-block-gap">
       <p>
-        {{ eraNetwork.name }} is going through an upgrade and withdrawals are disabled until it is finished (expected
-        May 7th 18h00 UTC). Please come back later.
+        Bridging from {{ eraNetwork.name }} is temporarily disabled because of undergoing upgrade, expected to be
+        completed by June 7th, 15:00 UTC. Please check back later. For more details, visit the
+        <a
+          href="https://github.com/zkSync-Community-Hub/zksync-developers/discussions/519"
+          target="_blank"
+          class="underline underline-offset-2"
+          >upgrade information page</a
+        >.
       </p>
     </CommonAlert>
 
