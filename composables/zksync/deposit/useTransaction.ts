@@ -44,6 +44,7 @@ export default (getL1Signer: () => Promise<L1Signer | undefined>) => {
         token: transaction.tokenAddress,
         amount: transaction.amount,
         l2GasLimit: fee.l2GasLimit,
+        approveBaseERC20: true,
         overrides,
       });
 
