@@ -17,6 +17,7 @@ export type DepositFeeValues = {
 export default (tokens: Ref<Token[]>, balances: Ref<TokenAmount[] | undefined>) => {
   const { getPublicClient } = useOnboardStore();
   const { getL1VoidSigner } = useZkSyncWalletStore();
+  const { requestProvider } = useZkSyncProviderStore();
 
   let params = {
     to: undefined as string | undefined,
@@ -86,8 +87,11 @@ export default (tokens: Ref<Token[]>, balances: Ref<TokenAmount[] | undefined>) 
       recommendedBalance.value = undefined;
       if (!feeToken.value) throw new Error("Fee tokens is not available");
 
+      const provider = requestProvider();
+      const isEthBasedChain = await provider.isEthBasedChain();
+
       try {
-        if (params.tokenAddress === feeToken.value?.address) {
+        if (isEthBasedChain && params.tokenAddress === feeToken.value?.address) {
           fee.value = await getEthTransactionFee();
         } else {
           fee.value = getERC20TransactionFee();
