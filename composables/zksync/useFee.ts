@@ -1,8 +1,8 @@
 import { BigNumber } from "ethers";
+import { type Provider } from "zksync-ethers";
 
 import type { Token, TokenAmount } from "@/types";
 import type { BigNumberish } from "ethers";
-import type { Provider } from "zksync-ethers";
 
 export type FeeEstimationParams = {
   type: "transfer" | "withdrawal";
@@ -27,7 +27,7 @@ export default (
   });
 
   const feeToken = computed(() => {
-    return tokens.value?.[ETH_TOKEN.address];
+    return tokens.value?.[L2_BASE_TOKEN_ADDRESS];
   });
   const enoughBalanceToCoverFee = computed(() => {
     if (!feeToken.value || inProgress.value) {
@@ -58,7 +58,7 @@ export default (
           return provider[params!.type === "transfer" ? "estimateGasTransfer" : "estimateGasWithdraw"]({
             from: params!.from,
             to: params!.to,
-            token: params!.tokenAddress === ETH_TOKEN.address ? ETH_TOKEN.l1Address! : params!.tokenAddress,
+            token: params!.tokenAddress,
             amount: tokenBalance,
           });
         }),

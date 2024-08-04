@@ -1,4 +1,5 @@
 import { BigNumber } from "ethers";
+import { utils } from "zksync-ethers";
 import IERC20 from "zksync-ethers/abi/IERC20.json";
 
 import type { Hash } from "@/types";
@@ -36,7 +37,7 @@ export default (
   );
 
   const requestAllowance = async () => {
-    if (accountAddress.value && tokenAddress.value && tokenAddress.value !== ETH_TOKEN.l1Address) {
+    if (accountAddress.value && tokenAddress.value && tokenAddress.value !== utils.ETH_ADDRESS) {
       await getAllowance();
     } else {
       reset();

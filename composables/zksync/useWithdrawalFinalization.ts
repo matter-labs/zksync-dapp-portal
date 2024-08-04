@@ -13,7 +13,7 @@ export default (transactionInfo: ComputedRef<TransactionInfo>) => {
   const providerStore = useZkSyncProviderStore();
   const tokensStore = useZkSyncTokensStore();
   const { isCorrectNetworkSet } = storeToRefs(onboardStore);
-  const { tokens } = storeToRefs(tokensStore);
+  const { ethToken } = storeToRefs(tokensStore);
 
   const retrieveBridgeAddresses = useMemoize(() => providerStore.requestProvider().getDefaultBridgeAddresses());
 
@@ -42,7 +42,7 @@ export default (transactionInfo: ComputedRef<TransactionInfo>) => {
     return calculateFee(gasLimit.value, gasPrice.value).toString();
   });
   const feeToken = computed(() => {
-    return tokens.value?.[ETH_TOKEN.address];
+    return ethToken;
   });
 
   const getFinalizationParams = async () => {

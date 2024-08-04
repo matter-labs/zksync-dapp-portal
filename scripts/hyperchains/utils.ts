@@ -45,11 +45,6 @@ export const promptNetworkReplacement = async (network: Network) => {
 export const generateNetworkConfig = (network: Network, tokens: Token[]) => {
   const config = getConfig();
 
-  /* // Add ETH token if it's not in the list
-  if (!tokens.some((token: Token) => token.address === ETH_TOKEN.address)) {
-    tokens.unshift(ETH_TOKEN);
-  } */
-
   config.unshift({ network, tokens });
   saveConfig(config);
 };

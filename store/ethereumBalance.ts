@@ -1,5 +1,6 @@
 import { AnkrProvider } from "@ankr.com/ankr.js";
 import { BigNumber } from "ethers";
+import { utils } from "zksync-ethers";
 
 import { l1Networks } from "@/data/networks";
 
@@ -42,7 +43,7 @@ export const useEthereumBalanceStore = defineStore("ethereumBalance", () => {
         .filter((e) => e.contractAddress || e.tokenType === "NATIVE")
         .map((e) => {
           return {
-            address: e.tokenType === "NATIVE" ? ETH_TOKEN.l1Address : checksumAddress(e.contractAddress!),
+            address: e.tokenType === "NATIVE" ? utils.ETH_ADDRESS : checksumAddress(e.contractAddress!),
             symbol: e.tokenSymbol,
             name: e.tokenName,
             decimals: e.tokenDecimals,

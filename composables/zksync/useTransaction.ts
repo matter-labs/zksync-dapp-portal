@@ -39,7 +39,7 @@ export default (getSigner: () => Promise<Signer | undefined>, getProvider: () =>
       const provider = getProvider();
 
       const getRequiredBridgeAddress = async () => {
-        if (transaction.tokenAddress === ETH_TOKEN.address) return undefined;
+        if (transaction.tokenAddress === L2_BASE_TOKEN_ADDRESS) return undefined;
         const bridgeAddresses = await retrieveBridgeAddresses();
         return bridgeAddresses.sharedL2;
       };
@@ -52,7 +52,7 @@ export default (getSigner: () => Promise<Signer | undefined>, getProvider: () =>
       const txRequest = await provider[transaction.type === "transfer" ? "getTransferTx" : "getWithdrawTx"]({
         from: await signer.getAddress(),
         to: transaction.to,
-        token: transaction.tokenAddress === ETH_TOKEN.address ? ETH_TOKEN.l1Address! : transaction.tokenAddress,
+        token: transaction.tokenAddress,
         amount: transaction.amount,
         bridgeAddress,
         overrides: {

@@ -1,3 +1,5 @@
+import { utils } from "zksync-ethers";
+
 import type { Api, Token, TokenAmount } from "@/types";
 
 export const groupBalancesByAmount = <T = TokenAmount>(balances: Ref<T[]>) =>
@@ -33,20 +35,13 @@ export const groupBalancesByAmount = <T = TokenAmount>(balances: Ref<T[]>) =>
   });
 
 export const mapApiToken = (token: Api.Response.Token): Token => {
-  if (token.l2Address === ETH_TOKEN.address) {
-    return {
-      ...ETH_TOKEN,
-      price: token.usdPrice || undefined,
-    };
-  }
-
   return {
     l1Address: token.l1Address || undefined,
     address: token.l2Address,
     symbol: token.symbol || "unknown",
     name: token.name || "unknown",
     decimals: token.decimals,
-    iconUrl: token.iconURL || undefined,
+    iconUrl: token.l1Address === utils.ETH_ADDRESS ? "/img/eth.svg" : token.iconURL || undefined,
     price: token.usdPrice || undefined,
   };
 };

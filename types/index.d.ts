@@ -9,6 +9,7 @@ export type Token = {
   decimals: number;
   iconUrl?: string;
   price?: TokenPrice;
+  isETH?: boolean;
 };
 export type TokenAmount = Token & { amount: BigNumberish };
 

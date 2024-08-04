@@ -45,7 +45,7 @@ export const useZkSyncWalletStore = defineStore("zkSyncWallet", () => {
 
     const web3Provider = new ethers.providers.Web3Provider(onboardStore.getPublicClient() as any, "any");
     return new L1VoidSigner(
-      account.value.address || ETH_TOKEN.address,
+      account.value.address || L2_BASE_TOKEN_ADDRESS,
       web3Provider,
       providerStore.requestProvider()
     ) as unknown as L1Signer;
@@ -68,16 +68,17 @@ export const useZkSyncWalletStore = defineStore("zkSyncWallet", () => {
     if (!accountState.value) throw new Error("Account state is not available");
     if (!tokens.value) throw new Error("Tokens are not available");
     return Object.entries(accountState.value.balances)
-      .filter(([, { token }]) => token)
-      .map(([, { balance, token }]) => {
+      .filter(([tokenAddress, { token }]) => token || tokens.value?.[tokenAddress])
+      .map(([tokenAddress, { balance, token }]) => {
+        const tokenInfo = token ? mapApiToken(token) : tokens.value?.[tokenAddress];
         return {
-          address: token!.l2Address,
-          l1Address: token!.l1Address || undefined,
-          name: token!.name || undefined,
-          symbol: token!.symbol!,
-          decimals: token!.decimals,
-          iconUrl: token!.iconURL || undefined,
-          price: token?.usdPrice || undefined,
+          address: tokenInfo!.address,
+          l1Address: tokenInfo!.l1Address || undefined,
+          name: tokenInfo!.name || undefined,
+          symbol: tokenInfo!.symbol!,
+          decimals: tokenInfo!.decimals,
+          iconUrl: tokenInfo!.iconUrl || undefined,
+          price: tokenInfo?.price || undefined,
           amount: balance,
         };
       });
@@ -126,8 +127,8 @@ export const useZkSyncWalletStore = defineStore("zkSyncWallet", () => {
         return { ...token, amount };
       })
       .sort((a, b) => {
-        if (a.address === ETH_TOKEN.address) return -1; // Always bring ETH to the beginning
-        if (b.address === ETH_TOKEN.address) return 1; // Keep ETH at the beginning if comparing with any other token
+        if (a.address === L2_BASE_TOKEN_ADDRESS) return -1; // Always bring ETH to the beginning
+        if (b.address === L2_BASE_TOKEN_ADDRESS) return 1; // Keep ETH at the beginning if comparing with any other token
         return 0; // Keep other tokens' order unchanged
       });
     const knownTokenAddresses = new Set(knownTokens.map((token) => token.address));

@@ -42,7 +42,7 @@ export default (tokens: Ref<Token[]>, balances: Ref<TokenAmount[] | undefined>) 
   });
 
   const feeToken = computed(() => {
-    return tokens.value.find((e) => e.address === ETH_TOKEN.l1Address);
+    return tokens.value.find((e) => e.address === utils.ETH_ADDRESS);
   });
   const enoughBalanceToCoverFee = computed(() => {
     if (!feeToken.value || !balances.value || inProgress.value) {
@@ -62,7 +62,7 @@ export default (tokens: Ref<Token[]>, balances: Ref<TokenAmount[] | undefined>) 
 
     return await retry(() =>
       signer.getFullRequiredDepositFee({
-        token: ETH_TOKEN.l1Address!,
+        token: utils.ETH_ADDRESS,
         to: params.to,
       })
     );

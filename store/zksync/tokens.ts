@@ -1,4 +1,5 @@
 import { $fetch } from "ofetch";
+import { utils } from "zksync-ethers";
 
 import { customBridgeTokens } from "@/data/customBridgeTokens";
 
@@ -15,22 +16,68 @@ export const useZkSyncTokensStore = defineStore("zkSyncTokens", () => {
     execute: requestTokens,
     reset: resetTokens,
   } = usePromise<Token[]>(async () => {
+    const provider = providerStore.requestProvider();
+    const ethL2TokenAddress = await provider.l2TokenAddress(utils.ETH_ADDRESS);
+
+    let baseToken = null;
+    let ethToken = null;
+    let explorerTokens: Token[] = [];
+    let configTokens: Token[] = [];
+
     if (eraNetwork.value.blockExplorerApi) {
       const responses: Api.Response.Collection<Api.Response.Token>[] = await Promise.all([
         $fetch(`${eraNetwork.value.blockExplorerApi}/tokens?minLiquidity=0&limit=100&page=1`),
         $fetch(`${eraNetwork.value.blockExplorerApi}/tokens?minLiquidity=0&limit=100&page=2`),
         $fetch(`${eraNetwork.value.blockExplorerApi}/tokens?minLiquidity=0&limit=100&page=3`),
       ]);
-      const explorerTokens = responses.map((response) => response.items.map(mapApiToken)).flat();
-      const etherExplorerToken = explorerTokens.find((token) => token.address === ETH_TOKEN.address);
-      const tokensWithoutEther = explorerTokens.filter((token) => token.address !== ETH_TOKEN.address);
-      return [etherExplorerToken || ETH_TOKEN, ...tokensWithoutEther] as Token[];
+      explorerTokens = responses.map((response) => response.items.map(mapApiToken)).flat();
+      baseToken = explorerTokens.find((token) => token.address === L2_BASE_TOKEN_ADDRESS);
+      ethToken = explorerTokens.find((token) => token.address === ethL2TokenAddress);
     }
-    if (eraNetwork.value.getTokens) {
-      return await eraNetwork.value.getTokens();
-    } else {
-      return [ETH_TOKEN];
+
+    if (eraNetwork.value.getTokens && (!baseToken || !ethToken)) {
+      configTokens = await eraNetwork.value.getTokens();
+      if (!baseToken) {
+        baseToken = configTokens.find((token) => token.address === L2_BASE_TOKEN_ADDRESS);
+      }
+      if (!ethToken) {
+        ethToken = configTokens.find((token) => token.address === ethL2TokenAddress);
+      }
     }
+
+    if (!baseToken) {
+      baseToken = {
+        address: "0x000000000000000000000000000000000000800A",
+        l1Address: await provider.getBaseTokenContractAddress(),
+        symbol: "BASETOKEN",
+        name: "Base Token",
+        decimals: 18,
+        iconUrl: "/img/eth.svg",
+      };
+    }
+    if (!ethToken) {
+      ethToken = {
+        address: ethL2TokenAddress,
+        l1Address: utils.ETH_ADDRESS,
+        symbol: "ETH",
+        name: "Ether",
+        decimals: 18,
+        iconUrl: "/img/eth.svg",
+      };
+    }
+
+    const tokens = explorerTokens.length ? explorerTokens : configTokens;
+    const nonBaseOrEthExplorerTokens = tokens.filter(
+      (token) => token.address !== L2_BASE_TOKEN_ADDRESS && token.address !== ethL2TokenAddress
+    );
+    return [
+      baseToken,
+      ...(baseToken.address !== ethToken.address ? [ethToken] : []),
+      ...nonBaseOrEthExplorerTokens,
+    ].map((token) => ({
+      ...token,
+      isETH: token.address === ethL2TokenAddress,
+    }));
   });
 
   const tokens = computed<{ [tokenAddress: string]: Token } | undefined>(() => {
@@ -52,10 +99,20 @@ export const useZkSyncTokensStore = defineStore("zkSyncTokens", () => {
         })
     );
   });
+  const baseToken = computed<Token | undefined>(() => {
+    if (!tokensRaw.value) return undefined;
+    return tokensRaw.value.find((token) => token.address === L2_BASE_TOKEN_ADDRESS);
+  });
+  const ethToken = computed<Token | undefined>(() => {
+    if (!tokensRaw.value) return undefined;
+    return tokensRaw.value.find((token) => token.isETH);
+  });
 
   return {
     l1Tokens,
     tokens,
+    baseToken,
+    ethToken,
     tokensRequestInProgress: computed(() => tokensRequestInProgress.value),
     tokensRequestError: computed(() => tokensRequestError.value),
     requestTokens,
