@@ -60,16 +60,16 @@ export const useZkSyncTokensStore = defineStore("zkSyncTokens", () => {
       };
     }
 
-    const btL1Address = await provider.getBaseTokenContractAddress();
-    if (btL1Address !== utils.ETH_ADDRESS) {
-      const l1Rpc = useNetworkStore();
-      const l1Provider = new ethers.providers.JsonRpcProvider(l1Rpc.l1Network?.rpcUrls.default.http[0]);
-      const walletEthers = ethers.Wallet.createRandom();
-      const connectedWallet = walletEthers.connect(l1Provider);
-      const ERC20_L1 = new ethers.Contract(btL1Address, IERC20, connectedWallet);
-      const ERC20_SYMBOL: string = (await ERC20_L1.symbol()) || "BT";
-      const ERC20_DECIMALS = (await ERC20_L1.decimals()) || 18;
-      if (!baseToken) {
+    if (!baseToken) {
+      const btL1Address = await provider.getBaseTokenContractAddress();
+      if (btL1Address !== utils.ETH_ADDRESS) {
+        const l1Rpc = useNetworkStore();
+        const l1Provider = new ethers.providers.JsonRpcProvider(l1Rpc.l1Network?.rpcUrls.default.http[0]);
+        const walletEthers = ethers.Wallet.createRandom();
+        const connectedWallet = walletEthers.connect(l1Provider);
+        const ERC20_L1 = new ethers.Contract(btL1Address, IERC20, connectedWallet);
+        const ERC20_SYMBOL: string = (await ERC20_L1.symbol()) || "BT";
+        const ERC20_DECIMALS = (await ERC20_L1.decimals()) || 18;
         baseToken = {
           address: L2_BASE_TOKEN_ADDRESS,
           l1Address: btL1Address,
@@ -78,11 +78,9 @@ export const useZkSyncTokensStore = defineStore("zkSyncTokens", () => {
           decimals: ERC20_DECIMALS,
           iconUrl: "/img/era.svg",
         };
+      } else {
+        baseToken = ethToken;
       }
-    }
-
-    if (!baseToken) {
-      baseToken = ethToken;
     }
 
     const tokens = explorerTokens.length ? explorerTokens : configTokens;
