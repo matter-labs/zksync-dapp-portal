@@ -15,5 +15,6 @@ export const usePortalRuntimeConfig = () => {
           }
         : undefined,
     },
+    hyperchainsConfig: runtimeConfig?.hyperchainsConfig,
   };
 };

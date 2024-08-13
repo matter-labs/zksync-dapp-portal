@@ -103,7 +103,7 @@ const publicChains: ZkSyncNetwork[] = [
 ];
 
 const getHyperchains = (): ZkSyncNetwork[] => {
-  const hyperchains = Hyperchains as Config;
+  const hyperchains = portalRuntimeConfig.hyperchainsConfig || (Hyperchains as Config);
   return hyperchains.map((e) => {
     const network: ZkSyncNetwork = {
       ...e.network,

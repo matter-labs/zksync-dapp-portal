@@ -1,3 +1,5 @@
+import { type Config as HyperchainsConfig } from "@/scripts/hyperchains/common";
+
 export type Hash = `0x${string}`;
 
 export type TokenPrice = number | undefined;
@@ -132,7 +134,7 @@ declare global {
       track: (eventName: string, params?: unknown) => void;
       initialized: boolean;
     };
-    '##runtimeConfig'?: {
+    "##runtimeConfig"?: {
       nodeType?: string;
       walletConnectProjectId?: string;
       ankrToken?: string;
@@ -141,8 +143,9 @@ declare global {
         rudder?: {
           key: string;
           dataplaneUrl: string;
-        }
-      }
-    }
+        };
+      };
+      hyperchainsConfig?: HyperchainsConfig;
+    };
   }
 }
