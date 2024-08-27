@@ -84,8 +84,8 @@ export default (
               },
             }),
           {
-            retries: 2,
-            delay: 3_000,
+            retries: 3,
+            delay: 5_000,
           }
         );
         await requestAllowance();
