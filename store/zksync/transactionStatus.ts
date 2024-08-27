@@ -52,9 +52,11 @@ export const useZkSyncTransactionStatusStore = defineStore("zkSyncTransactionSta
 
   const getDepositL2TransactionHash = async (l1TransactionHash: string) => {
     const publicClient = onboardStore.getPublicClient();
-    const transaction = await publicClient.waitForTransactionReceipt({
-      hash: l1TransactionHash as Hash,
-    });
+    const transaction = await retry(() =>
+      publicClient.waitForTransactionReceipt({
+        hash: l1TransactionHash as Hash,
+      })
+    );
     for (const log of transaction.logs) {
       try {
         const { args, eventName } = decodeEventLog({

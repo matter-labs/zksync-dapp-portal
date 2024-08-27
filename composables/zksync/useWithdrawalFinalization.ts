@@ -130,12 +130,14 @@ export default (transactionInfo: ComputedRef<TransactionInfo>) => {
       });
 
       status.value = "sending";
-      const receipt = await onboardStore.getPublicClient().waitForTransactionReceipt({
-        hash: transactionHash.value!,
-        onReplaced: (replacement) => {
-          transactionHash.value = replacement.transaction.hash;
-        },
-      });
+      const receipt = await retry(() =>
+        onboardStore.getPublicClient().waitForTransactionReceipt({
+          hash: transactionHash.value!,
+          onReplaced: (replacement) => {
+            transactionHash.value = replacement.transaction.hash;
+          },
+        })
+      );
 
       trackEvent("withdrawal-finalized", {
         token: transactionInfo.value!.token.symbol,
