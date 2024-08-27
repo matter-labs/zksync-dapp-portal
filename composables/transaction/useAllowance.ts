@@ -75,13 +75,18 @@ export default (
         });
 
         setAllowanceStatus.value = "sending";
-        const receipt = await retry(() =>
-          getPublicClient().waitForTransactionReceipt({
-            hash: setAllowanceTransactionHash.value!,
-            onReplaced: (replacement) => {
-              setAllowanceTransactionHash.value = replacement.transaction.hash;
-            },
-          })
+        const receipt = await retry(
+          () =>
+            getPublicClient().waitForTransactionReceipt({
+              hash: setAllowanceTransactionHash.value!,
+              onReplaced: (replacement) => {
+                setAllowanceTransactionHash.value = replacement.transaction.hash;
+              },
+            }),
+          {
+            retries: 2,
+            delay: 3_000,
+          }
         );
         await requestAllowance();
 
