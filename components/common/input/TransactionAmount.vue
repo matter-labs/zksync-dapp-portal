@@ -82,6 +82,7 @@
           class="h-max"
           :toggled="selectTokenModalOpened"
           variant="light"
+          :disabled="loading"
           @click="selectTokenModalOpened = true"
         >
           <template #left-icon>
