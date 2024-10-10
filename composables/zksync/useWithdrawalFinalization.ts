@@ -146,7 +146,7 @@ export default (transactionInfo: ComputedRef<TransactionInfo>) => {
             },
           });
         },
-        { retries: 3, delay: 10000 } // Adjust retries and delay as needed
+        { retries: 3, delay: 10000 }
       );
 
       trackEvent("withdrawal-finalized", {
