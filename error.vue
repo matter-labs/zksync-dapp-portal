@@ -3,7 +3,7 @@
     <Header />
     <div class="error-info-container">
       <h1 class="error-status-code">{{ error.statusCode }}</h1>
-      <p class="error-message">{{ error.message }}</p>
+      <p v-if="error.statusCode !== 404" class="error-message">{{ sanitizedErrorMessage }}</p>
       <CommonButton as="RouterLink" :to="{ name: 'bridge' }" class="mt-4" variant="primary">
         Back to Bridge
       </CommonButton>
@@ -12,14 +12,29 @@
 </template>
 
 <script lang="ts">
-export default {
+import DOMPurify from "dompurify";
+import { defineComponent, computed } from "vue";
+
+export default defineComponent({
   props: {
     error: {
-      type: Object as PropType<any>,
+      type: Object as PropType<{ statusCode: number; message: string }>,
       required: true,
+      validator: (value: { statusCode: number; message: string }) => {
+        return typeof value.statusCode === "number" && typeof value.message === "string";
+      },
     },
   },
-};
+  setup(props: { error: { statusCode: number; message: string } }) {
+    const sanitizedErrorMessage = computed(() => {
+      return DOMPurify.sanitize(props.error.message);
+    });
+
+    return {
+      sanitizedErrorMessage,
+    };
+  },
+});
 </script>
 
 <style lang="scss" scoped>
