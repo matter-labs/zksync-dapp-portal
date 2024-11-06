@@ -148,5 +148,4 @@ declare global {
       hyperchainsConfig?: HyperchainsConfig;
     };
   }
-  declare module "dompurify";
 }
