@@ -18,11 +18,11 @@
 
 ## 🌍 Connecting to local node
 
-Harness the Portal's power to connect to your [local zkSync Era node](https://era.zksync.io/docs/tools/testing/).
+Harness the Portal's power to connect to your [local zkSync Era node](https://docs.zksync.io/zksync-node/quickstart).
 
 **Prerequisites:** Node.js version 16+, npm version 7+
 
-1. 📚 Follow the [documentation](https://era.zksync.io/docs/tools/testing/) for setting up either an **in-memory node** or **dockerized local setup**.
+1. 📚 Follow the [documentation](https://docs.zksync.io/zksync-node/quickstart) for setting up either an **in-memory node** or **dockerized local setup**.
 2. 🔄 Clone the Portal repository and set it up:
     ```bash
     git clone https://github.com/matter-labs/dapp-portal.git
