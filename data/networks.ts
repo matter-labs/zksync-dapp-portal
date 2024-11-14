@@ -8,15 +8,26 @@ import type { Chain } from "@wagmi/core/chains";
 
 const portalRuntimeConfig = usePortalRuntimeConfig();
 
+// We don't use Ankr token here, since the expectation is that public quota is enough to cover all the requests.
 export const l1Networks = {
   mainnet: {
     ...mainnet,
     name: "Ethereum",
     network: "mainnet",
+    rpcUrls: {
+      default: {
+        http: ["https://rpc.ankr.com/eth/"],
+      },
+    },
   },
   sepolia: {
     ...sepolia,
     name: "Ethereum Sepolia Testnet",
+    rpcUrls: {
+      default: {
+        http: ["https://rpc.ankr.com/eth_sepolia/"],
+      },
+    },
   },
 } as const;
 export type L1Network = Chain;
