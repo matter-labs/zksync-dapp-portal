@@ -8,7 +8,9 @@ import type { Chain } from "@wagmi/core/chains";
 
 const portalRuntimeConfig = usePortalRuntimeConfig();
 
-// We don't use Ankr token here, since the expectation is that public quota is enough to cover all the requests.
+// We don't use RPC tokens here, since the expectation is that public quota is enough to cover all the requests.
+// We provide several RPC URLs to deal with the case when one of them is down.
+// The expectation is that "more reliable" RPCs are listed first.
 export const l1Networks = {
   mainnet: {
     ...mainnet,
@@ -16,7 +18,7 @@ export const l1Networks = {
     network: "mainnet",
     rpcUrls: {
       default: {
-        http: ["https://rpc.ankr.com/eth/"],
+        http: ["https://rpc.ankr.com/eth/", "https://ethereum-rpc.publicnode.com", "https://cloudflare-eth.com"],
       },
     },
   },
@@ -25,7 +27,11 @@ export const l1Networks = {
     name: "Ethereum Sepolia Testnet",
     rpcUrls: {
       default: {
-        http: ["https://rpc.ankr.com/eth_sepolia/"],
+        http: [
+          "https://rpc.ankr.com/eth_sepolia/",
+          "https://ethereum-sepolia-rpc.publicnode.com",
+          "https://rpc.sepolia.org",
+        ],
       },
     },
   },
