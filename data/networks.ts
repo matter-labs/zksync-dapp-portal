@@ -36,7 +36,6 @@ export const l1Networks = {
     },
   },
 } as const;
-
 export type L1Network = Chain;
 
 export type ZkSyncNetwork = {
