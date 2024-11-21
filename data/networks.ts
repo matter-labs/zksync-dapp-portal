@@ -1,7 +1,7 @@
 import { mainnet, sepolia } from "@wagmi/core/chains";
 
 import Hyperchains from "@/hyperchains/config.json";
-import { PUBLIC_L1_CHAINS, type Config } from "@/scripts/hyperchains/common";
+import { type Config } from "@/scripts/hyperchains/common";
 
 import type { Token } from "@/types";
 import type { Chain } from "@wagmi/core/chains";
@@ -36,6 +36,7 @@ export const l1Networks = {
     },
   },
 } as const;
+
 export type L1Network = Chain;
 
 export type ZkSyncNetwork = {
@@ -127,7 +128,7 @@ const getHyperchains = (): ZkSyncNetwork[] => {
       getTokens: () => e.tokens,
     };
     if (e.network.publicL1NetworkId) {
-      network.l1Network = PUBLIC_L1_CHAINS.find((chain) => chain.id === e.network.publicL1NetworkId);
+      network.l1Network = Object.entries(l1Networks).find(([, chain]) => chain.id === e.network.publicL1NetworkId)?.[1];
       if (!network.l1Network) {
         throw new Error(
           `L1 network with ID ${e.network.publicL1NetworkId} from ${network.name} config wasn't found in the list of public L1 networks.`
