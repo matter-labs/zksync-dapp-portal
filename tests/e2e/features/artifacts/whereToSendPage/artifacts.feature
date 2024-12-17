@@ -9,9 +9,9 @@ Feature: Artifacts - UI
     Given I go to page "/transaction/zksync/era/?network=era-goerli"
     Then Element with "text" "Where to send" should be "visible"
     #zkSync Era item
-    Then Element with "text" "zkSync Era Testnet" should be "visible"
-    Then Element with "text" "Send inside zkSync Era Testnet network" should be "visible"
-    Then Element with "text" "zkSync Era Testnet" should be "clickable"
+    Then Element with "text" "ZKsync Era Testnet" should be "visible"
+    Then Element with "text" "Send inside ZKsync Era Testnet network" should be "visible"
+    Then Element with "text" "ZKsync Era Testnet" should be "clickable"
     Then Element with "partial src" "/img/era.svg" should be "visible"
     Then Element with "partial src" "/img/era.svg" should be "clickable"
     #Ethereum item
@@ -21,9 +21,9 @@ Feature: Artifacts - UI
     Then Element with "partial src" "/img/ethereum.svg" should be "visible"
     Then Element with "partial src" "/img/ethereum.svg" should be "clickable"
     #zkSync Lite item
-    Then Element with "text" "zkSync Lite Goerli" should be "visible"
-    Then Element with "text" "Send to zkSync Lite network" should be "visible"
-    Then Element with "text" "zkSync Lite Goerli" should be "clickable"
+    Then Element with "text" "ZKsync Lite Goerli" should be "visible"
+    Then Element with "text" "Send to ZKsync Lite network" should be "visible"
+    Then Element with "text" "ZKsync Lite Goerli" should be "clickable"
     Then Element with "partial src" "/img/zksync-lite.svg" should be "visible"
     Then Element with "partial src" "/img/zksync-lite.svg" should be "clickable"
     Then Element with "text" "Send to exchange" should be "visible"

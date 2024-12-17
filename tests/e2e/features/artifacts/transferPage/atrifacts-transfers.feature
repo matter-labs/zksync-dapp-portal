@@ -153,7 +153,7 @@ Feature: Artifacts - UI
     Given I am on the Main page
     When I go to page "/transaction/zksync/era/send?network=era-goerli&address=0x2CF4F78917A16C9584AeB5d4c5bD2713d724C75d"
     When I choose "ETH" as token and insert "0.0000000001" as amount
-    When I "confirm" transaction after clicking "Send to zkSync Era Testnet" button
+    When I "confirm" transaction after clicking "Send to ZKsync Era Testnet" button
     #Transaction submitted pop up - id1537
     Then Message "Transaction submitted" should be visible
     Then Submitted transaction animation should be visible
@@ -210,7 +210,7 @@ Feature: Artifacts - UI
     Then Element with "text" " Continue " should be "clickable"
     When I click by text " Continue "
     Then Element with "text" "Confirm transaction" should be "visible"
-    Then Element with "text" "Your zkSync Era Testnet account" should be "visible"
+    Then Element with "text" "Your ZKsync Era Testnet account" should be "visible"
     Then Element with "partial class" "address-card-avatar" should be "visible"
     Then Modal card element with the "//*[text()='0x2CF4...75d']" xpath should be "visible"
     Then Modal card element with the "//*[@alt='ETH token icon']" xpath should be "visible"
@@ -229,8 +229,8 @@ Feature: Artifacts - UI
     Then Modal card element with the "//*[contains(@class, '-my-0.5')]//button[contains(., 'of')]" xpath should be "visible"
     Then Modal card element with the "//*[contains(@class, '-my-0.5')]//*[contains(@src, 'eth.svg')]" xpath should be "visible"
     Then Modal card element with the "//*[contains(@class, '-my-0.5')]//button[contains(., 'ETH')]" xpath should be "visible"
-    Then Element with "text" "Send to zkSync Era Testnet" should be "visible"
-    Then Element with "text" "Send to zkSync Era Testnet" should be "clickable"
+    Then Element with "text" "Send to ZKsync Era Testnet" should be "visible"
+    Then Element with "text" "Send to ZKsync Era Testnet" should be "clickable"
 
   @id1286 @transfer
   Scenario: Check max button functionality
@@ -254,7 +254,7 @@ Feature: Artifacts - UI
     When I go to page "/transaction/zksync/era/send/?address=0x2CF4F78917A16C9584AeB5d4c5bD2713d724C75d"
     # Fill all the required fields for tx and to see Submitted window
     Then I choose "ETH" as token and insert "0.00000001" as amount
-    When I "confirm" transaction after clicking "Send to zkSync Era Testnet" button
+    When I "confirm" transaction after clicking "Send to ZKsync Era Testnet" button
     #Links check
     Then Element with "href" "https://goerli.explorer.zksync.io/address/0x2CF4F78917A16C9584AeB5d4c5bD2713d724C75d" should be "clickable"
     Then I click by "href" with "https://goerli.explorer.zksync.io/address/0x2CF4F78917A16C9584AeB5d4c5bD2713d724C75d" value

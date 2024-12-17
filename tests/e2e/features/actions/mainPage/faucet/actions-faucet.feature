@@ -9,7 +9,7 @@ Feature: Faucet
     Given A wallet should be "empty"
     When I go to page "/?network=era-mainnet"
     Then Element with "text" "Not enough tokens?" should be "invisible"
-    Then Element with "text" "Use official zkSync Era faucet" should be "invisible"
+    Then Element with "text" "Use official ZKsync Era faucet" should be "invisible"
     Then Element with "text" " Get free test tokens " should be "invisible"
 
   @id1635

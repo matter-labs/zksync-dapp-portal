@@ -9,7 +9,7 @@ Feature: Artifacts - UI
   Scenario: Check artifacts for an empty wallet
     Then A wallet should be "empty"
     Then Message " You don't have any balances on " should be visible
-    Then Message "zkSync Era Testnet" should be visible
+    Then Message "ZKsync Era Testnet" should be visible
     Then Message " Proceed to " should be visible
     Then Message "Add funds" should be visible
     Then Message " page to add balance to your account " should be visible

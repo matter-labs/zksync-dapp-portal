@@ -92,7 +92,7 @@
         <CommonCardWithLineButtons class="mt-block-padding-1/2">
           <DestinationItem
             label="Official Documentation"
-            description="Developer resources and technical zkSync documentation"
+            description="Developer resources and technical ZKsync documentation"
             as="a"
             href="https://era.zksync.io"
             target="_blank"

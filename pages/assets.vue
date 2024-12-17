@@ -86,7 +86,7 @@
 
       <template v-if="noBalances">
         <TypographyCategoryLabel>
-          To start using zkSync ecosystem, deposit tokens in any convenient way
+          To start using ZKsync ecosystem, deposit tokens in any convenient way
         </TypographyCategoryLabel>
 
         <div class="flex flex-col gap-block-gap">
@@ -104,7 +104,7 @@
         </div>
       </template>
       <template v-else>
-        <TypographyCategoryLabel>Deposit more tokens to zkSync</TypographyCategoryLabel>
+        <TypographyCategoryLabel>Deposit more tokens to ZKsync</TypographyCategoryLabel>
 
         <CommonCardWithLineButtons>
           <DestinationItem v-for="(item, index) in depositMethods" :key="index" v-bind="item.props">

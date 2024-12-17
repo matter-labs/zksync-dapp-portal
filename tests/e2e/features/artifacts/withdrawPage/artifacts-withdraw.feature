@@ -45,7 +45,7 @@ Feature: Withdraw
     When I click by text " Continue "
     Then Element with "text" "Confirm transaction" should be "visible"
     Then Element with "text" "Your Ethereum Goerli Testnet account" should be "visible"
-    Then Element with "text" "Your zkSync Era Testnet account" should be "visible"
+    Then Element with "text" "Your ZKsync Era Testnet account" should be "visible"
     Then Element with "partial class" "address-card-avatar" should be "visible"
     Then Modal card element with the "//*[text()='0x2CF4...75d']" xpath should be "visible"
     Then Modal card element with the "//*[@alt='ETH token icon']" xpath should be "visible"
@@ -82,7 +82,7 @@ Feature: Withdraw
     Then I click by "testId" with "token-dropDown" value
     When I fill the input field contains "placeholder" type "Symbol or address" value with "AAA" text
     Then Element with "partial string" 'No tokens was found for "AAA"' should be "visible"
-    Then Element with "partial text" "Make sure you are using correct zkSync network" should be "visible"
+    Then Element with "partial text" "Make sure you are using correct ZKsync network" should be "visible"
 
     Examples:
       | network |

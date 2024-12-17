@@ -7,8 +7,8 @@ import { chainList, type ZkSyncNetwork } from "@/data/networks";
 const portalRuntimeConfig = usePortalRuntimeConfig();
 
 const metadata = {
-  name: "zkSync Portal",
-  description: "zkSync Portal - view balances, transfer and bridge tokens",
+  name: "ZKsync Portal",
+  description: "ZKsync Portal - view balances, transfer and bridge tokens",
   url: "https://portal.zksync.io",
   icons: ["https://portal.zksync.io/icon.png"],
 };

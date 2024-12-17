@@ -1,6 +1,6 @@
 {
   "name": "zksync-dapp-portal",
-  "description": "zkSync Portal provides Wallet and Bridge functionality for interacting with zkSync",
+  "description": "ZKsync Portal provides Wallet and Bridge functionality for interacting with ZKsync",
   "private": true,
   "scripts": {
     "dev": "nuxt dev",

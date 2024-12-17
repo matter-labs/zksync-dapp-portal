@@ -54,7 +54,7 @@
           <template v-if="isConnected">
             No tokens for "{{ search }}" were found on connected account
             <br />
-            <span class="mt-1.5 inline-block">Make sure you are using correct zkSync network</span>
+            <span class="mt-1.5 inline-block">Make sure you are using correct ZKsync network</span>
           </template>
           <template v-else>Connect wallet to see all tokens available for you</template>
         </p>

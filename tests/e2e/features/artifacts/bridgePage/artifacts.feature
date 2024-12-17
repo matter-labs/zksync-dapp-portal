@@ -13,7 +13,7 @@ Feature: Withdraw
     Then Element with "testId" "close-button" should be "visible"
     Then Element with "testId" "close-button" should be "clickable"
     Then Modal card element with the "//*[contains(text(),'0x2CF4...75d')]" xpath should be "visible"
-    Then Modal card element with the "//div[text()='zkSync Era Testnet']" xpath should be "visible"
+    Then Modal card element with the "//div[text()='ZKsync Era Testnet']" xpath should be "visible"
     Then Modal card element with the "//div[text()='Bridge network']" xpath should be "visible"
     Then Element with "text" "View on Explorer" should be "visible"
     Then Element with "text" "View on Explorer" should be "clickable"
@@ -29,8 +29,8 @@ Feature: Withdraw
     When I click by partial text "..."
     Then Element with "text" "Bridge network" should be "visible"
     Then I click by text "Bridge network"
-    Then Modal card element with the "//*[text()='zkSync Era Testnet']" xpath should be "visible"
-    Then Modal card element with the "//*[text()='zkSync Era Mainnet']" xpath should be "visible"
+    Then Modal card element with the "//*[text()='ZKsync Era Testnet']" xpath should be "visible"
+    Then Modal card element with the "//*[text()='ZKsync Era Mainnet']" xpath should be "visible"
 
 
   @id1604:I
@@ -44,7 +44,7 @@ Feature: Withdraw
     Then Modal card element with the "//button[@data-testid='close-button']" xpath should be "visible"
     Then Element with "text" "Selected network" should be "visible"
     Then Element with "text" "Other networks" should be "visible"
-    Then Modal card element with the "//*[text()='zkSync Era Testnet']" xpath should be "visible"
+    Then Modal card element with the "//*[text()='ZKsync Era Testnet']" xpath should be "visible"
     Then Modal card element with the "//*[@src='/img/era.svg']" xpath should be "visible"
     Then Modal card element with the "//*[text()='Ethereum Goerli Testnet']" xpath should be "visible"
     Then Modal card element with the "//*[@src='/img/ethereum.svg']" xpath should be "visible"
@@ -60,7 +60,7 @@ Feature: Withdraw
     Then Modal card element with the "//button[@data-testid='close-button']" xpath should be "visible"
     Then Element with "text" "Selected network" should be "visible"
     Then Element with "text" "Other networks" should be "visible"
-    Then Modal card element with the "//*[text()='zkSync Era Mainnet']" xpath should be "visible"
+    Then Modal card element with the "//*[text()='ZKsync Era Mainnet']" xpath should be "visible"
     Then Modal card element with the "//*[@src='/img/era.svg']" xpath should be "visible"
     Then Modal card element with the "//*[text()='Ethereum Mainnet']" xpath should be "visible"
     Then Modal card element with the "//*[@src='/img/ethereum.svg']" xpath should be "visible"
@@ -74,7 +74,7 @@ Feature: Withdraw
     #Recent withdrawals dropdown
     Then Element with "partial class" "transition-transform" should be "visible"
     Then Element with "text" "From" should be "visible"
-    Then Element with "text" "zkSync Era Testnet" should be "visible"
+    Then Element with "text" "ZKsync Era Testnet" should be "visible"
     Then Element with "testId" "token-dropDown" should be "visible"
     Then Element with "testId" "token-dropDown" should be "clickable"
     Then Element with "id" "amount-input" should be "visible"
@@ -162,8 +162,8 @@ Feature: Withdraw
       Then Element with "text" " Max " should be "visible"
       Then Element with "text" " Max " should be "clickable"
       #Block
-      Then Element with "text" "Your zkSync Era Testnet account" should be "visible"
-      Then Element with "text" "Your zkSync Era Testnet account" should be "clickable"
+      Then Element with "text" "Your ZKsync Era Testnet account" should be "visible"
+      Then Element with "text" "Your ZKsync Era Testnet account" should be "clickable"
       Then Element with "text" "0x2CF4...75d" should be "visible"
       Then Element with "text" "0x2CF4...75d" should be "clickable"
       Then Element with "class" "address-avatar address-card-avatar" should be "visible"
@@ -199,9 +199,9 @@ Feature: Withdraw
     Scenario: Check the editing recipient address in Bridge (Deposit)
       Given I go to page "/bridge?network=era-goerli"
       When I click by text "Deposit"
-      When I click by "text" with "Your zkSync Era Testnet account" value
+      When I click by "text" with "Your ZKsync Era Testnet account" value
       Then Element with "text" "Bridge to" should be "visible"
       When I fill the input field contains "placeholder" type "Address or ENS or contact name" value with "0x52B6d10d7d865B3d4103f8809AA3521288568f46" text
       When I click by text "0x52B6...f46"
-      Then Element with "text" "zkSync Era Testnet address" should be "visible"
+      Then Element with "text" "ZKsync Era Testnet address" should be "visible"
       Then Element with "text" "0x52B6...f46" should be "visible"

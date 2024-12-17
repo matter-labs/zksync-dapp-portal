@@ -85,7 +85,7 @@ Feature: Artifacts - UI
     Then I click by "testId" with "token-dropDown" value
     When I fill the input field contains "placeholder" type "Symbol or address" value with "AAA" text
     Then Element with "partial string" 'No tokens was found for "AAA"' should be "visible"
-    Then Element with "partial text" "Make sure you are using correct zkSync network" should be "visible"
+    Then Element with "partial text" "Make sure you are using correct ZKsync network" should be "visible"
 
     Examples:
       | network |

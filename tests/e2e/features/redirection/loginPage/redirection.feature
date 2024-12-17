@@ -3,13 +3,13 @@
 Feature: External Redirection on the Login Page
 
   @id1541
-  Scenario Outline: Check redirection for the "View on Explorer" links (zkSync Era∎)
+  Scenario Outline: Check redirection for the "View on Explorer" links (ZKsync Era∎)
     When I click by "<Selector type>" with "<Selector value>" value
     Then New page has "<url>" address
 
     Examples:
       | Selector type | Selector value            | url                                        |
-      | title         | zkSync Portal GitHub page | https://github.com/matter-labs/dapp-portal |
+      | title         | ZKsync Portal GitHub page | https://github.com/matter-labs/dapp-portal |
       | id            | zk-sync-white-total       | https://zksync.io/                         |
 
   @id1586

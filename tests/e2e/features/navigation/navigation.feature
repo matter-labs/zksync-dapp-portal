@@ -74,9 +74,9 @@ Feature: Navigation
 
     Examples:
       | Button name         | url                                     |
-      | zkSync Era Testnet  | /transaction/zksync/era/send            |
+      | ZKsync Era Testnet  | /transaction/zksync/era/send            |
       | Ethereum Goerli     | /transaction/zksync/era/withdraw        |
-      | zkSync Lite Goerli  | /transaction/zksync/era/send-lite       |
+      | ZKsync Lite Goerli  | /transaction/zksync/era/send-lite       |
 
   @id1430:II
   Scenario Outline: Check Navigation for the "Where to Send" page links
@@ -111,8 +111,8 @@ Feature: Navigation
     Then Current page have "<Network URL>" address
     Examples:
       | Network name        | Network URL            |
-      | zkSync Era Testnet  | /?network=era-goerli   |
-      | zkSync Lite Goerli  | /?network=lite-goerli  |
+      | ZKsync Era Testnet  | /?network=era-goerli   |
+      | ZKsync Lite Goerli  | /?network=lite-goerli  |
 
   @1489:II @testnet
   Scenario Outline: Check navigation from networks dropdown
@@ -125,5 +125,5 @@ Feature: Navigation
     Then Current page have "<Network URL>" address
     Examples:
       | Network name        | Network URL            |
-      | zkSync Era Mainnet  | /?network=era-mainnet  |
-      | zkSync Lite Mainnet | /?network=lite-mainnet |
+      | ZKsync Era Mainnet  | /?network=era-mainnet  |
+      | ZKsync Lite Mainnet | /?network=lite-mainnet |

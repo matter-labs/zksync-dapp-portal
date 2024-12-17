@@ -1,6 +1,6 @@
 {
   "zksyncGoerliNetwork": {
-    "networkName": "zkSync Era Testnet",
+    "networkName": "ZKsync Era Testnet",
     "newRpcUrl": "https://testnet.era.zksync.dev",
     "chainId": "280",
     "currencySymbol": "ETH",

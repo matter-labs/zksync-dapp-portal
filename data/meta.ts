@@ -1,18 +1,18 @@
 export const portal = {
-  title: "zkSync Portal | View balances, transfer and bridge tokens",
+  title: "ZKsync Portal | View balances, transfer and bridge tokens",
   description:
-    "zkSync Portal allows you to view your balances, transfer tokens and bridge assets between zkSync and Ethereum",
+    "ZKsync Portal allows you to view your balances, transfer tokens and bridge assets between ZKsync and Ethereum",
   previewImg: {
     src: "https://portal.zksync.io/preview.png",
-    alt: "zkSync Portal",
+    alt: "ZKsync Portal",
   },
 };
 export const bridge = {
-  title: "zkSync Bridge | Transfer funds between zkSync and Ethereum",
+  title: "ZKsync Bridge | Transfer funds between ZKsync and Ethereum",
   description:
-    "With the zkSync Bridge you can easily deposit tokens to zkSync. Enjoy faster, cheaper and more efficient transactions with the future proof zkEVM scaling Ethereum's security and values.",
+    "With the ZKsync Bridge you can easily deposit tokens to ZKsync. Enjoy faster, cheaper and more efficient transactions with the future proof zkEVM scaling Ethereum's security and values.",
   previewImg: {
     src: "https://portal.zksync.io/preview.png",
-    alt: "zkSync Bridge",
+    alt: "ZKsync Bridge",
   },
 };

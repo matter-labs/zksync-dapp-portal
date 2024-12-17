@@ -54,7 +54,7 @@ export type ZkSyncNetwork = {
   getTokens?: () => Token[] | Promise<Token[]>; // If blockExplorerApi is specified, tokens will be fetched from there. Otherwise, this function will be used.
 };
 
-// See the official documentation on running a local zkSync node: https://era.zksync.io/docs/tools/testing/
+// See the official documentation on running a local ZKsync node: https://era.zksync.io/docs/tools/testing/
 // Also see the guide in the README.md file in the root of the repository.
 
 // In-memory node default config. Docs: https://era.zksync.io/docs/tools/testing/era-test-node.html
@@ -86,7 +86,7 @@ const publicChains: ZkSyncNetwork[] = [
   {
     id: 324,
     key: "mainnet",
-    name: "zkSync",
+    name: "ZKsync",
     rpcUrl: "https://mainnet.era.zksync.io",
     blockExplorerUrl: "https://era.zksync.network",
     blockExplorerApi: "https://block-explorer-api.mainnet.zksync.io",
@@ -98,7 +98,7 @@ const publicChains: ZkSyncNetwork[] = [
   {
     id: 300,
     key: "sepolia",
-    name: "zkSync Sepolia Testnet",
+    name: "ZKsync Sepolia Testnet",
     rpcUrl: "https://sepolia.era.zksync.dev",
     blockExplorerUrl: "https://sepolia-era.zksync.network",
     blockExplorerApi: "https://block-explorer-api.sepolia.zksync.dev",
@@ -110,7 +110,7 @@ const publicChains: ZkSyncNetwork[] = [
   {
     id: 270,
     key: "stage",
-    name: "zkSync Stage",
+    name: "ZKsync Stage",
     rpcUrl: "https://z2-dev-api.zksync.dev",
     blockExplorerUrl: "https://sepolia-beta.staging-scan-v2.zksync.dev",
     blockExplorerApi: "https://block-explorer-api.stage.zksync.dev",

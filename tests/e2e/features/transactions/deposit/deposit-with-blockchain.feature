@@ -14,7 +14,7 @@ Feature: Deposit
     Then Fee "should" have "$" value
     Then Fee "should" have "ETH" value
     When I choose "ETH" as token and insert "0.0000000001" as amount
-    When I "confirm" transaction after clicking "Add funds to zkSync Era Testnet" button
+    When I "confirm" transaction after clicking "Add funds to ZKsync Era Testnet" button
     Then Message "Transaction submitted" should be visible
     # id1396
     Then Element with "text" " Go to Assets page " should be "visible"
@@ -28,7 +28,7 @@ Feature: Deposit
     Given I go to "Deposit" transaction section
     When I click by "text" with "Your account" value
     When I choose "ETH" as token and insert "0.0000000001" as amount
-    When I "confirm" transaction after clicking "Add funds to zkSync Era Testnet" button
+    When I "confirm" transaction after clicking "Add funds to ZKsync Era Testnet" button
     Then Message "Transaction submitted" should be visible
     Then Modal card element with the "//*[contains(text(),'Track status')]" xpath should be "visible"
     Then Modal card element with the "//*[contains(text(),'Track status')]" xpath should be "clickable"
@@ -41,6 +41,6 @@ Feature: Deposit
     Given I go to "Deposit" transaction section
     When I click by "text" with "Your account" value
     When I choose "ETH" as token and insert "0.0000000001" as amount
-    When I "reject" transaction after clicking "Add funds to zkSync Era Testnet" button
-    Then Element with "text" "Add funds to zkSync Era Testnet" should be "visible"
-    Then Element with "text" "Add funds to zkSync Era Testnet" should be "clickable"
+    When I "reject" transaction after clicking "Add funds to ZKsync Era Testnet" button
+    Then Element with "text" "Add funds to ZKsync Era Testnet" should be "visible"
+    Then Element with "text" "Add funds to ZKsync Era Testnet" should be "clickable"

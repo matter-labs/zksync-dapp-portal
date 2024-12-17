@@ -1,6 +1,6 @@
 <template>
   <CommonModal v-model:opened="modalDisplayed" :initial-focus="checkbox" :closable="false">
-    <DialogTitle as="div" class="modal-title">zkSync Bridge is live on beta</DialogTitle>
+    <DialogTitle as="div" class="modal-title">ZKsync Bridge is live on beta</DialogTitle>
     <p class="modal-text">
       Nothing on this website should be construed as an invitation, inducement, or solicitation to engage in investment
       activity. You understand that the bridge, asset, and transaction features available through this website are in

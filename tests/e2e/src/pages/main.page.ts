@@ -266,10 +266,10 @@ export class MainPage extends BasePage {
     await this.click(this.networkSwitcher);
 
     if (
-      networkName === "zkSync Era Mainnet" ||
-      networkName === "zkSync Era Testnet" ||
-      networkName === "zkSync Lite Mainnet" ||
-      networkName === "zkSync Lite Goerli"
+      networkName === "ZKsync Era Mainnet" ||
+      networkName === "ZKsync Era Testnet" ||
+      networkName === "ZKsync Lite Mainnet" ||
+      networkName === "ZKsync Lite Goerli"
     ) {
       result = `//*[text()='${networkName}']`;
     } else {

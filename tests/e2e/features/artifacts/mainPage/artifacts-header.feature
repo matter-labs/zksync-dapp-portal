@@ -56,12 +56,12 @@ Feature: Artifacts - UI
     Then Element with "text" "Copy" should be "visible"
     Then Element with "text" "Copy" should be "clickable"
     Then Element with "text" " Please transfer funds to this address using " should be "visible"
-    Then Element with "text" "zkSync Era Testnet" should be "visible"
+    Then Element with "text" "ZKsync Era Testnet" should be "visible"
     Then Element with "text" " to successfully receive them " should be "visible"
 
   @id1363 @loginPage
   Scenario: Check artifacts on the Login page
     Given I'm logged out
-    Then Element with "text" "Connect your Ethereum wallet to zkSync Portal" should be "visible"
+    Then Element with "text" "Connect your Ethereum wallet to ZKsync Portal" should be "visible"
     Then Element with "testId" "network-switcher" should be "visible"
-    Then Element with "title" "zkSync Portal GitHub page" should be "visible"
+    Then Element with "title" "ZKsync Portal GitHub page" should be "visible"
