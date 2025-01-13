@@ -1,15 +1,12 @@
-import { BigNumber } from "ethers";
-
 import type { ZkSyncNetwork } from "@/data/networks";
 import type { TokenAmount } from "@/types";
-import type { BigNumberish } from "ethers";
 
 export function isOnlyZeroes(value: string) {
   return value.replace(/0/g, "").replace(/\./g, "").length === 0;
 }
 
-export function calculateFee(gasLimit: BigNumberish, gasPrice: BigNumberish) {
-  return BigNumber.from(gasLimit).mul(gasPrice);
+export function calculateFee(gasLimit: bigint, gasPrice: bigint) {
+  return gasLimit * gasPrice;
 }
 
 export const getNetworkUrl = (network: ZkSyncNetwork, routePath: string) => {

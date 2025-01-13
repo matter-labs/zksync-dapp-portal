@@ -43,7 +43,6 @@ import {
   PlusIcon,
 } from "@heroicons/vue/24/outline";
 import { useTimeAgo } from "@vueuse/core";
-import { BigNumber } from "ethers";
 
 import TokenAmount from "@/components/transaction/lineItem/TokenAmount.vue";
 import TotalPrice from "@/components/transaction/lineItem/TotalPrice.vue";
@@ -127,7 +126,7 @@ const chainsLabel = computed(() => {
   };
 });
 const computeAmount = computed(() => {
-  return BigNumber.from(props.transfer.amount || "0").toString();
+  return BigInt(props.transfer.amount || "0").toString();
 });
 const token = computed(() => {
   return props.transfer.token;

@@ -1,8 +1,6 @@
-import { BigNumber } from "ethers";
 import { type Provider } from "zksync-ethers";
 
 import type { Token, TokenAmount } from "@/types";
-import type { BigNumberish } from "ethers";
 
 export type FeeEstimationParams = {
   type: "transfer" | "withdrawal";
@@ -18,8 +16,8 @@ export default (
 ) => {
   let params: FeeEstimationParams | undefined;
 
-  const gasLimit = ref<BigNumberish | undefined>();
-  const gasPrice = ref<BigNumberish | undefined>();
+  const gasLimit = ref<bigint | undefined>();
+  const gasPrice = ref<bigint | undefined>();
 
   const totalFee = computed(() => {
     if (!gasLimit.value || !gasPrice.value) return undefined;
@@ -35,7 +33,7 @@ export default (
     }
     const feeTokenBalance = balances.value.find((e) => e.address === feeToken.value!.address);
     if (!feeTokenBalance) return true;
-    if (totalFee.value && BigNumber.from(totalFee.value).gt(feeTokenBalance.amount)) {
+    if (totalFee.value && BigInt(totalFee.value) > feeTokenBalance.amount) {
       return false;
     }
     return true;

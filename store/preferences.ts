@@ -1,5 +1,5 @@
 import { useStorage } from "@vueuse/core";
-import { getAddress, isAddress } from "ethers/lib/utils";
+import { getAddress, isAddress } from "ethers";
 
 export const usePreferencesStore = defineStore("preferences", () => {
   const { account, isConnected } = storeToRefs(useOnboardStore());

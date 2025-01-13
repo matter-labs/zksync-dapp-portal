@@ -371,8 +371,7 @@ import {
   LockClosedIcon,
 } from "@heroicons/vue/24/outline";
 import { useRouteQuery } from "@vueuse/router";
-import { BigNumber } from "ethers";
-import { isAddress } from "ethers/lib/utils";
+import { isAddress } from "ethers";
 
 import EthereumTransactionFooter from "@/components/transaction/EthereumTransactionFooter.vue";
 import useAllowance from "@/composables/transaction/useAllowance";
@@ -538,27 +537,27 @@ const maxAmount = computed(() => {
     return undefined;
   }
   if (feeToken.value?.address === selectedToken.value.address) {
-    if (BigNumber.from(tokenBalance.value).isZero()) {
+    if (BigInt(tokenBalance.value) === 0n) {
       return "0";
     }
     if (!fee.value) {
       return undefined;
     }
-    if (BigNumber.from(fee.value).gt(tokenBalance.value)) {
+    if (BigInt(fee.value) > BigInt(tokenBalance.value)) {
       return "0";
     }
-    return BigNumber.from(tokenBalance.value).sub(fee.value).toString();
+    return String(BigInt(tokenBalance.value) - BigInt(fee.value));
   }
   return tokenBalance.value.toString();
 });
 const totalComputeAmount = computed(() => {
   try {
     if (!amount.value || !selectedToken.value) {
-      return BigNumber.from("0");
+      return 0n;
     }
     return decimalToBigNumber(amount.value, selectedToken.value.decimals);
   } catch (error) {
-    return BigNumber.from("0");
+    return 0n;
   }
 });
 const enoughBalanceForTransaction = computed(() => !amountError.value);
@@ -629,7 +628,7 @@ const continueButtonDisabled = computed(() => {
     !transaction.value ||
     !enoughBalanceToCoverFee.value ||
     !(!amountError.value || amountError.value === "exceeds_max_amount") ||
-    BigNumber.from(transaction.value.token.amount).isZero()
+    BigInt(transaction.value.token.amount) === 0n
   )
     return true;
   if ((allowanceRequestInProgress.value && !allowance.value) || allowanceRequestError.value) return true;

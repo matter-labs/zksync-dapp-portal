@@ -1,4 +1,3 @@
-import { BigNumber } from "ethers";
 import { utils } from "zksync-ethers";
 import IERC20 from "zksync-ethers/abi/IERC20.json";
 
@@ -31,7 +30,7 @@ export default (
         functionName: "allowance",
         args: [accountAddress.value, contractAddress],
       })) as bigint;
-      return BigNumber.from(allowance);
+      return BigInt(allowance);
     },
     { cache: false }
   );

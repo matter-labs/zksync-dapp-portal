@@ -16,7 +16,7 @@
 </template>
 
 <script lang="ts" setup>
-import { isAddress } from "ethers/lib/utils";
+import { isAddress } from "ethers";
 
 defineProps({
   id: {

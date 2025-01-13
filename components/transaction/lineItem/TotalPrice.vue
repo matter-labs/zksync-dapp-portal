@@ -11,8 +11,6 @@
 </template>
 
 <script lang="ts" setup>
-import { BigNumber } from "ethers";
-
 import type { Token } from "@/types";
 import type { BigNumberish } from "ethers";
 
@@ -34,6 +32,6 @@ const props = defineProps({
 });
 
 const isZeroAmount = computed(() => {
-  return BigNumber.from(props.amount).isZero();
+  return BigInt(props.amount) === 0n;
 });
 </script>

@@ -1,5 +1,4 @@
-import { BigNumber, type BigNumberish } from "ethers";
-import { formatUnits, getAddress, parseUnits } from "ethers/lib/utils";
+import { formatUnits, getAddress, parseUnits, type BigNumberish } from "ethers";
 import { BaseError } from "viem";
 
 export function shortenAddress(address: string, chars = 3): string {
@@ -78,7 +77,7 @@ export function removeSmallAmountPretty(
   minTokenValue?: number,
   maxChars?: number
 ): string {
-  if (BigNumber.from(amount).isZero()) {
+  if (BigInt(amount) === 0n) {
     return "0";
   }
   const withoutSmallAmount = removeSmallAmount(amount, decimals, price, minTokenValue, maxChars);
