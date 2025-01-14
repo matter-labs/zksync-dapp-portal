@@ -146,6 +146,7 @@ declare global {
         };
       };
       hyperchainsConfig?: HyperchainsConfig;
+      appVersion?: string;
     };
   }
 }

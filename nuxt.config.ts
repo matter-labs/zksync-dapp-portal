@@ -80,9 +80,15 @@ export default defineNuxtConfig({
   vite: {
     // Make listed envs public and accessible in the runtime
     define: Object.fromEntries(
-      ["NODE_TYPE", "WALLET_CONNECT_PROJECT_ID", "ANKR_TOKEN", "SCREENING_API_URL", "RUDDER_KEY", "DATAPLANE_URL"].map(
-        (key) => [`process.env.${key}`, JSON.stringify(process.env[key])]
-      )
+      [
+        "NODE_TYPE",
+        "WALLET_CONNECT_PROJECT_ID",
+        "ANKR_TOKEN",
+        "SCREENING_API_URL",
+        "RUDDER_KEY",
+        "DATAPLANE_URL",
+        "APP_VERSION",
+      ].map((key) => [`process.env.${key}`, JSON.stringify(process.env[key])])
     ),
     css: {
       preprocessorOptions: {

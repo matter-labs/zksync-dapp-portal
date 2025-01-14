@@ -16,5 +16,6 @@ export const usePortalRuntimeConfig = () => {
         : undefined,
     },
     hyperchainsConfig: runtimeConfig?.hyperchainsConfig,
+    appVersion: runtimeConfig?.appVersion || process.env.APP_VERSION,
   };
 };

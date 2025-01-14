@@ -7,7 +7,7 @@
     "dev:node:memory": "cross-env NODE_TYPE=memory npm run dev",
     "dev:node:docker": "cross-env NODE_TYPE=dockerized npm run dev",
     "dev:node:hyperchain": "ts-node --transpile-only scripts/hyperchains/empty-check.ts && cross-env NODE_TYPE=hyperchain npm run dev",
-    "generate": "nuxt generate && npm run generate-meta",
+    "generate": "cross-env APP_VERSION=$(git rev-parse --short HEAD) nuxt generate && npm run generate-meta",
     "generate:node:memory": "cross-env NODE_TYPE=memory npm run generate",
     "generate:node:docker": "cross-env NODE_TYPE=dockerized npm run generate",
     "generate:node:hyperchain": "ts-node --transpile-only scripts/hyperchains/empty-check.ts && cross-env NODE_TYPE=hyperchain npm run generate",

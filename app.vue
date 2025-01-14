@@ -15,4 +15,7 @@ watch(
   },
   { immediate: true }
 );
+
+const portalRuntimeConfig = usePortalRuntimeConfig();
+logger.log(`=== App version: ${portalRuntimeConfig.appVersion} ===`);
 </script>
