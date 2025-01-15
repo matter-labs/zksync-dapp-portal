@@ -17,5 +17,7 @@ watch(
 );
 
 const portalRuntimeConfig = usePortalRuntimeConfig();
-logger.log(`=== App version: ${portalRuntimeConfig.appVersion} ===`);
+if (portalRuntimeConfig.gitRepoUrl && portalRuntimeConfig.gitCommitHash) {
+  logger.log(`=== App source: ${portalRuntimeConfig.gitRepoUrl}/commit/${portalRuntimeConfig.gitCommitHash} ===`);
+}
 </script>

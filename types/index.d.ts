@@ -146,7 +146,8 @@ declare global {
         };
       };
       hyperchainsConfig?: HyperchainsConfig;
-      appVersion?: string;
+      gitCommitHash?: string;
+      gitRepoUrl?: string;
     };
   }
 }

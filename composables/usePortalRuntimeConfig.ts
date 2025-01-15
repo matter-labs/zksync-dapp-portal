@@ -16,6 +16,7 @@ export const usePortalRuntimeConfig = () => {
         : undefined,
     },
     hyperchainsConfig: runtimeConfig?.hyperchainsConfig,
-    appVersion: runtimeConfig?.appVersion || process.env.APP_VERSION,
+    gitCommitHash: runtimeConfig?.gitCommitHash || process.env.GIT_COMMIT_HASH,
+    gitRepoUrl: runtimeConfig?.gitRepoUrl || process.env.GIT_REPO_URL,
   };
 };

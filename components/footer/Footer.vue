@@ -6,6 +6,12 @@
       </CommonButtonLabel>
     </div>
     <div class="links-container">
+      <CommonButtonLabel v-if="!!gitCommitUrl" as="a" :href="gitCommitUrl" target="_blank" class="footer-link">
+        <span class="github-link-content">
+          <IconsGitHub class="h-6 w-6" />
+          {{ portalRuntimeConfig.gitCommitHash }}
+        </span>
+      </CommonButtonLabel>
       <CommonButtonLabel as="a" href="https://zksync.io/terms" target="_blank" class="footer-link">
         Terms of Service
       </CommonButtonLabel>
@@ -17,6 +23,7 @@
 </template>
 
 <script lang="ts" setup>
+const portalRuntimeConfig = usePortalRuntimeConfig();
 const eraWalletStore = useZkSyncWalletStore();
 const { isCorrectNetworkSet } = storeToRefs(eraWalletStore);
 const { isConnected, connectorName } = storeToRefs(useOnboardStore());
@@ -28,6 +35,12 @@ const addNetworkToWallet = async () => {
 const showAddNetworkButton = computed(() => {
   return isConnected.value && !isCorrectNetworkSet.value && connectorName.value !== "WalletConnect";
 });
+
+const gitCommitUrl = computed(() =>
+  portalRuntimeConfig.gitRepoUrl && portalRuntimeConfig.gitCommitHash
+    ? `${portalRuntimeConfig.gitRepoUrl}/commit/${portalRuntimeConfig.gitCommitHash}`
+    : ""
+);
 </script>
 
 <style lang="scss" scoped>
@@ -36,6 +49,10 @@ const showAddNetworkButton = computed(() => {
 
   .links-container {
     @apply flex w-max flex-wrap items-center justify-center gap-x-8 gap-y-4 whitespace-nowrap;
+  }
+
+  .github-link-content {
+    @apply flex items-center gap-1;
   }
 }
 </style>
