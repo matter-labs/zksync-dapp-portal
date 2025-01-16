@@ -30,10 +30,6 @@ export default (tokens: Ref<Token[]>, balances: Ref<TokenAmount[] | undefined>) 
     if (!fee.value) return undefined;
 
     if (fee.value.l1GasLimit && fee.value.maxFeePerGas && fee.value.maxPriorityFeePerGas) {
-      // return fee.value.l1GasLimit
-      //   .mul(fee.value.maxFeePerGas)
-      //   .add(fee.value.baseCost || "0")
-      //   .toString();
       return String(fee.value.l1GasLimit * fee.value.maxFeePerGas + (fee.value.baseCost || 0n));
     } else if (fee.value.l1GasLimit && fee.value.gasPrice) {
       return calculateFee(fee.value.l1GasLimit, fee.value.gasPrice).toString();
