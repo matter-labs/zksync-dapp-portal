@@ -14,11 +14,20 @@
           {{ balanceError.message }}
         </CommonErrorBlock>
       </CommonCardWithLineButtons>
-      <div v-else>
-        <div v-for="(group, index) in balanceGroups" :key="index">
-          <TypographyCategoryLabel v-if="group.title">
-            {{ group.title }}
-          </TypographyCategoryLabel>
+      <div v-else class="space-y-4">
+        <CommonInputSearch
+          v-model.trim="search"
+          class="mb-block-padding-1/4"
+          placeholder="Search by symbol or address"
+          autofocus="desktop"
+        >
+          <template #icon>
+            <MagnifyingGlassIcon aria-hidden="true" />
+          </template>
+        </CommonInputSearch>
+
+        <div v-for="(group, index) in filteredBalances" :key="index">
+          <TypographyCategoryLabel v-if="group.title"> {{ group.title }} </TypographyCategoryLabel>
           <CommonCardWithLineButtons>
             <TokenBalance
               v-for="item in group.balances"
@@ -37,6 +46,8 @@
 </template>
 
 <script lang="ts" setup>
+import type { TokenAmount } from "@/types";
+
 const onboardStore = useOnboardStore();
 const walletEraStore = useZkSyncWalletStore();
 const { isConnected } = storeToRefs(onboardStore);
@@ -45,7 +56,34 @@ const { eraNetwork } = storeToRefs(useZkSyncProviderStore());
 
 const { loading, reset: resetSingleLoading } = useSingleLoading(computed(() => balanceInProgress.value));
 
+const search = ref("");
 const balanceGroups = groupBalancesByAmount(balance);
+
+const filterBalanceGroups = (
+  balancesGroups: globalThis.ComputedRef<
+    {
+      title: string | null;
+      balances: TokenAmount[];
+    }[]
+  >
+) => {
+  const lowercaseSearch = search.value.toLowerCase();
+
+  return balancesGroups.value.map((balanceGroup) => {
+    const filteredGroupBalances = balanceGroup.balances.filter(({ symbol, name, l1Address, address }) => {
+      return Object.values({ address, name, symbol, l1Address })
+        .filter((e) => typeof e === "string")
+        .some((value) => value!.toLowerCase().includes(lowercaseSearch));
+    });
+
+    return {
+      title: balanceGroup.title,
+      balances: filteredGroupBalances,
+    };
+  });
+};
+
+const filteredBalances = computed(() => filterBalanceGroups(balanceGroups));
 
 const fetch = () => {
   walletEraStore.requestBalance();
