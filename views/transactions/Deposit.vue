@@ -218,25 +218,27 @@
         </CommonErrorBlock>
         <CommonHeightTransition
           v-if="step === 'form'"
-          :opened="(!enoughAllowance && !continueButtonDisabled) || !!setAllowanceReceipt"
+          :opened="(!enoughAllowance && !continueButtonDisabled) || !!setAllowanceReceipts?.length"
         >
           <CommonCardWithLineButtons class="mt-4">
             <DestinationItem
-              v-if="enoughAllowance && setAllowanceReceipt"
+              v-if="enoughAllowance && setAllowanceReceipts?.length"
               as="div"
               :description="`You can now proceed to deposit`"
             >
               <template #label>
                 {{ selectedToken?.symbol }} allowance approved
-                <a
-                  v-if="l1BlockExplorerUrl"
-                  :href="`${l1BlockExplorerUrl}/tx/${setAllowanceReceipt.transactionHash}`"
-                  target="_blank"
-                  class="inline-flex items-center gap-1 underline underline-offset-2"
-                >
-                  View on Explorer
-                  <ArrowTopRightOnSquareIcon class="h-6 w-6" aria-hidden="true" />
-                </a>
+                <template v-for="allowanceReceipt in setAllowanceReceipts" :key="allowanceReceipt.transactionHash">
+                  <a
+                    v-if="l1BlockExplorerUrl"
+                    :href="`${l1BlockExplorerUrl}/tx/${allowanceReceipt.transactionHash}`"
+                    target="_blank"
+                    class="inline-flex items-center gap-1 underline underline-offset-2"
+                  >
+                    View on Explorer
+                    <ArrowTopRightOnSquareIcon class="h-6 w-6" aria-hidden="true" />
+                  </a>
+                </template>
               </template>
               <template #image>
                 <div class="aspect-square h-full w-full rounded-full bg-success-400 p-3 text-black">
@@ -247,20 +249,25 @@
             <DestinationItem v-else as="div">
               <template #label>
                 Approve {{ selectedToken?.symbol }} allowance
-                <a
-                  v-if="l1BlockExplorerUrl && setAllowanceTransactionHash"
-                  :href="`${l1BlockExplorerUrl}/tx/${setAllowanceTransactionHash}`"
-                  target="_blank"
-                  class="inline-flex items-center gap-1 underline underline-offset-2"
+                <template
+                  v-for="allowanceTransactionHash in setAllowanceTransactionHashes"
+                  :key="allowanceTransactionHash"
                 >
-                  View on Explorer
-                  <ArrowTopRightOnSquareIcon class="h-6 w-6" aria-hidden="true" />
-                </a>
+                  <a
+                    v-if="l1BlockExplorerUrl && allowanceTransactionHash"
+                    :href="`${l1BlockExplorerUrl}/tx/${allowanceTransactionHash}`"
+                    target="_blank"
+                    class="inline-flex items-center gap-1 underline underline-offset-2"
+                  >
+                    View on Explorer
+                    <ArrowTopRightOnSquareIcon class="h-6 w-6" aria-hidden="true" />
+                  </a>
+                </template>
               </template>
               <template #underline>
                 Before depositing you need to give our bridge permission to spend specified amount of
                 {{ selectedToken?.symbol }}.
-                <span v-if="allowance && !allowance.isZero()"
+                <span v-if="allowance && allowance !== 0n"
                   >You can deposit up to
                   <CommonButtonLabel variant="light" @click="setAmountToCurrentAllowance()">
                     {{ parseTokenAmount(allowance!, selectedToken!.decimals) }}
@@ -469,23 +476,26 @@ const {
   error: allowanceRequestError,
   requestAllowance,
 
-  setAllowanceTransactionHash,
-  setAllowanceReceipt,
+  setAllowanceTransactionHashes,
+  setAllowanceReceipts,
   setAllowanceStatus,
   setAllowanceInProgress,
   setAllowanceError,
   setAllowance,
   resetSetAllowance,
+  approvalAmounts,
 } = useAllowance(
   computed(() => account.value.address),
   computed(() => selectedToken.value?.address),
-  async () => (await providerStore.requestProvider().getDefaultBridgeAddresses()).sharedL1
+  async () => (await providerStore.requestProvider().getDefaultBridgeAddresses()).sharedL1,
+  eraWalletStore.getL1Signer
 );
 const enoughAllowance = computed(() => {
-  if (!allowance.value || !selectedToken.value) {
+  if (allowance?.value === undefined || !selectedToken.value) {
     return true;
   }
-  return !allowance.value.isZero() && allowance.value.gte(totalComputeAmount.value);
+  const approvalAllowance = approvalAmounts.length ? approvalAmounts[0]?.allowance : 0;
+  return allowance.value !== 0n && allowance?.value >= BigInt(approvalAllowance);
 });
 const setAmountToCurrentAllowance = () => {
   if (!allowance.value || !selectedToken.value) {
@@ -697,7 +707,7 @@ const makeTransaction = async () => {
 
   if (tx) {
     zkSyncEthereumBalance.deductBalance(feeToken.value!.address!, fee.value!);
-    zkSyncEthereumBalance.deductBalance(transaction.value!.token.address!, transaction.value!.token.amount);
+    zkSyncEthereumBalance.deductBalance(transaction.value!.token.address!, String(transaction.value!.token.amount));
     transactionInfo.value = {
       type: "deposit",
       transactionHash: tx.hash,

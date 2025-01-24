@@ -1,15 +1,16 @@
-import { utils } from "zksync-ethers";
+import { L1Signer, utils } from "zksync-ethers";
 import IERC20 from "zksync-ethers/abi/IERC20.json";
 
-import type { Hash } from "@/types";
+import type { Hash, TokenAllowance } from "@/types";
 import type { BigNumberish } from "ethers";
 
 export default (
   accountAddress: Ref<string | undefined>,
   tokenAddress: Ref<string | undefined>,
-  getContractAddress: () => Promise<string | undefined>
+  getContractAddress: () => Promise<string | undefined>,
+  getL1Signer: () => Promise<L1Signer | undefined>
 ) => {
-  const { getPublicClient, getWallet } = useOnboardStore();
+  const { getPublicClient } = useOnboardStore();
   const {
     result,
     inProgress,
@@ -43,13 +44,14 @@ export default (
     }
   };
 
-  let approvalAmount: BigNumberish | undefined;
+  let approvalAmounts: TokenAllowance[] = [];
   const setAllowanceStatus = ref<"not-started" | "processing" | "waiting-for-signature" | "sending" | "done">(
     "not-started"
   );
-  const setAllowanceTransactionHash = ref<Hash | undefined>();
+  const setAllowanceTransactionHashes = ref<(Hash | undefined)[]>([]);
+
   const {
-    result: setAllowanceReceipt,
+    result: setAllowanceReceipts,
     inProgress: setAllowanceInProgress,
     error: setAllowanceError,
     execute: executeSetAllowance,
@@ -63,34 +65,39 @@ export default (
         const contractAddress = await getContractAddress();
         if (!contractAddress) throw new Error("Contract address is not available");
 
-        const wallet = await getWallet();
-
+        const wallet = await getL1Signer();
         setAllowanceStatus.value = "waiting-for-signature";
-        setAllowanceTransactionHash.value = await wallet.writeContract({
-          address: tokenAddress.value as Hash,
-          abi: IERC20,
-          functionName: "approve",
-          args: [contractAddress, approvalAmount!.toString()],
-        });
 
-        setAllowanceStatus.value = "sending";
-        const receipt = await retry(
-          () =>
-            getPublicClient().waitForTransactionReceipt({
-              hash: setAllowanceTransactionHash.value!,
-              onReplaced: (replacement) => {
-                setAllowanceTransactionHash.value = replacement.transaction.hash;
-              },
-            }),
-          {
-            retries: 3,
-            delay: 5_000,
-          }
-        );
+        const receipts = [];
+
+        for (let i = 0; i < approvalAmounts.length; i++) {
+          const txResponse = await wallet?.approveERC20(approvalAmounts[i].token, approvalAmounts[i].allowance);
+
+          setAllowanceTransactionHashes.value.push(txResponse?.hash as Hash);
+
+          setAllowanceStatus.value = "sending";
+
+          const receipt = await retry(
+            () =>
+              getPublicClient().waitForTransactionReceipt({
+                hash: setAllowanceTransactionHashes.value[i]!,
+                onReplaced: (replacement) => {
+                  setAllowanceTransactionHashes.value[i] = replacement.transaction.hash;
+                },
+              }),
+            {
+              retries: 3,
+              delay: 5_000,
+            }
+          );
+
+          receipts.push(receipt);
+        }
+
         await requestAllowance();
 
         setAllowanceStatus.value = "done";
-        return receipt;
+        return receipts;
       } catch (err) {
         setAllowanceStatus.value = "not-started";
         throw err;
@@ -99,13 +106,27 @@ export default (
     { cache: false }
   );
   const setAllowance = async (amount: BigNumberish) => {
-    approvalAmount = amount;
+    const wallet = await getL1Signer();
+    if (!wallet) throw new Error("Wallet is not available");
+    const depositAllowanceParams = await wallet.getDepositAllowanceParams(tokenAddress.value!, amount);
+    // Map returned approval amounts to increase amount by 1% to account for gas changes
+    approvalAmounts = depositAllowanceParams.map((allowanceParams) => {
+      // The allowance will return the same value as the amount in cases it doesn't need to include gas
+      const shouldIncrease = BigInt(allowanceParams.allowance) !== BigInt(amount);
+      // Increase allowance by 1% in case the gas changes, if the allowance needs to include gas
+      const increasedAllowance = (BigInt(allowanceParams.allowance) * 1n) / 100n + BigInt(allowanceParams.allowance);
+
+      return {
+        allowance: shouldIncrease ? increasedAllowance : BigInt(allowanceParams.allowance),
+        token: allowanceParams.token,
+      };
+    });
     await executeSetAllowance();
   };
   const resetSetAllowance = () => {
-    approvalAmount = undefined;
+    approvalAmounts = [];
     setAllowanceStatus.value = "not-started";
-    setAllowanceTransactionHash.value = undefined;
+    setAllowanceTransactionHashes.value = [];
     resetExecuteSetAllowance();
   };
 
@@ -124,12 +145,13 @@ export default (
     error: computed(() => error.value),
     requestAllowance,
 
-    setAllowanceTransactionHash,
-    setAllowanceReceipt,
+    setAllowanceTransactionHashes,
+    setAllowanceReceipts,
     setAllowanceStatus,
     setAllowanceInProgress,
     setAllowanceError,
     setAllowance,
     resetSetAllowance,
+    approvalAmounts,
   };
 };
