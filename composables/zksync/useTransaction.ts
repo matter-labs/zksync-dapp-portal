@@ -62,12 +62,11 @@ export default (getSigner: () => Promise<Signer | undefined>, getProvider: () =>
       });
 
       const txResponse = await signer.sendTransaction(txRequest);
-      const tx = getProvider()._wrapTransaction(txResponse);
 
-      transactionHash.value = tx.hash;
+      transactionHash.value = txResponse.hash;
       status.value = "done";
 
-      return tx;
+      return txResponse;
     } catch (err) {
       error.value = formatError(err as Error);
       status.value = "not-started";
