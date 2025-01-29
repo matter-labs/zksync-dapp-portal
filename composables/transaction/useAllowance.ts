@@ -105,10 +105,11 @@ export default (
     },
     { cache: false }
   );
-  const setAllowance = async (amount: BigNumberish) => {
+  const getApprovalAmounts = async (amount: BigNumberish) => {
     const wallet = await getL1Signer();
     if (!wallet) throw new Error("Wallet is not available");
     const depositAllowanceParams = await wallet.getDepositAllowanceParams(tokenAddress.value!, amount);
+
     // Map returned approval amounts to increase amount by 1% to account for gas changes
     approvalAmounts = depositAllowanceParams.map((allowanceParams) => {
       // The allowance will return the same value as the amount in cases it doesn't need to include gas
@@ -121,8 +122,15 @@ export default (
         token: allowanceParams.token,
       };
     });
+
+    return approvalAmounts;
+  };
+
+  const setAllowance = async (amount: BigNumberish) => {
+    await getApprovalAmounts(amount);
     await executeSetAllowance();
   };
+
   const resetSetAllowance = () => {
     approvalAmounts = [];
     setAllowanceStatus.value = "not-started";
@@ -152,6 +160,6 @@ export default (
     setAllowanceError,
     setAllowance,
     resetSetAllowance,
-    approvalAmounts,
+    getApprovalAmounts,
   };
 };
