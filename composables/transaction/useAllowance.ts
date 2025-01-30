@@ -110,7 +110,7 @@ export default (
     const wallet = await getL1Signer();
     if (!wallet) throw new Error("Wallet is not available");
 
-    // We need to pass the overrides in order to get the correct deposti allowance params
+    // We need to pass the overrides in order to get the correct deposits allowance params
     const overrides = {
       gasPrice: fee.gasPrice,
       gasLimit: fee.l1GasLimit,
