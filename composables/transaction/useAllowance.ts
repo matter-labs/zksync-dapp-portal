@@ -1,6 +1,7 @@
 import { L1Signer, utils } from "zksync-ethers";
 import IERC20 from "zksync-ethers/abi/IERC20.json";
 
+import type { DepositFeeValues } from "../zksync/deposit/useFee";
 import type { Hash, TokenAllowance } from "@/types";
 import type { BigNumberish } from "ethers";
 
@@ -105,29 +106,32 @@ export default (
     },
     { cache: false }
   );
-  const getApprovalAmounts = async (amount: BigNumberish) => {
+  const getApprovalAmounts = async (amount: BigNumberish, fee: DepositFeeValues) => {
     const wallet = await getL1Signer();
     if (!wallet) throw new Error("Wallet is not available");
-    const depositAllowanceParams = await wallet.getDepositAllowanceParams(tokenAddress.value!, amount);
 
-    // Map returned approval amounts to increase amount by 1% to account for gas changes
-    approvalAmounts = depositAllowanceParams.map((allowanceParams) => {
-      // The allowance will return the same value as the amount in cases it doesn't need to include gas
-      const shouldIncrease = BigInt(allowanceParams.allowance) !== BigInt(amount);
-      // Increase allowance by 1% in case the gas changes, if the allowance needs to include gas
-      const increasedAllowance = (BigInt(allowanceParams.allowance) * 1n) / 100n + BigInt(allowanceParams.allowance);
+    // We need to pass the overrides in order to get the correct deposti allowance params
+    const overrides = {
+      gasPrice: fee.gasPrice,
+      gasLimit: fee.l1GasLimit,
+      maxFeePerGas: fee.maxFeePerGas,
+      maxPriorityFeePerGas: fee.maxPriorityFeePerGas,
+    };
+    if (overrides.gasPrice && overrides.maxFeePerGas) {
+      overrides.gasPrice = undefined;
+    }
 
-      return {
-        allowance: shouldIncrease ? increasedAllowance : BigInt(allowanceParams.allowance),
-        token: allowanceParams.token,
-      };
-    });
+    approvalAmounts = (await wallet.getDepositAllowanceParams(
+      tokenAddress.value!,
+      amount,
+      overrides
+    )) as TokenAllowance[];
 
     return approvalAmounts;
   };
 
-  const setAllowance = async (amount: BigNumberish) => {
-    await getApprovalAmounts(amount);
+  const setAllowance = async (amount: BigNumberish, fee: DepositFeeValues) => {
+    await getApprovalAmounts(amount, fee);
     await executeSetAllowance();
   };
 

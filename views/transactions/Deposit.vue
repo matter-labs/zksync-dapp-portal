@@ -496,7 +496,7 @@ const enoughAllowance = computedAsync(async () => {
     return true;
   }
 
-  const approvalAmounts = await getApprovalAmounts(totalComputeAmount.value);
+  const approvalAmounts = await getApprovalAmounts(totalComputeAmount.value, feeValues.value!);
   const approvalAllowance = approvalAmounts.length ? approvalAmounts[0]?.allowance : 0;
   return allowance.value !== 0n && allowance?.value >= BigInt(approvalAllowance);
 }, false);
@@ -507,7 +507,7 @@ const setAmountToCurrentAllowance = () => {
   amount.value = parseTokenAmount(allowance.value, selectedToken.value.decimals);
 };
 const setTokenAllowance = async () => {
-  await setAllowance(totalComputeAmount.value);
+  await setAllowance(totalComputeAmount.value, feeValues.value!);
   await new Promise((resolve) => setTimeout(resolve, 2000)); // Wait for balances to be updated on API side
   await fetchBalances(true);
 };
